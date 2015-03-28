@@ -1,0 +1,70 @@
+#Ignore DB settings
+/app/etc/local.xml
+
+#Ignore generated content
+/sitemap.xml
+/feed/**
+
+#Ignore result fo compilation
+/includes/src
+
+#Ignore some media directories will generated content
+/media/brand
+/media/captcha
+/media/catalog
+/media/colorswatch
+/media/css
+/media/css_secure
+/media/downloadable
+/media/favicon/
+/media/import
+/media/js
+/media/tmp
+/media/upload
+/media/wysiwyg
+
+#Ignore some files and directories from downloader component
+/downloader/cache.cfg
+/downloader/.cache/**
+
+#Ignore content of /var directory except package/ directory
+/var/**
+!/var/package
+/var/package/tmp/
+
+#htaccess files
+.htaccess
+
+# Modman                       #
+################################
+.modman
+
+# OS generated files           #
+################################
+.bash_history
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+.project
+*.sublime-project
+*.sublime-workspace
+*.tmproj
+*.bak
+*.swp
+*~.nib
+
+# From old TD repo
+/errors/
+/install.php
+/lib/Zend/
+/lib/Varien/
+/LICENSE*
+/php.ini.sample
+/pkginfo/
+/RELEASE_NOTES.txt
+*.lock
