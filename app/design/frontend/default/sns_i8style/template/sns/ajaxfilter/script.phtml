@@ -1,0 +1,106 @@
+<?php if($this->isEnabled): ?>
+<script type="text/javascript">
+	var data = "";
+	var active = false;
+	jQuery(function($){
+		if($('body').find('#sns_ajaxfilter').attr('id') != 'sns_ajaxfilter'){
+		$('body').prepend('<div id="sns_ajaxfilter" style="display:none"><div class="process"><img width="30" height="30" src="<?php echo $this->loadingImage ?>"><div><?php echo $this->loadingText ?></div></div><div class="bg"></div></div>');}
+
+		
+		$(document).on('click', '#sns_mainnav #sns_custommenu ul li a', function(e){
+			if($(this).attr('href')!='javascript:void(0)'){
+				$('#sns_ajaxfilter .bg').height('100%');
+				$('#sns_ajaxfilter').fadeIn(300);
+				// e.preventDefault();
+				// ajaxFilter($(this).attr('href'));
+			}
+		});
+		
+		$( window ).load(function() {
+				$('#sns_ajaxfilter .bg').height('100%');
+                $('#sns_ajaxfilter').fadeOut(300);
+		});
+		
+		<?php if($this->ajaxLayered): ?>
+		$(document).on('click', '.block-layered-nav a', function(e){
+			e.preventDefault();
+			
+			if ((!$( this ).parent("li").hasClass( "m-selected-ln-item" )) && ($( this ).parent("li").hasClass( "m-unselected-ln-item" ))) {
+				$( this ).parent("li").toggleClass( "m-selected-ln-item",true );
+				$( this ).css( "color","#fa0d25" );
+			}
+			
+			if (($( this ).parent("li").hasClass( "m-selected-ln-item" )) && (!$( this ).parent("li").hasClass( "m-unselected-ln-item" ))) {
+				$( this ).parent("li").toggleClass( "m-selected-ln-item",false );
+				$( this ).css( "color","#666" );
+			}
+			
+			ajaxFilter($(this).attr('href'));
+		});
+		<?php endif; ?>
+			
+		<?php if($this->ajaxToolbar): ?>
+		$(document).on('click', '.toolbar a', function(e){
+			e.preventDefault();
+			ajaxFilter($(this).attr('href'));
+		});
+		$('.toolbar select').removeAttr('onchange');
+		$('.toolbar select').on('change',function(){
+			//var url=$(this).val(); alert(url);
+			e.preventDefault();
+			ajaxFilter($(this).val());
+		});
+		<?php endif; ?>
+
+
+	});
+
+<?php if($this->ajaxPrice || $this->ajaxLayered): ?>
+function ajaxFilter(url) {
+    if (!active) {
+        active = true;
+        jQuery(function($) {
+            oldUrl = url;
+            $('#sns_ajaxfilter .bg').height('100%');
+            $('#sns_ajaxfilter').fadeIn(300);
+            try {
+                $.ajax({
+                    url: url,
+                    dataType: 'json',
+                    type: 'post',
+                    data: data,
+                    success: function(data) {
+						//callback();
+                        if (data.viewpanel) {
+                            if ($('.block-layered-nav')) {
+                                $('.block-layered-nav').empty();
+                                $('.block-layered-nav').replaceWith(data.viewpanel)
+                            }
+                        }
+                        if (data.productlist) {
+                            $('.category-products').empty();
+                            $('.category-products').replaceWith(data.productlist)
+                        }
+                        var hist = url.split('?');
+                        if(window.history && window.history.pushState){
+							window.history.pushState('GET', data.title, url);
+						}
+                        $('body').find('.toolbar select').removeAttr('onchange');
+                        $('#sns_ajaxfilter .bg').height('100%');
+                        $('#sns_ajaxfilter').fadeOut(600);
+						$('html, body').animate({ scrollTop: 0 }, 0);
+                    }
+                })
+            } catch (e) {}
+        });
+        active = false
+    }
+    return false
+}
+<?php endif; ?>
+
+function callback(){
+	// return;
+}
+</script>
+<?php endif; ?>

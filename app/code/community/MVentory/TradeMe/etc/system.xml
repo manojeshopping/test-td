@@ -1,0 +1,463 @@
+<?xml version="1.0"?>
+
+<!--
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to a Commercial Software License.
+ * No sharing - This file cannot be shared, published or
+ * distributed outside of the licensed organisation.
+ * No Derivatives - You can make changes to this file for your own use,
+ * but you cannot share or redistribute the changes.
+ * This Copyright Notice must be retained in its entirety.
+ * The full text of the license was supplied to your organisation as
+ * part of the licensing agreement with mVentory.
+ *
+ * @package MVentory/TradeMe
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
+ * @license Commercial
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
+ */
+-->
+
+<config>
+  <tabs>
+    <mventory translate="label">
+      <label><![CDATA[<img id="mventory-logo" alt="mVentory" title="mVentory" src="https://s3-ap-southeast-2.amazonaws.com/mventory-logos/mVentory-logo.png">]]></label>
+      <sort_order>100</sort_order>
+    </mventory>
+  </tabs>
+
+  <sections>
+    <trademe translate="label">
+      <label>TradeMe</label>
+      <tab>mventory</tab>
+      <frontend_type>text</frontend_type>
+
+      <show_in_default>1</show_in_default>
+      <show_in_website>1</show_in_website>
+      <show_in_store>0</show_in_store>
+
+      <sort_order>0</sort_order>
+
+      <groups>
+        <hint>
+          <frontend_model>trademe/setting_hint</frontend_model>
+
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+
+          <sort_order>0</sort_order>
+        </hint>
+        <settings translate="label footer">
+          <label>Settings</label>
+          <footer>
+            <![CDATA[
+            <ul class="messages">
+              <li class="notice-msg">
+                <ul>
+                  <li>You must complete configuration at the Global and Website levels.</li>
+                </ul>
+              </li
+            </ul>
+            ]]>
+          </footer>
+          <frontend_model>trademe/setting_fieldset</frontend_model>
+
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>0</show_in_store>
+
+          <sort_order>1</sort_order>
+
+          <account_template translate="comment" foo="bar">
+            <comment>Save config after changing Consumer keys before pressing Authorise button.</comment>
+            <name translate="label comment tooltip">
+              <label>Name</label>
+			        <comment>A free text name to help you identify the account.</comment>
+              <tooltip>Used for your reference only.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>1</sort_order>
+            </name>
+
+            <key translate="label comment tooltip">
+              <label>Consumer Key</label>
+              <comment><![CDATA[Copy from <a href="http://www.trademe.co.nz/MyTradeMe/Api/DeveloperOptions.aspx" target="_blank" title="Get the key now">My Trade Me</a>]]></comment>
+              <tooltip>Register a new TradeMe application of type "client" and copy the keys here. Application name and description can be anything you like.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>2</sort_order>
+            </key>
+
+            <secret translate="label">
+              <label>Consumer Secret</label>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>3</sort_order>
+            </secret>
+
+            <max_listings translate="label comment tooltip">
+              <label>Max Number of Listings</label>
+              <comment>Enter 0 to disable automatic submissions.</comment>
+              <tooltip>A limit for automatic product listing submissions. Automatic submissions are only performed if the number of currently listed products (including manually-listed products) is below this limit. $1 auctons are excluded.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>4</sort_order>
+            </max_listings>
+          </account_template>
+
+          <fields>
+            <sandbox translate="label comment tooltip">
+              <label>Sandbox</label>
+              <comment><![CDATA[Use <a href="http://www.tmsandbox.co.nz/" target="_blank" title="Go to TM Sandbox">Trade Me Sandbox</a> for testing and development only]]></comment>
+              <tooltip>Trade Me Sandbox is a mirror of their production website for API testing. You can list and buy without incurring any fees.</tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>102</sort_order>
+            </sandbox>
+
+            <unlink_all_auctions translate="label comment tooltip">
+              <label>Unlink all sandbox auctions</label>
+              <comment>Globally unlink all sandbox auctions. Auctions will not be withdrawn.</comment>
+              <tooltip>During testing it can be useful to unlink all active auctions from their corresponding products. This button will perform this action for ALL configured sandbox accounts in ALL stores.</tooltip>
+              <frontend_model>trademe/setting_unlink</frontend_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>103</sort_order>
+            </unlink_all_auctions>
+
+            <cron translate="label comment tooltip">
+              <label>Magento cron interval (in minutes)</label>
+              <tooltip><![CDATA[Magento cron must be running for this feature to work.<br/>You can make listings manually with the cron disabled, but the site will not be able to check TradeMe for sales or auction expiration.]]></tooltip>
+              <comment><![CDATA[Interval to poll TradeMe for updates or 0 to disable polling. Enable <a href="https://www.google.co.nz/search?q=magento+cron.php" target="_blank" title="How to configure and troubleshoot Magento cron">Cron.php</a>.]]></comment>
+              <frontend_type>text</frontend_type>
+              <backend_model>trademe/setting_backend_cron</backend_model>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>104</sort_order>
+            </cron>
+
+            <enable_listing translate="label comment tooltip">
+              <label>Default value for 'Allow to list' flag</label>
+              <comment>Yes to list new products by default.</comment>
+              <tooltip>Automatic (cron) submission will only work for products with 'Allow to List' flag set to Yes. Set this option to Yes if you want all products to be automatically listed by default.</tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>105</sort_order>
+            </enable_listing>
+
+            <list_as_new translate="label comment tooltip">
+              <label>List as 'New'</label>
+              <comment>Select product conditions that should be listed on Trade Me as New. Hold Ctrl to select multiple items.</comment>
+              <tooltip>Use attribute tm_condition to specify condition per product and map your values to TradeMe values here. Products are always listed as new attribute tm_condition is not used.</tooltip>
+              <frontend_type>multiselect</frontend_type>
+              <source_model>trademe/setting_source_conditions</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>106</sort_order>
+            </list_as_new>
+
+            <payment_methods>
+              <label>Allowed payment methods</label>
+              <comment>Select acceptable payment methods. Hold Ctrl to select multiple items.</comment>
+              <tooltip>Specify which payment methods you want to accept with your TradeMe auctions. Note: credit card payment method will be automatically disabled for listings with Buy Now or reserve over $3000.</tooltip>
+              <frontend_type>multiselect</frontend_type>
+              <source_model>trademe/setting_source_paymentmethods</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>107</sort_order>
+            </payment_methods>
+
+            <mapping_store translate="label comment">
+              <label>Fake store for mapping values of TradeMe attributes</label>
+              <comment>Leave blank unless instructed otherwise.</comment>
+              <frontend_type>select</frontend_type>
+              <source_model>trademe/setting_source_store</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>108</sort_order>
+            </mapping_store>
+
+            <name_variants_attr translate="label comment tooltip">
+              <label>Name variants attribute code</label>
+              <comment>Optional, e.g. prod_names</comment>
+              <tooltip>You can nominate an attribute with name variants to be randomly used for products on TradeMe, one name per line. Create a text area attribute and copy its code into this text box. This feature is optional.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>109</sort_order>
+            </name_variants_attr>
+
+            <shipping_attr translate="label comment tooltip">
+              <label>Shipping method attribute</label>
+              <comment>Attribute code for a custom shipping methods</comment>
+              <tooltip>Use existing or create a new attribute with shipping options per product. You can use any arbitrary values, e.g. Courier, Envelope, Parcel. The values will be used to determine shipping options for TradeMe. Leave blank if there is only one or no shipping options.</tooltip>
+              <frontend_type>text</frontend_type>
+              <frontend_class>validate-code validate-length maximum-length-30</frontend_class>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>110</sort_order>
+            </shipping_attr>
+
+            <stock_status translate="label comment tooltip">
+              <label>Minimum stock level</label>
+              <comment>List only products with selected stock levels</comment>
+              <tooltip>Select all stock level types that should be listed on TradeMe. See Inventory tab in product details for more info.</tooltip>
+              <frontend_type>multiselect</frontend_type>
+              <source_model>trademe/setting_source_stockstatus</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>109</sort_order>
+            </stock_status>
+
+            <import translate="label comment tooltip">
+              <label>Import configuration file</label>
+              <comment>A valid config file is required for the extension to work</comment>
+              <tooltip>
+                <![CDATA[
+                <ol class="trademe-setting-list">
+                  <li>Export the configuration file</li>
+                  <li>Read help section on CSV file fields</li>
+                  <li>Edit the file with your settings and values</li>
+                  <li>Press "Browse" to upload the edited file</li>
+                </ol>
+                ]]>
+              </tooltip>
+              <frontend_type>file</frontend_type>
+              <backend_model>trademe/setting_backend_options</backend_model>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>111</sort_order>
+            </import>
+
+            <export translate="label">
+              <label>Export configuration file</label>
+              <frontend_model>trademe/setting_options</frontend_model>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>112</sort_order>
+            </export>
+          </fields>
+        </settings>
+
+        <one_dollar translate="label footer">
+          <label>$1 auctions</label>
+          <footer>
+            <![CDATA[
+              <ul class="messages">
+                <li class="notice-msg">
+                  <ul>
+                    <li>Any product can be marked for $1 auctions. The site will list one per day marked in "Auction end days", minus auction duration. It can also list the same product at full price. The day and time of the listing are chosen to achieve the desired closing day/time. No $1 auctions are created if no end-days are selected.
+                    </li>
+                  </ul>
+                </li
+              </ul>
+            ]]></footer>
+          <frontend_model>trademe/setting_fieldset</frontend_model>
+
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>0</show_in_store>
+
+          <sort_order>2</sort_order>
+
+          <fields>
+            <end_days translate="label comment tooltip">
+              <label>Auction end days</label>
+              <comment>Crtl+Click to select / deselect multiple days</comment>
+              <tooltip><![CDATA[Products will be listed one per day while stock lasts to finish at the specified day/time.<br />Use Ctrl+Click to deselect the last item and disable $1 auctions.]]></tooltip>
+              <frontend_type>multiselect</frontend_type>
+              <source_model>adminhtml/system_config_source_locale_weekdays</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>1</sort_order>
+            </end_days>
+
+            <end_time translate="label comment tooltip">
+              <label>Auction end time</label>
+              <comment>Auction end time, +/- 30min, e.g. 21:30 for 9pm to 10pm</comment>
+              <tooltip><![CDATA[Auctions will start at this approximate time +/- 30 min.<br />E.g. 21:30 may create auctions between 9pm and 10pm.]]></tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>2</sort_order>
+            </end_time>
+
+            <duration translate="label comment tooltip">
+              <label>Auction duration</label>
+              <comment>Auction duration</comment>
+              <tooltip>Longer auctions acquire more views and more watchers</tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>trademe/setting_source_7days</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>3</sort_order>
+            </duration>
+
+            <list_full_price translate="label comment tooltip">
+              <label>List full price</label>
+              <comment>Full price auctions for $1 products</comment>
+              <tooltip>
+                <![CDATA[
+                Controls if full price auctions should be listed concurrently with $1 auctions.
+                <ul class="trademe-setting-list">
+                  <li>Always - maintain at least one full price auction</li>
+                  <li>If stock allows - if there are more items than $1 auctions</li>
+                  <li>Never - do not list full price auctions</li>
+                </ul>
+                ]]>
+              </tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>trademe/setting_source_listfullprice</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>4</sort_order>
+            </list_full_price>
+
+            <!--
+              Temporarily disabled until we will have found proper withdrawal
+              logic
+            -->
+
+            <!--
+            <allow_withdrawal translate="label comment tooltip">
+              <label>Allow withdrawal</label>
+              <comment>Allow withdrawal of $1 auctions</comment>
+              <tooltip>
+                <![CDATA[
+                  <ul class="trademe-setting-list">
+                    <li>Yes - follow the withdrawal rules for full price auctions in the main config section</li>
+                    <li>No - do not withdraw $1 auctions</li>
+                  </ul>
+                ]]>
+              </tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>5</sort_order>
+            </allow_withdrawal>
+            -->
+
+            <limit translate="label comment tooltip">
+              <label>$1 auctions limit</label>
+              <comment>Max number of concurrent $1 auctions</comment>
+              <tooltip>A limit of $1 auctions per product that can be active at the same time.</tooltip>
+              <frontend_type>text</frontend_type>
+              <frontend_class>validate-digits</frontend_class>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>107</sort_order>
+            </limit>
+          </fields>
+        </one_dollar>
+
+        <help>
+          <frontend_model>trademe/setting_help</frontend_model>
+
+          <show_in_default>1</show_in_default>
+          <show_in_website>0</show_in_website>
+          <show_in_store>0</show_in_store>
+
+          <sort_order>3</sort_order>
+        </help>
+
+        <help_account>
+          <frontend_model>trademe/setting_accounthelp</frontend_model>
+
+          <show_in_default>0</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>0</show_in_store>
+
+          <sort_order>4</sort_order>
+        </help_account>
+        
+        <build_info>
+          <frontend_model>trademe/setting_buildinfo</frontend_model>
+
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          
+          <sort_order>5</sort_order>
+        </build_info>
+      </groups>
+    </trademe>
+  </sections>
+</config>

@@ -1,0 +1,222 @@
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to a Commercial Software License.
+ * No sharing - This file cannot be shared, published or
+ * distributed outside of the licensed organisation.
+ * No Derivatives - You can make changes to this file for your own use,
+ * but you cannot share or redistribute the changes.
+ * This Copyright Notice must be retained in its entirety.
+ * The full text of the license was supplied to your organisation as
+ * part of the licensing agreement with mVentory.
+ *
+ * @package MVentory/TradeMe
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
+ * @license Commercial
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
+ */
+
+#trademe-rules {
+  margin-bottom: 20px;
+}
+
+.trademe-rule-template {
+  display: none;
+}
+
+.trademe-rule {
+  position: relative;
+}
+
+.trademe-rule-placeholder {
+  border-style: dashed;
+  opacity: 0.5;
+}
+
+.trademe-rule .trademe-rule-remove {
+  color: #EA7601;
+  cursor: pointer;
+  font-size: 12px;
+  left: 2px;
+  line-height: 12px;
+  position: absolute;
+  top: 1px;
+}
+
+.trademe-rule-attrs {
+  float: left;
+  width: 70%;
+}
+
+.trademe-rule-attrs .trademe-inner {
+  border-right: 2px solid #D6D6D6;
+}
+
+.trademe-rule-categories {
+  float: left;
+  width: 30%;
+}
+
+.trademe-rule-categories .trademe-inner {
+  margin: 2px 15px;
+}
+
+.trademe-rule-attr,
+.trademe-rule-category {
+  border-top: 1px dashed #D6D6D6;
+  margin-right: 15px;
+  padding: 2px 0px;
+}
+
+.trademe-rule-attr:first-child,
+.trademe-rule-category:first-child,
+#trademe-rule-new > .trademe-inner > *:first-child {
+  border: none;
+}
+
+.trademe-rule-attr > * {
+  width: 50%;
+  float: left;
+}
+
+#trademe-rule-new {
+  margin-bottom: 10px;
+}
+
+#trademe-rule-new > .trademe-inner > * {
+  float: left;
+  border-left: 1px dashed #D6D6D6;
+  margin-right: 15px;
+  padding-left: 15px;
+}
+
+#trademe-rule-new > .trademe-inner > *:first-child {
+  padding-left: 0px;
+}
+
+.trademe-rule-new-arrow {
+  text-align: center;
+}
+
+.trademe-rule-new-attr-name,
+.trademe-rule-new-attr-value {
+  width: 100%;
+}
+
+.trademe-rule-new-attr-value {
+  min-height: 200px;
+}
+
+.trademe-rule-new-attr-name > .trademe-state-used-attr {
+  color: blue;
+}
+
+.trademe-rule-new-attr-name > option[value="-2"] {
+  display: none;
+}
+
+.trademe-rule-new-attr-value > .trademe-state-used-value {
+  color: lightgray;
+}
+
+#trademe-rule-new-buttons {
+  clear: both;
+  border-top: 2px solid #D6D6D6;
+  padding-top: 10px;
+}
+
+.trademe-rule-new-attr-buttons a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.trademe-state-not-completed .trademe-rule-new-attr-buttons a {
+  color: gray;
+  cursor: default;
+}
+
+.trademe-rule-category {
+  margin: 0;
+}
+
+.trademe-state-no-category {
+  color: lightgray;
+}
+
+#trademe-rule-new-category {
+  display: block;
+}
+
+/* Table of TradeMe categories */
+
+.grid .trademe-state-selected {
+  background-color: #FCF5DD;
+}
+
+/* TradeMe tab */
+
+#mventory-logo {
+ display: block;
+}
+
+#product_info_tabs_trademe_content .a-right button {
+  margin-left: 4px;
+}
+
+#product_info_tabs_trademe_content .trademe-option {
+  padding-right: 10px;
+}
+
+#trademe-fixed-end-auctions {
+  margin: 0 0 1em 0;
+}
+#trademe-fixed-end-auctions-table {
+  width: auto;
+}
+
+/* Settings */
+
+fieldset[id^="trademe_account_"] > .comment {
+  font-weight: bold;
+}
+
+.trademe-account-buttons button {
+  margin: 0 0 0 5px;
+}
+
+#mventory-promo {
+  font-weight: bold;
+}
+
+.trademe-setting-buttons-wrapper {
+  display: inline-block;
+  width: 280px;
+  margin: 0 3px 0 0;
+}
+
+.trademe-setting-help-table td, th {
+  padding: 0.5rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.trademe-setting-help-table td:nth-child(1) {
+  font-weight: bold;
+  width: 100px;
+}
+
+.trademe-setting-help-table ul,
+ul.trademe-setting-list {
+  list-style: disc inside;
+}
+
+ol.trademe-setting-list,
+.trademe-setting-help-table ol {
+  list-style: decimal inside;
+}
+
+.trademe-setting-help-table code {
+  white-space: pre-wrap;
+  padding: 1px 5px;
+  background-color: #eaeaea;
+}

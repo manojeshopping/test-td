@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Redis Management Module
+ * 
+ * @category   Steverobbins
+ * @package    Steverobbins_Redismanager
+ * @author     Steve Robbins <steven.j.robbins@gmail.com>
+ * @copyright  Copyright (c) 2014 Steve Robbins (https://github.com/steverobbins)
+ * @license    http://creativecommons.org/licenses/by/3.0/deed.en_US Creative Commons Attribution 3.0 Unported License
+ */
+-->
+<config>
+    <modules>
+        <Steverobbins_Redismanager>
+            <version>1.2.1.1</version>
+        </Steverobbins_Redismanager>
+    </modules>
+    <global>
+        <blocks>
+            <redismanager>
+                <class>Steverobbins_Redismanager_Block</class>
+            </redismanager>
+        </blocks>
+        <helpers>
+            <redismanager>
+                <class>Steverobbins_Redismanager_Helper</class>
+            </redismanager>
+        </helpers>
+        <models>
+            <redismanager>
+                <class>Steverobbins_Redismanager_Model</class>
+            </redismanager>
+        </models>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Steverobbins_Redismanager before="Mage_Adminhtml">Steverobbins_Redismanager_Adminhtml</Steverobbins_Redismanager>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <redismanager>
+                    <file>steverobbins/redismanager.xml</file>
+                </redismanager>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Steverobbins_Redismanager>
+                    <files>
+                        <default>Steverobbins_Redismanager.csv</default>
+                    </files>
+                </Steverobbins_Redismanager>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <redismanager>
+            <settings>
+                <auto>1</auto>
+            </settings>
+        </redismanager>
+    </default>
+</config>

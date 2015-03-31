@@ -1,0 +1,237 @@
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License BY-NC-ND.
+ * NonCommercial — You may not use the material for commercial purposes.
+ * NoDerivatives — If you remix, transform, or build upon the material,
+ * you may not distribute the modified material.
+ * See the full license at http://creativecommons.org/licenses/by-nc-nd/4.0/
+ *
+ * See http://mventory.com/legal/licensing/ for other licensing options.
+ *
+ * @package MVentory/API
+ * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @license http://creativecommons.org/licenses/by-nc-nd/4.0/
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
+ */
+
+#mventory-rules {
+  margin-bottom: 20px;
+}
+
+.mventory-rule-template {
+  display: none;
+}
+
+.mventory-rule {
+  border: 1px solid #d6d6d6;
+  margin: 0 0 15px;
+}
+
+.mventory-rule-placeholder {
+  border-style: dashed;
+  opacity: 0.5;
+}
+
+.mventory-rule-content {
+  position: relative;
+  padding: 10px 15px;
+  background: #fafafa;
+}
+
+.mventory-rule-err-msg {
+  padding: 10px 15px;
+  border-top: 4px solid #f16048;
+  margin: 0px 0px 0px 50px;
+  background: #fefefe;
+  white-space: pre-wrap;
+  display: none;
+}
+
+.mventory-rule .mventory-rule-remove {
+  color: #EA7601;
+  cursor: pointer;
+  font-size: 12px;
+  left: 2px;
+  line-height: 12px;
+  position: absolute;
+  top: 1px;
+}
+
+.mventory-rule-attrs {
+  float: left;
+  width: 70%;
+}
+
+.mventory-rule-attrs .mventory-inner {
+  border-right: 2px solid #D6D6D6;
+  padding: 0 15px 0 0;
+}
+
+.mventory-rule-categories {
+  float: left;
+  width: 30%;
+}
+
+.mventory-rule-categories .mventory-inner {
+  margin: 2px 15px;
+}
+
+.mventory-rule-attr,
+.mventory-rule-category {
+  border-top: 1px dashed #D6D6D6;
+  margin-right: 15px;
+  padding: 2px 0px;
+}
+
+.mventory-rule-attr:first-child,
+.mventory-rule-category:first-child,
+#mventory-rule-new > .mventory-inner > .mventory-rule-new-attr:first-child {
+  border: none;
+}
+
+.mventory-rule-attr > * {
+  width: 50%;
+  float: left;
+}
+
+#mventory-rule-new > .mventory-inner > .mventory-rule-new-attr {
+  float: left;
+  margin: 0 0 10px 15px;
+}
+
+#mventory-rule-new > .mventory-inner > .mventory-rule-new-attr:first-child {
+  margin: 0 0 10px 0;
+}
+
+.mventory-rule-new-attr-column {
+  display: table-cell;
+}
+
+.mventory-rule-new-arrow {
+  text-align: center;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+
+.mventory-rule-new-attr-name,
+.mventory-rule-new-attr-value {
+  width: 100%;
+}
+
+.mventory-rule-new-attr-value {
+  min-height: 200px;
+}
+
+.mventory-rule-new-attr-name > .mventory-state-used-attr {
+  color: blue;
+}
+
+.mventory-rule-new-attr-name > option[value="-1"] {
+  display: none;
+}
+
+.mventory-rule-new-attr-value > .mventory-state-used-value {
+  color: lightgray;
+}
+
+.mventory-rule-attr-and {
+  vertical-align: middle;
+  padding: 0 15px 0 0;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+
+.mventory-rule-new-attr:first-child .mventory-rule-attr-and {
+  display: none;
+}
+
+#mventory-rule-new-buttons {
+  clear: both;
+  border-top: 2px solid #D6D6D6;
+  padding-top: 10px;
+}
+
+.mventory-rule-new-attr-buttons a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mventory-state-not-completed .mventory-rule-new-attr-buttons a {
+  color: gray;
+  cursor: default;
+}
+
+.mventory-rule-category {
+  margin: 0;
+}
+
+/* States */
+
+.mventory-state-no-category {
+  color: lightgray;
+}
+
+.mventory-rule.mventory-state-success {
+  background: url(../../images/success_msg_icon.gif) no-repeat 17px 50% #eff5ea;
+}
+
+.mventory-rule.mventory-state-error {
+  background: url(../../images/error_msg_icon.gif) no-repeat 17px 50% #faebe7;
+}
+
+.mventory-rule.mventory-state-processing {
+  opacity: 0.4;
+  background: url(../../images/ajax-loader-tr.gif) no-repeat 10px 50% #fff4e9;
+}
+
+.mventory-state-success .mventory-rule-content,
+.mventory-state-error .mventory-rule-content,
+.mventory-state-processing .mventory-rule-content {
+  margin: 0 0 0 50px;
+}
+
+.mventory-state-error .mventory-rule-err-msg {
+  display: block;
+}
+
+#mventory-categories-wrapper {
+  display: none;
+  position: absolute;
+}
+
+#mventory-matching-attribute-messages {
+  margin: 0 0 10px 0;
+}
+
+#mventory-matching-attribute-messages li {
+  margin: 0 !important;
+}
+
+/* Tooltips on attribute's metadata tab */
+#product_attribute_tabs_mventory_content .field-tooltip > div ul {
+  list-style: disc inside;
+}
+
+.fieldset-footer {
+  margin: 20px 5px 5px;;
+}
+
+.fieldset-footer h4 {
+  margin: 0 0 10px;
+}
+
+.fieldset-footer ol {
+  list-style: decimal inside;
+  margin: 0 0 0.5em;
+}
+
+/* System config */
+.section-config .value .buttons-set {
+  display: inline-block;
+  margin: 0;
+}
+
+#mventory-logo {
+  display: block;
+}

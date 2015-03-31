@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Magentoguys_Checkout>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Magentoguys_Checkout>
+    </modules>
+</config> 

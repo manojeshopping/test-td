@@ -1,0 +1,367 @@
+<?php
+
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to a Commercial Software License.
+ * No sharing - This file cannot be shared, published or
+ * distributed outside of the licensed organisation.
+ * No Derivatives - You can make changes to this file for your own use,
+ * but you cannot share or redistribute the changes.
+ * This Copyright Notice must be retained in its entirety.
+ * The full text of the license was supplied to your organisation as
+ * part of the licensing agreement with mVentory.
+ *
+ * @package MVentory/TradeMe
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
+ * @license Commercial
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
+ */
+
+$_product = $this->getProduct();
+$_auction = $this->getAuction();
+$_fixedEndAuctions = $this->getFixedEndAuctions();
+
+$_categories = $this->getCategories();
+$_preselectedCategories = $this->getPreselectedCategories();
+
+$_cols = $this->getColsNumber() - 1;
+
+$_productUrl = Mage::helper('mventory/product')->getUrl($_product);
+
+$_allowBuyNow = $this->getAllowBuyNow();
+$_addFees = $this->getAddFees();
+$_shippingType = $this->getShippingType();
+$_pickup = $this->getPickup();
+$_relist = $this->getRelist();
+$_avoidWithdrawal = $this->getAvoidWithdrawal();
+$_accounts = $this->getAccounts();
+
+$_shippingRate = $this->getShippingRate();
+$_fees = $this->getFees();
+$_price = $this->getProductPrice();
+$_totalPrice = $_price + $_shippingRate + $_fees;
+
+$__accountName = $this->__('Account name');
+$__listingId = $this->__('Listing ID');
+$__listed = $this->__('Listed');
+$__action = $this->__('Action');
+$__remove = $this->__('Remove');
+
+?>
+
+<ul class="messages">
+  <li class="notice-msg">
+    <ul>
+      <li>Choose Trade Me account, auction settings, category and press Submit to create a product listing on Trade me. Try our <a id="mventory-promo" target="_blank" href="https://play.google.com/store/apps/details?id=com.mageventory">barcode scanner</a> to scan and list a product on Trade Me with one click.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><?php echo $this->__('Product URL'); ?>: <a target="_blank" href="<?php echo $_productUrl; ?>"><?php echo $_productUrl; ?></a></p>
+
+<div class="entry-edit">
+  <fieldset>
+    <label class="trademe-option">
+      <?php echo $this->getAttributeLabel('tm_relist'); ?>:
+      <select class="select" name="product[tm_relist]">
+        <?php foreach ($this->getAttributeOptions('tm_relist') as $_option): ?>
+        <option value="<?php echo $_option['value']; ?>" <?php if ($_option['value'] == $_relist) echo 'selected="selected"'; ?>><?php echo $_option['label']; ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+
+    <label class="trademe-option">
+      <?php echo $this->getAttributeLabel('tm_avoid_withdrawal'); ?>:
+      <select class="select" name="product[tm_avoid_withdrawal]">
+        <?php foreach ($this->getAttributeOptions('tm_avoid_withdrawal') as $_option): ?>
+        <option value="<?php echo $_option['value']; ?>" <?php if ($_option['value'] == $_avoidWithdrawal) echo 'selected="selected"'; ?>><?php echo $_option['label']; ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+
+    <label class="trademe-option">
+      <?php echo $this->getAttributeLabel('tm_allow_buy_now'); ?>:
+      <select class="select" name="product[tm_allow_buy_now]">
+        <?php foreach ($this->getAttributeOptions('tm_allow_buy_now') as $_option): ?>
+        <option value="<?php echo $_option['value']; ?>" <?php if ($_option['value'] == $_allowBuyNow) echo 'selected="selected"'; ?>><?php echo $_option['label']; ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+
+    <label class="trademe-option">
+      <?php echo $this->getAttributeLabel('tm_add_fees'); ?>:
+      <select id="trademe-tab-add-fees" class="select" name="product[tm_add_fees]">
+        <?php foreach ($this->getAttributeOptions('tm_add_fees') as $_option): ?>
+        <option value="<?php echo $_option['value']; ?>" <?php if ($_option['value'] == $_addFees) echo 'selected="selected"'; ?>><?php echo $_option['label']; ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+  </fieldset>
+</div>
+
+<div class="entry-edit">
+  <fieldset>
+    <label class="trademe-option">
+      <?php echo $this->__('Account: '); ?>
+      <select id="tm_account" class="select" name="product[tm_account_id]">
+        <?php foreach ($_accounts as $acc): ?>
+        <option value="<?php echo $acc['value']; ?>" <?php if ($acc['selected']) echo 'selected="selected"'; ?>><?php echo $acc['label'] ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+
+    <label class="trademe-option">
+      <?php echo $this->getAttributeLabel('tm_shipping_type'); ?>:
+      <select id="trademe-tab-shipping-type" class="select" name="product[tm_shipping_type]">
+        <?php foreach ($this->getAttributeOptions('tm_shipping_type') as $_option): ?>
+        <option value="<?php echo $_option['value']; ?>" <?php if ($_option['value'] == $_shippingType) echo 'selected="selected"'; ?>><?php echo $_option['label']; ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+
+    <label class="trademe-option">
+      <?php echo $this->getAttributeLabel('tm_pickup'); ?>:
+      <select class="select" name="product[tm_pickup]">
+        <?php foreach ($this->getAttributeOptions('tm_pickup') as $_option): ?>
+        <option value="<?php echo $_option['value']; ?>" <?php if ($_option['value'] == $_pickup) echo 'selected="selected"'; ?>><?php echo $_option['label']; ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+  </fieldset>
+</div>
+
+<p>
+  Total price: $<span id="trademe-total-price"><?php echo number_format($_totalPrice, 2); ?></span>
+  <span id="trademe-price"<?php if (!($_shippingRate || $_fees)) echo ' style="display: none;"'; ?>>
+    ($<?php echo number_format($_price, 2); ?>
+
+    <span id="trademe-wrapper-shipping-rate"<?php if (!$_shippingRate) echo ' style="display: none;"'; ?>>
+      + $<span id="trademe-shippingrate"><?php echo number_format($_shippingRate, 2); ?></span> (shipping)
+    </span>
+
+    <span id="trademe-wrapper-fees"<?php if (!$_fees) echo ' style="display: none;"'; ?>>
+      + $<span id="trademe-fees"><?php echo number_format($_fees, 2); ?></span> (commission)
+    </span>)
+  </span>
+</p>
+
+<?php if ($_fixedEndAuctions): ?>
+<div id="trademe-fixed-end-auctions" class="grid">
+  <h6>$1 auctions:</h6>
+
+  <table id="trademe-fixed-end-auctions-table" class="data" cellspacing="0">
+    <colgroup>
+      <col/>
+      <col/>
+      <col/>
+      <col width='1' />
+    </colgroup>
+
+    <thead>
+      <tr class="headings">
+        <th><?php echo $__accountName; ?></th>
+        <th><?php echo $__listingId; ?></th>
+        <th><?php echo $__listed; ?></th>
+        <th class="last"><?php echo $__action; ?></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <?php foreach ($_fixedEndAuctions as $_fixedAuction): ?>
+      <tr>
+        <td><?php echo $_fixedAuction['account']; ?></td>
+        <td><a target="_blank" href="<?php echo $_fixedAuction['listing_url']; ?>"><?php echo $_fixedAuction['listing']; ?></a></td>
+        <td><?php echo $_fixedAuction['listed']; ?></td>
+        <td class="last"><a href="<?php echo $_fixedAuction['remove_url']; ?>"><?php echo $__remove; ?></a></td>
+      </tr>
+      <?php endforeach ?>
+    </tbody>
+  </table>
+</div>
+<?php endif; ?>
+
+<table cellspacing="0" class="actions">
+  <tbody>
+    <tr>
+      <td>
+        <?php if ($_auction['listing_id']): ?>
+          <?php echo $this->__('Listing URL'); ?>:
+          <?php $_listingUrl = $_auction->getUrl($this->_website); ?>
+        <a target="_blank" href="<?php echo $_listingUrl ?>">
+          <?php echo $_listingUrl ?>
+        </a>
+        (<?php echo $this->__('ID'); ?>: <?php echo $_auction['listing_id']; ?>  )
+        <?php endif; ?>
+      </td>
+      <td class="a-right">
+      <?php
+        if ($_auction['listing_id']) {
+          echo $this->getStatusButton();
+          echo $this->getRemoveButton();
+          echo $this->getUpdateButton();
+        } else
+          echo $this->getSubmitButton();
+      ?>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="grid">
+  <table id="trademe-selected-categories" class="data" cellspacing="0">
+    <colgroup>
+      <col width='1' />
+
+      <?php for ($n = 0; $n <= $_cols; ++$n): ?>
+      <col />
+      <?php endfor; ?>
+
+      <col width='1' />
+    </colgroup>
+
+    <tbody>
+      <tr id="trademe-message-no-selected" class="even">
+        <td class="empty-text a-center last" colspan="<?php echo $_cols + 3; ?>">
+          <?php
+
+          echo $this->__(
+            'Select a TradeMe category from the list below or create category matching rules on <a href="%s" title="Click and scroll down to Trade Me Categories section">attribute set page</a>.',
+            Mage::helper('adminhtml')->getUrl(
+              'adminhtml/catalog_product_set/edit',
+              array('id' => $_product->getAttributeSetId())
+            )
+          );
+
+          ?>
+        </td>
+      </tr>
+      <?php foreach ($_preselectedCategories as $id): ?>
+        <?php if (isset($_categories[$id])): ?>
+          <?php $_checked = $this->getCategory() == $id; ?>
+
+        <tr class="pointer">
+          <td class="checkbox">
+            <input type="radio" class="trademe-category-selector" name="trademe_category"  value="<?php echo $id; ?>" <?php echo $_checked ? 'checked="checked"' : '' ?> />
+          </td>
+
+          <?php for ($n = 0; $n <= $_cols; ++$n): ?>
+          <td>
+            <?php echo isset($_categories[$id]['name'][$n]) ? $_categories[$id]['name'][$n] : ''; ?>
+          </td>
+          <?php endfor; ?>
+
+          <td class="last">
+            <a href="<?php echo MVentory_TradeMe_Block_Tab::URL . $_categories[$id]['path']; ?>" target="_blank">
+              <?php echo $this->__('View'); ?>
+            </a>
+          </td>
+        </tr>
+
+          <?php $attrs = $this->getPreparedAttributes($id); ?>
+
+          <?php if ($attrs): ?>
+          <tr class="trademe-category-attributes">
+            <td><?php echo $this->__('Attributes'); ?>:</td>
+            <td colspan=<?php echo $_cols + 2; ?> class="last">
+
+            <?php if (count($attrs['existing'])): ?>
+              <?php foreach ($attrs['existing'] as $attr): ?>
+                <?php echo $attr['Name'] . ' (' . $attr['Type'] . '), '; ?>
+              <?php endforeach; ?>
+
+              <br />
+            <?php endif; ?>
+
+            <?php if (count($attrs['optional'])): ?>
+              <?php echo $this->__('Optional'); ?>:
+
+              <?php foreach ($attrs['optional'] as $attr): ?>
+                <?php echo $attr['Name'] . ' (' . $attr['Type'] . '), '; ?>
+              <?php endforeach; ?>
+
+              <br />
+            <?php endif; ?>
+
+            <?php if (count($attrs['missing'])): ?>
+              <?php echo $this->__('Missing'); ?>:
+
+              <?php foreach ($attrs['missing'] as $attr): ?>
+                <?php echo $attr['Name'] . ' (' . $attr['Type'] . '), '; ?>
+              <?php endforeach; ?>
+            <?php endif; ?>
+            </td>
+          </tr>
+          <?php endif; ?>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+</div>
+
+<?php echo $this->getCategoriesButton(); ?>
+
+<div id="trademe-categories-wrapper" class="grid"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+trademe_categories(<?php echo $this->getUrlTemplates() ?>);
+
+decorateTable('trademe-fixed-end-auctions');
+
+jQuery(document).ready(function ($) {
+  var data = <?php echo Zend_Json::encode($this->prepareDataForJs()) ?>;
+  var limit = <?php echo MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH; ?>;
+
+  var $options = $('#product_info_tabs_trademe_content')
+                   .find('.trademe-option')
+                   .children()
+                   .filter(':input');
+
+  $('#product_edit_form').on('submit', function () {
+    var name = $(this).find('input[name="product[name]"]').val();
+
+    if (name.length <= limit)
+      return;
+
+    name = name.substring(0, limit - 3) + '...';
+
+    var msg = 'Product\'s name exceeded the limit of '
+              + limit
+              + ' symbols.\n'
+              + 'Please reduce its length or press OK to use '
+              + 'following truncated name "'
+              + name
+              + '"'
+
+    return confirm(msg);
+  });
+
+  $('#tm_account').on('change', function () {
+    var account = data['accounts'][$(this).val()];
+
+    for (var key in account) {
+      var $option = $options.filter('[name*="tm_' + key + '"]')
+
+      //Ignore account options without corresponding fields on the page
+      if ($option.length)
+        $option.val(-1);
+    }
+
+    trademe_update_total_price(data['product'], account);
+  });
+
+  $('#trademe-tab-add-fees, #trademe-tab-shipping-type').on(
+    'change',
+    function () {
+      trademe_update_total_price(
+        data['product'],
+        data['accounts'][$('#tm_account').val()]
+      );
+    }
+  )
+});
+
+//]]>
+</script>

@@ -1,0 +1,160 @@
+<?php
+
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to a Commercial Software License.
+ * No sharing - This file cannot be shared, published or
+ * distributed outside of the licensed organisation.
+ * No Derivatives - You can make changes to this file for your own use,
+ * but you cannot share or redistribute the changes.
+ * This Copyright Notice must be retained in its entirety.
+ * The full text of the license was supplied to your organisation as
+ * part of the licensing agreement with mVentory.
+ *
+ * @package MVentory/TradeMe
+ * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @license Commercial
+ */
+
+?>
+
+<div class="entry-edit-head collapseable">
+  <strong>CSV configuration file fields description</strong>
+</div>
+
+<div class="box">
+  <table class="trademe-setting-help-table">
+    <tr>
+      <td colspan="2">
+        This section explains settings used in the CSV configuration file. See Settings section above for more info.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Account
+      </td>
+      <td>
+        Account Name (as specified above.)
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Shipping type
+      </td>
+      <td>
+        Values from the shipping type attribute (mv_shipping_ by default). Each shipping type value can be configured separately in separate rows or an asterix can be used as a wildcat to configure all shipping types that do not have their own configurations.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Maximum weight
+      </td>
+      <td>
+        This column is a match if the weight of the product is less or equals the value in this column. Arrange values in ascending order.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Minimal price
+      </td>
+      <td>
+        Products with cost below minimal price will not be considered for automatic submission to Trade Me.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Free shipping cost
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>
+        Allow Buy Now
+      </td>
+      <td>
+        Buy Now option will be added to each auction. Buy Now price will be the same as the starting price.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Avoid withdrawal
+      </td>
+      <td>
+        Instead of withdrawing an auction, the price will be increased by XXX and the auction will be left to expire.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Add fees
+      </td>
+      <td>
+        Trade Me fees will be added to product cost to calculate the starting price.
+        <br />
+        The field has 3 options:
+        <ul>
+          <li><code>0</code> or empty - No comission</li>
+          <li><code>1</code> or <code>always</code> - Always add commission</li>
+          <li><code>2</code> or <code>special</code> - Only if the product has a current special price</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Allow pickup
+      </td>
+      <td>
+        'Pick-ups are allowed' will be set in auction shipping details.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Add category image
+      </td>
+      <td>
+        An category image to appear in category listing will be added to the auction.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Buyer ID
+      </td>
+      <td>
+        Magento customer ID to be used to create a transaction when a product is sold through Trade Me.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Listing duration
+      </td>
+      <td>
+        Duration of a product listing in days.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Shipping options
+      </td>
+      <td>
+        Dollar amount followed by a comma and a description. Shipping cost and description that corresponds to this shipping type - will be displayed under shipping options in the auction.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Footer description
+      </td>
+      <td>
+        Any text that should be attached to the auction description as a footer.
+        <br />
+        The following special tags can be used:
+        <ul>
+          <li><code>{{url}}</code> - product URL</li>
+          <li><code>{{fd}}</code> - product description</li>
+          <li><code>{{sd}}</code> - product short description</li>
+          <li><code style="text-decoration: line-through">{{fs}}</code> - free shipping text (not used currently)</li>
+          <li><code>{{attrs}}</code> - product attributes (only visible on frontend)</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,62 @@
+<!--
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to a Commercial Software License.
+ * No sharing - This file cannot be shared, published or
+ * distributed outside of the licensed organisation.
+ * No Derivatives - You can make changes to this file for your own use,
+ * but you cannot share or redistribute the changes.
+ * This Copyright Notice must be retained in its entirety.
+ * The full text of the license was supplied to your organisation as
+ * part of the licensing agreement with mVentory.
+ *
+ * @package MVentory/TradeMe
+ * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @license Commercial
+ */
+-->
+
+<config>
+  <api>
+    <resources>
+      <trademe_product>
+        <model>trademe/product_api</model>
+        <acl>trademe/product</acl>
+
+        <methods>
+          <submit translate="title" module="trademe">
+            <title>Submit product to TradeMe</title>
+            <acl>trademe/product/submit</acl>
+          </submit>
+        </methods>
+
+        <faults module="trademe">
+          <unable_to_match_category>
+            <code>201</code>
+            <message>Unable to match TradeMe category</message>
+          </unable_to_match_category>
+        </faults>
+      </trademe_product>
+    </resources>
+
+    <acl>
+      <resources>
+        <trademe translate="title" module="trademe">
+          <title>TradeMe</title>
+          <sort_order>-1</sort_order>
+
+          <product translate="title" module="trademe">
+            <title>Product</title>
+            <sort_order>1</sort_order>
+
+            <submit translate="title" module="trademe">
+              <title>Submit product to TradeMe</title>
+              <sort_order>1</sort_order>
+            </submit>
+          </product>
+        </trademe>
+      </resources>
+    </acl>
+  </api>
+</config>

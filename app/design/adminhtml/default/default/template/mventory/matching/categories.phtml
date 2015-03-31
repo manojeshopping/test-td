@@ -1,0 +1,115 @@
+<?php
+
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License BY-NC-ND.
+ * NonCommercial — You may not use the material for commercial purposes.
+ * NoDerivatives — If you remix, transform, or build upon the material,
+ * you may not distribute the modified material.
+ * See the full license at http://creativecommons.org/licenses/by-nc-nd/4.0/
+ *
+ * See http://mventory.com/legal/licensing/ for other licensing options.
+ *
+ * @package MVentory/API
+ * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @license http://creativecommons.org/licenses/by-nc-nd/4.0/
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
+ */
+
+?>
+
+<div id="categories" class="tree box"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+Ext.EventManager.onDocumentReady (function () {
+  function buildCategoryTree (parent, config) {
+    for (var i = 0; i < config.length; i++) {
+
+      //Add checkbox to node
+      config[i].uiProvider = Ext.tree.CheckboxNodeUI;
+
+      var node = new Ext.tree.TreeNode(config[i]);
+
+      parent.appendChild(node);
+
+      if (config[i].children)
+        buildCategoryTree(node, config[i].children);
+    }
+  }
+
+  var root = new Ext.tree.TreeNode({
+    text: '<?php echo $this->jsQuoteEscape($this->getRoot()->getName()); ?>',
+    id: '<?php echo $this->getRoot()->getId(); ?>',
+    expanded: true
+  });
+
+  var tree = new Ext.tree.TreePanel('categories', {
+    animate: false,
+    enableDD: false,
+    rootVisible: false
+  });
+
+  tree.setRootNode(root);
+
+  tree.addListener({
+    'click': onClick,
+    'check': onCheck
+  });
+
+  buildCategoryTree(root, <?php echo $this->getTreeJson() ?>);
+
+  tree.render();
+
+  function getNames (ids) {
+    var names = [],
+        nodes = tree.nodeHash;
+
+    for (var i = 0, id; id = ids[i++];)
+      names.push(nodes[id].text);
+
+    return names;
+  };
+
+  /**
+   * Uncheck all categories.
+   */
+  function reset () {
+    var id,
+        checkbox,
+        nodes = tree.nodeHash;
+
+    for (id in nodes)
+      if (nodes.hasOwnProperty(id)) {
+        checkbox = nodes[id].getUI();
+
+        if (checkbox.rendered)
+          checkbox.check(false, false, true);
+      }
+  }
+
+  function onClick (node, e) {
+    var checkbox;
+
+    checkbox = node.getUI(),
+    checkbox.check(!checkbox.checked(), false);
+  }
+
+  function onCheck (node, e) {
+    if (!(typeof window.mventory_select_category == 'function'
+          && typeof window.mventory_unselect_category == 'function'))
+      return;
+
+    node.getUI().checked()
+      ? mventory_select_category(node.id)
+      : mventory_unselect_category(node.id);
+  }
+
+  window.mventory_categories_reset = reset;
+  window.mventory_categories_get_names = getNames;
+});
+
+//]]>
+</script>

@@ -1,0 +1,151 @@
+.item .brand-logo-img{-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;height:30px;left:8px;position:absolute;top:133px;width:100px;}
+.brand-logo-img .manufacturer-img-box img{border-radius:4px;height:24px;width:80px;}
+#search_autocomplete .price-excluding-tax{display:none;}
+#search_autocomplete .price-including-tax .label{display:none;}
+.showroom-info{font-family:Nunito, sans-serif;font-size:1em;text-transform:uppercase;color:white;position:absolute;top:128px;z-index:1;right:0px;}
+.showroom-info a{color:#ffb400;}
+.showroom-info a:hover{color:#ffc333;}
+.showroom-info span{color:#ffb400;}
+#sns_slideshow{margin-top:14.6em;}
+#sns_menu.keep_sticky {
+    background-color: rgba(0, 0, 0, 0.8);
+    bottom: auto !important;
+    position: fixed !important;
+    top: 0 !important;
+    width: 100%;
+    z-index: 20;
+}
+.searchindex-results li{
+	list-style:outside none none !important;
+}
+
+.item-price .price-box .old-price{
+	font-size: 1.8em;
+	padding:0 4px 0 40px !important;
+}
+
+.sns-product-detail .price-box .old-price .price-label{
+	color: white;
+	float: left;
+    display: block;
+    font-family: Nunito,sans-serif;
+    font-size: 0.8em;
+	padding-right: 5px;
+}
+.sns-product-detail .price-box .old-price {
+	float: right;
+	background-clip: padding-box;
+    background-color: #ec1c24;
+    border-radius: 4px;
+    color: white;
+    font-family: Nunito,sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    margin-top: 2px;
+	
+}
+.sns-product-detail .product-shop .price-including-tax{
+	float: left;
+    margin-right: 60px;	
+}
+
+.sns-product-detail .price-box .special-price {
+	float:left;	
+}
+.sns-product-detail .product-shop .price-box .special-price .price-including-tax .price{
+	font-size:2em !important;	
+}
+.sns-product-detail .product-shop .price-box .special-price .price-excluding-tax .price{
+	font-size:13px !important;
+}
+
+.sns-product-detail .product-shop .price-box .price-to span.price-excluding-tax{
+	display:none;
+}
+
+.sns-product-detail .product-shop .price-box .price-from span.price-excluding-tax{
+	display:none;
+}
+
+.sns-product-detail .product-shop .price-box span.price-excluding-tax{
+	float: right;
+    padding-top: 4px;
+    position: unset;
+}
+.sns-product-detail .product-shop .product-model-box .product-model{
+	float:left;
+}
+.sns-product-detail .product-shop .product-model-box .brand-logo-img{
+	float:right;
+}
+.product-shop .price-box span.price-excluding-tax .price{
+	font-size:13px !important;
+}
+.sns-product-detail .product-shop .price-box .old-price .price{
+	color:white !important;
+}
+.my-wishlist .buttons-set .btn-update{
+		float:left;
+}
+.my-wishlist .buttons-set .btn-add{
+		float:left;
+}
+.my-wishlist .buttons-set{
+	clear:both;
+}
+.my-wishlist .button-intro{
+	float:right;
+	margin-top: 5px;
+    padding: 5px 5px 0;
+}
+
+#sns_mommenu .first a.menu-title-lv0{
+	background-color: transparent !important;
+    box-shadow: 0px 0px #0372a5;
+    color: #b9b9b9 !important;
+}
+
+.product_shop .price-box-bundle .price-box .price-from .price-label{
+	float:left;
+	margin-right:2px;
+}
+.product_shop .price-box-bundle .price-box .price-to .price-label{
+	float:left; 
+	margin-right:2px;
+}
+
+.products-grid .item .item-inner .item-price .price-box .price-to{
+	display:none;
+}
+.products-grid .item .item-inner .item-price .price-box .price-from .price{
+	font-family:nunito;
+	font-size:1.3em;
+	font-weight:bold;
+}
+.products-grid .item .item-inner .item-price .price-box .price-from{
+	position: absolute;
+    right: 0;
+    top: -28px;
+}
+#sns-advertise{
+	margin-top:20px;
+}
+.sns-product-detail .product-essential .product-img-box .sns_product_img .more-views .gallery_img .item-img a{background:none repeat scroll 0 0 white;}
+
+.sns-product-detail .product-shop .gp-including-tax{
+	float:none;
+	margin-right:0px;
+}
+
+.sns-product-detail .product-shop .price-box span.gp-excluding-tax{
+	position:unset;
+	padding-top:0px;
+}
+
+.product-shop .price-box span.gp-excluding-tax .label{
+	padding:1px;
+}
+
+.sns-product-detail .product-shop .price-box-bundle .price-box .price-from{
+	width:100%;
+}

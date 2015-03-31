@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+
+<!--
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License BY-NC-ND.
+ * By Attribution (BY) - You can share this file unchanged, including
+ * this copyright statement.
+ * Non-Commercial (NC) - You can use this file for non-commercial activities.
+ * A commercial license can be purchased separately from mventory.com.
+ * No Derivatives (ND) - You can make changes to this file for your own use,
+ * but you cannot share or redistribute the changes.  
+ *
+ * See the full license at http://creativecommons.org/licenses/by-nc-nd/4.0/
+ *
+ * @package MVentory/API
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
+ * @license http://creativecommons.org/licenses/by-nc-nd/4.0/
+ */
+-->
+
+<config>
+  <modules>
+    <MVentory_API>
+      <version>29</version>
+    </MVentory_API>
+  </modules>
+
+  <global>
+    <blocks>
+      <mventory>
+        <class>MVentory_API_Block</class>
+      </mventory>
+    </blocks>
+
+    <models>
+      <mventory>
+        <class>MVentory_API_Model</class>
+        <resourceModel>mventory_resources</resourceModel>
+      </mventory>
+
+      <mventory_resources>
+        <class>MVentory_API_Model_Resource</class>
+
+        <entities>
+          <order_transaction>
+            <table>mventory_order_transaction</table>
+          </order_transaction>
+          <cart_item>
+            <table>mventory_cart_item</table>
+          </cart_item>
+
+          <carrier_volumerate>
+            <table>mventory_carrier_volumerate</table>
+          </carrier_volumerate>
+
+          <matching_rules>
+            <table>mventory_matching_rules</table>
+          </matching_rules>
+
+          <additional_skus>
+            <table>mventory_additional_skus</table>
+          </additional_skus>
+        </entities>
+      </mventory_resources>
+    </models>
+
+    <helpers>
+      <mventory>
+        <class>MVentory_API_Helper</class>
+      </mventory>
+
+      <sales>
+        <rewrite>
+          <data>MVentory_API_Helper_Mage_Sales_Data</data>
+        </rewrite>
+      </sales>
+    </helpers>
+
+    <resources>
+      <mventory_setup>
+        <setup>
+          <module>MVentory_API</module>
+          <class>MVentory_API_Model_Resource_Setup</class>
+        </setup>
+      </mventory_setup>
+    </resources>
+
+    <events>
+      <catalog_model_product_duplicate>
+        <observers>
+          <mventory_unset_duplicate_flag_in_product>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>unsetDuplicateFlagInProduct</method>
+          </mventory_unset_duplicate_flag_in_product>
+
+          <mventory_update_duplicate>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>updateDuplicate</method>
+          </mventory_update_duplicate>
+        </observers>
+      </catalog_model_product_duplicate>
+
+      <!-- Requires M. >= 1.7 -->
+      <catalog_product_media_save_before>
+        <observers>
+          <mventory_restore_duplicate_flag_in_product>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>restoreDuplicateFlagInProduct</method>
+          </mventory_restore_duplicate_flag_in_product>
+        </observers>
+      </catalog_product_media_save_before>
+
+      <catalog_controller_product_init>
+        <observers>
+          <mventory_product_init>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>productInit</method>
+          </mventory_product_init>
+        </observers>
+      </catalog_controller_product_init>
+
+      <!-- Temporarily disabled until we will find a proper solution -->
+      <!--
+      <cataloginventory_stock_item_save_after>
+        <observers>
+          <mventory_update_prices_in_configurable_on_stock_change>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>updatePricesInConfigurableOnStockChange</method>
+          </mventory_update_prices_in_configurable_on_stock_change>
+        </observers>
+      </cataloginventory_stock_item_save_after>
+      -->
+
+      <adminhtml_catalog_product_grid_prepare_massaction>
+        <observers>
+          <mventory_add_product_name_rebuild_massaction>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>addProductNameRebuildMassaction</method>
+          </mventory_add_product_name_rebuild_massaction>
+
+          <mventory_add_product_category_match_massaction>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>addProductCategoryMatchMassaction</method>
+          </mventory_add_product_category_match_massaction>
+        </observers>
+      </adminhtml_catalog_product_grid_prepare_massaction>
+    </events>
+
+    <rewrite>
+      <mventory_qr_scan>
+        <from><![CDATA[#^/sku/#]]></from>
+        <to><![CDATA[/mventory/qr/scan/sku/]]></to>
+      </mventory_qr_scan>
+      <mventory_app_config>
+        <from><![CDATA[#^/mventory-key/(.*)\.txt$#]]></from>
+        <to><![CDATA[/mventory/app/profile/key/$1/]]></to>
+      </mventory_app_config>
+      <mventory_app_config_redirect>
+        <from><![CDATA[#^/mventory-key/(.*)$#]]></from>
+        <to><![CDATA[/mventory/app/redirect/key/$1/]]></to>
+      </mventory_app_config_redirect>
+
+      <!-- Support for old app -->
+      <!-- !!!TODO: remove it after all apps will be upgraded -->
+      <mventory_image_redirect>
+        <from><![CDATA[#^/mventory_tm/image/get/file/(.*)$#]]></from>
+        <to><![CDATA[/mventory/image/get/file/$1]]></to>
+      </mventory_image_redirect>
+    </rewrite>
+
+    <cache>
+      <types>
+        <mventory module="mventory" translate="label,description">
+          <label>mVentory Cache</label>
+          <description>Cache for various mVentory parts</description>
+          <tags>MVENTORY</tags>
+        </mventory>
+      </types>
+    </cache>
+
+    <psr0_namespaces>
+      <Dropbox />
+    </psr0_namespaces>
+  </global>
+
+  <admin>
+    <routers>
+      <mventory_adminhtml>
+        <use>admin</use>
+        <args>
+          <module>MVentory_API</module>
+          <frontName>mventory</frontName>
+        </args>
+      </mventory_adminhtml>
+    </routers>
+  </admin>
+
+  <frontend>
+    <routers>
+      <mventory>
+        <use>standard</use>
+        <args>
+          <module>MVentory_API</module>
+          <frontName>mventory</frontName>
+        </args>
+      </mventory>
+    </routers>
+
+    <layout>
+      <updates>
+        <mventory>
+          <file>mventory.xml</file>
+        </mventory>
+      </updates>
+    </layout>
+  </frontend>
+
+  <adminhtml>
+    <acl>
+      <resources>
+        <admin>
+          <children>
+            <system>
+              <children>
+                <config>
+                  <children>
+                    <mventory>
+                      <title>mVentory API</title>
+                    </mventory>
+                  </children>
+                </config>
+              </children>
+            </system>
+          </children>
+        </admin>
+      </resources>
+    </acl>
+
+    <events>
+      <core_block_abstract_prepare_layout_before>
+        <observers>
+          <mventory_add_create_api_user_button>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>addCreateApiUserButton</method>
+          </mventory_add_create_api_user_button>
+        </observers>
+      </core_block_abstract_prepare_layout_before>
+
+      <controller_action_layout_render_before_adminhtml_catalog_product_set_edit>
+        <observers>
+          <mventory_add_mathing_rules_block>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>addMatchingRulesBlock</method>
+          </mventory_add_mathing_rules_block>
+        </observers>
+      </controller_action_layout_render_before_adminhtml_catalog_product_set_edit>
+
+      <api_user_save_after>
+        <observers>
+          <mventory_generate_link_for_profile>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>generateLinkForProfile</method>
+          </mventory_generate_link_for_profile>
+        </observers>
+      </api_user_save_after>
+
+      <catalog_entity_attribute_save_before>
+        <observers>
+          <mventory_attr_save_metadata>
+            <type>singleton</type>
+            <class>mventory/observer</class>
+            <method>saveAttrMetadata</method>
+          </mventory_attr_save_metadata>
+        </observers>
+      </catalog_entity_attribute_save_before>
+    </events>
+
+    <layout>
+      <updates>
+        <mventory>
+          <file>mventory.xml</file>
+        </mventory>
+      </updates>
+    </layout>
+  </adminhtml>
+
+  <default>
+    <mventory>
+      <qr>
+        <rows>10</rows>
+        <columns>15</columns>
+        <size>180</size>
+        <pages>3</pages>
+        <copies>1</copies>
+      </qr>
+
+      <api>
+        <products-number-to-fetch>50</products-number-to-fetch>
+        <add_to_websites>1</add_to_websites>
+        <tax_class>0</tax_class>
+        <cart-item-lifetime>1440</cart-item-lifetime>
+        <app_profile_link_lifetime>1440</app_profile_link_lifetime>
+        <default_role>mVentory</default_role>
+        <apply_rules>0</apply_rules>
+        <product_visiblity>1</product_visiblity>
+      </api>
+
+      <image_clips>
+        <enable>0</enable>
+        <backup_folder>backup</backup_folder>
+        <exclude_new>1</exclude_new>
+        <auto_replace>1</auto_replace>
+        <log_file>var/log/imglog.csv</log_file>
+        <dropbox_path>/</dropbox_path>
+        <ideal_width>900</ideal_width>
+        <ideal_height>900</ideal_height>
+      </image_clips>
+
+      <metadata>
+        <!-- Empty string = Visible in all -->
+        <invisible_for_websites><![CDATA[]]></invisible_for_websites>
+
+        <!-- Empty string = No hint -->
+        <hint><![CDATA[]]></hint>
+
+        <!-- 0 = No -->
+        <readonly>0</readonly>
+
+        <!-- 0 = No -->
+        <use_for_search>0</use_for_search>
+
+        <!-- 0 = Normal keyboard -->
+        <input_method>0</input_method>
+
+        <!--
+          0 = Normal keyboard
+          2 = Scanner
+          4 = Copy from internet search
+          5 = Copy from another product
+        -->
+        <alt_input_method>0,2,4,5</alt_input_method>
+
+        <!-- 0 = Text -->
+        <content_type>0</content_type>
+
+        <!-- 1 = Yes -->
+        <add_new_values>1</add_new_values>
+      </metadata>
+    </mventory>
+
+    <carriers>
+      <mventory>
+        <active>1</active>
+        <sallowspecific>0</sallowspecific>
+        <cutoff_cost>0</cutoff_cost>
+        <model>mventory/shipping</model>
+        <name>mVentory</name>
+        <title>mVentory Shipping</title>
+        <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>
+      </mventory>
+
+      <volumerate>
+        <active>0</active>
+        <sallowspecific>0</sallowspecific>
+        <model>mventory/carrier_volumerate</model>
+        <name>Shipping Rate</name>
+        <title>Volume/Weight Based Rate</title>
+        <specificerrmsg>This shipping method is currently unavailable. If you would like to ship using this shipping method, please contact us.</specificerrmsg>
+      </volumerate>
+    </carriers>
+
+    <payment>
+      <mventory>
+        <active>1</active>
+        <model>mventory/payment</model>
+        <order_status>pending</order_status>
+        <title>mVentory</title>
+        <allowspecific>0</allowspecific>
+        <group>offline</group>
+      </mventory>
+    </payment>
+  </default>
+
+  <mventory>
+    <metadata>
+      <fields>
+        <invisible_for_websites>
+          <type>multiselect</type>
+          <label>Make invisible for</label>
+          <note>Select all websites this attribute should NOT appear in</note>
+          <tooltip>All non-system attributes appear in the app by default. You can hide some of them from the app. It won't affect their use in Magento or the front-end.</tooltip>
+          <source_model>mventory/system_config_source_website</source_model>
+        </invisible_for_websites>
+
+        <hint>
+          <type>text</type>
+          <label>Hint</label>
+          <note>Text to appear under the input field in the app.</note>
+          <tooltip>Use hints to help users understand the meaning of the attribute, how to use it and how to format data for clarity and consistency.</tooltip>
+        </hint>
+
+        <readonly>
+          <type>select</type>
+          <label>Read-only</label>
+          <note>Yes = disable editing in the app</note>
+          <tooltip>Set to Yes if the user should see, but not edit this attribute. It will be still displayed on product details and editing screens.</tooltip>
+          <source_model>adminhtml/system_config_source_yesno</source_model>
+        </readonly>
+
+        <use_for_search>
+          <type>select</type>
+          <label>Use for search</label>
+          <note>Include the value into search string</note>
+          <tooltip>The value of this attribute will be included in the search string when users search for product info, videos and images online. E.g. you may want to include the name of the brand or product number.</tooltip>
+          <source_model>adminhtml/system_config_source_yesno</source_model>
+        </use_for_search>
+
+        <input_method>
+          <type>select</type>
+          <label>Default input method</label>
+          <note>E.g. pressing on the field activates this input method</note>
+          <tooltip>The type of input displayed when the user taps on the input field.</tooltip>
+          <source_model>mventory/system_config_source_inputmethod</source_model>
+          <depends>text,textarea,weight</depends>
+        </input_method>
+
+        <alt_input_method>
+          <type>multiselect</type>
+          <label>Alternative input methods</label>
+          <note>Select one or more</note>
+          <tooltip>The type of input displayed when the user taps and holds on the input field. It can be the same as on-tap or different. A menu is displayed if there is more than one.</tooltip>
+          <source_model>mventory/system_config_source_inputmethod</source_model>
+          <depends>text,textarea,weight</depends>
+        </alt_input_method>
+
+        <content_type>
+          <type>select</type>
+          <label>Content type</label>
+          <note>For content-specific features in the app</note>
+          <tooltip>
+            <![CDATA[
+              Some content types have special handling in the app.
+              <ul>
+                <li>YouTube video ID - the app saves YouTube video IDs from internet search. Modify your theme to display it as a video.</li>
+                <li>Web address - the app saves a web address of a page. Modify your theme to display it as a link.</li>
+                <li>ISBN10, ISBN13 - the app will search Google Books for this if a valid ISBN was entered or scanned by the user.</li>
+                <li>Secondary barcode block - this field is populated with the value of a secondary barcode block from the SKU/manufacturer code field.</li>
+                <li>ISSN - this field is populated with a periodical's ISSN.</li>
+              </ul>
+            ]]>
+          </tooltip>
+          <source_model>mventory/system_config_source_contenttype</source_model>
+          <depends>text,textarea,weight</depends>
+        </content_type>
+
+        <add_new_values>
+          <type>select</type>
+          <label>Allow adding new values</label>
+          <note>A user can add new values via the app</note>
+          <tooltip>Users can add new values via the app. While it is convenient, it may lead to inconsistency.</tooltip>
+          <source_model>adminhtml/system_config_source_yesno</source_model>
+          <depends>select,multiselect</depends>
+        </add_new_values>
+      </fields>
+    </metadata>
+  </mventory>
+</config>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Redis Management Module
+ * 
+ * @category   Steverobbins
+ * @package    Steverobbins_Redismanager
+ * @author     Steve Robbins <steven.j.robbins@gmail.com>
+ * @copyright  Copyright (c) 2014 Steve Robbins (https://github.com/steverobbins)
+ * @license    http://creativecommons.org/licenses/by/3.0/deed.en_US Creative Commons Attribution 3.0 Unported License
+ */
+-->
+<config>
+    <menu>
+        <system>
+            <children>
+                <redismanager translate="title">
+                    <title>Redis Management</title>
+                    <sort_order>95</sort_order>
+                    <action>adminhtml/redismanager</action>
+                </redismanager>
+            </children>
+        </system>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <redismanager translate="title" module="redismanager">
+                                <title>Redis Management</title>
+                            </redismanager>
+                            <config>
+                                <children>
+                                    <redismanager translate="title" module="redismanager">
+                                        <title>Redis Management</title>
+                                    </redismanager>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

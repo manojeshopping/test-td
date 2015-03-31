@@ -5,20 +5,25 @@
 /sitemap.xml
 /feed/**
 
-#Ignore result fo compilation
+#Ignore result of compilation
 /includes/src
 
-#Ignore some media directories will generated content
-/media/brand
+#Ignore some media directories with generated content
+/media/Manufacturer
+/media/cache
 /media/captcha
 /media/catalog
-/media/colorswatch
 /media/css
 /media/css_secure
+/media/customer
 /media/downloadable
+/media/downloads
+/media/email/
 /media/favicon/
 /media/import
 /media/js
+/media/misc
+/media/sales
 /media/tmp
 /media/upload
 /media/wysiwyg
@@ -27,7 +32,7 @@
 /downloader/cache.cfg
 /downloader/.cache/**
 
-#Ignore content of /var directory except package/ directory
+#Ignore content of /var directory except package/ sub-directory
 /var/**
 !/var/package
 /var/package/tmp/
@@ -57,14 +62,3 @@ Thumbs.db
 *.bak
 *.swp
 *~.nib
-
-# From old TD repo
-/errors/
-/install.php
-/lib/Zend/
-/lib/Varien/
-/LICENSE*
-/php.ini.sample
-/pkginfo/
-/RELEASE_NOTES.txt
-*.lock
