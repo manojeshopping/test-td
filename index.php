@@ -75,7 +75,7 @@ if (isset($_SERVER['MAGE_IS_DEVELOPER_MODE'])) {
 }
 
 #ini_set('display_errors', 1);
-
+#
 umask(0);
 
 /* Store or website code */
