@@ -1124,6 +1124,7 @@ margin-top: -8px !important;
   /*background-color: transparent !important;*/
 
   color: #0372a5 !important;
+  font-size: .9em !important;
 }
 #sns_custommenu ul.mainnav li.level0 .wrap_dropdown a span {
   color: #0372a5 !important;
@@ -1145,6 +1146,7 @@ margin-top: -8px !important;
 
   margin-right: 0px;
   padding-left: 18px !important;
+  font-size: 1em !important;
   color: #0495d7 !important;
 }
 #sns_custommenu ul.mainnav li.level0 .wrap_submenu ul.level0 > li a:hover {
