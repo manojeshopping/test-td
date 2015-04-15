@@ -114,10 +114,15 @@
 	margin-right:2px;
 }
 
-.products-grid .item .item-inner .item-price .price-box .price-to{
-	display:none;
+.products-grid .item .item-inner .item-price .price-box .price-to .price-label{
+	 display:none; 
 }
 .products-grid .item .item-inner .item-price .price-box .price-from .price{
+	font-family:nunito;
+	font-size:1.3em;
+	font-weight:bold;
+}
+.products-grid .item .item-inner .item-price .price-box .price-to .price{
 	font-family:nunito;
 	font-size:1.3em;
 	font-weight:bold;
@@ -125,7 +130,12 @@
 .products-grid .item .item-inner .item-price .price-box .price-from{
 	position: absolute;
     right: 0;
-    top: -28px;
+    top: -25px;
+}
+.products-grid .item .item-inner .item-price .price-box .price-to{
+	position: absolute;
+    right: 0;
+    top: -15px;
 }
 #sns-advertise{
 	margin-top:20px;
@@ -149,3 +159,4 @@
 .sns-product-detail .product-shop .price-box-bundle .price-box .price-from{
 	width:100%;
 }
+.products-grid .item .item-inner .item-price .price-box .price-from{display:none}
