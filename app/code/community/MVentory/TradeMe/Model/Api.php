@@ -90,32 +90,35 @@ EOT;
     //Remove all CR and LF symbols
     '#\R+#s' => '',
 
-    //Remove any whitespace symbols surrounding tags
-    '#\s*(<[^<>]+>)\s*#is' => '\1',
-
-    //Replace single tab symbol, &nbsp; and whitespace symbols with space symbol
-    '#\t|&nbsp;|\s{2,}#s' => ' ',
-
-    //Remove <table> tag and its content completely
-    '#<table[^<>]*>.*</table>#is' => '',
-
-    //Replace empty tags with new lines
-    '#<([a-z1-9]+)[^<>]*>\s*</\g{1}>#is' => "\r\n",
+    //Replace single tab symbol, &nbsp;, </td> and whitespace symbols with space
+    //symbol
+    '#\t|&nbsp;|</td>|\h{2,}#is' => ' ',
 
     //Replace <li> tag with '* ' string
     '#<li[^<>]*>#i' => '* ',
 
-    //Replace opening and ending <div>, <p>, <hx> tags with 2 empty lines
+    //Replace all whitespans other than single space with single space
+    //Either one [\t\r\n\f\v] and zero or more ws,
+    //or two or more consecutive-any-whitespace.
+    '#(?>[^\S ]\s*|\s{2,})#ix' => ' ',
+
+    //Replace empty tags with newline symbol
+    '#<([a-z1-9]+)[^<>]*>\s*</\g{1}>#is' => "\r\n",
+
+    //Replace opening and ending <div>, <p>, <hx> tags with empty line
     '#</?(div|p|h[1-6])[^<>]*>#i' => "\r\n\r\n",
 
-    //Replace <br>, </br>, </li> tags with newline symbol
-    '#</?br[^<>]*>|</li>#i' => "\r\n",
+    //Replace <br>, <br />, </br>, </li>, </tr> tags with newline symbol
+    '#</?br[^<>]*>|</li>|</tr>#i' => "\r\n",
 
     //Remove remained tags
     '#<[^<>]+>#s' => '',
 
     //Replace multiple empty lines with single line
     '#\R{2,}#s' => "\r\n\r\n",
+
+    //Remove any horizontal space adjacent to newline symbols
+    '#\h*(\R+)\h*#' => '$1',
 
     //Remove all CR and LF symbols from start and end
     '#|^\R+|\R+$#s' => '',
@@ -451,17 +454,20 @@ EOT;
 
             $return = $response;
           } elseif ((string)$xml->ErrorDescription)
-            $return = (string)$xml->ErrorDescription;
+            $return = $this->_parseErrors((string)$xml->ErrorDescription);
           elseif ($response) {
-            $return = $response;
+            $return = $this->_parseErrors($response);
 
-            $hasPayNowError = false !== strrpos(
-              ($response = strtolower(trim($response))),
-              self::PAYNOW_ERR_MSG,
-              -strlen($response)
-            );
+            foreach ($return as $error) {
+              $hasPayNowError = false !== strrpos(
+                strtolower($error),
+                self::PAYNOW_ERR_MSG,
+                -strlen($error)
+              );
 
-            if ($hasPayNowError) {
+              if (!$hasPayNowError)
+                continue;
+
               $paymentMethods = array_diff(
                 $paymentMethods,
                 array(MVentory_TradeMe_Model_Config::PAYMENT_CC)
@@ -480,6 +486,9 @@ EOT;
               }
 
               $tries++;
+
+              //We found pay now error, so we don't need to check for others
+              break;
             }
           }
         }
@@ -1371,5 +1380,22 @@ EOT;
       return $this->_attrTypes[$id];
 
     return 'Unknown';
+  }
+
+  /**
+   * Parse and prepare errors from TradeMe API response
+   *
+   * @param string $errors
+   *   Raw string of errors from TradeMe API response
+   *
+   * @return array
+   *   Parse and prepare list of errors
+   */
+  protected function _parseErrors ($errors) {
+    $errors = explode("\r\n", $errors);
+
+    array_walk($errors, 'trim');
+
+    return array_filter($errors);
   }
 }

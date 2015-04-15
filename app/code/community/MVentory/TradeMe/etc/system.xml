@@ -428,6 +428,74 @@
           </fields>
         </one_dollar>
 
+        <watermark translate="label">
+          <label>Watermark</label>
+          <frontend_model>trademe/setting_fieldset</frontend_model>
+
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>0</show_in_store>
+
+          <sort_order>3</sort_order>
+
+          <fields>
+            <image translate="label comment tooltip">
+              <label>Image</label>
+              <comment>Allowed file types: jpeg, gif, png.</comment>
+              <tooltip>GIF and PNG alpha channels are only considered if Watermark Position is selected to Stretch. In this case transparency can be created by setting alpha = 0. Any other value of alpha channel will be ignored, i.e. semi-transparancy is not supported.</tooltip>
+              <frontend_type>image</frontend_type>
+              <backend_model>adminhtml/system_config_backend_image</backend_model>
+              <upload_dir config="system/filesystem/media" scope_info="1">catalog/product/watermark</upload_dir>
+              <base_url type="media" scope_info="1">catalog/product/watermark</base_url>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>1</sort_order>
+            </image>
+
+            <size translate="label comment tooltip">
+              <label>Size</label>
+              <comment>Example format: 200x300.</comment>
+              <tooltip>TradeMe images are resized to the following dimensions: 670 x 502 px.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>2</sort_order>
+            </size>
+
+            <opacity translate="label comment tooltip">
+              <label>Opacity</label>
+              <comment>Default: 0</comment>
+              <tooltip>Value in percent. 0 - fully transparent, 100 - fully opaque.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>3</sort_order>
+            </opacity>
+
+            <position translate="label tooltip">
+              <label>Position</label>
+              <tooltip>GIF and PNG alpha channels are only considered if Watermark Position is selected to Stretch. In this case transparency can be created by setting alpha = 0. Any other value of alpha channel will be ignored, i.e. semi-transparancy is not supported.</tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_watermark_position</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>4</sort_order>
+            </position>
+          </fields>
+        </watermark>
+
         <help>
           <frontend_model>trademe/setting_help</frontend_model>
 
@@ -435,7 +503,7 @@
           <show_in_website>0</show_in_website>
           <show_in_store>0</show_in_store>
 
-          <sort_order>3</sort_order>
+          <sort_order>4</sort_order>
         </help>
 
         <help_account>
@@ -445,7 +513,7 @@
           <show_in_website>1</show_in_website>
           <show_in_store>0</show_in_store>
 
-          <sort_order>4</sort_order>
+          <sort_order>5</sort_order>
         </help_account>
         
         <build_info>
@@ -455,7 +523,7 @@
           <show_in_website>1</show_in_website>
           <show_in_store>1</show_in_store>
           
-          <sort_order>5</sort_order>
+          <sort_order>6</sort_order>
         </build_info>
       </groups>
     </trademe>

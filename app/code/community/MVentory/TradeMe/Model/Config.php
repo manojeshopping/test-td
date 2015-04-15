@@ -35,6 +35,11 @@ class MVentory_TradeMe_Model_Config
   const _PAYMENT_METHODS = 'trademe/settings/payment_methods';
   const _STOCK_STATUS = 'trademe/settings/stock_status';
 
+  const _WATERMARK_IMG = 'trademe/watermark/image';
+  const _WATERMARK_SIZE = 'trademe/watermark/size';
+  const _WATERMARK_OPC = 'trademe/watermark/opacity';
+  const _WATERMARK_POS = 'trademe/watermark/position';
+
   const _1AUC_ENDTIME = 'trademe/one_dollar/end_time';
   const _1AUC_ENDDAYS = 'trademe/one_dollar/end_days';
   const _1AUC_DURATION = 'trademe/one_dollar/duration';

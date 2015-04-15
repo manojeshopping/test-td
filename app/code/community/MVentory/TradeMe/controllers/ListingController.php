@@ -85,7 +85,8 @@ class MVentory_TradeMe_ListingController
     $result = $connector->send($product, $data['category'], $data);
 
     if (!is_int($result)) {
-      $session->addError($helper->__($result));
+      foreach ((array)$result as $error)
+        $session->addError($helper->__($error));
 
       $this->_redirect('adminhtml/catalog_product/edit/id/' . $productId);
 

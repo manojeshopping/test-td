@@ -13,7 +13,7 @@
  * part of the licensing agreement with mVentory.
  *
  * @package MVentory/TradeMe
- * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
  */
 
@@ -56,7 +56,9 @@ class MVentory_TradeMe_Model_Product_Api extends MVentory_API_Model_Product_Api
     $_result = $this->fullInfo($productId, 'id');
 
     if (!is_int($result))
-      $_result['tm_error'] = $result;
+      $_result['tm_error'] = is_array($result)
+                               ? implode("\r\n", $result)
+                               : $result;
 
     return $_result;
   }

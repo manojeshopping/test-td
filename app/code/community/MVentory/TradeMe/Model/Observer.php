@@ -529,14 +529,18 @@ EOT;
           continue;
 
         $minimalPrice = $this->_helper->getMinimalPrice($perShipping);
+        $productPrice = $this->_helper->getProductPrice(
+          $product,
+          $this->_website
+        );
 
         MVentory_TradeMe_Model_Log::debug(array(
           'product' => $product,
-          'product price' => $product->getPrice(),
+          'product price' => $productPrice,
           'minimal price' => $minimalPrice
         ));
 
-        if ($minimalPrice && ($product->getPrice() < $minimalPrice))
+        if ($minimalPrice && ($productPrice < $minimalPrice))
           continue;
 
         $api = new MVentory_TradeMe_Model_Api();
@@ -548,16 +552,17 @@ EOT;
           'error' => !is_int($result)
         ));
 
-        if (trim($result) == 'Insufficient balance') {
-          $this->_negativeBalanceError($accountData['name']);
+        if (is_array($result)) foreach ($result as $error)
+          if ($error == 'Insufficient balance') {
+            $this->_negativeBalanceError($accountData['name']);
 
-          if (count($accounts) == 1)
-            return;
+            if (count($accounts) == 1)
+              return;
 
-          unset($accounts[$accountId]);
+            unset($accounts[$accountId]);
 
-          continue;
-        }
+            continue 2;
+          }
 
         if (is_int($result)) {
           Mage::getModel('trademe/auction')
@@ -746,17 +751,21 @@ EOT;
           continue;
 
         $minimalPrice = $this->_helper->getMinimalPrice($perShipping);
+        $productPrice = $this->_helper->getProductPrice(
+          $product,
+          $this->_website
+        );
 
         MVentory_TradeMe_Model_Log::debug(array(
           'product' => $product,
-          'product price' => $product->getPrice(),
+          'product price' => $productPrice,
           'minimal price' => $minimalPrice
         ));
 
         /**
          * @todo Should we check minimal price limit for $1 auctions?
          */
-        if ($minimalPrice && ($product->getPrice() < $minimalPrice))
+        if ($minimalPrice && ($productPrice < $minimalPrice))
           continue;
 
         $api = new MVentory_TradeMe_Model_Api();
@@ -779,16 +788,17 @@ EOT;
           'error' => !is_int($result)
         ));
 
-        if (trim($result) == 'Insufficient balance') {
-          $this->_negativeBalanceError($accountData['name']);
+        if (is_array($result)) foreach ($result as $error)
+          if ($error == 'Insufficient balance') {
+            $this->_negativeBalanceError($accountData['name']);
 
-          if (count($accounts) == 1)
-            return;
+            if (count($accounts) == 1)
+              return;
 
-          unset($accounts[$accountId]);
+            unset($accounts[$accountId]);
 
-          continue;
-        }
+            continue 2;
+          }
 
         if (is_int($result)) {
           Mage::getModel('trademe/auction')
@@ -1227,7 +1237,7 @@ EOT;
     $this
       ->_productHelper
       ->sendEmailTmpl(
-          'mventory_negative_balance',
+          'trademe_negative_balance',
           array('account' => $accountName),
           $this->_website
         );

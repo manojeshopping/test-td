@@ -13,7 +13,7 @@
  * part of the licensing agreement with mVentory.
  *
  * @package MVentory/TradeMe
- * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
@@ -53,15 +53,26 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
     if (!$image && $image == 'no_selection')
       return;
 
+    $settings = null;
+
     if ($store->getId != Mage::app()->getStore()->getId())
       $env = $this->changeStore($store);
 
+    $watermarkImg = $this->_getWatermarkImg($store);
+
     $imageModel = Mage::getModel('catalog/product_image')
       ->setDestinationSubdir('image')
-      ->setKeepFrame(false)
+      ->setKeepFrame((bool) $watermarkImg)
       ->setConstrainOnly(true)
       ->setWidth($size['width'])
       ->setHeight($size['height']);
+
+    if ($watermarkImg)
+      $imageModel
+        ->setWatermarkFile($watermarkImg)
+        ->setWatermarkSize($this->_getWatermarkSize($store))
+        ->setWatermarkImageOpacity($this->_getWatermarkOpacity($store))
+        ->setWatermarkPosition($this->_getWatermarkPos($store));
 
     //Don't call this method in chain because some exts can override it
     //but don't return correct object
@@ -70,7 +81,11 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
     //Check if resized image exists before resizing it
     $newImage = ($newImage = $imageModel->getNewFile())
                 ? $newImage
-                : $this->_buildFileName($image, $imageModel, $store);
+                : $this->_buildFileName(
+                    $image,
+                    $settings = $this->_extractSettings($imageModel),
+                    $store
+                  );
 
     if (file_exists($newImage)) {
       if (isset($env))
@@ -79,8 +94,12 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
       return $newImage;
     }
 
+    $imageModel->resize();
+
+    if ($watermarkImg)
+      $imageModel->setWatermark($watermarkImg);
+
     $newImage = $imageModel
-      ->resize()
       ->saveFile()
       ->getNewFile();
 
@@ -93,8 +112,15 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
 
     $newImage = $this->_download(
       $imageModel->getUrl(),
-      $this->_buildFileName($image, $imageModel, $store)
+      $this->_buildFileName(
+        $image,
+        $settings ?: $settings = $this->_extractSettings($imageModel),
+        $store
+      )
     );
+
+    if ($watermarkImg && file_exists($newImage))
+      $this->_addWatermark($newImage, $settings);
 
     if (isset($env))
       $this->changeStore($env);
@@ -135,14 +161,98 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
   }
 
   /**
+   * Add watermark specified in settings to passed image file. Overwrites
+   * original file.
+   *
+   * @param string $file
+   *   Path to original image file
+   *
+   * @param array $settings
+   *   Settings from product's image model
+   *
+   * @return MVentory_TradeMe_Helper_Image
+   *   Instance of this class
+   */
+  protected function _addWatermark ($file, $settings) {
+    $image = new Varien_Image($file);
+
+    $image->keepAspectRatio($settings['keep_aspect_ratio']);
+    $image->keepFrame($settings['keep_frame']);
+    $image->keepTransparency($settings['keep_transparency']);
+    $image->constrainOnly($settings['constrain_only']);
+    $image->backgroundColor($settings['background_color']);
+    $image->quality($settings['quality']);
+
+    $image
+      ->setWatermarkPosition($settings['watermark_position'])
+      ->setWatermarkImageOpacity($settings['watermark_opacity'])
+      ->setWatermarkWidth($settings['watermark_width'])
+      ->setWatermarkHeigth($settings['watermark_height']);
+
+    $image->watermark($settings['watermark_filepath']);
+    $image->save($file);
+
+    return $this;
+  }
+
+  /**
+   * Extract settings from supplied product's image model
+   *
+   * @param Mage_Catalog_Model_Product_Image $model
+   *   Product's image model
+   *
+   * @return array
+   *   Extracted settings
+   */
+  protected function _extractSettings ($model) {
+    $ref = new ReflectionObject($model);
+
+    $prop = function ($name) use ($ref, $model) {
+      $p = $ref->getProperty($name);
+      $p->setAccessible(true);
+
+      return $p->getValue($model);
+    };
+
+    $call = function ($name) use ($ref, $model) {
+      $m = $ref->getMethod($name);
+      $m->setAccessible(true);
+
+      return $m->invokeArgs($model, array());
+    };
+
+    return array(
+      'destination_subdir' => $model->getDestinationSubdir(),
+
+      'width' => $model->getWidth(),
+      'height' => $model->getHeight(),
+
+      'keep_aspect_ratio' => $prop('_keepAspectRatio'),
+      'keep_frame' => $prop('_keepFrame'),
+      'keep_transparency' => $prop('_keepTransparency'),
+      'constrain_only' => $prop('_constrainOnly'),
+      'background_color' => $prop('_backgroundColor'),
+      'angel' => $prop('_angle'),
+      'quality' => $model->getQuality(),
+
+      'watermark_file' => $model->getWatermarkFile(),
+      'watermark_filepath' => $call('_getWatermarkFilePath'),
+      'watermark_opacity' => $model->getWatermarkImageOpacity(),
+      'watermark_position' => $model->getWatermarkPosition(),
+      'watermark_width' => $model->getWatermarkWidth(),
+      'watermark_height' => $model->getWatermarkHeigth()
+    );
+  }
+
+  /**
    * Build full path for prepared image in same way as Magento does for
    * product images
    *
    * @param string $file
    *   Name of image file with dispretion path
    *
-   * @param Mage_Catalog_Model_Product_Image $imageModel
-   *   Initialised Mage_Catalog_Model_Product_Image object
+   * @param array $settings
+   *   Image settings from product's image model
    *
    * @param Mage_Core_Model_Store $store
    *   Store object
@@ -150,63 +260,39 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
    * @return string
    *   Full path for prepared product image
    */
-  protected function _buildFileName ($file, $imageModel, $store) {
+  protected function _buildFileName ($file, $settings, $store) {
     //Most important params
     $path = array(
       Mage::getSingleton('catalog/product_media_config')->getBaseMediaPath(),
       'cache',
       $store->getId(),
-      $imageModel->getDestinationSubdir()
+      $settings['destination_subdir']
     );
 
-    $width = $imageModel->getWidth();
-    $height = $imageModel->getHeight();
+    $width = $settings['width'];
+    $height = $settings['height'];
 
     if ($width || $height)
       $path[] = $width . 'x' . $height;
 
     //Miscellaneous params as a hash
-
-    //NOTE: we can't access protected fields of Mage_Catalog_Model_Product_Image
-    //object and it doesn't provide getter for all following fields, so we
-    //use hardcoded values. Some of them default, some of them are set in
-    //getImage() method
-
-    //Use default value of _keepAspectRatio field
-    $_keepAspectRatio = true;
-
-    //Use value set in the getImage() method for _keepFrame field
-    $_keepFrame = false;
-
-    //Use default value of _keepTransparency field
-    $_keepTransparency = true;
-
-    //Use value set in the getImage() method for _constrainOnly field
-    $_constrainOnly = true;
-
-    //Use default value of _backgroundColor field
-    $_backgroundColor = array(255, 255, 255);
-
-    //Use default value of _angle field
-    $_angle = null;
-
     $params = array(
-      ($_keepAspectRatio ? '' : 'non') . 'proportional',
-      ($_keepFrame ? '' : 'no') . 'frame',
-      ($_keepTransparency ? '' : 'no') . 'transparency',
-      ($_constrainOnly ? 'do' : 'not') . 'constrainonly',
-      $this->_rgbToString($_backgroundColor),
-      'angle' . $_angle,
-      'quality' . $imageModel->getQuality()
+      ($settings['keep_aspect_ratio'] ? '' : 'non') . 'proportional',
+      ($settings['keep_frame'] ? '' : 'no') . 'frame',
+      ($settings['keep_transparency'] ? '' : 'no') . 'transparency',
+      ($settings['constrain_only'] ? 'do' : 'not') . 'constrainonly',
+      $this->_rgbToString($settings['background_color']),
+      'angle' . $settings['angel'],
+      'quality' . $settings['quality']
     );
 
     //If has watermark add watermark params to hash
-    if ($imageModel->getWatermarkFile()) {
-      $params[] = $imageModel->getWatermarkFile();
-      $params[] = $imageModel->getWatermarkImageOpacity();
-      $params[] = $imageModel->getWatermarkPosition();
-      $params[] = $imageModel->getWatermarkWidth();
-      $params[] = $imageModel->getWatermarkHeigth();
+    if ($settings['watermark_file']) {
+      $params[] = $settings['watermark_file'];
+      $params[] = $settings['watermark_opacity'];
+      $params[] = $settings['watermark_position'];
+      $params[] = $settings['watermark_width'];
+      $params[] = $settings['watermark_height'];
     }
 
     $path[] = md5(implode('_', $params));
@@ -231,5 +317,83 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
       $rgb .= ($value === null) ? 'null' : sprintf('%02s', dechex($value));
 
     return $rgb;
+  }
+
+  /**
+   * Parse size from string (e.g 300x200)
+   *
+   * @param str $string
+   *   String with size in WxH format
+   *
+   * @return array|bool
+   *   Parsed size or false if it's not correct
+   */
+  protected function _parseSize ($str) {
+    $size = explode('x', strtolower($str));
+
+    if (sizeof($size) == 2)
+      return array(
+        'width' => ($size[0] > 0) ? $size[0] : null,
+        'height' => ($size[1] > 0) ? $size[1] : null,
+
+        //Magento has misprint in height word in watermark functions
+        'heigth' => ($size[1] > 0) ? $size[1] : null
+      );
+
+    return false;
+  }
+
+  /**
+   * Return filename of watermark image from store's config
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store object
+   *
+   * @return string
+   *   Filename of watermark image
+   */
+  protected function _getWatermarkImg ($store) {
+    return $store->getConfig(MVentory_TradeMe_Model_Config::_WATERMARK_IMG);
+  }
+
+  /**
+   * Return size of watermark image from store's config
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store object
+   *
+   * @return string
+   *   Size of watermark image
+   */
+  protected function _getWatermarkSize ($store) {
+    return $this->_parseSize(
+      $store->getConfig(MVentory_TradeMe_Model_Config::_WATERMARK_SIZE)
+    );
+  }
+
+  /**
+   * Return opacity of watermark image from store's config
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store object
+   *
+   * @return string
+   *   Opacity of watermark image
+   */
+  protected function _getWatermarkOpacity ($store) {
+    return $store->getConfig(MVentory_TradeMe_Model_Config::_WATERMARK_OPC);
+  }
+
+  /**
+   * Return position of watermark image from store's config
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store object
+   *
+   * @return string
+   *   Position of watermark image
+   */
+  protected function _getWatermarkPos ($store) {
+    return $store->getConfig(MVentory_TradeMe_Model_Config::_WATERMARK_POS);
   }
 }

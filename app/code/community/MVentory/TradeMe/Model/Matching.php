@@ -247,7 +247,9 @@ class MVentory_TradeMe_Model_Matching
    */
   protected function _getValue ($product, $code) {
     if ($code == 'category_ids')
-      return $this->_expandCategories($product->getCategoryIds());
+      return ($ids = $product->getCategoryIds())
+               ? $this->_expandCategories($ids)
+               : array();
 
     return is_string($value = $product->getData($code))
              ? explode(',', $value)
