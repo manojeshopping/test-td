@@ -22,7 +22,7 @@
 					</dateFormatLength>
 					<dateFormatLength type="medium">
 						<dateFormat>
-							<pattern>d/MM/yyyy</pattern>
+							<pattern>d MMM, y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="short">

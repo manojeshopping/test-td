@@ -160,3 +160,6 @@
 	width:100%;
 }
 .products-grid .item .item-inner .item-price .price-box .price-from{display:none}
+.product-shop .price-box-bundle .price-box{display:none !important;} 
+#product-options-wrapper .options-list li .label{text-align:left; white-space:normal}
+
