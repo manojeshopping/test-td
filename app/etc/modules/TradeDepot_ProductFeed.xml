@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<config>
+  <modules>
+    <TradeDepot_ProductFeed>
+      <active>true</active>
+      <codePool>community</codePool>
+    </TradeDepot_ProductFeed>
+  </modules>
+</config>

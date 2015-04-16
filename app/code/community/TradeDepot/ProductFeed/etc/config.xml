@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<config>
+  <modules>
+    <TradeDepot_ProductFeed>
+      <version>0</version>
+    </TradeDepot_ProductFeed>
+  </modules>
+
+  <global>
+    <helpers>
+      <productfeed>
+        <class>TradeDepot_ProductFeed_Helper</class>
+      </productfeed>
+    </helpers>
+
+    <models>
+      <productfeed>
+        <class>TradeDepot_ProductFeed_Model</class>
+      </productfeed>
+    </models>
+  </global>
+
+  <crontab>
+    <jobs>
+      <tradedepot_productfeed_generation>
+        <schedule>
+          <cron_expr>0 2 * * *</cron_expr>
+        </schedule>
+        <run>
+          <model>productfeed/observer::generateFeeds</model>
+        </run>
+      </tradedepot_productfeed_generation>
+    </jobs>
+  </crontab>
+</config>
