@@ -4,6 +4,7 @@
 #Ignore generated content
 /sitemap.xml
 /feed/**
+/feeds/**
 
 #Ignore result of compilation
 /includes/src
