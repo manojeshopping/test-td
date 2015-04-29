@@ -74,6 +74,18 @@ class Web_States_Block_Adminhtml_States_Grid extends Mage_Adminhtml_Block_Widget
                                  'column_css_class' => 'name_locale'
                             )
         );
+		
+		$this->addColumn(
+            'sort_order', array(
+                         'header'           => Mage::helper('web_states')->__('Sort Order'),
+                         'align'            => 'left',
+                         'width'            => '110px',
+                         'index'            => 'sort_order',
+                         //'editable' =>true,
+                         'column_css_class' => 'sort_order_td'
+                    )
+        );
+		
         $this->addColumn(
             'action',
             array(
@@ -124,6 +136,7 @@ class Web_States_Block_Adminhtml_States_Grid extends Mage_Adminhtml_Block_Widget
 
         $nameUrl = $this->getUrl('*/*/saveName');
         $codeUrl = $this->getUrl('*/*/saveCode');
+		$sortOrderUrl = $this->getUrl('*/*/saveSortOrder');
         $js
             = '
         function getNameUrl(e)
@@ -133,6 +146,10 @@ class Web_States_Block_Adminhtml_States_Grid extends Mage_Adminhtml_Block_Widget
         function getCodeUrl(e)
         {
             return "' . $codeUrl . 'region_id/"+getId(e);
+        }
+		function getSortOrderUrl(e)
+        {
+            return "' . $sortOrderUrl . 'region_id/"+getId(e);
         }
         function getNameLocaleUrl(e,url)
         {
@@ -158,6 +175,12 @@ class Web_States_Block_Adminhtml_States_Grid extends Mage_Adminhtml_Block_Widget
                 idx = getId(el);
                 el.update('<span id='+idx+'>'+el.innerHTML.trim()+'</span>');
                 new Ajax.InPlaceEditor(el.down('span'), getCodeUrl(el),{formId:idx,okText: 'Save',cancelText: 'Cancel'} );
+            });
+			$$('.sort_order_td').each(function(el){
+                if(el.down('span')){return ;}
+                idx = getId(el);
+                el.update('<span id='+idx+'>'+el.innerHTML.trim()+'</span>');
+                new Ajax.InPlaceEditor(el.down('span'), getSortOrderUrl(el),{formId:idx,okText: 'Save',cancelText: 'Cancel'} );
             });
 
 EOF;
