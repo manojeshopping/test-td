@@ -30,15 +30,19 @@ class MVentory_TradeMe_Model_Config
   const MAPPING_STORE = 'trademe/settings/mapping_store';
   const ENABLE_LISTING = 'trademe/settings/enable_listing';
   const LIST_AS_NEW = 'trademe/settings/list_as_new';
-  const _NAME_VARIANTS_ATTR = 'trademe/settings/name_variants_attr';
   const _SHIPPING_ATTR = 'trademe/settings/shipping_attr';
   const _PAYMENT_METHODS = 'trademe/settings/payment_methods';
   const _STOCK_STATUS = 'trademe/settings/stock_status';
 
-  const _WATERMARK_IMG = 'trademe/watermark/image';
-  const _WATERMARK_SIZE = 'trademe/watermark/size';
-  const _WATERMARK_OPC = 'trademe/watermark/opacity';
-  const _WATERMARK_POS = 'trademe/watermark/position';
+  const _IMG_PADDING = 'trademe/image/padding';
+
+  const _WATERMARK_IMG = 'trademe/image/watermark_image';
+  const _WATERMARK_SIZE = 'trademe/image/watermark_size';
+  const _WATERMARK_OPC = 'trademe/image/watermark_opacity';
+  const _WATERMARK_POS = 'trademe/image/watermark_position';
+
+  const _AUC_NAME_VAR_ATTR = 'trademe/normal_auction/name_variants_attr';
+  const _AUC_MULT_PER_NAME = 'trademe/normal_auction/per_name_variant';
 
   const _1AUC_ENDTIME = 'trademe/one_dollar/end_time';
   const _1AUC_ENDDAYS = 'trademe/one_dollar/end_days';
@@ -100,7 +104,8 @@ class MVentory_TradeMe_Model_Config
   //Values of Minimum stock level setting
   const STOCK_IN = 0;
   const STOCK_NOT_MANAGED = 1;
-  const STOCK_NO = 2;
+  const STOCK_BOTH = 2; //Both in stock and not managed
+  const STOCK_NO = 3;
 
   //TradeMe currency
   const CURRENCY = 'NZD';

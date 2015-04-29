@@ -13,7 +13,7 @@
  * part of the licensing agreement with mVentory.
  *
  * @package MVentory/TradeMe
- * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
  */
 
@@ -117,12 +117,9 @@ class MVentory_TradeMe_Model_Auction extends Mage_Core_Model_Abstract
 
     $connector = new MVentory_TradeMe_Model_Api();
 
-    $result = $connector
+    $connector
       ->setWebsiteId($this->_getWebsite())
       ->remove($this);
-
-    if ($result !== true)
-      throw new Mage_Core_Exception($result);
 
     return $this;
   }

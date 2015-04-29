@@ -32,6 +32,40 @@ class MVentory_TradeMe_Model_Api {
 pay now cannot be used with a buy now or reserve price over
 EOT;
 
+  const __E_NO_ACCOUNT = <<<'EOT'
+Account data is not loaded
+EOT;
+  const __E_NO_TOKEN = <<<'EOT'
+OAuth access token is not available
+EOT;
+  const __E_TOKEN_INVALID = <<<'EOT'
+Unserializing of OAuth access token failed
+EOT;
+  const __E_ACCOUNT_SHIPPING = <<<'EOT'
+Account doesn't contain settings for product's shipping type
+EOT;
+  const __E_RESPONSE_STATUS = <<<'EOT'
+Status of response is %d, expected is %d
+EOT;
+  const __E_RESPONSE_EMPTY = <<<'EOT'
+Response is empty
+EOT;
+  const __E_RESPONSE_DECODING = <<<'EOT'
+Decoding of response failed
+EOT;
+  const __E_RESPONSE_INCOMPLETE = <<<'EOT'
+Response is missing %s field
+EOT;
+  const __E_IMAGE_FAILED = <<<'EOT'
+Uploading of image failed (status: %d)
+EOT;
+  const __E_AUCTION_DESC = <<<'EOT'
+Length of the description exceeded the limit of %d characters
+EOT;
+  const __E_STORE_PAYMENT = <<<'EOT'
+TradeMe Payment methods are not selected
+EOT;
+
   //List of TradeMe categories to ignore. Categories are selected by its number
   private $_ignoreCategories = array(
     //'0001-' => true, //Trade Me Motors
@@ -131,7 +165,7 @@ EOT;
   private function _getConfig ($path) {
     return $this
       ->_helper
-      ->getConfig($path, $this->_website);
+      ->getConfig($path, $this->_getWebsite());
   }
 
   private function getConfig () {
@@ -181,6 +215,22 @@ EOT;
     return $this;
   }
 
+  /**
+   * Getter for _website field
+   *
+   * @return Mage_Core_Model_Website
+   *   Website model
+   *
+   * @throws LogicException
+   *   If _website field is empty
+   */
+  protected function _getWebsite () {
+    if (!$this->_website)
+      throw new LogicException('_website field must be set');
+
+    return $this->_website;
+  }
+
   public function setAccountId ($data) {
     if (is_array($data))
       $this->_accountId = isset($data['account_id'])
@@ -189,7 +239,7 @@ EOT;
     else
       $this->_accountId = $data;
 
-    $accounts = Mage::helper('trademe')->getAccounts($this->_website);
+    $accounts = Mage::helper('trademe')->getAccounts($this->_getWebsite());
 
     if ($this->_accountId)
       $this->_accountData = $accounts[$this->_accountId];
@@ -202,13 +252,23 @@ EOT;
   }
 
   public function auth () {
-    if (!(isset($this->_accountData['access_token'])
-          && $data = $this->_accountData['access_token']))
-      return null;
+    if (!$this->_accountData)
+      throw new MVentory_TradeMe_AccountException(null, self::__E_NO_ACCOUNT);
+
+    $account = $this->_accountData;
+
+    if (!(isset($account['access_token'])
+          && $params = $account['access_token']))
+      throw new MVentory_TradeMe_AccountException($account, self::__E_NO_TOKEN);
+
+    if (($params = unserialize($params)) === null)
+      throw new MVentory_TradeMe_AccountException(
+        $account,
+        self::__E_TOKEN_INVALID
+      );
 
     $token = new Zend_Oauth_Token_Access();
-
-    return $token->setParams(unserialize($data));
+    return $token->setParams($params);
   }
 
   public function send ($product, $categoryId, $data, $overwrite = array()) {
@@ -219,11 +279,17 @@ EOT;
     $this->getWebsiteId($product);
     $this->setAccountId($data);
 
-    $store = $this->_website->getDefaultStore();
+    $store = $this
+      ->_getWebsite()
+      ->getDefaultStore();
+
     $account = $helper->prepareAccount($this->_accountData, $product, $store);
 
     if (!$account)
-      return 'No settings for product\'s shipping type';
+      throw new MVentory_TradeMe_AccountException(
+        $account,
+        self::__E_ACCOUNT_SHIPPING
+      );
 
     if (!$isUpdateOptions = is_array($data))
       $_data = $helper->getFields($product, $account);
@@ -241,113 +307,99 @@ EOT;
 
     $return = 'Error';
 
-    if ($accessToken = $this->auth()) {
-      if (!$categoryId)
-        return 'Product doesn\'t have matched TradeMe category';
+    $accessToken = $this->auth();
 
-      $shippingType = MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
-
-      Mage::unregister('product');
-      Mage::register('product', $product);
-
-      $descriptionTmpl = $account['footer'];
-
-      $description = '';
-
-      if ($descriptionTmpl)
-        $description = $this->processDescription(
-          $descriptionTmpl,
-          $product->getData()
-        );
-
-      if (strlen($description)
-            > MVentory_TradeMe_Model_Config::DESCRIPTION_MAX_LENGTH)
-        return 'Length of the description exceeded the limit of '
-               .  MVentory_TradeMe_Model_Config::DESCRIPTION_MAX_LENGTH
-               . ' characters';
-
-      //Convert all HTML entities to chars first (to allow entities which
-      //are not exists in XML) and then convert special chars to entities
-      //to not break XML
-      //Set encoding parameter to support PHP < 5.4
-      $description = htmlspecialchars(
-        html_entity_decode($description, ENT_COMPAT, 'UTF-8')
+    if (!$categoryId)
+      throw new MVentory_TradeMe_ApiException(
+        'Product doesn\'t have matched TradeMe category'
       );
 
-      $photoId = null;
+    $shippingType = MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
 
-      try {
-        $image = Mage::helper('trademe/image')->getImage(
-          $product,
-          $this->_imageSize,
-          $store
-        );
-      } catch (Exception $e) {
-        $msg = 'Error occured while preparing image (%s)';
+    Mage::unregister('product');
+    Mage::register('product', $product);
 
-        Mage::logException($e);
-        MVentory_TradeMe_Model_Log::debug(sprintf($msg, $e->getMessage()));
+    $descriptionTmpl = $account['footer'];
 
-        return $helper->__($msg, $e->getMessage());
-      }
+    $description = '';
 
-      if (!is_int($photoId = $this->uploadImage($image))) {
-        $msg = 'Error occured while uploading image (%s)';
-
-        MVentory_TradeMe_Model_Log::debug(sprintf($msg, $photoId));
-        return $helper->__($msg, $photoId);
-      }
-
-      $client = $accessToken->getHttpClient($this->getConfig());
-      $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling.xml');
-      $client->setMethod(Zend_Http_Client::POST);
-
-      $title = $helper->getTitle($product, $store);
-
-      if (strlen($title) > MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH)
-        $title = htmlspecialchars(substr(
-          $title,
-          0,
-          MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH - 1
-        ))
-        . '&#8230;';
-      else
-        $title = htmlspecialchars($title);
-
-      $price = $this->_getPrice(
-        $product,
-        $account,
-        $_data,
-        $overwrite,
-        $store->getBaseCurrency()
+    if ($descriptionTmpl)
+      $description = $this->processDescription(
+        $descriptionTmpl,
+        $product->getData()
       );
 
-      $buyNow = '';
+    if (strlen($description)
+          > MVentory_TradeMe_Model_Config::DESCRIPTION_MAX_LENGTH)
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_AUCTION_DESC,
+        MVentory_TradeMe_Model_Config::DESCRIPTION_MAX_LENGTH
+      ));
 
-      if ($this->_getAllowBuyNow($_data, $overwrite))
-        $buyNow = '<BuyNowPrice>' . $price . '</BuyNowPrice>';
+    //Convert all HTML entities to chars first (to allow entities which
+    //are not exists in XML) and then convert special chars to entities
+    //to not break XML
+    //Set encoding parameter to support PHP < 5.4
+    $description = htmlspecialchars(
+      html_entity_decode($description, ENT_COMPAT, 'UTF-8')
+    );
 
-      $duration = $this->_durations[$this->_getDuration($account, $overwrite)];
+    $image = Mage::helper('trademe/image')->getImage(
+      $product,
+      $this->_imageSize,
+      $store
+    );
 
-      $shippingTypes
-        = Mage::getModel('trademe/attribute_source_freeshipping')
-            ->toArray();
+    $photoId = $this->uploadImage($image);
 
-      $shippingType
-        = $shippingTypes[$shippingType];
+    $client = $accessToken->getHttpClient($this->getConfig());
+    $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling.xml');
+    $client->setMethod(Zend_Http_Client::POST);
 
-      unset($shippingTypes);
+    $title = $this->_getTitle($product, $store, $overwrite);
 
-      $pickup = $this->_getPickup($_data, $account);
-      $pickup = $this->_pickupValues[$pickup];
+    if (strlen($title) > MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH)
+      $title = htmlspecialchars(substr(
+        $title,
+        0,
+        MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH - 1
+      ))
+      . '&#8230;';
+    else
+      $title = htmlspecialchars($title);
 
-      $isBrandNew = (int) $this->_getIsBrandNew($product);
-      $paymentMethods = $this->_getPaymentMethods($store);
+    $price = $this->_getPrice(
+      $product,
+      $account,
+      $_data,
+      $overwrite,
+      $store->getBaseCurrency()
+    );
 
-      $tries = 1;
+    $buyNow = '';
 
-      do {
-        $xml = '<ListingRequest xmlns="http://api.trademe.co.nz/v1">
+    if ($this->_getAllowBuyNow($_data, $overwrite))
+      $buyNow = '<BuyNowPrice>' . $price . '</BuyNowPrice>';
+
+    $duration = $this->_durations[$this->_getDuration($account, $overwrite)];
+
+    $shippingTypes
+      = Mage::getModel('trademe/attribute_source_freeshipping')->toArray();
+
+    $shippingType = $shippingTypes[$shippingType];
+
+    unset($shippingTypes);
+
+    $pickup = $this->_getPickup($_data, $account);
+    $pickup = $this->_pickupValues[$pickup];
+
+    $isBrandNew = (int) $this->_getIsBrandNew($product);
+    $paymentMethods = $this->_getPaymentMethods($store);
+
+    $tries = 1;
+
+    do {
+      $xml = '<ListingRequest xmlns="http://api.trademe.co.nz/v1">
 <Category>' . $categoryId . '</Category>
 <Title>' . $title . '</Title>
 <Description><Paragraph>' . $description . '</Paragraph></Description>
@@ -359,198 +411,200 @@ EOT;
 <IsBrandNew>' . $isBrandNew . '</IsBrandNew>
 <SendPaymentInstructions>true</SendPaymentInstructions>';
 
-        if ($photoId
-            && isset($account['category_image']) && $account['category_image'])
-          $xml .= '<HasGallery>true</HasGallery>';
+      if (isset($account['category_image']) && $account['category_image'])
+        $xml .= '<HasGallery>true</HasGallery>';
 
-        if ($photoId) {
-          $xml .= '<PhotoIds><PhotoId>' . $photoId . '</PhotoId></PhotoIds>';
+      $xml .= '<PhotoIds><PhotoId>' . $photoId . '</PhotoId></PhotoIds>';
+
+      if ($photoId) {
+        $xml .= '<PhotoIds><PhotoId>' . $photoId . '</PhotoId></PhotoIds>';
+      }
+
+      $xml .= '<ShippingOptions>';
+
+      if (isset($account['shipping_options']) && $account['shipping_options'])
+        foreach ($account['shipping_options'] as $shippingOption)
+          $xml .= '<ShippingOption><Type>Custom</Type><Price>'
+                  . $shippingOption['price']
+                  . '</Price><Method>'
+                  . $shippingOption['method']
+                  . '</Method></ShippingOption>';
+      else
+        $xml .= '<ShippingOption><Type>'
+                . $shippingType
+                . '</Type></ShippingOption>';
+
+      $xml .= '</ShippingOptions>';
+
+      $xml .= '<PaymentMethods><PaymentMethod>'
+              . implode(
+                  '</PaymentMethod><PaymentMethod>',
+                  array_intersect_key(
+                    $this->_paymentMethods,
+                    array_flip($paymentMethods)
+                  )
+                )
+              . '</PaymentMethod></PaymentMethods>';
+
+      /**
+       * @todo Temporarily disabled. Matching code is buggy in some corner cases
+       * and should be fixed and refactored.
+       */
+      //$attributes = $this->getCategoryAttrs($categoryId);
+      $attributes = false;
+
+      if ($attributes) {
+        $attributes = $helper->fillAttributes(
+          $product,
+          $attributes,
+          $helper->getMappingStore()
+        );
+
+        if ($attributes['error']) {
+          if (isset($attributes['required']))
+            return 'Product has empty "' . $attributes['required']
+                   . '" attribute';
+
+          if (isset($attributes['no_match']))
+            return 'Error in matching "' . $attributes['no_match']
+                   . '" attribute: incorrect value in "fake" store';
         }
 
-        $xml .= '<ShippingOptions>';
+        if ($attributes = $attributes['attributes']) {
+          $xml .= '<Attributes>';
 
-        if (isset($account['shipping_options']) && $account['shipping_options'])
-          foreach ($account['shipping_options'] as $shippingOption)
-            $xml .= '<ShippingOption><Type>Custom</Type><Price>'
-                    . $shippingOption['price']
-                    . '</Price><Method>'
-                    . $shippingOption['method']
-                    . '</Method></ShippingOption>';
-        else
-          $xml .= '<ShippingOption><Type>'
-                  . $shippingType
-                  . '</Type></ShippingOption>';
+          foreach ($attributes as $attributeName => $attributeValue) {
+            $xml .= '<Attribute>';
+            $xml .= '<Name>' . htmlspecialchars($attributeName) . '</Name>';
+            $xml .= '<Value>' . htmlspecialchars($attributeValue) . '</Value>';
+            $xml .= '</Attribute>';
+          }
 
-        $xml .= '</ShippingOptions>';
+          $xml .= '</Attributes>';
+        }
+      }
 
-        $xml .= '<PaymentMethods><PaymentMethod>'
-                . implode(
-                    '</PaymentMethod><PaymentMethod>',
-                    array_intersect_key(
-                      $this->_paymentMethods,
-                      array_flip($paymentMethods)
-                    )
-                  )
-                . '</PaymentMethod></PaymentMethods>';
+      $xml .=  '<SKU>' . htmlspecialchars($product->getSku()) . '</SKU>';
+      $xml .= '</ListingRequest>';
 
-        /**
-         * @todo Temporarily disabled. Matching code is buggy in some corner
-         * cases and should be fixed and refactored.
-         */
-        //$attributes = $this->getCategoryAttrs($categoryId);
-        $attributes = false;
+      $client->setRawData($xml, 'application/xml');
+      $response = $client->request();
 
-        if ($attributes) {
-          $attributes = $helper->fillAttributes(
-            $product,
-            $attributes,
-            $helper->getMappingStore()
+      if (($status = $response->getStatus()) != 200)
+        throw new MVentory_TradeMe_ApiException(sprintf(
+          self::__E_RESPONSE_STATUS,
+          $status,
+          200
+        ));
+
+      $body = $response->getBody();
+
+      if ($body === '')
+        throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
+
+      $xml = simplexml_load_string($body);
+
+      if ($xml === false)
+        throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
+
+      if (strtolower(trim((string) $xml->Success)) != 'true') {
+        $errors = (string) $xml->Description;
+
+        foreach ($this->_parseErrors($errors) as $error) {
+          $hasPayNowError = false !== strrpos(
+            strtolower($error),
+            self::PAYNOW_ERR_MSG,
+            -strlen($error)
           );
 
-          if ($attributes['error']) {
-            if (isset($attributes['required']))
-              return 'Product has empty "' . $attributes['required']
-                     . '" attribute';
+          if (!$hasPayNowError)
+            continue;
 
-            if (isset($attributes['no_match']))
-              return 'Error in matching "' . $attributes['no_match']
-                     . '" attribute: incorrect value in "fake" store';
-          }
+          $paymentMethods = array_diff(
+            $paymentMethods,
+            array(MVentory_TradeMe_Model_Config::PAYMENT_CC)
+          );
 
-          if ($attributes = $attributes['attributes']) {
-            $xml .= '<Attributes>';
+          MVentory_TradeMe_Model_Log::debug(array(
+            'price' => $price,
+            'removed payment method' => 'Credit card'
+          ));
 
-            foreach ($attributes as $attributeName => $attributeValue) {
-              $xml .= '<Attribute>';
-              $xml .= '<Name>' . htmlspecialchars($attributeName) . '</Name>';
-              $xml .= '<Value>' . htmlspecialchars($attributeValue) . '</Value>';
-              $xml .= '</Attribute>';
-            }
+          if (!$paymentMethods)
+            throw new MVentory_TradeMe_ApiException(self::__E_STORE_PAYMENT);
 
-            $xml .= '</Attributes>';
-          }
+          $tries++;
+
+          //We found pay now error, so we don't need to check for others
+          continue 2;
         }
 
-        $xml .=  '<SKU>' . htmlspecialchars($product->getSku()) . '</SKU>';
-        $xml .= '</ListingRequest>';
+        throw new MVentory_TradeMe_ApiException($errors);
+      }
 
-        $client->setRawData($xml, 'application/xml');
-        $response = $client->request();
+      if (!($xml->ListingId && ($listingId = (int) $xml->ListingId)))
+        throw new MVentory_TradeMe_ApiException(sprintf(
+          self::__E_RESPONSE_INCOMPLETE,
+          'ListingId'
+        ));
 
-        $xml = simplexml_load_string($response->getBody());
+      if ($isUpdateOptions)
+        $helper->setFields($product, $data);
+    } while (--$tries);
 
-        if ($xml) {
-          $isSuccess = (string) $xml->Success == 'true';
-          $response = $isSuccess
-                      ? (int) $xml->ListingId
-                      : (string) $xml->Description;
-
-          MVentory_TradeMe_Model_Log::debug(array('response' => $response));
-
-          if ($isSuccess) {
-
-            if ($isUpdateOptions)
-              $helper->setFields($product, $data);
-
-            $return = $response;
-          } elseif ((string)$xml->ErrorDescription)
-            $return = $this->_parseErrors((string)$xml->ErrorDescription);
-          elseif ($response) {
-            $return = $this->_parseErrors($response);
-
-            foreach ($return as $error) {
-              $hasPayNowError = false !== strrpos(
-                strtolower($error),
-                self::PAYNOW_ERR_MSG,
-                -strlen($error)
-              );
-
-              if (!$hasPayNowError)
-                continue;
-
-              $paymentMethods = array_diff(
-                $paymentMethods,
-                array(MVentory_TradeMe_Model_Config::PAYMENT_CC)
-              );
-
-              MVentory_TradeMe_Model_Log::debug(array(
-                'price' => $price,
-                'removed payment method' => 'Credit card'
-              ));
-
-              if (!$paymentMethods) {
-                $msg = 'TradeMe Payment methods are not selected';
-
-                MVentory_TradeMe_Model_Log::debug($msg);
-                return $helper->__($msg);
-              }
-
-              $tries++;
-
-              //We found pay now error, so we don't need to check for others
-              break;
-            }
-          }
-        }
-      } while (--$tries);
-    }
-    else
-      $return = 'Can\'t get access token';
-
-    return $return;
+    return $listingId;
   }
 
   /**
    * NOTE: requires $this->_website to be set
    *
    * @param MVentory_TradeMe_Model_Auction $auction Auction
-   * @return bool|string
+   * @return bool
    */
   public function remove ($auction) {
     MVentory_TradeMe_Model_Log::debug();
 
-    if (!$this->_website)
-      return;
-
     $this->setAccountId($auction['account_id']);
     $listingId = $auction['listing_id'];
 
-    $error = 'error';
+    $accessToken = $this->auth();
 
-    if ($accessToken = $this->auth()) {
-      $client = $accessToken->getHttpClient($this->getConfig());
-      $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling/Withdraw.xml');
-      $client->setMethod(Zend_Http_Client::POST);
+    $client = $accessToken->getHttpClient($this->getConfig());
+    $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling/Withdraw.xml');
+    $client->setMethod(Zend_Http_Client::POST);
 
-      $xml = '<WithdrawRequest xmlns="http://api.trademe.co.nz/v1">
+    $xml = '<WithdrawRequest xmlns="http://api.trademe.co.nz/v1">
 <ListingId>' . $listingId . '</ListingId>
 <Type>ListingWasNotSold</Type>
 <Reason>Withdraw</Reason>
 </WithdrawRequest>';
 
-      $client->setRawData($xml, 'application/xml');
-      $response = $client->request();
+    $client->setRawData($xml, 'application/xml');
+    $response = $client->request();
 
-      $xml = simplexml_load_string($response->getBody());
+    if (($status = $response->getStatus()) != 200)
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_STATUS,
+        $status,
+        200
+      ));
 
-      if ($xml) {
-        $isSuccess = (string) $xml->Success == 'true';
-        $response = $isSuccess
-                    ? (int) $xml->ListingId
-                    : (string) $xml->Description;
+    $body = $response->getBody();
 
-        MVentory_TradeMe_Model_Log::debug(array('response' => $response));
+    if ($body === '')
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
 
-        if ($isSuccess)
-          return true;
-        else if ($response)
-          $error = $response;
-      }
-    }
-    else
-      $return = 'Can\'t get access token';
+    $xml = simplexml_load_string($body);
 
-    return $error;
+    if ($xml === false)
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
+
+    MVentory_TradeMe_Model_Log::debug(array('response' => $xml));
+
+    if ((string) $xml->Success != 'true')
+      throw new MVentory_TradeMe_ApiException((string) $xml->Description);
+
+    return true;
   }
 
   /**
@@ -562,28 +616,10 @@ EOT;
   public function check ($auction) {
     MVentory_TradeMe_Model_Log::debug();
 
-    if (!$this->_website)
-      return;
-
     $this->setAccountId($auction['account_id']);
     $listingId = $auction['listing_id'];
 
-    $json = $this->_loadListingDetailsAuth($listingId);
-
-    if (!$json)
-      return;
-
-    $item = $this->_parseListingDetails($json);
-
-    if (is_string($item)) {
-      MVentory_TradeMe_Model_Log::debug(
-        'Error on retrieving listing details ' . $listingId . ' (' . $item . ')'
-      );
-
-      return;
-    }
-
-    unset($json);
+    $item = $this->_loadListingDetailsAuth($listingId);
 
     //Check if item on sold
     if ($item['AsAt'] < $item['EndDate'])
@@ -613,200 +649,176 @@ EOT;
 
     $this->setAccountId($auction['account_id']);
 
-    $store = $this->_website->getDefaultStore();
+    $store = $this
+      ->_getWebsite()
+      ->getDefaultStore();
+
     $account = $helper->prepareAccount($this->_accountData, $product, $store);
 
     if (!$account)
-      return 'No settings for product\'s shipping type';
-
-    $listingId = $auction['listing_id'];
-    $return = 'Error';
-
-    if ($accessToken = $this->auth()) {
-      $client = $accessToken->getHttpClient($this->getConfig());
-
-      $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling/Edit.json');
-      $client->setMethod(Zend_Http_Client::POST);
-      $json = $this->_loadListingDetailsAuth($listingId);
-
-      if (!$json){
-        MVentory_TradeMe_Model_Log::debug(
-          'Unable to retrieve data for listing ' . $listingId
-        );
-
-        $this->_helper->sendEmail(
-          'Unable to retrieve data for TradeMe listing ',
-          $return . ' product id ' . $product->getId() . ' listing id '
-            . $listingId
-        );
-
-        return 'Unable to retrieve data from TradeMe';
-      }
-
-      $item = $this->_parseListingDetails($json);
-      $item = $this->_listingDetailsToEditingRequest($item);
-
-      $formData = $_formData;
-
-      if ($formData)
-        foreach ($formData as $key => $value)
-          if ($value == -1 && isset($account[$key]))
-            $formData[$key] = $account[$key];
-
-      $shippingType = MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
-
-      if (!isset($parameters['Category']) && isset($formData['category'])
-          && $formData['category'])
-        $parameters['Category'] = $formData['category'];
-
-      if (!isset($parameters['Title'])) {
-        $title = $helper->getTitle($product, $store);
-
-        if (strlen($title) > MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH)
-          //!!!TODO: use hellip instead 3 dots, see send() method
-          $title = substr(
-            $title,
-            0,
-            MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH - 3
-          ) . '...';
-
-        $parameters['Title'] = $title;
-      }
-
-      if (!isset($parameters['ShippingOptions']))
-        if (isset($account['shipping_options']) && $account['shipping_options'])
-          foreach ($account['shipping_options'] as $shippingOption)
-            $parameters['ShippingOptions'][] = array(
-              'Type' => MVentory_TradeMe_Model_Config::SHIPPING_CUSTOM,
-              'Price' => $shippingOption['price'],
-              'Method' => $shippingOption['method'],
-            );
-        else
-          $parameters['ShippingOptions'][]['Type'] = $shippingType;
-
-      //set price
-      if (!isset($parameters['StartPrice']))
-        $parameters['StartPrice'] = $this->_getPrice(
-          $product,
-          $account,
-          $formData,
-          array(),
-          $store->getBaseCurrency()
-        );
-
-      if(!isset($parameters['ReservePrice']))
-        $parameters['ReservePrice'] = $parameters['StartPrice'];
-      if(!isset($parameters['BuyNowPrice']) && ((isset($formData['allow_buy_now'])
-        && $formData['allow_buy_now'])) || isset($item['BuyNowPrice']))
-          $parameters['BuyNowPrice'] = $parameters['StartPrice'];
-
-      //set description
-      if(!isset($parameters['Description'])) {
-        $descriptionTmpl = $account['footer'];
-
-        $description = '';
-
-        if ($descriptionTmpl) {
-          //Set current product in Magento registry, it's required by the block
-          //which shows product's attributes
-          Mage::register('product', $product, true);
-
-          $_data = $product->getData();
-
-          //if ($productShippingType == 'tab_ShipFree'
-          //    || ($productShippingType == 'tab_ShipParcel'
-          //        && $shippingType == MVentory_TradeMe_Model_Config::SHIPPING_FREE
-          //        && isset($account['free_shipping_cost'])
-          //        && $account['free_shipping_cost'] > 0))
-          //  $_data['free_shipping_text'] = isset($account['free_shipping_text'])
-          //                                   ? $account['free_shipping_text']
-          //                                     : '';
-
-          $description = $this->processDescription($descriptionTmpl, $_data);
-
-          unset($_data);
-
-          //Convert all HTML entities to chars first (to allow entities which
-          //are not exists in XML) and then convert special chars to entities
-          //to not break XML
-          //Set encoding parameter to support PHP < 5.4
-          $description = html_entity_decode($description, ENT_COMPAT, 'UTF-8');
-        }
-        $parameters['Description'] = array($description);
-      }
-      else {
-        $parameters['Description'] = array($parameters['Description']);
-      }
-
-      //set Duration
-      $item['Duration'] = $helper->getDuration($account);
-
-      //Set pickup option
-      if (!isset($parameters['Pickup']) && isset($formData['pickup']))
-        $parameters['Pickup'] = $this->_getPickup($formData, $account);
-
-      //Set IsBrandNew option
-      if (!isset($parameters['IsBrandNew']))
-        $parameters['IsBrandNew'] = $this->_getIsBrandNew($product);
-
-      $item['PaymentMethods'] = $this->_getPaymentMethods($store);
-
-      if (!isset($parameters['SKU']))
-        $parameters['SKU'] = htmlspecialchars($product->getSku());
-
-      $item = array_merge($item,$parameters);
-      $client->setRawData(Zend_Json::encode($item), 'application/json');
-
-      $response = $client->request();
-      $jsonResponse = json_decode($response->getBody());
-
-      if (isset($jsonResponse->Success) && $jsonResponse->Success == 'true') {
-        if ($_formData) {
-          $helper->setFields($product, $_formData);
-
-          $product->save();
-        }
-
-        $return = (int)$jsonResponse->ListingId;
-      }
-      else {
-        if (isset($jsonResponse->Description) && (string)$jsonResponse->Description) {
-          $return = (string)$jsonResponse->Description;
-        } elseif (isset($jsonResponse->ErrorDescription)
-                  && (string)$jsonResponse->ErrorDescription) {
-            $return = (string)$jsonResponse->ErrorDescription;
-        }
-
-        $this->_helper->sendEmail(
-          'Unable to update TradeMe listing ',
-          $return .' product id ' . $product->getId() . ' listing id '
-            . $listingId
-        );
-      }
-
-      MVentory_TradeMe_Model_Log::debug(array('response' => $return));
-  	}
-  	else {
-  	  $this->_helper->sendEmail(
-        'Unable to auth TradeMe',
-        $return . ' product id ' . $product->getId() . ' listing id '
-          . $listingId
+      throw new MVentory_TradeMe_AccountException(
+        $account,
+        self::__E_ACCOUNT_SHIPPING
       );
 
-  	  MVentory_TradeMe_Model_Log::debug(
-        'Unable to auth when trying to update listing details ' . $listingId
-  	   );
+    $listingId = $auction['listing_id'];
 
-      $return = 'Can\'t get access token';
-  	}
+    $accessToken = $this->auth();
 
-    return $return;
+    $client = $accessToken->getHttpClient($this->getConfig());
+
+    $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling/Edit.json');
+    $client->setMethod(Zend_Http_Client::POST);
+
+    $item = $this->_loadListingDetailsAuth($listingId);
+    $item = $this->_listingDetailsToEditingRequest($item);
+
+    $formData = $_formData;
+
+    if ($formData)
+      foreach ($formData as $key => $value)
+        if ($value == -1 && isset($account[$key]))
+          $formData[$key] = $account[$key];
+
+    $shippingType = MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
+
+    if (!isset($parameters['Category']) && isset($formData['category'])
+        && $formData['category'])
+      $parameters['Category'] = $formData['category'];
+
+    if (!isset($parameters['Title'])) {
+      $title = $helper->getTitle($product, $store);
+
+      if (strlen($title) > MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH)
+        //!!!TODO: use hellip instead 3 dots, see send() method
+        $title = substr(
+          $title,
+          0,
+          MVentory_TradeMe_Model_Config::TITLE_MAX_LENGTH - 3
+        ) . '...';
+
+      $parameters['Title'] = $title;
+    }
+
+    if (!isset($parameters['ShippingOptions']))
+      if (isset($account['shipping_options']) && $account['shipping_options'])
+        foreach ($account['shipping_options'] as $shippingOption)
+          $parameters['ShippingOptions'][] = array(
+            'Type' => MVentory_TradeMe_Model_Config::SHIPPING_CUSTOM,
+            'Price' => $shippingOption['price'],
+            'Method' => $shippingOption['method'],
+          );
+      else
+        $parameters['ShippingOptions'][]['Type'] = $shippingType;
+
+    //set price
+    if (!isset($parameters['StartPrice']))
+      $parameters['StartPrice'] = $this->_getPrice(
+        $product,
+        $account,
+        $formData,
+        array(),
+        $store->getBaseCurrency()
+      );
+
+    if(!isset($parameters['ReservePrice']))
+      $parameters['ReservePrice'] = $parameters['StartPrice'];
+    if(!isset($parameters['BuyNowPrice']) && ((isset($formData['allow_buy_now'])
+       && $formData['allow_buy_now'])) || isset($item['BuyNowPrice']))
+      $parameters['BuyNowPrice'] = $parameters['StartPrice'];
+
+    //set description
+    if(!isset($parameters['Description'])) {
+      $descriptionTmpl = $account['footer'];
+
+      $description = '';
+
+      if ($descriptionTmpl) {
+        //Set current product in Magento registry, it's required by the block
+        //which shows product's attributes
+        Mage::register('product', $product, true);
+
+        $_data = $product->getData();
+
+        //if ($productShippingType == 'tab_ShipFree'
+        //    || ($productShippingType == 'tab_ShipParcel'
+        //        && $shippingType == MVentory_TradeMe_Model_Config::SHIPPING_FREE
+        //        && isset($account['free_shipping_cost'])
+        //        && $account['free_shipping_cost'] > 0))
+        //  $_data['free_shipping_text'] = isset($account['free_shipping_text'])
+        //                                   ? $account['free_shipping_text']
+        //                                     : '';
+
+        $description = $this->processDescription($descriptionTmpl, $_data);
+
+        unset($_data);
+
+        //Convert all HTML entities to chars first (to allow entities which
+        //are not exists in XML) and then convert special chars to entities
+        //to not break XML
+        //Set encoding parameter to support PHP < 5.4
+        $description = html_entity_decode($description, ENT_COMPAT, 'UTF-8');
+      }
+      $parameters['Description'] = array($description);
+    }
+    else {
+      $parameters['Description'] = array($parameters['Description']);
+    }
+
+    //set Duration
+    $item['Duration'] = $helper->getDuration($account);
+
+    //Set pickup option
+    if (!isset($parameters['Pickup']) && isset($formData['pickup']))
+      $parameters['Pickup'] = $this->_getPickup($formData, $account);
+
+    $item['PaymentMethods'] = $this->_getPaymentMethods($store);
+
+    if (!isset($parameters['SKU']))
+      $parameters['SKU'] = htmlspecialchars($product->getSku());
+
+    $item = array_merge($item,$parameters);
+    $client->setRawData(Zend_Json::encode($item), 'application/json');
+
+    $response = $client->request();
+
+    if (($status = $response->getStatus()) != 200)
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_STATUS,
+        $status,
+        200
+      ));
+
+    $body = $response->getBody();
+
+    if ($body === '')
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
+
+    $body = json_decode($body, true);
+
+    if ($body === null)
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
+
+    if (!(isset($body['Success']) && $body['Success']))
+      throw new MVentory_TradeMe_ApiException($body['Description']);
+
+    if (!(isset($body['ListingId']) && $body['ListingId']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'ListingId'
+      ));
+
+    if ($_formData) {
+      $helper->setFields($product, $_formData);
+
+      $product->save();
+    }
+
+    return (int) $body['ListingId'];
   }
 
   public function massCheck ($auctions) {
-    if (!$accessToken = $this->auth())
-      return;
-
+    $accessToken = $this->auth();
     $client = $accessToken->getHttpClient($this->getConfig());
     $client->setUri(
       'https://api.' . $this->_host
@@ -820,77 +832,48 @@ EOT;
 
     $response = $client->request();
 
-    if ($response->getStatus() != 200)
-      return;
+    if (($status = $response->getStatus()) != 200)
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_STATUS,
+        $status,
+        200
+      ));
 
-    $items = json_decode($response->getBody(), true);
+    $body = $response->getBody();
+
+    if ($body === '')
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
+
+    $items = json_decode($body, true);
+
+    if ($items === null)
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
+
+    if (!isset($items['List']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'List'
+      ));
+
+    if (!isset($items['TotalCount']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'TotalCount'
+      ));
 
     foreach ($auctions as $auction)
       foreach ($items['List'] as $item)
-        if ($item['ListingId'] == $auction['listing_id'])
+        if (isset($item['ListingId'])
+            && $item['ListingId'] == $auction['listing_id'])
           $auction['is_selling'] = true;
 
     return $items['TotalCount'];
   }
 
-  /**
-   * NOTE: this function requires $this->_accountId and $this->_accountData
-   * to be set
-   *
-   * @param Mage_Catalog_Model_Product $product Product
-   * @return bool
-   */
-  public function relist ($product) {
-    if (!($this->_accountId && $this->_accountData))
-      return false;
-
-    $this->getWebsiteId($product);
-
-    if (!$listingId = $product->getTmCurrentListingId())
-      return false;
-
-    if (!$accessToken = $this->auth())
-      return false;
-
-    $client = $accessToken->getHttpClient($this->getConfig());
-
-    $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling/Relist.json');
-    $client->setMethod(Zend_Http_Client::POST);
-
-    $data = array('ListingId' => $listingId);
-
-    $client->setRawData(Zend_Json::encode($data), 'application/json');
-
-    $response = $client->request();
-
-    if ($response->getStatus() != 200)
-      return false;
-
-    $response = Zend_Json::decode($response->getBody());
-
-    MVentory_TradeMe_Model_Log::debug(array('response' => $response));
-
-    if (!$response['Success']) {
-      Mage::log(
-        'TradeMe: error on relisting '
-        . $listingId
-        . ' ('
-        . $response['Description']
-        . ')'
-      );
-
-      return false;
-    }
-
-    return $response['ListingId'];
-  }
-
   public function uploadImage ($image) {
     MVentory_TradeMe_Model_Log::debug();
 
-    if (!$accessToken = $this->auth())
-      return 'Can\'t get access token';
-
+    $accessToken = $this->auth();
     $client = $accessToken->getHttpClient($this->getConfig());
 
     $url = 'https://api.' . $this->_host . '.co.nz/v1/Photos.json';
@@ -909,25 +892,36 @@ EOT;
 
     $response = $client->request();
 
-    $result = Zend_Json::decode($response->getBody());
+    if (($status = $response->getStatus()) != 200)
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_STATUS,
+        $status,
+        200
+      ));
 
-    MVentory_TradeMe_Model_Log::debug(array('response' => $result));
+    $body = $response->getBody();
 
-    if ($response->getStatus() != 200)
-      return $result['ErrorDescription'];
+    if ($body === '')
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
 
-    if ($result['Status'] != 1) {
-      $msg = 'Error on image uploading ('
-             . $image
-             . '). Error description: '
-             . $result['Description'];
+    MVentory_TradeMe_Model_Log::debug(array('response' => $body));
 
-      MVentory_TradeMe_Model_Log::debug($msg);
+    $result = json_decode($body, true);
 
-      $this->_helper->sendEmail('Unable to upload image to TradeMe', $msg);
+    if ($result === null)
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
 
-      return $result['Description'];
-    }
+    if (!(isset($result['Status']) && $result['Status'] == 1))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_IMAGE_FAILED,
+        $result['Status']
+      ));
+
+    if (!isset($result['PhotoId']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'PhotoId'
+      ));
 
     return $result['PhotoId'];
   }
@@ -1092,9 +1086,7 @@ EOT;
   }
 
   public function _loadListingDetailsAuth ($listingId) {
-    if (!$accessToken = $this->auth())
-      return;
-
+    $accessToken = $this->auth();
     $client = $accessToken->getHttpClient($this->getConfig());
 
     $url = 'https://api.'
@@ -1108,10 +1100,27 @@ EOT;
 
     $response = $client->request();
 
-    if ($response->getStatus() != 200)
-      return;
+    if (($status = $response->getStatus()) != 200)
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_STATUS,
+        $status,
+        200
+      ));
 
-    return $response->getBody();
+    $body = $response->getBody();
+
+    if ($body === '')
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
+
+    $body = json_decode($body, true);
+
+    if ($body === null)
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
+
+    if (isset($body['ErrorDescription']))
+      throw new MVentory_TradeMe_ApiException($body['ErrorDescription']);
+
+    return $this->_prepareListingDetails($body);
   }
 
   public function _parseCategories (&$list, $categories, $names = array()) {
@@ -1135,11 +1144,18 @@ EOT;
     }
   }
 
-  public function _parseListingDetails ($details) {
-    $details = json_decode($details, true);
+  public function _prepareListingDetails ($details) {
+    if (!(isset($details['EndDate']) && $details['EndDate']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'EndDate'
+      ));
 
-    if (isset($details['ErrorDescription']))
-      return $details['ErrorDescription'];
+    if (!(isset($details['AsAt']) && $details['AsAt']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'AsAt'
+      ));
 
     $details['EndDate'] = $this->_prepareTimestamp($details['EndDate']);
     $details['AsAt'] = $this->_prepareTimestamp($details['AsAt']);
@@ -1253,14 +1269,15 @@ EOT;
     if (isset($overwrite['price']))
       return $overwrite['price'];
 
+    $website = $this->_getWebsite();
     $helper = Mage::helper('trademe');
 
-    $price = $helper->getProductPrice($product, $this->_website);
+    $price = $helper->getProductPrice($product, $website);
 
     $price += $helper->getShippingRate(
       $product,
       $account['name'],
-      $this->_website
+      $website
     );
 
     if ($currency->getCode != MVentory_TradeMe_Model_Config::CURRENCY)
@@ -1268,7 +1285,7 @@ EOT;
         $price,
         $currency,
         MVentory_TradeMe_Model_Config::CURRENCY,
-        $this->_website->getDefaultStore()
+        $website->getDefaultStore()
       );
 
     return $this->_getAddFees($product, $data)
@@ -1316,6 +1333,27 @@ EOT;
       ',',
       $store->getConfig(MVentory_TradeMe_Model_Config::_PAYMENT_METHODS)
     );
+  }
+
+  /**
+   * Get auction title
+   *
+   * @param Mage_Catalog_Model_Product $product
+   *   Product model
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store model
+   *
+   * @param array $overwrite
+   *   Values to overwrite
+   *
+   * @return string
+   *   Auction title
+   */
+  protected function _getTitle ($product, $store, $overwrite) {
+    return isset($overwrite['title'])
+             ? $overwrite['title']
+             : Mage::helper('trademe/auction')->getTitle ($product, $store);
   }
 
   public function getCategories () {

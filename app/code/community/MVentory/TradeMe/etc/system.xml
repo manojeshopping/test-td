@@ -221,19 +221,6 @@
               <sort_order>108</sort_order>
             </mapping_store>
 
-            <name_variants_attr translate="label comment tooltip">
-              <label>Name variants attribute code</label>
-              <comment>Optional, e.g. prod_names</comment>
-              <tooltip>You can nominate an attribute with name variants to be randomly used for products on TradeMe, one name per line. Create a text area attribute and copy its code into this text box. This feature is optional.</tooltip>
-              <frontend_type>text</frontend_type>
-
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-
-              <sort_order>109</sort_order>
-            </name_variants_attr>
-
             <shipping_attr translate="label comment tooltip">
               <label>Shipping method attribute</label>
               <comment>Attribute code for a custom shipping methods</comment>
@@ -245,21 +232,21 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>110</sort_order>
+              <sort_order>109</sort_order>
             </shipping_attr>
 
             <stock_status translate="label comment tooltip">
-              <label>Minimum stock level</label>
-              <comment>List only products with selected stock levels</comment>
+              <label>Stock type</label>
+              <comment>List only products with selected stock type</comment>
               <tooltip>Select all stock level types that should be listed on TradeMe. See Inventory tab in product details for more info.</tooltip>
-              <frontend_type>multiselect</frontend_type>
+              <frontend_type>select</frontend_type>
               <source_model>trademe/setting_source_stockstatus</source_model>
 
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>109</sort_order>
+              <sort_order>110</sort_order>
             </stock_status>
 
             <import translate="label comment tooltip">
@@ -298,6 +285,45 @@
           </fields>
         </settings>
 
+        <normal_auction translate="label">
+          <label>Full price auctions</label>
+
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>0</show_in_store>
+
+          <sort_order>2</sort_order>
+
+          <fields>
+            <name_variants_attr translate="label comment tooltip">
+              <label>Name variants attribute code</label>
+              <comment>Optional, e.g. prod_names</comment>
+              <tooltip>You can nominate an attribute with name variants to be randomly used for products on TradeMe, one name per line. Create a text area attribute and copy its code into this text box. This feature is optional.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>1</sort_order>
+            </name_variants_attr>
+
+            <per_name_variant translate="label comment tooltip">
+              <label>Create multiple auctions per product</label>
+              <comment>Name variants attribute code must be provided.</comment>
+              <tooltip>Set to Yes if you want multiple auctions to be created with different name variants - one auction per name variant.</tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>2</sort_order>
+            </per_name_variant>
+          </fields>
+        </normal_auction>
+
         <one_dollar translate="label footer">
           <label>$1 auctions</label>
           <footer>
@@ -317,7 +343,7 @@
           <show_in_website>1</show_in_website>
           <show_in_store>0</show_in_store>
 
-          <sort_order>2</sort_order>
+          <sort_order>3</sort_order>
 
           <fields>
             <end_days translate="label comment tooltip">
@@ -428,8 +454,8 @@
           </fields>
         </one_dollar>
 
-        <watermark translate="label">
-          <label>Watermark</label>
+        <image translate="label">
+          <label>Image</label>
           <frontend_model>trademe/setting_fieldset</frontend_model>
 
           <show_in_default>1</show_in_default>
@@ -439,10 +465,34 @@
           <sort_order>3</sort_order>
 
           <fields>
-            <image translate="label comment tooltip">
+            <padding translate="label comment tooltip">
+              <label>Padding, px</label>
+              <comment>Default: 0 px</comment>
+              <tooltip>Image will be scaled to create a white border around the image with a thickness of this many pixels. Flush catalogue images cache after changing this setting.</tooltip>
+              <frontend_type>text</frontend_type>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>1</sort_order>
+            </padding>
+
+            <watermark_options translate="label">
+              <label>Watermark options</label>
+              <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>2</sort_order>
+            </watermark_options>
+
+            <watermark_image translate="label comment tooltip">
               <label>Image</label>
               <comment>Allowed file types: jpeg, gif, png.</comment>
-              <tooltip>GIF and PNG alpha channels are only considered if Watermark Position is selected to Stretch. In this case transparency can be created by setting alpha = 0. Any other value of alpha channel will be ignored, i.e. semi-transparancy is not supported.</tooltip>
+              <tooltip>GIF and PNG alpha channels are only considered if Watermark Position is selected to Stretch. In this case selective transparency can be created by setting alpha = 0 for some parts of the watermark image. Any other value of alpha channel will be ignored, i.e. semi-transparancy is not supported.</tooltip>
               <frontend_type>image</frontend_type>
               <backend_model>adminhtml/system_config_backend_image</backend_model>
               <upload_dir config="system/filesystem/media" scope_info="1">catalog/product/watermark</upload_dir>
@@ -452,23 +502,23 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>1</sort_order>
-            </image>
+              <sort_order>3</sort_order>
+            </watermark_image>
 
-            <size translate="label comment tooltip">
+            <watermark_size translate="label comment tooltip">
               <label>Size</label>
-              <comment>Example format: 200x300.</comment>
-              <tooltip>TradeMe images are resized to the following dimensions: 670 x 502 px.</tooltip>
+              <comment>Leave empty if watermark image doesn't need resizing.</comment>
+              <tooltip>Example format: 200x400. Tip: TradeMe images are resized to the following dimensions: 670 x 502 px.</tooltip>
               <frontend_type>text</frontend_type>
 
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>2</sort_order>
-            </size>
+              <sort_order>4</sort_order>
+            </watermark_size>
 
-            <opacity translate="label comment tooltip">
+            <watermark_opacity translate="label comment tooltip">
               <label>Opacity</label>
               <comment>Default: 0</comment>
               <tooltip>Value in percent. 0 - fully transparent, 100 - fully opaque.</tooltip>
@@ -478,12 +528,12 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>3</sort_order>
-            </opacity>
+              <sort_order>5</sort_order>
+            </watermark_opacity>
 
-            <position translate="label tooltip">
+            <watermark_position translate="label tooltip">
               <label>Position</label>
-              <tooltip>GIF and PNG alpha channels are only considered if Watermark Position is selected to Stretch. In this case transparency can be created by setting alpha = 0. Any other value of alpha channel will be ignored, i.e. semi-transparancy is not supported.</tooltip>
+              <tooltip>GIF and PNG alpha channels are only considered if Watermark Position is selected to Stretch. In this case selective transparency can be created by setting alpha = 0 for some parts of the watermark image. Any other value of alpha channel will be ignored, i.e. semi-transparancy is not supported.</tooltip>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_watermark_position</source_model>
 
@@ -491,10 +541,10 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>4</sort_order>
-            </position>
+              <sort_order>6</sort_order>
+            </watermark_position>
           </fields>
-        </watermark>
+        </image>
 
         <help>
           <frontend_model>trademe/setting_help</frontend_model>

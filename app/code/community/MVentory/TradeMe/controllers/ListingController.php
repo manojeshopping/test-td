@@ -80,32 +80,37 @@ class MVentory_TradeMe_ListingController
       return;
     }
 
-    $connector = new MVentory_TradeMe_Model_Api();
+    try {
+      $connector = new MVentory_TradeMe_Model_Api();
+      $listingId = $connector->send($product, $data['category'], $data);
 
-    $result = $connector->send($product, $data['category'], $data);
-
-    if (!is_int($result)) {
-      foreach ((array)$result as $error)
-        $session->addError($helper->__($error));
-
-      $this->_redirect('adminhtml/catalog_product/edit/id/' . $productId);
-
-      return;
-    }
-
-    $auction
-      ->setData(array(
+      $auction
+        ->setData(array(
           'product_id' => $product->getId(),
-          'listing_id' => $result,
+          'listing_id' => $listingId,
           'account_id' => $data['account_id']
         ))
-      ->save();
+        ->save();
+    }
+    catch (Exception $e) {
+      Mage::logException($e);
+
+      foreach ($this->_parseErrors($e->getMessage()) as $error)
+        $session->addError($helper->__($error));
+
+      return $this->_redirect(
+        'adminhtml/catalog_product/edit/id/' . $productId
+      );
+    }
 
     $path = MVentory_TradeMe_Model_Config::SANDBOX;
     $website = $helper->getWebsite($product);
 
     $host = $helper->getConfig($path, $website) ? 'tmsandbox' : 'trademe';
-    $url = 'http://www.' . $host . '.co.nz/Browse/Listing.aspx?id=' . $result;
+    $url = 'http://www.'
+           . $host
+           . '.co.nz/Browse/Listing.aspx?id='
+           . $listingId;
 
     $link = '<a href="' . $url . '">' . $url . '</a>';
 
@@ -162,6 +167,7 @@ class MVentory_TradeMe_ListingController
 
       $session->addSuccess($helper->__('Removed from: %s', $auction->getUrl()));
     } catch (Exception $e) {
+      Mage::logException($e);
       $session->addError($helper->__($e->getMessage()));
     }
 
@@ -190,10 +196,20 @@ class MVentory_TradeMe_ListingController
 
       $website = $helper->getWebsite($product);
 
-      $connector = new MVentory_TradeMe_Model_Api();
-      $result = $connector
-        ->setWebsiteId($website)
-        ->check($auction);
+      try {
+        $connector = new MVentory_TradeMe_Model_Api();
+        $result = $connector
+          ->setWebsiteId($website)
+          ->check($auction);
+      }
+      catch (Exception $e) {
+        Mage::logException($e);
+        Mage::getSingleton('adminhtml/session')->addError(
+          $helper->__($e->getMessage())
+        );
+
+        return $this->_redirect('adminhtml/catalog_product/edit/id/' . $id);
+      }
 
       $path = MVentory_TradeMe_Model_Config::SANDBOX;
 
@@ -237,8 +253,7 @@ class MVentory_TradeMe_ListingController
 
           break;
         default:
-          Mage::getSingleton('adminhtml/session')
-            ->addError($helper->__('Listing doesn\'t exist'));
+          throw new LogicException('Unexpected result value');
       }
     } else
       Mage::getSingleton('adminhtml/session')->addError($helper->__('Error'));
@@ -291,19 +306,20 @@ class MVentory_TradeMe_ListingController
       return;
     }
 
-    $api = new MVentory_TradeMe_Model_Api();
-    $result = $api->update($product, $auction, null, $data);
+    try {
+      $api = new MVentory_TradeMe_Model_Api();
+      $result = $api->update($product, $auction, null, $data);
 
-    if (!is_int($result)) {
-      Mage::getSingleton('adminhtml/session')->addError($helper->__($result));
-
-      $this->_redirect('adminhtml/catalog_product/edit/id/' . $params['id']);
-
-      return;
+      Mage::getSingleton('adminhtml/session')->addSuccess(
+        $helper->__('Listing has been updated')
+      );
     }
-
-    Mage::getSingleton('adminhtml/session')
-      ->addSuccess($helper->__('Listing has been updated '));
+    catch (Exception $e) {
+      Mage::logException($e);
+      Mage::getSingleton('adminhtml/session')->addError(
+        $helper->__($e->getMessage())
+      );
+    }
 
     $this->_redirect('adminhtml/catalog_product/edit/id/' . $params['id']);
   }
@@ -351,5 +367,22 @@ class MVentory_TradeMe_ListingController
     }
 
     return $this->_redirectUrl($lastUrl);
+  }
+
+  /**
+   * Parse and prepare errors from TradeMe API response
+   *
+   * @param string $errors
+   *   Raw string of errors from TradeMe API response
+   *
+   * @return array
+   *   Parse and prepare list of errors
+   */
+  protected function _parseErrors ($errors) {
+    $errors = explode("\r\n", $errors);
+
+    array_walk($errors, 'trim');
+
+    return array_filter($errors);
   }
 }

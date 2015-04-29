@@ -94,7 +94,20 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
       return $newImage;
     }
 
-    $imageModel->resize();
+    //Check if image processor is instance or child of Varien_Image because
+    //padding code depends on its internal things. It can be redeclared in
+    //some Magento extensions to implement different logic.
+    if (($scaleSize = $this->_getScaleSize($this->_getPadding($store), $size))
+        && ($imgProcessor = $imageModel->getImageProcessor())
+        && ($imgProcessor instanceof Varien_Image)) {
+
+      $imgProcessor->resize($scaleSize['width'], $scaleSize['height']);
+      $this->_pad($imgProcessor, $size);
+
+      unset($imgProcessor);
+    }
+    else
+      $imageModel->resize();
 
     if ($watermarkImg)
       $imageModel->setWatermark($watermarkImg);
@@ -119,8 +132,25 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
       )
     );
 
-    if ($watermarkImg && file_exists($newImage))
-      $this->_addWatermark($newImage, $settings);
+    if (file_exists($newImage)) {
+      $image = null;
+
+      if ($scaleSize) {
+        $image = $this->_getVarienImage($newImage, $settings);
+
+        $image->resize($scaleSize['width'], $scaleSize['height']);
+        $this->_pad($image, $size);
+      }
+
+      if ($watermarkImg)
+        $this->_addWatermark(
+          $image = $image ?: $this->_getVarienImage($newImage, $settings),
+          $settings
+        );
+
+      if ($image)
+        $image->save($newImage);
+    }
 
     if (isset($env))
       $this->changeStore($env);
@@ -161,19 +191,18 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
   }
 
   /**
-   * Add watermark specified in settings to passed image file. Overwrites
-   * original file.
+   * Get image handler for passed image file
    *
    * @param string $file
-   *   Path to original image file
+   *   Path to image file
    *
    * @param array $settings
    *   Settings from product's image model
    *
-   * @return MVentory_TradeMe_Helper_Image
-   *   Instance of this class
+   * @return Varien_Image
+   *   Image handler for the passed image file
    */
-  protected function _addWatermark ($file, $settings) {
+  protected function _getVarienImage ($file, $settings) {
     $image = new Varien_Image($file);
 
     $image->keepAspectRatio($settings['keep_aspect_ratio']);
@@ -183,14 +212,102 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
     $image->backgroundColor($settings['background_color']);
     $image->quality($settings['quality']);
 
+    return $image;
+  }
+
+  /**
+   * Add watermark specified in settings to passed image handler
+   *
+   * @param Varien_Image $image
+   *   Image handler
+   *
+   * @param array $settings
+   *   Settings from product's image model
+   *
+   * @return MVentory_TradeMe_Helper_Image
+   *   Instance of this class
+   */
+  protected function _addWatermark ($image, $settings) {
     $image
       ->setWatermarkPosition($settings['watermark_position'])
       ->setWatermarkImageOpacity($settings['watermark_opacity'])
       ->setWatermarkWidth($settings['watermark_width'])
-      ->setWatermarkHeigth($settings['watermark_height']);
+      ->setWatermarkHeigth($settings['watermark_height'])
+      ->watermark($settings['watermark_filepath']);
 
-    $image->watermark($settings['watermark_filepath']);
-    $image->save($file);
+    return $this;
+  }
+
+  /**
+   * Add padding around supplied image to make final image size as specified
+   * in $size parameter
+   *
+   * @param Varien_Image $image
+   *   Image handler
+   *
+   * @param array $size
+   *   Final image size (array must contain 'width' and 'height' keys)
+   *
+   * @return MVentory_TradeMe_Helper_Image
+   *   Instance of this class
+   *
+   * @throws Exception
+   *   If padding of image failed
+   */
+  protected function _pad ($image, $size) {
+    $adapter = $this->_getImageAdapter($image);
+
+    $width = $size['width'];
+    $height = $size['height'];
+
+    $ref = new ReflectionObject($adapter);
+
+    $prop = function ($name, $value = null) use ($ref, $adapter) {
+      $p = $ref->getProperty($name);
+      $p->setAccessible(true);
+
+      return $value ? $p->setValue($adapter, $value) : $p->getValue($adapter);
+    };
+
+    $call = function () use ($ref, $adapter) {
+      $args = func_num_args() == 1 && is_array(func_get_arg(0))
+                ? func_get_arg(0)
+                : func_get_args();
+
+      $m = $ref->getMethod(array_shift($args));
+      $m->setAccessible(true);
+
+      return $m->invokeArgs($adapter, $args);
+    };
+
+    $handler = imagecreatetruecolor($width, $height);
+    $call(array('_fillBackgroundColor', &$handler));
+
+    $oHandler = $prop('_imageHandler');
+    $oWidth = $prop('_imageSrcWidth');
+    $oHeight = $prop('_imageSrcHeight');
+
+    $result = imagecopy(
+      $handler,
+      $oHandler,
+      ($width - $oWidth) / 2,
+      ($height - $oHeight) / 2,
+      0,
+      0,
+      $oWidth,
+      $oHeight
+    );
+
+    if (!$result) {
+      imagedestroy($handler);
+
+      throw new Exception('Padding of image failed');
+    }
+
+    $prop('_imageHandler', $handler);
+    $call('refreshImageDimensions');
+
+    imagedestroy($oHandler);
 
     return $this;
   }
@@ -242,6 +359,15 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
       'watermark_width' => $model->getWatermarkWidth(),
       'watermark_height' => $model->getWatermarkHeigth()
     );
+  }
+
+  protected function _getImageAdapter ($image) {
+    $ref = new ReflectionObject($image);
+
+    $method = $ref->getMethod('_getAdapter');
+    $method->setAccessible(true);
+
+    return $method->invoke($image);
   }
 
   /**
@@ -341,6 +467,40 @@ class MVentory_TradeMe_Helper_Image extends MVentory_TradeMe_Helper_Data
       );
 
     return false;
+  }
+
+  /**
+   * Calculate size for scaling
+   *
+   * @param int $padding
+   *   Padding value
+   *
+   * @param array $size
+   *   Final size
+   *
+   * @return array
+   *   Size for scaling
+   */
+  protected function _getScaleSize ($padding, $size) {
+    return $padding
+             ? array(
+                 'width' => $size['width'] - 2 * $padding,
+                 'height' => $size['height'] - 2 * $padding
+               )
+             : array();
+  }
+
+  /**
+   * Return padding value from store's config
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store object
+   *
+   * @return string
+   *   Padding
+   */
+  protected function _getPadding ($store) {
+    return (int) $store->getConfig(MVentory_TradeMe_Model_Config::_IMG_PADDING);
   }
 
   /**

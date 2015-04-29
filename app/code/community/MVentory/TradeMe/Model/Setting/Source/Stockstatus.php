@@ -45,8 +45,8 @@ class MVentory_TradeMe_Model_Setting_Source_Stockstatus
         'value' => MVentory_TradeMe_Model_Config::STOCK_NOT_MANAGED
       ),
       array(
-        'label' => $helper->__('Out of stock'),
-        'value' => MVentory_TradeMe_Model_Config::STOCK_NO
+        'label' => $helper->__('Both of the above'),
+        'value' => MVentory_TradeMe_Model_Config::STOCK_BOTH
       )
     );
   }
@@ -65,6 +65,8 @@ class MVentory_TradeMe_Model_Setting_Source_Stockstatus
         => $helper->__('Managed and in stock'),
       MVentory_TradeMe_Model_Config::STOCK_NOT_MANAGED
         => $helper->__('Stock not managed'),
+      MVentory_TradeMe_Model_Config::STOCK_BOTH
+        => $helper->__('Both of the above'),
       MVentory_TradeMe_Model_Config::STOCK_NO
         => $helper->__('Out of stock')
     );

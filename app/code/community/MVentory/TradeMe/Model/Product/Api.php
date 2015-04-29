@@ -38,27 +38,30 @@ class MVentory_TradeMe_Model_Product_Api extends MVentory_API_Model_Product_Api
 
     $connector = new MVentory_TradeMe_Model_Api();
 
-    $result = $connector->send(
-      $product,
-      $match['id'],
-      $data['account_id']
-    );
+    try {
+      $listingId = $connector->send(
+        $product,
+        $match['id'],
+        $data['account_id']
+      );
 
-    if (is_int($result))
       Mage::getModel('trademe/auction')
         ->setData(array(
             'product_id' => $product->getId(),
-            'listing_id' => $result,
+            'listing_id' => $listingId,
             'account_id' => $data['account_id']
           ))
         ->save();
+    }
+    catch (Exception $e) {
+      Mage::logException($e);
+      $error = $e->getMessage();
+    }
 
     $_result = $this->fullInfo($productId, 'id');
 
-    if (!is_int($result))
-      $_result['tm_error'] = is_array($result)
-                               ? implode("\r\n", $result)
-                               : $result;
+    if (isset($error))
+      $_result['tm_error'] = $error;
 
     return $_result;
   }

@@ -203,13 +203,29 @@ EOT;
       $auctions = Mage::getResourceModel('trademe/auction_collection')
         ->addFieldToFilter('account_id', $accountId);
 
-      $connector = new MVentory_TradeMe_Model_Api();
+      try {
+        $connector = new MVentory_TradeMe_Model_Api();
 
-      $connector
-        ->setWebsiteId($this->_website)
-        ->setAccountId($accountId);
+        $connector
+          ->setWebsiteId($this->_website)
+          ->setAccountId($accountId);
 
-      $accountData['listings'] = $connector->massCheck($auctions);
+        $accountData['listings'] = $connector->massCheck($auctions);
+      }
+      catch (Exception $e) {
+        //Unset account so it won't be used for listing auctions
+        unset($this->_accounts[$accountId]);
+
+        Mage::logException($e);
+
+        MVentory_TradeMe_Model_Log::debug(array(
+          'account' => $accountData['name'],
+          'error on mass checking of auctions' => $e->getMessage(),
+          'error' => true
+        ));
+
+        continue;
+      }
 
       MVentory_TradeMe_Model_Log::debug(array(
         'account' => $accountData['name'],
@@ -232,14 +248,28 @@ EOT;
           continue;
         }
 
-        $result = $connector->check($auction);
+        try {
+          $result = $connector->check($auction);
+        }
+        catch (Exception $e) {
+          Mage::logException($e);
+
+          MVentory_TradeMe_Model_Log::debug(array(
+            'auction' => $auction,
+            'error on getting status' => $e->getMessage(),
+            'error' => true
+          ));
+
+          continue;
+        }
 
         MVentory_TradeMe_Model_Log::debug(array(
           'auction' => $auction,
           'status' => $result
         ));
 
-        if (!$result || $result == 3) {
+        //Auction is on sell
+        if ($result == 3) {
 
           //Increase number of active auctions to include auctions
           //which weren't counted by massCheck() method for some reason
@@ -249,6 +279,7 @@ EOT;
           continue;
         }
 
+        //Auction was sold
         if ($result == 2) {
           $product = Mage::getModel('catalog/product')->load(
             $auction['product_id']
@@ -440,15 +471,8 @@ EOT;
     if (!count($accounts))
       return;
 
-    if ($listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_STOCK) {
+    if ($listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_STOCK)
       $auctions = $aucResource->getNumberPerProduct();
-
-      $storeManageStock = (int) $this
-        ->_store
-        ->getConfig(
-            Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK
-          );
-    }
 
     unset($accountId, $accountData, $syncData);
 
@@ -460,29 +484,20 @@ EOT;
       if (!$id = $product->getId())
         continue;
 
-      $log = array('product' => $product);
-
       if ($listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_STOCK
           && isset($auctions[$id])) {
 
-        $stock = Mage::getModel('cataloginventory/stock_item')
-          ->loadByProduct($id);
-
-        if (!$stock->getId())
-          continue;
-
-        $manageStock = $stock->getUseConfigManageStock()
-                         ? $storeManageStock
-                         : (int) $stock['manage_stock'];
+        $qty = $this->_getProductQty($product);
 
         MVentory_TradeMe_Model_Log::debug(array(
           'product' => $product,
+          'stock' => $qty,
           'number of auctions' => $auctions[$id],
-          'manage stock' => $manageStock,
-          'qty' => $stock->getQty()
         ));
 
-        if ($manageStock && ($stock->getQty() <= $auctions[$id]))
+        //Go to next product if stock item can't be loaded (QTY === null)
+        //or stock is managed (QTY !== false) and we have no more stock to list
+        if (($qty === null) || ($qty !== false && $qty <= $auctions[$id]))
           continue;
       }
 
@@ -543,56 +558,112 @@ EOT;
         if ($minimalPrice && ($productPrice < $minimalPrice))
           continue;
 
-        $api = new MVentory_TradeMe_Model_Api();
-        $result = $api->send($product, $matchResult['id'], $accountId);
+        $nameVariants = $this->_getProductNameVariants(
+          $product,
+
+          //Use known number of normal + $1 auctions or pass 1 to count
+          //auction with default product name
+          isset($auctions[$id]) ? 1 + $auctions[$id] : 1
+        );
+
+        if ($nameVariants)
+          array_unshift($nameVariants, $product->getName());
+        else
+          $nameVariants[] = Mage::helper('trademe/auction')->getTitle(
+            $product,
+            $this->_store
+          );
 
         MVentory_TradeMe_Model_Log::debug(array(
           'product' => $product,
-          'submit result' => $result,
-          'error' => !is_int($result)
+          'name variants' => $nameVariants
         ));
 
-        if (is_array($result)) foreach ($result as $error)
-          if ($error == 'Insufficient balance') {
-            $this->_negativeBalanceError($accountData['name']);
+        $numberOfListedVariants = 0;
 
-            if (count($accounts) == 1)
-              return;
+        foreach ($nameVariants as $nameVariant) {
+          try {
+            $api = new MVentory_TradeMe_Model_Api();
+            $listingId = $api->send(
+              $product,
+              $matchResult['id'],
+              $accountId,
+              array('title' => $nameVariant)
+            );
+          }
+          catch (Exception $e) {
+            $errors = $this->_parseErrors($e->getMessage());
 
-            unset($accounts[$accountId]);
+            Mage::logException($e);
+            MVentory_TradeMe_Model_Log::debug(array(
+              'product' => $product,
+              'submit result' => $errors,
+              'error' => true
+            ));
 
+            //Go to next product if error happened during listing name variant
+            //Because we don't want to list name variants in different accounts
+            if ($numberOfListedVariants)
+              continue 3;
+
+            foreach ($errors as $error)
+              if ($error == 'Insufficient balance') {
+                $this->_negativeBalanceError($accountData['name']);
+
+                if (count($accounts) == 1)
+                  return;
+
+                unset($accounts[$accountId]);
+
+                break;
+              }
+
+            //Try next account
             continue 2;
           }
 
-        if (is_int($result)) {
-          Mage::getModel('trademe/auction')
-            ->setData(array(
-                'product_id' => $product->getId(),
-                'listing_id' => $result,
-                'account_id' => $accountId
-              ))
-            ->save();
+          MVentory_TradeMe_Model_Log::debug(array(
+            'product' => $product,
+            'submit result' => $listingId,
+            'error' => false
+          ));
 
-          if (!--$accounts[$accountId]['free_slots']) {
-            $accountData['sync_data']['duration'] = $this
-              ->_helper
-              ->getDuration($perShipping);
+          //Add record to the DB only for auction with default name
+          if (!$numberOfListedVariants)
+            Mage::getModel('trademe/auction')
+              ->setData(array(
+                  'product_id' => $product->getId(),
+                  'listing_id' => $listingId,
+                  'account_id' => $accountId
+                ))
+              ->save();
 
-            Mage::app()->saveCache(
-              serialize($accountData['sync_data']),
-              $accountData['cache_id'],
-              array(self::TAG_FREE_SLOTS),
-              null
-            );
-
-            if (count($accounts) == 1)
-              return;
-
-            unset($accounts[$accountId]);
-          }
-
-          break;
+          $numberOfListedVariants++;
         }
+
+        $accounts[$accountId]['free_slots'] -= $numberOfListedVariants;
+
+        if ($accounts[$accountId]['free_slots'] <= 0) {
+          $accountData['sync_data']['duration'] = $this
+            ->_helper
+            ->getDuration($perShipping);
+
+          Mage::app()->saveCache(
+            serialize($accountData['sync_data']),
+            $accountData['cache_id'],
+            array(self::TAG_FREE_SLOTS),
+            null
+          );
+
+          if (count($accounts) == 1)
+            return;
+
+          unset($accounts[$accountId]);
+        }
+
+        //We have succesfully listed product (and its name variants),
+        //go to the next one
+        break;
       }
     }
   }
@@ -768,50 +839,63 @@ EOT;
         if ($minimalPrice && ($productPrice < $minimalPrice))
           continue;
 
-        $api = new MVentory_TradeMe_Model_Api();
-        $result = $api->send(
-          $product,
-          $matchResult['id'],
-          $accountId,
-          array(
-            'price' => 1,
-            'allow_buy_now' => false,
-            'duration' => (int) $store->getConfig(
-              MVentory_TradeMe_Model_Config::_1AUC_DURATION
+        try {
+          $api = new MVentory_TradeMe_Model_Api();
+          $listingId = $api->send(
+            $product,
+            $matchResult['id'],
+            $accountId,
+            array(
+              'price' => 1,
+              'allow_buy_now' => false,
+              'duration' => (int) $store->getConfig(
+                MVentory_TradeMe_Model_Config::_1AUC_DURATION
+              )
             )
-          )
-        );
+          );
+        }
+        catch (Exception $e) {
+          $errors = $this->_parseErrors($e->getMessage());
+
+          Mage::logException($e);
+          MVentory_TradeMe_Model_Log::debug(array(
+            'product' => $product,
+            'submit result' => $errors,
+            'error' => true
+          ));
+
+          foreach ($errors as $error)
+            if ($error == 'Insufficient balance') {
+              $this->_negativeBalanceError($accountData['name']);
+
+              if (count($accounts) == 1)
+                return;
+
+              unset($accounts[$accountId]);
+
+              break;
+            }
+
+          //Try next account
+          continue;
+        }
 
         MVentory_TradeMe_Model_Log::debug(array(
           'product' => $product,
-          'submit result' => $result,
-          'error' => !is_int($result)
+          'submit result' => $listingId,
+          'error' => false
         ));
 
-        if (is_array($result)) foreach ($result as $error)
-          if ($error == 'Insufficient balance') {
-            $this->_negativeBalanceError($accountData['name']);
+        Mage::getModel('trademe/auction')
+          ->setData(array(
+              'product_id' => $product->getId(),
+              'type' => MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE,
+              'listing_id' => $listingId,
+              'account_id' => $accountId
+            ))
+          ->save();
 
-            if (count($accounts) == 1)
-              return;
-
-            unset($accounts[$accountId]);
-
-            continue 2;
-          }
-
-        if (is_int($result)) {
-          Mage::getModel('trademe/auction')
-            ->setData(array(
-                'product_id' => $product->getId(),
-                'type' => MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE,
-                'listing_id' => $result,
-                'account_id' => $accountId
-              ))
-            ->save();
-
-          break;
-        }
+        break;
       }
     }
   }
@@ -874,8 +958,6 @@ EOT;
         }
       }
 
-      $hasError = false;
-
       $api = new MVentory_TradeMe_Model_Api();
 
       if ($avoidWithdrawal) {
@@ -884,24 +966,32 @@ EOT;
         if ($fields['add_fees'])
           $price = $trademe->addFees($price);
 
-        $result = $api->update(
-          $product,
-          $auction,
-          array('StartPrice' => $price)
-        );
+        try {
+          $api->update(
+            $product,
+            $auction,
+            array('StartPrice' => $price)
+          );
+        }
+        catch (Exception $e) {
+          Mage::logException($e);
 
-        if (!is_int($result))
-          $hasError = true;
-      } else {
-        $result = $api
-          ->setWebsiteId($website)
-          ->remove($auction);
-
-        if ($result !== true)
-          $hasError = true;
+          $error = $e->getMessage();
+        }
       }
+      else
+        try {
+          $api
+            ->setWebsiteId($website)
+            ->remove($auction);
+        }
+        catch (Exception $e) {
+          Mage::logException($e);
 
-      if ($hasError) {
+          $error = $e->getMessage();
+        }
+
+      if (isset($error)) {
         //Send email with error message to website's general contact address
 
         $productUrl = $productHelper->getUrl($product);
@@ -913,7 +1003,7 @@ EOT;
                    . ') linked to product ('
                    . $productUrl
                    . ')'
-                   . ' Error: ' . $result;
+                   . ' Error: ' . $error;
 
         $productHelper->sendEmail($subject, $message);
 
@@ -1072,7 +1162,7 @@ EOT;
     if ($config['section'] != 'trademe')
       return $this;
 
-    $path = explode('/', MVentory_TradeMe_Model_Config::_NAME_VARIANTS_ATTR);
+    $path = explode('/', MVentory_TradeMe_Model_Config::_AUC_NAME_VAR_ATTR);
     $key = array('groups', $path[1], 'fields', $path[2], 'value');
 
     if (!$code = trim($config->getData(implode('/', $key))))
@@ -1139,6 +1229,95 @@ EOT;
       return true;
 
     return (int) $number < (int) $max;
+  }
+
+  /**
+   * Return product's name variants. Number of variants depends on available
+   * stock
+   *
+   * @param Mage_Catalog_Model_Product $product
+   *   Product model
+   *
+   * @param int $numOfAuctions
+   *   Number of existing auctions for the supplied product
+   *
+   * @return array
+   *   Returns shuffled array of name varients limit by available product's
+   *   stock.
+   */
+  protected function _getProductNameVariants ($product, $numOfAuctions) {
+    $allowMultiple = (bool) $this->_store->getConfig(
+      MVentory_TradeMe_Model_Config::_AUC_MULT_PER_NAME
+    );
+
+    if (!$allowMultiple)
+      return array();
+
+    $names = Mage::helper('trademe/product')->getNameVariants(
+      $product,
+      $this->_store
+    );
+
+    if (!$names)
+      return array();
+
+    $qty = $this->_getProductQty($product);
+
+    //Return no name variants if stock item can't be loaded
+    if ($qty === null)
+      return array();
+
+    //Return all name variants if stock is not managed
+    if ($qty === false)
+      return $names;
+
+    $qty = $qty - $numOfAuctions;
+
+    if ($qty <= 0)
+      return array();
+
+    return (count($names) <= $qty)
+             ? $names
+             : array_intersect_key(
+                 $names,
+                 array_flip((array) array_rand($names, $qty))
+               );
+  }
+
+  /**
+   * Return QTY for the specified product
+   *
+   * @param Mage_Catalog_Model_Product $product
+   *   Product model
+   *
+   * @return int|bool|null
+   *   Returns QTY number or null if stock item can't be loaded or false if
+   *   stock is not managed
+   */
+  protected function _getProductQty ($product) {
+    if (!isset($this->_isStockManagedInStore))
+      $this->_isStockManagedInStore = (int) $this->_store->getConfig(
+        Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK
+      );
+
+    if (!isset($product['trademe_stock_item'])) {
+      $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct(
+        $product
+      );
+
+      if (!$stock->getId())
+        return null;
+
+      $product['trademe_stock_item'] = $stock;
+    }
+    else
+      $stock = $product['trademe_stock_item'];
+
+    $manageStock = $stock->getUseConfigManageStock()
+                     ? $this->_isStockManagedInStore
+                     : (int) $stock['manage_stock'];
+
+    return $manageStock ? $stock->getQty() : false;
   }
 
   /**
@@ -1245,6 +1424,23 @@ EOT;
     $app->saveCache(true, $cacheId, array(self::TAG_EMAILS), 3600);
 
     return $this;
+  }
+
+  /**
+   * Parse and prepare errors from TradeMe API response
+   *
+   * @param string $errors
+   *   Raw string of errors from TradeMe API response
+   *
+   * @return array
+   *   Parse and prepare list of errors
+   */
+  protected function _parseErrors ($errors) {
+    $errors = explode("\r\n", $errors);
+
+    array_walk($errors, 'trim');
+
+    return array_filter($errors);
   }
 
   /**

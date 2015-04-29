@@ -92,24 +92,12 @@ class MVentory_TradeMe_Helper_Auction extends MVentory_TradeMe_Helper_Data
    */
   public function getTitle ($product, $store) {
     $title = $product->getName();
-
-    $code = trim(
-      $store->getConfig(MVentory_TradeMe_Model_Config::_NAME_VARIANTS_ATTR)
+    $titles = Mage::helper('trademe/product')->getNameVariants(
+      $product,
+      $store
     );
 
-    if (!$code)
-      return $title;
-
-    if (!$_titles = trim($product[strtolower($code)]))
-      return $title;
-
-    $_titles = explode("\n", str_replace("\r\n", "\n", $_titles));
-
-    foreach ($_titles as $_title)
-      if ($_title = trim($_title))
-        $titles[] = $_title;
-
-    if (!isset($titles))
+    if (!$titles)
       return $title;
 
     $titles[] = $title;
