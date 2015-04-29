@@ -147,9 +147,15 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
         $classes[] = 'level' . $level;
 
         $classes[] = 'nav-' . $itemposition;
-        if ($this->isCategoryActive($category)) {
-            $classes[] = 'active';
-        }
+        // if ($this->isCategoryActive($category)) {
+			// $classes[] = 'active';
+        // }
+		if(Mage::registry('current_category')){
+			if(in_array($category->getId(), Mage::registry('current_category')->getPathIds())){
+				$classes[] = 'active';
+			}
+		}
+		
         $linkClass = '';
         
         $linkClass .= ' menu-title-lv'.$level;
@@ -321,6 +327,21 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 	        $html[] = '<span>' . $this->escapeHtml('FURNITURE') . '</span>';
 	        $html[] = '</a>';
 			$html[] = '</li>';
+		}
+	 
+		$products = Mage::getModel('catalog/category')->load(13)->getProductCollection()
+        ->addAttributeToSelect('entity_id')
+        ->addAttributeToFilter('status', 1)
+        ->addAttributeToFilter('visibility', 4);
+		
+		$products_count = $products->count();
+		
+
+		if($level==0 && $category->getId()==13){
+			$html[] = '<div class="notification-round">';
+			$html[]	= $products_count;
+			$html[] = '</div>';
+
 		}
 		
         $html = implode("\n", $html);
