@@ -39,6 +39,35 @@
             </updates>
         </layout>
 	</frontend>
+	<admin>
+        <routers>
+			<checkoutc>
+				<use>admin</use>
+				<args>
+					<module>Magentoguys_Checkoutc</module>
+					<frontName>checkoutc</frontName>
+				</args>
+			</checkoutc>
+        </routers>
+    </admin>
+    <adminhtml>
+		<layout>
+			<updates>
+				<checkoutc>
+					<file>checkoutc.xml</file>
+				</checkoutc>
+			</updates>
+		</layout>
+		<translate>
+            <modules>
+                <Magentoguys_Checkoutc>
+                    <files>
+                        <default>Magentoguys_Checkoutc.csv</default>
+                    </files>
+                </Magentoguys_Checkoutc>
+            </modules>
+        </translate>
+    </adminhtml> 
 	<global>
 		<blocks>
 			<checkoutc>
