@@ -187,6 +187,30 @@ class Web_States_Adminhtml_StatesController extends Mage_Adminhtml_Controller_Ac
         }
         echo $model->getCode();
     }
+	
+	public function saveSortOrderAction()
+    {
+        $request = $this->getRequest();
+        $editorId = $request->getParam('editorId');
+        $value = $request->getParam('value');
+        if (!$editorId) {
+            echo $this->__('Unable to Save.');
+            return;
+        }
+        // if (!$value) {
+            // echo $this->__('Value can not be empty.');
+            // return;
+        // }
+        $model = Mage::getModel('web_states/states')->load($editorId);
+        $model->setSortOrder(trim($value));
+        try {
+            $model->save();
+        } catch (Exception $e) {
+            echo $e->getSortOrder() . '-' . $e->getMessage();
+        }
+        echo $model->getSortOrder();
+
+    }
 
     public function massDeleteAction()
     {
