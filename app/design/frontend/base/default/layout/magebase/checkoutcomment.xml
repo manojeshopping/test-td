@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magebase
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ *
+ * @category    Magebase
+ * @package     Magebase_CheckoutComment
+ * @copyright   Copyright (c) 2011 Magebase. (http://magebase.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<layout version="0.1.0">
+    <checkout_onepage_index>
+        <!-- Please note: We are adding a new block for the comments.
+             You will need to edit the template: checkout/onepage/shipping_method.phtml
+             to add: <?php echo $this->getChildHtml('mbcomments') ?>
+          -->
+        <reference name="checkout.onepage.shipping">
+        <block type="checkout/onepage_shipping" name="mbcomments" template="magebase/checkoutcomment/shipping_comment.phtml" />
+        </reference>
+    </checkout_onepage_index>
+</layout>
