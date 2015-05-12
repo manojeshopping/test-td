@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<config>
+  <modules>
+    <MVentory_ProductFeed>
+      <active>true</active>
+      <codePool>community</codePool>
+    </MVentory_ProductFeed>
+  </modules>
+</config>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<config>
+  <modules>
+    <MVentory_ProductFeed>
+      <version>0</version>
+    </MVentory_ProductFeed>
+  </modules>
+
+  <global>
+    <helpers>
+      <productfeed>
+        <class>MVentory_ProductFeed_Helper</class>
+      </productfeed>
+    </helpers>
+
+    <models>
+      <productfeed>
+        <class>MVentory_ProductFeed_Model</class>
+      </productfeed>
+    </models>
+  </global>
+
+  <crontab>
+    <jobs>
+      <mventory_productfeed_generation>
+        <schedule>
+          <cron_expr>0 2 * * *</cron_expr>
+        </schedule>
+        <run>
+          <model>productfeed/observer::generateFeeds</model>
+        </run>
+      </mventory_productfeed_generation>
+    </jobs>
+  </crontab>
+</config>
