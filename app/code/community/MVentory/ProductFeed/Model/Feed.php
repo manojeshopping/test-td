@@ -23,24 +23,6 @@ class MVentory_ProductFeed_Model_Feed
       ->addStoreFilter($params['store'])
       ->addFinalPrice();
 
-    $storeManageStock = $params['store']->getConfig(
-      Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK
-    );
-
-    $condition = array(
-      '{{table}}.use_config_manage_stock = 0 AND {{table}}.manage_stock=1'
-    );
-
-    if ($storeManageStock)
-      $condition[] = '{{table}}.use_config_manage_stock = 1';
-
-    $productCollection->joinTable(
-      'cataloginventory_stock_item',
-      'product_id = entity_id',
-      array('qty' => 'qty', 'is_in_stock' => 'is_in_stock'),
-      '(' . join(') OR (', $condition) . ')'
-    );
-
     $conds = array();
 
     if ($params['attribute_sets'])
