@@ -10,9 +10,9 @@
     <description>MVentory_ProductFeed</description>
     <notes>Development release</notes>
     <authors><author><name>Anatoly A. Kazantsev</name><user>anatoly</user><email>anatoly@mventory.com</email></author></authors>
-    <date>2015-05-12</date>
-    <time>13:51:11</time>
-    <contents><target name="mageetc"><dir name="modules"><file name="MVentory_ProductFeed.xml" hash="cf35a7a07921bec7f19f7d3d068d230b"/></dir></target><target name="magecommunity"><dir name="MVentory"><dir name="ProductFeed"><dir name="Helper"><file name="Data.php" hash="c4358876c633da11259e357f8c47200b"/></dir><dir name="Model"><file name="Feed.php" hash="c3c8051b5f82273e37f68c50a0d6361b"/><file name="Observer.php" hash="06c37810d557efd49e507802da6e6139"/></dir><dir name="etc"><file name="config.xml" hash="38cf309fdab5a958fbfb009153535b88"/></dir></dir></dir></target></contents>
+    <date>2015-05-14</date>
+    <time>03:13:08</time>
+    <contents><target name="mageetc"><dir name="modules"><file name="MVentory_ProductFeed.xml" hash="cf35a7a07921bec7f19f7d3d068d230b"/></dir></target><target name="magecommunity"><dir name="MVentory"><dir name="ProductFeed"><dir name="Helper"><file name="Data.php" hash="c4358876c633da11259e357f8c47200b"/></dir><dir name="Model"><file name="Feed.php" hash="ce39ede775b55562b15e59773b655442"/><file name="Observer.php" hash="06c37810d557efd49e507802da6e6139"/></dir><dir name="etc"><file name="config.xml" hash="38cf309fdab5a958fbfb009153535b88"/></dir></dir></dir></target></contents>
     <compatible/>
     <dependencies><required><php><min>5.3.0</min><max>6.0.0</max></php></required></dependencies>
 </package>
