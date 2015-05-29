@@ -13,7 +13,7 @@
  * part of the licensing agreement with mVentory.
  *
  * @package MVentory/TradeMe
- * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
  */
 
@@ -222,15 +222,39 @@ class MVentory_TradeMe_Model_Resource_Auction
   }
 
   /**
-   * Perform actions before object save
+   * Perform actions before auction save
    *
-   * @param Varien_Object $object
-   * @return Mage_Core_Model_Resource_Db_Abstract
+   * @param Mage_Core_Model_Abstract $auction
+   *   Auction model
+   *
+   * @return MVentory_TradeMe_Model_Resource_Auction
+   *   Instance of this class
    */
-  protected function _beforeSave (Mage_Core_Model_Abstract $object) {
-    if ($object->isObjectNew() && $object['listed_at'] === null)
-      $object['listed_at'] = Varien_Date::now();
+  protected function _beforeSave (Mage_Core_Model_Abstract $auction) {
+    if ($auction->isObjectNew() && $auction['listed_at'] === null)
+      Mage::helper('trademe/product')->setAttributesValue(
+        $auction['product_id'],
+        array('tm_listing_date' => $auction['listed_at'] = Varien_Date::now())
+      );
 
-    return parent::_beforeSave($object);
+    return parent::_beforeSave($auction);
+  }
+
+  /**
+   * Perform actions before auction delete
+   *
+   * @param Mage_Core_Model_Abstract $auction
+   *   Auction model
+   *
+   * @return MVentory_TradeMe_Model_Resource_Auction
+   *   Instance of this class
+   */
+  protected function _beforeDelete (Mage_Core_Model_Abstract $auction) {
+    Mage::helper('trademe/product')->setAttributesValue(
+      $auction['product_id'],
+      array('tm_listing_date' => null)
+    );
+
+    return parent::_beforeSave($auction);
   }
 }

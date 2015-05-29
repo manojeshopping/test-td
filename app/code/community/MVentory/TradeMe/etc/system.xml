@@ -24,7 +24,7 @@
   <tabs>
     <mventory translate="label">
       <label><![CDATA[<img id="mventory-logo" alt="mVentory" title="mVentory" src="https://s3-ap-southeast-2.amazonaws.com/mventory-logos/mVentory-logo.png">]]></label>
-      <sort_order>100</sort_order>
+      <sort_order>150</sort_order>
     </mventory>
   </tabs>
 
@@ -38,7 +38,7 @@
       <show_in_website>1</show_in_website>
       <show_in_store>0</show_in_store>
 
-      <sort_order>0</sort_order>
+      <sort_order>2</sort_order>
 
       <groups>
         <hint>

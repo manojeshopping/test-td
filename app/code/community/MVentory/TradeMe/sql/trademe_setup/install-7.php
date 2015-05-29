@@ -13,7 +13,7 @@
  * part of the licensing agreement with mVentory.
  *
  * @package MVentory/TradeMe
- * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
@@ -133,12 +133,32 @@ $attrs = array(
 
     //Fields from Mage_Catalog_Model_Resource_Setup
     'is_configurable' => false
+  ),
+
+  /**
+   * This attribute is used only for user's benefit (e.g. filtering products
+   * on product list page in admin).
+   * We don't use stored value anywhere
+   */
+  'tm_listing_date' => array(
+    //Fields from Mage_Eav_Model_Entity_Setup
+    'type' => 'datetime',
+    'label' => 'Listing date',
+    'required' => false,
+    'global' => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
+
+    //Fields from Mage_Catalog_Model_Resource_Setup
+    'is_configurable' => false
   )
 );
 
+$groups = array('TM');
+
 $this->startSetup();
 
-$this->addAttributes($attrs);
+$this
+  ->addAttributeGroups($groups)
+  ->addAttributes($attrs);
 
 $this->createTable('matching_rules');
 $this->createTable('auction');

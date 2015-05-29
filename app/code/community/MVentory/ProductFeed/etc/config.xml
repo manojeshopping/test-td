@@ -3,7 +3,7 @@
 <config>
   <modules>
     <MVentory_ProductFeed>
-      <version>0</version>
+      <version>1</version>
     </MVentory_ProductFeed>
   </modules>
 
@@ -17,8 +17,22 @@
     <models>
       <productfeed>
         <class>MVentory_ProductFeed_Model</class>
+        <resourceModel>productfeed_resource</resourceModel>
       </productfeed>
+
+      <productfeed_resource>
+        <class>MVentory_ProductFeed_Model_Resource</class>
+      </productfeed_resource>
     </models>
+
+    <resources>
+      <productfeed_setup>
+        <setup>
+          <module>MVentory_ProductFeed</module>
+          <class>MVentory_ProductFeed_Model_Resource_Setup</class>
+        </setup>
+      </productfeed_setup>
+    </resources>
   </global>
 
   <crontab>

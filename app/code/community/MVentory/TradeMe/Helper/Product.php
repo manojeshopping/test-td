@@ -58,6 +58,30 @@ class MVentory_TradeMe_Helper_Product extends MVentory_TradeMe_Helper_Data
   }
 
   /**
+   * Update attribute values for product per store
+   *
+   * @param int $productId
+   *   ID of product
+   *
+   * @param array $attrData
+   *   Array of key-value pair of attribute's code and its value
+   *
+   * @param int|string|Mage_Core_Model_Store $store
+   *   Website model or its ID or code
+   */
+  public function setAttributesValue ($productId, $attrData, $store = 0) {
+    Mage::getResourceSingleton('catalog/product_action')->updateAttributes(
+      array($productId),
+      $attrData,
+      Mage::app()
+        ->getStore($store)
+        ->getId()
+    );
+
+    return $this;
+  }
+
+  /**
    * Parse Minimum stock level setting and return list if modes for stock
    * filtering
    *

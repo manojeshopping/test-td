@@ -18,6 +18,7 @@ class MVentory_ProductFeed_Model_Feed
     $productCollection = Mage::getResourceModel('catalog/product_collection')
       ->setStore($params['store'])
       ->addAttributeToSelect('*')
+      ->addAttributeToFilter('productfeed_include', 1)
       ->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
       ->addAttributeToFilter('visibility', Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH)
       ->addStoreFilter($params['store'])

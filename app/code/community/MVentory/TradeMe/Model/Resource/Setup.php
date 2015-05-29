@@ -13,7 +13,7 @@
  * part of the licensing agreement with mVentory.
  *
  * @package MVentory/TradeMe
- * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
@@ -64,20 +64,19 @@ class MVentory_TradeMe_Model_Resource_Setup
   );
 
   public function addAttributes ($attrs) {
-    $entityTypeId = $this->getEntityTypeId('catalog_product');
-    $setId = $this->getDefaultAttributeSetId($entityTypeId);
+    $entityTypeId = $this->getEntityTypeId(Mage_Catalog_Model_Product::ENTITY);
+    $setIds = $this->getAllAttributeSetIds($entityTypeId);
 
-    $this->addAttributeGroup($entityTypeId, $setId, 'TM');
-    $groupId = $this->getAttributeGroupId($entityTypeId, $setId, 'TM');
+    foreach ($attrs as $name => $attr) {
+      $this->addAttribute($entityTypeId, $name, $attr);
 
-    foreach ($attrs as $name => $attr)
-      $this
-        ->addAttribute($entityTypeId, $name, $attr)
-        ->addAttributeToGroup($entityTypeId, $setId, $groupId, $name);
+      foreach ($setIds as $setId)
+        $this->addAttributeToGroup($entityTypeId, $setId, 'TM', $name);
+    }
   }
 
   public function updateAttributes ($attrs) {
-    $entityTypeId = $this->getEntityTypeId('catalog_product');
+    $entityTypeId = $this->getEntityTypeId(Mage_Catalog_Model_Product::ENTITY);
 
     foreach ($attrs as $name => $attr)
       foreach ($attr as $field => $value)
@@ -97,7 +96,7 @@ class MVentory_TradeMe_Model_Resource_Setup
    * @return MVentory_TradeMe_Model_Resource_Setup
    */
   public function removeAttributes ($attrs, $removeData = false) {
-    $entityTypeId = $this->getEntityTypeId('catalog_product');
+    $entityTypeId = $this->getEntityTypeId(Mage_Catalog_Model_Product::ENTITY);
 
     foreach ($attrs as $attr) {
       if ($removeData) {
@@ -106,15 +105,51 @@ class MVentory_TradeMe_Model_Resource_Setup
           $attr
         );
 
-        $this->deleteTableRow(
-          $_attr->getBackendTable(),
-          'attribute_id',
-          $_attr->getAttributeId()
-        );
+        if ($id = $_attr->getAttributeId())
+          $this->deleteTableRow($_attr->getBackendTable(), 'attribute_id', $id);
       }
 
       $this->removeAttribute($entityTypeId, $attr);
     }
+
+    return $this;
+  }
+
+  /**
+   * Add attribute groups
+   *
+   * @param array $groups
+   *   List of group names
+   *
+   * @return MVentory_TradeMe_Model_Resource_Setup
+   *   Instance of this class
+   */
+  public function addAttributeGroups ($groups) {
+    $entityTypeId = $this->getEntityTypeId(Mage_Catalog_Model_Product::ENTITY);
+    $setId = $this->getDefaultAttributeSetId($entityTypeId);
+
+    foreach ($groups as $group)
+      $this->addAttributeGroup($entityTypeId, $setId, $group);
+
+    return $this;
+  }
+
+  /**
+   * Remove attribute groups
+   *
+   * @param array $groups
+   *   List of group names
+   *
+   * @return MVentory_TradeMe_Model_Resource_Setup
+   *   Instance of this class
+   */
+  public function removeAttributeGroups ($groups) {
+    $entityTypeId = $this->getEntityTypeId(Mage_Catalog_Model_Product::ENTITY);
+    $setIds = $this->getAllAttributeSetIds($entityTypeId);
+
+    foreach ($groups as $group)
+      foreach ($setIds as $setId)
+        $this->removeAttributeGroup($entityTypeId, $setId, $group);
 
     return $this;
   }
