@@ -53,3 +53,7 @@
 .pddetail-price .product-price{float:left !important;}
 .product-detail .more-views{padding:10px;}
 .hide-me{display:none;}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+.product{min-height:316px !important}
+}
