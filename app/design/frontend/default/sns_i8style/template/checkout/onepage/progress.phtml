@@ -24,12 +24,17 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<div class="block block-progress opc-block-progress">
-    <div class="block-title">
+<div class="bs-callout bs-callout-warning">
+<p>* Denotes a required field</p>
+</div>
+<h3 class="dark"><?php echo $this->__('Your Checkout') ?></h3>
+<hr>
+<!--<div class="block block-progress opc-block-progress">-->
+    <!--<div class="block-title">
         <strong><span><?php echo $this->__('Your Checkout ...') ?></span></strong>
-    </div>
-    <div class="block-content">
-        <dl>
+    </div>-->
+    <!--<div class="block-content">-->
+        <!--<dl>-->
             <?php if ($this->getCheckout()->getStepData('billing', 'is_show')): ?>
             <div id="billing-progress-opcheckout">
                 <?php echo $this->getChildHtml('billing.progress') ?>
@@ -53,7 +58,7 @@
                 <?php echo $this->getChildHtml('payment.progress') ?>
             </div>
             <?php endif; ?>
-        </dl>
-    </div>
-</div>
+        <!--</dl>-->
+    <!--</div>-->
+<!--</div>-->
 

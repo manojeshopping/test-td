@@ -29,32 +29,22 @@
  */
 ?>
 <?php if ($this->displayBoth()):?>
-<tr class="cart-first-row">
-	<td></td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
-        <?php echo $this->helper('tax')->__('EXCL GST') ?>
-    </td>
-	<td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
-        <?php echo $this->helper('tax')->__('INCL GST') ?>
-    </td>
- 
-</tr>
 <tr>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
+    <th scope="row" style="<?php echo $this->getStyle() ?>" class="" colspan="<?php echo $this->getColspan(); ?>">
         <?php echo $this->helper('tax')->__('Subtotal') ?>
-    </td>
-	<td style="<?php echo $this->getStyle() ?>" class="a-right">
+    </th>
+	<td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValueExclTax()) ?>
     </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+    <td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValueInclTax()) ?>
     </td>
 </tr>
 <?php else : ?>
 <tr>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
+    <th scope="row" style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
         <?php echo $this->getTotal()->getTitle() ?>
-    </td>
+    </th>
     <td style="<?php echo $this->getStyle() ?>" class="a-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?>
     </td>

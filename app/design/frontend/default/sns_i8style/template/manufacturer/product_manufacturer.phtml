@@ -7,12 +7,7 @@ if(Mage::getModel('eav/entity_attribute_source_table')->setAttribute(Mage::getMo
         $status=$manufacturer->getStatus();    
         if($status==1){
 ?>
-        <div class="manufacturer-img-box">
-        <!--<a href="<?php // echo $this->getBaseUrl()."catalogsearch/advanced/result/?manufacturer[]=".$manufacturer->getMenufecturerName() ?>">-->
-		<!--<a href="javascript:void(0)">-->
-        <?php echo $this->getLayout()->createBlock('core/template')->setmanufacturerimage($manufacturer->getFilename())->setlegend($manufacturer->getLegend())->setTemplate('manufacturer/manufacturer_resize.phtml')->toHtml(); ?>
-        <!--</a>-->
-        </div>
+			<?php echo $this->getLayout()->createBlock('core/template')->setmanufacturerimage($manufacturer->getFilename())->setlegend($manufacturer->getLegend())->setTemplate('manufacturer/manufacturer_resize.phtml')->toHtml(); ?>
 <?php } 
 } 
 endif;

@@ -26,11 +26,9 @@
 ?>
 
 <?php if(($crumbs && is_array($crumbs))): ?>
-<div id="sns_pathway" class="clearfix">
-	<div class="pathway-inner">
-		<!--<h4><?php //echo $this->__("You're currently on:") ?></h4>-->
-		<span class="icon-pointer "></span>
-		<ul class="breadcrumbs">
+		<div class="vspace4"></div>	
+		<ul class="breadcrumb">
+			<li class=""><a href="<?php echo Mage::getBaseUrl(); ?>"><i class="fa fa-map-marker"></i></a></li>
 		  <?php foreach($crumbs as $_crumbName=>$_crumbInfo): ?>
             <li class="<?php echo $_crumbName.(($_crumbInfo['last'])?' last':''); ?>">
             <?php if($_crumbInfo['link']): ?>
@@ -41,11 +39,8 @@
                 <?php echo $this->htmlEscape($_crumbInfo['label']) ?>
             <?php endif; ?>
             <?php if(!$_crumbInfo['last']): ?>
-                <!--<span class="separator">&nbsp</span>-->
             <?php endif; ?>
             </li>
         <?php endforeach; ?>
-			</ul>
-	</div>
-</div>
+		</ul>
 <?php endif; ?>

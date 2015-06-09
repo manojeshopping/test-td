@@ -47,7 +47,6 @@ $imgSizeXXL = Mage::helper('i8style/data')->getImgSize('XXL');
 	
 	
 	<?php if(strpos($_SERVER['REQUEST_URI'], '/quickview/')) : ?>
-		<!-- quickview image gallery -->
 		<div id="sns_product_img<?php echo $unique; ?>" class="sns_product_qv_img">
 			<div class="item-img">
 				<img 
@@ -78,14 +77,12 @@ $imgSizeXXL = Mage::helper('i8style/data')->getImgSize('XXL');
 			});
 		</script>
 	<?php else : ?>
-		<div id="sns_product_img<?php echo $unique; ?>" class="sns_product_img">
-			<div class="product-image-zoom">
-			    <?php
+		<div id="sns_product_img<?php echo $unique; ?>" class="product-image box product-image-zoom sns_product_img">
+			<?php
 			    	$_img = '<img id="zoom_img'.$unique.'" data-zoom-image="'.$this->helper('catalog/image')->init($_product, 'image').'" src="'.$this->helper('catalog/image')->init($_product, 'image')->resize($imgSizeXXL[0], $imgSizeXL[1]).'" alt="'.$this->htmlEscape($this->getImageLabel()).'" title="'.$this->htmlEscape($this->getImageLabel()).'" />';
 					echo $_img;
 			    ?>
-			</div>
-
+		
 			<?php if (count($this->getGalleryImages()) > 0): ?>
 			<div class="more-views clearfix">
 		        <div class="gallery gallery_img" id="gallery_img<?php echo $unique; ?>" style="display: none;">

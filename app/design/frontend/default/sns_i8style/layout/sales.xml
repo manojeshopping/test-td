@@ -35,7 +35,7 @@ Customer account pages, rendered for all tabs in dashboard
 
     <customer_logged_in>
         <reference name="right">
-            <block type="sales/reorder_sidebar" name="sale.reorder.sidebar" as="reorder" template="sales/reorder/sidebar.phtml"/>
+            <!--<block type="sales/reorder_sidebar" name="sale.reorder.sidebar" as="reorder" template="sales/reorder/sidebar.phtml"/>-->
         </reference>
     </customer_logged_in>
     <checkout_onepage_index>

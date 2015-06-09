@@ -19,7 +19,7 @@
 			<action method="addItem"><type>skin_js</type><name helper="revolutionslider/data/getJSRevolutionSlider"/><params/><if/></action>
 			<action method="addCss"><stylesheet>sns/revolutionslider/css/revolution-customs.css</stylesheet></action>-->
         </reference>
-		<reference name="header">
+		<reference name="root">
 			<block type="revolutionslider/list" name="revolutionslider.list" as="slideshow"></block>
 		</reference>
 	</cms_index_index>

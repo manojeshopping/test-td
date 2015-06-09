@@ -60,9 +60,11 @@ class Mana_Filters_Block_Price extends Mage_Catalog_Block_Layer_Filter_Price
 	public function getPriceDisplayType(){
 		if($this->isTextBoxEnabled()){
 			$html = '
-				<div class="text-box"><div class="inner"><div class="price-from">
-					<span>'.$this->getCurrencySymbol().'</span> <input type="text" name="min" id="minPrice" class="priceTextBox" value="'.$this->getCurrMinPrice().'"/></div><div class="price-separator">-</div><div class="price-to"><span>'.$this->getCurrencySymbol().'</span> <input type="text" name="max" id="maxPrice" class="priceTextBox" value="'.$this->getCurrMaxPrice().'"/></div>
-					</div><input type="button" value="'.$this->getGoBtnText().'" name="go" class="go gfont"/>
+				<div class="form-group"><div class="input-group">
+					<div class="input-group-addon padding4">'.$this->getCurrencySymbol().'</div> <input type="text" name="min" id="minPrice" class="form-control" value="'.$this->getCurrMinPrice().'"/><div class="input-group-addon padding4">-</div><div class="input-group-addon padding4">'.$this->getCurrencySymbol().'</div> <input type="text" name="max" id="maxPrice" class="form-control" value="'.$this->getCurrMaxPrice().'"/>
+					<div class="input-group-addon padding0">
+						<input type="button" value="'.$this->getGoBtnText().'" name="go" class="go gfont"/>
+					</div></div>
 					<input type="hidden" id="amount" readonly="readonly" style="background:none; border:none;" value="'.$this->getCurrencySymbol().$this->getCurrMinPrice()." - ".$this->getCurrencySymbol().$this->getCurrMaxPrice().'" />
 
 				</div>';
@@ -87,9 +89,8 @@ class Mana_Filters_Block_Price extends Mage_Catalog_Block_Layer_Filter_Price
 		if($this->getSliderStatus()){
 			$text='
 				<div class="price">
+					<div class="range-wrap row"><div class="col-xs-12"><div id="slider-range"></div></div></div>
 					'.$this->getPriceDisplayType().'
-					<div class="range-wrap"><div id="slider-range"></div></div>
-
 				</div>'.$this->getSliderJs();
 
 			return $text;

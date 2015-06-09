@@ -1,0 +1,25 @@
+<?php
+$_product      = $this->getItem();
+$_configHelper = Mage::helper('searchautocomplete/config');
+?>
+<a href="<?php echo $_product->getProductUrl() ?>">
+<div class="search-item ">
+<div class="row">
+    <?php if ($_configHelper->isShowImage()): ?>
+		<div class="col-xs-4">
+			<img src="<?php echo $this->helper('mstcore/image')->init($_product, 'thumbnail', 'catalog/product')->resize($_configHelper->getImageWidth(), $_configHelper->getImageHeight()) ?>" class="img-responsive" width="<?php echo $_configHelper->getImageWidth() ?>px" height="<?php echo $_configHelper->getImageHeight() ?>px"/>
+		</div>
+   <?php endif ?>
+	<?php if($_configHelper->isShowShortDescription()): ?>
+		<div class="col-xs-5 showMeRed1">
+			<div class="short-description"><h4><?php echo Mage::helper('core/string')->truncate(strip_tags($_product->getShortDescription()), $_configHelper->getShortDescriptionLen()) ?></h4></div>
+		</div>
+	<?php endif; ?>
+	<?php if ($_configHelper->isShowPrice()): ?>
+		<div class="col-xs-3 showMeRed1">
+			<?php echo $this->getPriceHtml($_product, false) ?>
+		</div>
+	<?php endif ?>
+</div>
+</div>
+</a>

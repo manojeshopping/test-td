@@ -24,9 +24,7 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php /** @var $this Mage_Checkout_Block_Cart_Shipping */ ?>
 <div class="shipping">
-    <!-- <h2><?#php echo $this->__('Instant Freight Quote') ?></h2> -->
     <div class="shipping-form">
        <form action="<?php echo $this->getUrl('checkout/cart/estimatePost') ?>" method="post" id="shipping-zip-form">
             <p><?php echo $this->__('<strong>If you would like a shipping estimate please select a region from the box below:</strong>') ?></p>
@@ -37,9 +35,8 @@
                         <?php echo Mage::getBlockSingleton('directory/data')->getCountryHtmlSelect($this->getEstimateCountryId()) ?>
                     </div>
                 </li>
-            <?php //if($this->getStateActive()): ?>
+				<?php //if($this->getStateActive()): ?>
                 <li>
-                    <!-- <label for="region_id"<?php if ($this->isStateProvinceRequired()) echo ' class="required"' ?>><?php if ($this->isStateProvinceRequired()) echo '<em>*</em>' ?><?php echo $this->__('Region:') ?></label> -->
                     <div class="input-box">
                         <select id="region_id" name="region_id" title="<?php echo $this->__('State/Province') ?>" style="display:none;"<?php echo ($this->isStateProvinceRequired() ? ' class="validate-select"' : '') ?>>
                             <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
@@ -50,7 +47,7 @@
                        //]]>
                        </script>
                        <input type="text" id="region" name="region" value="<?php echo $this->escapeHtml($this->getEstimateRegion()) ?>"  title="<?php echo $this->__('State/Province') ?>" class="input-text" style="display:none;" />
-                   </div>
+					</div>
                 </li>
             <?php //endif; ?>
             <?php if($this->getCityActive()): ?>

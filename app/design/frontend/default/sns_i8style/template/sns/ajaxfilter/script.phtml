@@ -44,6 +44,10 @@
 			e.preventDefault();
 			ajaxFilter($(this).attr('href'));
 		});
+		$(document).on('click', '.bottom-pager a', function(e){
+			e.preventDefault();
+			ajaxFilter($(this).attr('href'));
+		});
 		$('.toolbar select').removeAttr('onchange');
 		$('.toolbar select').on('change',function(){
 			//var url=$(this).val(); alert(url);

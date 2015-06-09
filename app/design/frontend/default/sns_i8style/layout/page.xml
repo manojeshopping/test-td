@@ -50,14 +50,19 @@ Default layout, loads most of the pages
                 <action method="addJs"><script>mage/cookies.js</script></action>
                 
                 <action method="addJs"><script>sns/jquery/jquery.js</script></action>
-                <action method="addJs"><script>sns/jquery/jquery-noconflict.js</script></action>
+				<action method="addJs"><script>sns/jquery/jquery-noconflict.js</script></action>
                 <action method="addJs"><script>sns/cookie/jquery.cookie.min.js</script></action>
                 <action method="addJs"><script>sns/easing/jquery.easing.js</script></action>
                 <action method="addJs"><script>sns/bootstrap/js/bootstrap.min.js</script></action>
+				
+				<action method="addJs"><script>sns/bootstrap/js/bootstrap-submenu.js</script></action>
+				
+				<action method="addJs"><script>sns/bootstrap/js/docs.js</script></action>
 
 				<block type="page/js_cookie" name="js_cookies" template="page/js/cookie.phtml"/>
 				
 	    		<action method="addCss"><stylesheet>assets/bootstrap/css/bootstrap.min.css</stylesheet></action>
+				<action method="addCss"><stylesheet>assets/bootstrap/css/bootstrap-submenu.min.css</stylesheet></action>
 				<action method="addCss"><stylesheet>assets/fonts/awesome/css/font-awesome.min.css</stylesheet></action>
 				<action method="addCss"><stylesheet>assets/fonts/simpleline/simple-line-icons.css</stylesheet></action>
 				

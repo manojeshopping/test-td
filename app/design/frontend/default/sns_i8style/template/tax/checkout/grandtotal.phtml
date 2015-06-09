@@ -30,33 +30,25 @@
 ?>
 <?php if ($this->includeTax() && $this->getTotalExclTax()>=0):?>
 <tr>
-	<td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
-        <strong><?php echo $this->helper('tax')->__('Grand Total')?></strong>
+	<th style="<?php echo $this->getStyle() ?>" class="warning" scope="row" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->helper('tax')->__('Grand Total')?>
+    </th>
+	<td style="<?php echo $this->getStyle() ?>" class="text-right warning">
+        <?php echo $this->helper('checkout')->formatPrice($this->getTotalExclTax()) ?>
     </td>
-	<td style="<?php echo $this->getStyle() ?>" class="a-right">
-        <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotalExclTax()) ?></strong>
-    </td>
-	<td style="<?php echo $this->getStyle() ?>" class="a-right">
-        <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?></strong>
+	<td style="<?php echo $this->getStyle() ?>" class="text-right warning">
+        <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?>
     </td>
     
 </tr>
 <?php // echo $this->renderTotals('taxes', $this->getColspan()); ?>
-<!--<tr>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
-        <strong><?php echo $this->helper('tax')->__('Grand Total Incl. Tax')?></strong>
-    </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right">
-        <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?></strong>
-    </td>
-</tr>-->
 <?php else:?>
 <tr>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
-        <strong><?php echo $this->getTotal()->getTitle() ?></strong>
-    </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right">
-        <strong><?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?></strong>
+    <th scope="row" style="<?php echo $this->getStyle() ?>" class="warning" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->getTotal()->getTitle() ?>
+    </th>
+    <td style="<?php echo $this->getStyle() ?>" class="text-right warning">
+        <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?>
     </td>
 </tr>
 <?php endif;?>

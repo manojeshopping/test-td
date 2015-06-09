@@ -33,7 +33,7 @@ examples on what kind of actions can be applied to referenced blocks.
         </reference>
 	</catalog_category_default>
 	<catalog_category_layered> <!-- find all category pages with layered navigation -->
-		<reference name="left"> <!-- find left column block -->
+		<reference name="right"> <!-- find left column block -->
 			<remove name="catalog.leftnav"/> <!-- remove standard layered navigation -->
             <remove name="enterprisecatalog.leftnav"/> <!-- remove enterprise layered navigation -->
             <block type="mana_filters/view" name="mana.catalog.leftnav" before="-" template="catalog/layer/view.phtml"/>

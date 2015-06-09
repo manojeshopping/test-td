@@ -1,0 +1,14 @@
+<?php
+    $_collection = $this->getSuggestedCollection();
+?>
+
+<?php if ($this->isEnabled() && $_collection->count() > 0): ?>
+<ul class="related-search float-left">
+	<li><?php echo $this->__('Related Searches: ') ?> </li>
+	<?php foreach ($_collection as $_query): ?>
+	<li><a href="<?php echo $this->getQueryUrl($_query) ?>"><?php echo $_query->getQueryText() ?></a></li>
+	<?php endforeach ?>
+</ul>
+<div class="clearfix"></div>
+
+<?php endif ?>

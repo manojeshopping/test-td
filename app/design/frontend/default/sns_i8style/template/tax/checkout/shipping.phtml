@@ -28,143 +28,38 @@
  * @see Mage_Tax_Block_Checkout_Shipping
  */
 ?>
-<script type="text/javascript">
- jQuery(document).ready(function() {
 
-   // jQuery("#in_store_pickup").click(function() {
-		
-     // jQuery('#delivery_selected_cart').val('pickup');
-	 // jQuery('#pick_post').submit();	
-	 // jQuery('#estimate_shipping_selector').hide();
-    
-   // });
-   jQuery("#delivery").click(function() {
-
-	 jQuery('#delivery_selected').val('delivery'); 	
-	 jQuery('#estimate_shipping_selector').show();
-    
-   });
-   
-   // jQuery('input[name="delivery_option"]').click(function() {
-	  // jQuery('#delivery_selected').val(this.value);
-   // });
-  
-   jQuery('.btn-proceed-checkout').click(function(){
-		jQuery("#selected_delivery").submit();		
-   });
-	
-  
-});
-</script>
-<script type="text/javascript">
-jQuery(document).ready(function() {
-jQuery('#in_store_pickup').click(function(event) {
-	event.preventDefault(); /*  Stops default form submit on click */
-		 jQuery('#delivery_selected').val('pickup'); 	
-		jQuery('#estimate_shipping_selector').hide();                                                               //Hide Login Button
-        jQuery('#sns_ajaxfilter .bg').height('100%');
-        jQuery('#sns_ajaxfilter').fadeIn(300);
-        var region_id = jQuery("#store_pick_region").val();
-        var country_id = jQuery("#store_pick_country").val();
-		var postcode = jQuery("#store_pick_postcode").val();
-		
-        jQuery.ajax({                                                                                        // Run getUnlockedCall() and return values to form
-            url: "<?php echo $this->getUrl('checkout/cart/estimatePost') ?>",
-            data: 'region_id=' + region_id + '&country_id=' + country_id + '&estimate_postcode=' + postcode,
-            type: "POST",
-            success: function(data){
-				data = jQuery.parseJSON(data);
-				if (data.shipping) {
-						jQuery('#shopping-cart-totals-table').empty();
-						jQuery('#shopping-cart-totals-table').replaceWith(data.shipping);
-				}
-                // if (data.shipping == '') {
-                    // // $('#loginbutton').show();                                               // Show Login button
-                    // // $('.error').show();                                                     // Display login error message
-                    // // $('#loginprogress').html('');                                           // Show Progress Spinner
-                // } else {
-                    // location.reload();
-					// jQuery( window ).load(function() {
-						// jQuery('#estimate_shipping_selector').hide();
-					// });
-                                                                            // Show logout button
-                // }
-				jQuery('#estimate_shipping_selector').hide(); 
-				jQuery('#sns_ajaxfilter .bg').height('100%');
-                jQuery('#sns_ajaxfilter').fadeOut(600);
-				jQuery('#in_store_pickup').attr('checked', 'checked');
-				jQuery('#delivery_selected').val('pickup'); 
-            }
-            });
-        });
-	});	
-</script>
-
-<?php if ($this->displayBoth()):?>
-<tr class="estimate_shipping_selector">
-	<td style="<?php echo $this->getStyle() ?>" class="a-right">
-        <?php echo $this->__('PICKUP / DELIVERY'); ?>
-	</td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="2">
-        <div id="deliver_options">
-			<form action="<?php echo Mage::getUrl('checkout/onepage/',array('_secure'=>true)) ?>" name="selected_delivery" id="selected_delivery" method="post">
-				<input type="hidden" name="delivery_selected" id="delivery_selected" value="" />
-			</form>
-			<form action="<?php echo $this->getUrl('checkout/cart/estimatePost') ?>" name="pick_post" id="pick_post">
-				<input type="hidden" id="store_pick_region" name="region_id" value="" />
-				<input type="hidden" id="store_pick_country" name="country_id" value="NZ" />
-				<input type="hidden" id="store_pick_postcode" name="estimate_postcode" value="1111" />
-			</form>
-			<input type="radio" id="in_store_pickup" name="delivery_option" value="pickup" /><?php echo $this->__('In-store pickup (Takanini, Auckland)'); ?><br/>
-			<input type="radio" id="delivery" name="delivery_option" value="delivery" checked="checked"/><?php echo $this->__('I want delivery'); ?>	
-		</div>
-    </td>
-</tr>
-
-<tr id="estimate_shipping_selector" class="estimate_shipping_selector">
-	<td style="<?php echo $this->getStyle() ?>" class="a-right">
-        <?php echo $this->__('SPECIFY DELIVERY AREA OR LEAVE EMPTY FOR TAKANINI, AUCKLAND COLLECTION'); ?>
-    </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="2">
-        <?php if (!$this->getIsVirtual()): echo $this->getLayout()->createBlock('checkout/cart_shipping')->setTemplate('checkout/cart/shipping_new.phtml')->toHtml(); endif;  ?>
-    </td>
-</tr>
-
-
+<?php if($this->displayBoth()):?>
+<?php 
+$regionId = $this->getQuote()->getShippingAddress()->getRegionId();
+$region = Mage::getModel('directory/region')->load($regionId);
+?>
 <tr class="estimate_delivery_cost">
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
-        <?php echo $this->__('DELIVERY COSTS'); ?>
-    </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+    <th scope="row" style="<?php echo $this->getStyle() ?>" class="" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->__('Shipping -'); ?><span class="small change-region-update"><?php echo ($region->getName()!='')?$region->getName():'Pickup, Takanini, Auckland'; ?></span>
+    </th>
+    <td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getShippingExcludeTax()) ?>
     </td>
-	<td style="<?php echo $this->getStyle() ?>" class="a-right">
+	<td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getShippingIncludeTax()) ?>
     </td>
 </tr>
-<!--<tr>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
-        <?php echo $this->getIncludeTaxLabel() ?>
-    </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right">
-        <?php echo $this->helper('checkout')->formatPrice($this->getShippingIncludeTax()) ?>
-    </td>
-</tr>-->
 <?php elseif($this->displayIncludeTax()) : ?>
-<tr>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
+<tr class="estimate_delivery_cost">
+    <th scope="row" style="<?php echo $this->getStyle() ?>" class="" colspan="<?php echo $this->getColspan(); ?>">
         <?php echo $this->getTotal()->getTitle() ?>
-    </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+    </th>
+    <td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getShippingIncludeTax()) ?>
     </td>
 </tr>
 <?php else:?>
 <tr>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="<?php echo $this->getColspan(); ?>">
+    <th scope="row" style="<?php echo $this->getStyle() ?>" class="" colspan="<?php echo $this->getColspan(); ?>">
         <?php echo $this->escapeHtml($this->getTotal()->getTitle()) ?>
-    </td>
-    <td style="<?php echo $this->getStyle() ?>" class="a-right">
+    </th>
+    <td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getShippingExcludeTax()) ?>
     </td>
 </tr>

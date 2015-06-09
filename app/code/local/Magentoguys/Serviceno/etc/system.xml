@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Amasty 2012
+ */
+-->
+<config>
+	<tabs>
+        <serviceno translate="label" module="serviceno">
+            <label>Manage Frontend Display</label>
+            <sort_order>1</sort_order>
+        </serviceno>
+    </tabs>
+    <sections>
+        <serviceno translate="label" module="serviceno">
+		<class>separator-top</class>
+			<label>Manage Header Display</label>
+            <tab>serviceno</tab>
+            <sort_order>130</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <serviceno translate="label" module="serviceno">
+                    <label>Header Display Section</label>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <serviceno translate="label">
+                            <label>Customer Service No.</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </serviceno>
+						<slogan translate="label">
+                            <label>Slogan</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </slogan>
+                    </fields>
+                </serviceno>
+            </groups>
+        </serviceno>
+    </sections>
+</config>

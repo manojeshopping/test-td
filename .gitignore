@@ -41,6 +41,10 @@
 #htaccess files
 .htaccess
 
+# possible backups
+/*.sql
+/*.zip
+
 # Modman                       #
 ################################
 .modman

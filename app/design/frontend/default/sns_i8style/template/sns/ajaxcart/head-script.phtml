@@ -35,7 +35,7 @@
 		if(result.addtype=='0'){
 				ac_text=(isCOPage==1)?"<?php echo Mage::helper('ajaxcart')->__('Proceed to Checkout');?>":"<?php echo Mage::helper('ajaxcart')->__('Go to Cart');?>";
 				ac_href=(isCOPage==1)?"<?php echo Mage::getUrl('checkout/onepage/') ?>":"<?php echo Mage::getUrl('checkout/cart/') ?>";
-				cfaction='<li><a id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('Checkout');?>" class="button view-cart" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\''+ac_href+'\';"  href="'+ac_href+'">	<span>'+ac_text+'</span></a></li>';
+				cfaction='<li><button type="button" id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('Checkout');?>" class="btn btn-td-primary btn-md" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\''+ac_href+'\';"  href="#">'+ac_text+'</button></li>';
 				cfaction_text="<?php echo Mage::helper('ajaxcart')->__('your shopping cart.');?>";
 		}else if(result.addtype=='1'){
 				cfaction='<li><a id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('View Wish List');?>" class="button view-wishlist" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\'<?php echo Mage::getUrl('wishlist/index/') ?>\';"  href="<?php echo Mage::getUrl('wishlist/index/') ?>">	<span><?php echo Mage::helper('ajaxcart')->__('My Wishlist');?></span></a></li>';

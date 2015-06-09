@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ */
+-->
+<config>
+    <modules>
+        <Magentoguys_Serviceno>
+            <version>2.1.2</version>
+        </Magentoguys_Serviceno>
+    </modules>
+	
+	<global>
+        <helpers>
+            <serviceno>
+                <class>Magentoguys_Serviceno_Helper</class>
+            </serviceno>
+        </helpers>
+    </global>
+	
+	<adminhtml>
+        <acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                   <children>
+										<serviceno translate="title" module="serviceno">  
+											<title>Customer Serviceno</title>
+											<sort_order>99</sort_order>
+										</serviceno>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+			        </children>
+                </admin> 
+			</resources>
+		</acl>
+    </adminhtml>
+    
+	<default>
+        <serviceno>
+            <serviceno>
+                <serviceno>09 298 2535</serviceno>
+				<slogan>Lower Prices. Smarter Shopping.</slogan>
+            </serviceno>
+        </serviceno>
+	</default> 
+</config>

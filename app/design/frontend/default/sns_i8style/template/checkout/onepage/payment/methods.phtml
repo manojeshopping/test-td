@@ -37,14 +37,14 @@
     $oneMethod = count($methods) <= 1;
 ?>
 <?php if (empty($methods)): ?>
-    <dt>
+    <div>
         <?php echo $this->__('No Payment Methods') ?>
-    </dt>
+    </div>
 <?php else:
     foreach ($methods as $_method):
         $_code = $_method->getCode();
 ?>
-    <dt>
+    <div>
     <?php if(!$oneMethod): ?>
         <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->escapeHtml($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php endif; ?> class="radio" />
     <?php else: ?>
@@ -52,11 +52,11 @@
         <?php $oneMethod = $_code; ?>
     <?php endif; ?>
         <label for="p_method_<?php echo $_code ?>"><?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
-    </dt>
+    </div>
     <?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
-    <dd>
+    <div>
         <?php echo $html; ?>
-    </dd>
+    </div>
     <?php endif; ?>
 <?php endforeach;
     endif;

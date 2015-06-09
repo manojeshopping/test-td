@@ -110,36 +110,6 @@ class Magentoguys_Checkoutc_OnepageController extends Mage_Checkout_OnepageContr
     }
 	
 	/**
-     * Shipping address save action
-     */
-    public function saveShippingAction()
-    {
-        if ($this->_expireAjax()) {
-            return;
-        }
-        if ($this->getRequest()->isPost()) {
-            $data = $this->getRequest()->getPost('shipping', array());
-            $customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
-            $result = $this->getOnepage()->saveShipping($data, $customerAddressId);
-
-            if (!isset($result['error'])) {
-				Mage::dispatchEvent(
-                    'checkout_controller_onepage_save_shipping',
-                     array(
-                          'request' => $this->getRequest(),
-                          'quote'   => $this->getOnepage()->getQuote()));
-                $result['goto_section'] = 'shipping_method';
-                $result['update_section'] = array(
-                    'name' => 'shipping-method',
-                    'html' => $this->_getShippingMethodsHtml()
-                );
-            }
-            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-        }
-    }
-
-	
-	/**
      * Shipping method save action
      */
     public function saveShippingMethodAction()
@@ -163,7 +133,7 @@ class Magentoguys_Checkoutc_OnepageController extends Mage_Checkout_OnepageContr
 				$baseGrandTotal = Mage::app()->getStore()->getBaseCurrency()->format($grandTotal, array(), true);
 				$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
 				
-				$result['grand_total'] = '<strong>Total:'.$baseGrandTotal.'</strong>';
+				$result['grand_total'] = '<h6 class="dark uppercase">Total</h6><h1 class="dark">'.$baseGrandTotal.'</h1>';
                 $result['goto_section'] = 'payment';
                 $result['update_section'] = array(
                     'name' => 'payment-method',

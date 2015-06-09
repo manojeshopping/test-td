@@ -56,28 +56,48 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
         $classes[] = 'nav-' . $itemposition;
         if ($this->isCategoryActive($category)) {
             $classes[] = 'active';
+			$classes[] = 'open';
             $linkClass = ' active';
         }
         
 		if($level==0 || $level==1){
-			$classes[] = 'open';
-		}	
+			// $classes[] = 'open';
+		}
+		if($level==1){
+			$ulClass = 'dropdown-menu1';
+		}else{
+			$ulClass = 'dropdown-menu';
+		}
 	  
         $linkClass .= ' menu-title-lv'.$level;
 
 		if ($isFirst) $classes[] = 'first';
         if ($isLast) $classes[] = 'last';
         if ($hasActiveChildren) $classes[] = 'parent';
+		if(!empty($li) && $hasActiveChildren && $level>1){
+			$classes[] = 'dropdown-submenu';
+		}
+		elseif(!empty($li) && $hasActiveChildren && $level!=1 && $level<0){
+			$classes[] = 'dropdown';
+		}
+		if(!empty($li) && $hasActiveChildren && $level!=1){
+			$arrowIcon = '<span class="caret"></span>';
+		}
+		if($hasActiveChildren){
+			$linkClass .= ' dropdown-toggle';
+			$dataMoToggle = 'data-toggle="dropdown"';
+		}
 		
         $liclass = implode(' ', $classes);
 		
 		$html[] = '<li class="'.$liclass.'">';
-        $html[] = '<a href="'.$this->getCategoryUrl($category).'" class="'.$linkClass.'">';
+        $html[] = '<a href="'.$this->getCategoryUrl($category).'" class="'.$linkClass.' dropdown-toggle" '.$dataMoToggle.'>';
         $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
+		$html[] = $arrowIcon;
         $html[] = '</a>';
         
         if (!empty($li) && $hasActiveChildren) {
-            $html[] = '<ul class="level' . $level . '">';
+            $html[] = '<ul class="level' . $level . ' '.$ulClass.'">';
             $html[] = $li;
             $html[] = '</ul>';
         }
@@ -147,19 +167,14 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
         $classes[] = 'level' . $level;
 
         $classes[] = 'nav-' . $itemposition;
-        // if ($this->isCategoryActive($category)) {
-			// $classes[] = 'active';
-        // }
-		if(Mage::registry('current_category')){
-			if(in_array($category->getId(), Mage::registry('current_category')->getPathIds())){
-				$classes[] = 'active';
-			}
+        if ($this->isCategoryActive($category)) {
+            $classes[] = 'active';
 		}
-		
         $linkClass = '';
         
         $linkClass .= ' menu-title-lv'.$level;
         
+		// $linkClass .= ' dropdown-toggle';
         if($level==0){
         	if($this->_isgroup) {
         		$classes[] = 'group-item';
@@ -177,6 +192,10 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
         	if($menutypes == 2){
 	            $classes[] = 'drop-submenu-blocks';
 	        }
+			if (!empty($li) && $hasActiveChildren && $showsubmenu == true){
+				$classes[] = 'dropdown yamm-fw';
+			}
+			
         }
 		if ($isFirst) $classes[] = 'first';
         if ($isLast) $classes[] = 'last';
@@ -198,11 +217,17 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 		
         if($level==1 && $this->_isgroup){
             $classes[] = 'group-block col-sm-'.$this->_groupitemwidth;
+			$classes[] = 'dept';
         }
         
         $liclass = implode(' ', $classes);
 		
 		if($level == 0){
+			if (!empty($li) && $hasActiveChildren && $showsubmenu == true){
+				$below_arrow = '<span class="caret"></span>';
+				$data_toggle_elm = 'data-toggle="dropdown"';
+			}
+		
 			if($category->getId()==14){
 				$caret_down = '<i class="fa fa-caret-down menu-caret"></i>';
 			}
@@ -216,28 +241,39 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 			}
 			
 			$html[] = '<li class="'.$liclass.'">';
-	        $html[] = '<a href="'.$url.'" class="'.$linkClass.'">';
+	        $html[] = '<a href="'.$url.'" class="'.$linkClass.' dropdown-toggle" '.$data_toggle_elm.'>';
 	        $html[] = '<span>' . $this->escapeHtml($category->getName()) .$caret_down. '</span>';
+			$html[] = $below_arrow;
 	        $html[] = '</a>';
 		} elseif($level == 1) {
-			$html[] = '<li class="'.$liclass.'">';
-	        $html[] = '<a href="'.$this->getCategoryUrl($category).'" class="'.$linkClass.'">';
+			$html[] = '<li class="'.$liclass.' dropdown1">';
+	        $html[] = '<a href="'.$this->getCategoryUrl($category).'" class="'.$linkClass.' dropdown-toggle" tabindex="0">';
 	        $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
 	        $html[] = '</a>';
 		} else {
-			$html[] = '<li class="'.$liclass.'">';
-	        $html[] = '<a href="'.$this->getCategoryUrl($category).'" class="'.$linkClass.'">';
+			if (!empty($li) && $hasActiveChildren && $showsubmenu == true){
+				$submenuClass = 'dropdown-submenu1';
+				$dataToggleClass = '';
+				// $dataToggle = 'data-toggle="dropdown"';
+				$gourl= $this->getCategoryUrl($category);
+				$area_expanded = 'aria-expanded="false"';
+			}
+			else{
+				$gourl = $this->getCategoryUrl($category);
+			}
+			$html[] = '<li class="'.$liclass.' '.$submenuClass.'">';
+	        $html[] = '<a '.$area_expanded.' href="'.$gourl.'" class="'.$linkClass.' '.$dataToggleClass.'" '.$dataToggle.'>';
 	        $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
 	        $html[] = '</a>';
 		}
 
 		if($level == 0 && $showblock) {
-			$html[] = '<div class="wrap_dropdown fullwidth">';
+			$html[] = '<ul class="dropdown-menu fullwidth">';
 			$html[] = '<div class="row">';
 			
 			// top block
 			if($topblock){
-				$html[] = '<div class="col-sm-12">';
+				$html[] = '<div class="col-sm-12 hidden-xs hidden-sm">';
 				$html[] = '<div class="wrap_topblock">';
 				$html[] = $topblock;
 				$html[] = '</div>';
@@ -263,12 +299,16 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 	                $html[] = '</ul>';
 	                $html[] = '</div>';
             	}
-            } else {
-            	$html[] = '<div class="wrap_submenu">';
-                $html[] = '<ul class="level' . $level . '">';
+            }elseif($level == 1){
+				$html[] = '<ul class="level' . $level . ' mega-list dropdown-menu1">';
                 $html[] = $li;
                 $html[] = '</ul>';
-                $html[] = '</div>';
+			} else {
+            	// $html[] = '<div class="wrap_submenu">';
+                $html[] = '<ul class="hide level' . $level . ' dropdown-menu">';
+                $html[] = $li;
+                $html[] = '</ul>';
+               // $html[] = '</div>';
             }
         }
 		if($level == 0 && $showblock) {
@@ -292,7 +332,7 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 			}
 			
 			$html[] = '</div>'; // end row
-			$html[] = '</div>';
+			$html[] = '</ul>';
 		}
 
         $html[] = '</li>';
@@ -327,21 +367,6 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 	        $html[] = '<span>' . $this->escapeHtml('FURNITURE') . '</span>';
 	        $html[] = '</a>';
 			$html[] = '</li>';
-		}
-	 
-		$products = Mage::getModel('catalog/category')->load(13)->getProductCollection()
-        ->addAttributeToSelect('entity_id')
-        ->addAttributeToFilter('status', 1)
-        ->addAttributeToFilter('visibility', 4);
-		
-		$products_count = $products->count();
-		
-
-		if($level==0 && $category->getId()==13){
-			$html[] = '<div class="notification-round">';
-			$html[]	= $products_count;
-			$html[] = '</div>';
-
 		}
 		
         $html = implode("\n", $html);
@@ -424,9 +449,9 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 			}
 			$drophtml = '';
 			if($menuitem['status'] && $momenu == false){
-				$drophtml .= '<div class="wrap_dropdown fullwidth">';
+				$drophtml .= '<ul class="dropdown-menu fullwidth">';
 				$drophtml .= $this->getLayout()->createBlock('cms/block')->setBlockId($menuitem['block_id'])->toHtml();
-				$drophtml .= '</div>';
+				$drophtml .= '</ul>';
 			}
 			if($menuitem['position'] == $position){
 				$html .= '<li class="'.$liClass.'">';

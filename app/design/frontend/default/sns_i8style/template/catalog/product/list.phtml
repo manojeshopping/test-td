@@ -43,11 +43,13 @@
 <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
 <?php else: ?>
 <div class="category-products">
-    <?php echo $this->getToolbarHtml() ?>
-    <?php // List mode ?>
-    <div class="sns-products-container clearfix">
-    <?php if($this->getMode()!='grid'): ?>
-    <?php $_iterator = 0; ?>
+<div class="row top-bar">
+	<?php echo $this->getToolbarHtml() ?>
+</div>
+<?php echo $this->getChildHtml('related_searches') ?>
+<?php // List mode ?>
+<?php if($this->getMode()!='grid'): ?>
+<?php $_iterator = 0; ?>
     <ol class="products-list clearfix" id="products-list">
     <?php foreach ($_productCollection as $_product): ?>
     	<?php 
@@ -140,154 +142,86 @@
     </ol>
     <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
 
-    <?php else: ?>
+<?php else: ?>
 
-    <?php // Grid Mode ?>
-    <div class="products-grid row">
-    <?php $_collectionSize = $_productCollection->count() ?>
-    <?php // $_columnCount = $this->getColumnCount(); 
-		$_columnCount = 4;
-	?>
-    <?php $i=0; foreach ($_productCollection as $_product):  ?>
-    	<?php
-		$now = date("Y-m-d");
-        $newsFrom= substr($_product->getData('news_from_date'),0,10);
-        $newsTo=  substr($_product->getData('news_to_date'),0,10);
-        $price = $_product->getPrice();
-        $finalPrice = $_product->getFinalPrice();
-        $class = '';
-        if($now>=$newsFrom && $now<=$newsTo) $class .= ' have-iconew';
-        if( isset($price) && isset($finalPrice) && $finalPrice < $price) $class .= ' have-icosale';
+<?php // Grid Mode ?>
+    <div class="wrap">
+		<?php $_collectionSize = $_productCollection->count() ?>
+		<?php 
+			// $_columnCount = $this->getColumnCount(); 
+			$_columnCount = 4;
 		?>
-        <?php $i++; ?>
-        	<?php
-        		$itemClass = 'item';
-        		$itemClass .= ' col-lg-' . 12/$_columnCount;
-        		$itemClass .= ' col-xs-' . 12/($_columnCount - 1);
-        		if(($i-1)%$_columnCount==0) {
-        			$itemClass .= ' col-lg-first';
-        			//echo '<div class="clearfix visible-sm"></div>';
-        		}
-        		if($i%$_columnCount==0) {
-        			$itemClass .= ' col-lg-last';
-        		}
-        		if(($i-1)%($_columnCount-1)==0) {
-        			$itemClass .= ' col-xs-first';
-        			//echo '<div class="clearfix visible-xs"></div>';
-        		}
-        		if($i%($_columnCount-1)==0) {
-        			$itemClass .= ' col-xs-last';
-        		}
-        	?>
-            <div class="<?php echo $itemClass; ?>">
-				<div class="item-inner clearfix">
-                    <!-- <div class="td-logo-mini"></div> -->
-                	<div class="item-img<?php echo $class; ?><?php echo (count(Mage::getModel('catalog/product')->load($_product->getId())->getMediaGalleryImages()) > 0)?' have-additional':'';?> clearfix">
-			            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image<?php echo (count(Mage::getModel('catalog/product')->load($_product->getId())->getMediaGalleryImages()) > 0)?' have-additional':'';?>">
-			                <span class="image-main">
-			            	<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($imgSize[0], $imgSize[1]); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
-			                </span>
-			            </a>
-	                    <?php if(class_exists('Sns_Quickview_Helper_Data') && Mage::getStoreConfigFlag('quickview/general/enable') == 1) : ?>
-	                    <div class="quickview-wrap">
-	                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" style="display:none"></a>
-	                    </div>
-	                    <?php endif; ?>
-                    </div>
-					
-					<a href="<?php echo $_product->getProductUrl() ?>" title="" >
-						<div class="brand-logo-img">
-							<?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_product)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?>
+		<?php 
+			$i=0; foreach ($_productCollection as $_product): 
+		?>
+    	<?php
+			$now = date("Y-m-d");
+			$newsFrom= substr($_product->getData('news_from_date'),0,10);
+			$newsTo=  substr($_product->getData('news_to_date'),0,10);
+			$price = $_product->getPrice();
+			$finalPrice = $_product->getFinalPrice();
+			$class = '';
+			if($now>=$newsFrom && $now<=$newsTo) $class .= ' have-iconew';
+			if( isset($price) && isset($finalPrice) && $finalPrice < $price) $class .= ' have-icosale';
+		?>
+			<div class="item product col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-15 wrap">
+				<div class="product-wrap-top">
+					<div class="badges">
+						<?php
+						if ($now>=$newsFrom && $now<=$newsTo && $themeConfig['general_useTagNew']==1)
+							echo "<span class='ico-product ico-new'>New</span>";
+						if (isset($price) && isset($finalPrice) && $finalPrice < $price && $themeConfig['general_useTagSale']==1)
+							echo "<span class='ico-product ico-sale'>".floor(100-($finalPrice/$price)*100)."% OFF</span>";
+						?>
+					</div>
+					<div class="product-image item-img" >
+						<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="image-main img-main">
+							<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($imgSize[0], $imgSize[1]); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"/>
+						</a>
+					</div>
+					<div class="product-details">
+						<div class="product-title clearfix">
+							<h2>
+								<?php echo $_product->getShortDescription() ?>	
+							</h2>
 						</div>
-					</a>
-					
-                    <div class="item-info">
-						
-						<div class="info-inner">
-							<div class="badges">
-							<?php
-							if ($now>=$newsFrom && $now<=$newsTo && $themeConfig['general_useTagNew']==1)
-								echo "<span class='ico-product ico-new'>New</span>";
-							if (isset($price) && isset($finalPrice) && $finalPrice < $price && $themeConfig['general_useTagSale']==1)
-								echo "<span class='ico-product ico-sale'>".floor(100-($finalPrice/$price)*100)."% OFF</span>";
-								//echo "<span class='ico-product ico-sale'>Sale</span>";
-							?>
+						<div class="product-info row">
+							<div class="col-xs-6">
+								<div class="product-brand">	<?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_product)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?></div>
 							</div>
-							<?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
-							
-							<div class="item-wrap">
-								<div class="item-title">
-									<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
-
-										<?php echo $_product->getName(); ?>
-									</a>
-								</div>
-								<a href="<?php echo $_product->getProductUrl() ?>" title="" >
-									<div class="item-des">
-										<?php echo $_product->getShortDescription() ?>
-									</div>
-								</a>
+							<div class="col-xs-6">
+								<?php 
+									echo $this->getPriceHtml($_product, false) 
+								?>
 							</div>
-
-
-
-
 						</div>
-						
-                        <div class="item-img-info">
-							<?php
-                            $number_buttom = 0;
-                            if($themeConfig['listingpage_displayWishlist']==1) $number_buttom = $number_buttom +1;
-                            if($themeConfig['listingpage_displayCompare']==1) $number_buttom = $number_buttom +1;
-                            if($number_buttom > 0 || $themeConfig['listingpage_displayAddtocart']==1){ ?>
-                            <div class="actions<?php echo ($number_buttom > 0)?' more-buttons':''?>">
-                            <?php
-                            if($themeConfig['listingpage_displayAddtocart']==1){?>
-                            <?php if($_product->isSaleable()): ?>
-                                <button title="<?php echo $this->__('Add to Cart') ?>" class="btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-original-title="<?php echo $this->__('Add to Cart') ?>" data-toggle="tooltip"><?php echo $this->__('Add to Cart') ?></button>
-                            <?php else: ?>
-                                <span class="btn-cart availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></span>
-                            <?php endif; ?>
-                            <?php
-                            }?>
-                            <?php if($number_buttom > 0){?>
-                            <ul class="add-to-links">
-                                <?php if ( $this->helper('wishlist')->isAllow() && $themeConfig['listingpage_displayWishlist']==1 ) : ?>
-                                    <li><a title="<?php echo $this->__('Add to Wishlist') ?>" href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist" data-toggle="tooltip" data-original-title="<?php echo $this->__('Add to Wishlist') ?>"><?php //echo $this->__('Add to Wishlist') ?></a></li>
-                                <?php endif; ?>
-                                <?php if( $themeConfig['listingpage_displayCompare']==1 ):
-                                $_compareUrl=$this->getAddToCompareUrl($_product);
-                                ?>
-                                    <li><a title="<?php echo $this->__('Add to Compare') ?>" href="<?php echo $_compareUrl ?>" class="link-compare" data-toggle="tooltip" data-original-title="<?php echo $this->__('Add to Compare') ?>"><?php //echo $this->__('Add to Compare') ?></a></li>
-                                <?php endif; ?>
-                            </ul>
-                            <?php } ?>
-                            </div>
-                            <?php 
-                            }?>
-                        </div>
-                    </div>
-<!--                     <div class="gst-price">
-
-                    </div> -->
-                    <div class="item-price">
-                        <?php //MVENTORY: $uniqued variable is not defined ?>
-                        <?php //echo $this->getPriceHtml($_product, false, $uniqued) ?>
-                        <?php echo $this->getPriceHtml($_product, false) ?>
-                    </div>
+					</div>
+				</div>					
+				<div class="product-wrap-bottom">
+					<div class="product-option">
+						<?php if($_product->isSaleable()): ?>
+						   <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action btn-warning btn-md btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class="fa fa-shopping-cart"></i></button>
+					   <?php else: ?>
+						   <span class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></span>
+					   <?php endif; ?>
 					
-                    <div class="productcode" style="">
-                        <?php echo $_product->getSku(); ?>
-                    </div>                               
-                </div>
-            </div>
-        <?php endforeach ?>
-        </div>
-    <?php endif; ?>
+						<button type="button" onclick="setLocation('<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>')" class="btn btn-td-standard1 btn-td-primary-quiet btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Wishlist') ?>"><i class="fa fa-star"></i></button>	
+						<button type="button" onclick="setLocation('<?php echo $this->helper('catalog/product_compare')->getAddUrl($_product) ?>')" class="link-compare btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Compare') ?>"><i class="fa fa-align-left fa-rotate-270"></i></button>
+					</div>
+				</div>	
+				<div class="inner-box-sku">
+					<?php echo $_product->getSku(); ?>
+				</div>
+			</div>
+		<?php endforeach ?>
 	</div>
-    <div class="toolbar-bottom clearfix">
-        <?php echo $this->getToolbarHtml() ?>
-    </div>
+<?php endif; ?>
+	<div class="clearfix vspace40 "></div>
+	<div class="container text-center bottom-pager">
+		<nav>
+			<?php echo $this->getToolbarHtml() ?>
+		</nav>
+	</div>
     <script type="text/javascript">
     //<![CDATA[
         jQuery(function($){
@@ -307,5 +241,5 @@
         });
     //]]>
     </script>
-</div>
+</div>	
 <?php endif; ?>

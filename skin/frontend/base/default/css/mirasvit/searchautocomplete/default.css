@@ -36,8 +36,8 @@
 .searchautocomplete .searchautocomplete-placeholder .all{text-align:right;margin:10px 10px 5px 10px;}
 .searchautocomplete .searchautocomlete-image{float:left;margin:0px 5px 5px 0px;}
 form#search_mini_form.searchautocomplete div.form-search label{display:none;}
-.searchautocomplete .searchautocomplete-loader{position:absolute;top:11px;right:44px;width:16px;height:16px;background:url('../../../images/mirasvit/loader.gif');}
-form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER ul li div.searchautocomlete-image{float:left;padding-right:5px;}
+.searchautocomplete .searchautocomplete-loader{position:absolute;top:11px;right:57px;width:16px;height:16px;background:url('../../../images/mirasvit/loader.gif');}
+/* form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER ul li div.searchautocomlete-image{float:left;padding-right:5px;}
 form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER ul{border:none;background:none;box-shadow:none;margin:5px;}
 form#search_mini_form.searchautocomplete.UI-SEARCHAUTOCOMPLETE div.form-search div#search_autocomplete.UI-PLACEHOLDER.search-autocomplete ul li{border:1px solid #e2e2e2;margin-bottom:5px;padding:5px;width:112%;left:-38px;position:relative;}
 form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER ul li:hover{background:#eeffee;box-shadow:0 0 1px #525252;}
@@ -45,7 +45,7 @@ form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete
 form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER ul li div.price-box{float:right;margin-right:5px;}
 form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER div.all{float:right;padding:2px;}
 form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER div.index-title{background-color:#F7F7F6;text-align:right;color:#0A263C;border-bottom:1px solid #CCC;padding:2px 5px;}
-form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER:before{border-color:transparent transparent #CCC transparent;content:"";position:absolute;border-style:solid;border-width:5px;height:0;width:0;top:-11px;left:30px;}
+form#search_mini_form.searchautocomplete div.form-search div#search_autocomplete.UI-PLACEHOLDER:before{border-color:transparent transparent #CCC transparent;content:"";position:absolute;border-style:solid;border-width:5px;height:0;width:0;top:-11px;left:30px;}*/
 .searchautocomplete .nav-search-in .category-fake{margin-top:7px;}
 .searchautocomplete .nav-search-in .category{left:0px;top:0px;}
 .searchautocomplete .nav-search-in .nav-down-arrow{top:15px;}

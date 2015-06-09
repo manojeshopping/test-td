@@ -28,16 +28,21 @@
 <?php $buttonTitle = $this->__('Add to Cart'); ?>
 
 <?php if($_product->isSaleable()): ?>
-    <div class="add-to-cart">
-        <?php if(!$_product->isGrouped()): ?>
-        <label for="qty" class="gfont"><?php echo $this->__('Qty ') ?></label>
-        <div class="qty-container">
-            <button type="button" class="qty-decrease" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty ) && qty > 1 ) qty_el.value--;return false;"></button>
-            <input type="text" name="qty" id="qty" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
-            <button type="button" class="qty-increase" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty )) qty_el.value++;return false;"></button>
-        </div>
-        <?php endif; ?>
-        <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart have-borderinset gfont" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
-    </div>
+<div class="col-xs-8 1showMeYellow">
+<div class="input-group input-group-lg">
+<?php if(!$_product->isGrouped()): ?>
+								<div class="input-group-addon padding0">
+									<button data-original-title="Decrease Qty" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-td-info button-addon-left" type="submit" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty ) && qty > 1 ) qty_el.value--;return false;">-</button>
+								</div>
+								<input type="text" name="qty" id="qty" placeholder="1" value="<?php echo $this->getProductDefaultQty() * 1 ?>" onblur="this.placeholder = '1'" onfocus="this.placeholder = ''" class="form-control add-to-cart" title="<?php echo $this->__('Qty') ?>">
+								<div class="input-group-addon padding0 btn-margin-rt">
+									<button onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty )) qty_el.value++;return false;" data-original-title="Increase Qty" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-td-info button-addon-right" type="submit">+</button>
+								</div>
+<?php endif; ?>
+								<div class="input-group input-group-lg">
+									<button onclick="productAddToCartForm.submit(this)" title="<?php echo $buttonTitle ?>" data-original-title="Add to Cart" title="" data-placement="top" data-toggle="tooltip" class="btn btn-cart btn-lg btn-margin-rt btn-td-action btn-md" type="button"><i class="fa fa-shopping-cart"></i>&nbsp;ADD</button>
+								</div>
+							</div>
+		</div>					
     <?php echo $this->getChildHtml('', true, true) ?>
 <?php endif; ?>

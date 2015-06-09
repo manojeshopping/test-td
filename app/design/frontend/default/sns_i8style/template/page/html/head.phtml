@@ -23,60 +23,25 @@
  * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-include (dirname(dirname(__FILE__)).'/sns/sns.php');
-
-$themeCfg = Mage::helper('i8style/data');
 ?>
-<!-- <?php echo Mage::helper('i8style')->getThemeVersion(); ?> -->
 <title><?php echo $this->getTitle() ?></title>
 <meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
 <meta name="HandheldFriendly" content="true"/>
 <meta name="apple-touch-fullscreen" content="yes"/>
-
 <meta name="description" content="<?php echo htmlspecialchars($this->getDescription()) ?>" />
 <meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>" />
 <meta name="robots" content="<?php echo htmlspecialchars($this->getRobots()) ?>" />
-
 <meta property="og:site_name" content="Trade Depot" />
 <meta property="og:image" content="https://www.tradedepot.co.nz/skin/frontend/default/sns_i8style/images/trade-depot-logo.png" />
-<!--<link rel="icon" href="<?php // echo $this->getSkinUrl('favicon.ico') ?>" type="image/x-icon" />
-<link rel="shortcut icon" href="<?php // echo $this->getSkinUrl('favicon.ico') ?>" type="image/x-icon" />-->
 <link rel="icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
 <?php echo $this->getCssJsHtml() ?>
 
 <!-- Style get config -->
-<?php
-if($themeCfg->getField('general_googleFont')!='' && $themeCfg->getField('general_googleFontTargets')!=''): ?>
-<link href='http://fonts.googleapis.com/css?family=<?php echo $themeCfg->getField('general_googleFont');?>' rel='stylesheet' type='text/css'>
-<?php
-endif; ?>
-<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
-<style type="text/css">
-	body#bd{
-		font-family: <?php echo $themeCfg->getField('general_fontFamily'); ?>, sans-serif;
-		font-size: <?php echo $themeCfg->getField('general_fontSize'); ?>;
-	}
-	body#bd.boxed-layout {
-		background-color: <?php echo $themeCfg->getField('general_bodyBgColor'); ?>;
-		background-image: url("<?php echo $this->getSkinUrl('images/pattern/' . $themeCfg->getField('general_bodyBgImage').'.png'); ?>");
-	}
-	<?php //echo $themeCfg->getField('general_googleFont'); die();
-	if($themeCfg->getField('general_googleFont')!='' && $themeCfg->getField('general_googleFontTargets')!=''):
-		$gfont = str_replace('+', ' ', $themeCfg->getField('general_googleFont'));
-		if(strpos($gfont, ':')) $gfont = substr($gfont, 0, strpos($gfont, ':'));
-	?>
-
-	<?php echo $themeCfg->getField('general_googleFontTargets');?>{
-		font-family: <?php echo $gfont; ?>, sans-serif !important;
-	}
-	<?php
-	endif; ?>
-</style>
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,700,300|Open+Sans:400italic,700italic,700,400|Architects+Daughter' rel='stylesheet' type='text/css'>
 
 <?php echo $this->getChildHtml() ?>
-
 <script type="text/javascript">
 //<![CDATA[
 	function isHandheldDevices() {
@@ -92,6 +57,5 @@ endif; ?>
 	var TMPL_COOKIE = '';
 
 	var IS_HANDHELD = isHandheldDevices();
-	var KEEP_MENU = <?php echo $themeCfg->getField('menu_keepMenu', 1);?>;
 //]]>
 </script>

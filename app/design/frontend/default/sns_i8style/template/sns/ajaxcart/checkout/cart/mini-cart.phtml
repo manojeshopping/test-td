@@ -49,38 +49,34 @@ if($config['list_type']=='all'){
 //]]>
 </script>
 <?php $_cartQty = $this->getSummaryCount() ?>
-<div class="block mini-cart sns-ajaxcart<?php echo ($_cartQty > 0)?' have-item':' empty'; ?>">
-    <div class="tongle">
-        <?php if ($this->canApplyMsrp()): ?>
+<div class="dropdown block floatleft mini-cart sns-ajaxcart<?php echo ($_cartQty > 0)?' have-item':' empty'; ?>">
+   	<?php if ($this->canApplyMsrp()): ?>
             <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
         <?php else: ?>
 			<?php /* $total = Mage::helper('checkout')->formatPrice($this->getSubtotal()); */ ?>
 			<?php $total = Mage::helper('checkout')->formatPrice($this->getSubtotalInclTax()); ?>
-			<?php echo $this->__('My cart: ') ?>
 			<?php if($_cartQty > 0) : ?>
-        		<?php echo $this->__('%s item(s) - %s', $_cartQty, $total) ?>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default btn-xs btn-margin" type="button" id="dLabel">
+			<i class="fa fa-user"></i>
+			<?php echo $this->__('Cart') ?>
+				<span class="standout"><?php echo $this->__('%s item(s) %s', $_cartQty, $total) ?></span>
+				<span class="caret"></span>
+			</button>
 			<?php else: ?>
-				<?php echo $this->__('0 item - %s', $total) ?>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default btn-xs btn-margin" type="button" id="dLabel" style="display:none">
+			<i class="fa fa-user"></i>
+			<?php echo $this->__('Cart') ?>
+				<span class="standout"><?php echo $this->__('0 item %s', $total) ?></span>
+				<span class="caret"></span>
+			</button>	
 			<?php endif; ?>
         <?php endif; ?>
-    </div>
     <?php if ($_cartQty>0){ ?>
-    <div class="block-content">
+    <div class="block-content dropdown-menu">
 		<div class="block-inner">
 		    <?php if($_cartQty && ($this->isPossibleOnepageCheckout() OR $this->getQuote()->getHasError())): ?>
 		    <?php endif ?>
 		    <?php if(count($_items)){?>
-<?php /* 
-		        <p class="block-subtitle">
-		        	<?php
-		        	if($config['list_type']=='all'){
-		        	echo $this->__('All added item(s)');
-		        	}else{
-		        	echo $this->__('Recently added item(s)');
-		        	}
-		        	?>
-		        </p>
- */ ?>
 		        <?php
 		        $aPost  = Mage::app()->getRequest()->getPost(); //Zend_Debug::dump($aPost);
 		        ?>
@@ -115,17 +111,15 @@ if($config['list_type']=='all'){
 		    		<span class="label"><?php echo $this->__('Cart Subtotal:') ?></span>
 	    			<?php // echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
 					<?php echo Mage::helper('checkout')->formatPrice($this->getSubtotalInclTax()) ?>
-	                <?php /* if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
-	                    (<?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> <?php echo Mage::helper('tax')->getIncExcText(true) ?>)
-	                <?php endif; */ ?>
-	            </div>
+				</div>
     			<a href="#" name="update_cart_action" onclick="minicart.callAction();" title="<?php echo $this->__('Update Shopping Cart'); ?>" class="btn-update">
     				<?php echo $this->__('Update cart'); ?>
     			</a>
 	    		<div class="clearer"></div>
 	    		<?php if($_cartQty && ($this->isPossibleOnepageCheckout() OR $this->getQuote()->getHasError())){ ?>
-    			<button type="button" title="<?php echo $this->__('Go to cart') ?>" class="button gfont" onclick="setLocation('<?php echo Mage::getUrl('checkout/cart/') ?>')"><?php echo $this->__('Go to cart') ?></button>
-    			<button type="button" title="<?php echo $this->__('Checkout') ?>" class="button btn-gocheckout gfont" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')"><?php echo $this->__('Checkout') ?></button>
+    			<button type="button" title="<?php echo $this->__('Go to cart') ?>" class="btn btn-td-action btn-md" onclick="setLocation('<?php echo Mage::getUrl('checkout/cart/') ?>')"><?php echo $this->__('Go to cart') ?></button>
+    			
+				<button type="button" title="<?php echo $this->__('Checkout') ?>" class="btn btn-td-grey btn-md" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')"><?php echo $this->__('Checkout') ?></button>
 			    <?php  } ?>
 	    	</div>
     	</div>

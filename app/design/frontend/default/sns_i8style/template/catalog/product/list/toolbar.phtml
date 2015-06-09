@@ -32,71 +32,48 @@
  */
 ?>
 <?php if($this->getCollection()->getSize()): ?>
-<div class="toolbar clearfix">
+<div class="hidden-xs hidden-sm col-md-5 hidden-ie toolbar">
+	<div class="vspace4"></div>
     <?php if( $this->isExpanded() ): ?>
-    <div class="toolbar-inner">
-        <?php if( $this->isEnabledViewSwitcher() ): ?>
-        <p class="view-mode">
-            <?php $_modes = $this->getModes(); ?>
-            <?php if($_modes && count($_modes)>1): ?>
-            <label><?php echo $this->__('View as') ?></label>
-            <?php foreach ($this->getModes() as $_code=>$_label): ?>
-                <?php if($this->isModeActive($_code)): ?>
-                    <strong title="<?php echo $_label ?>" class="icon-<?php echo strtolower($_code); ?>"><?php //echo $_label ?></strong>
-                <?php else: ?>
-                    <a href="<?php echo $this->getModeUrl($_code) ?>" title="<?php echo $_label ?>" class="icon-<?php echo strtolower($_code); ?>"><?php //echo $_label ?></a>
-                <?php endif; ?>
-            <?php endforeach; ?>
-            <?php endif; ?>
-        </p>
-        <?php endif; ?>
-        <div class="sort-by">
-            <label><?php echo $this->__('Sort By') ?></label>
-            <div class="select-new"><div class="select-inner">
-            <select class="select-sort-by" onchange="setLocation(this.value)">
+	<div class="float-right">
+        <span class="sort_by_label"><?php echo $this->__('Sort By') ?></span>
+		<div class="sort-by btn-group">
+		    <select class="select-sort-by" onchange="setLocation(this.value)">
             <?php foreach($this->getAvailableOrders() as $_key=>$_order): ?>
                 <option value="<?php echo $this->getOrderUrl($_key, 'asc') ?>"<?php if($this->isOrderCurrent($_key)): ?> selected="selected"<?php endif; ?>>
                     <?php echo $this->__($_order); ?>
                 </option>
             <?php endforeach; ?>
             </select>
-            </div></div>
-            <?php if($this->getCurrentDirection() == 'desc'): ?>
-                <a class="set-asc" href="<?php echo $this->getOrderUrl(null, 'asc') ?>" title="<?php echo $this->__('Set Ascending Direction') ?>"></a>
-            <?php else: ?>
-                <a class="set-desc" href="<?php echo $this->getOrderUrl(null, 'desc') ?>" title="<?php echo $this->__('Set Descending Direction') ?>"></a>
-            <?php endif; ?>
-        </div>
-    	<div class="limiter">
-            <label><?php echo $this->__('Show') ?></label>
-            <div class="select-new"><div class="select-inner">
-            <select class="select-limit-show" onchange="setLocation(this.value)">
+		</div>	
+		<?php if($this->getCurrentDirection() == 'desc'): ?>
+			<a class="btn_desc" href="<?php echo $this->getOrderUrl(null, 'asc') ?>" title="<?php echo $this->__('Set Ascending Direction') ?>">
+				<button data-original-title="Sort Ascending" title="" data-placement="top" data-toggle="tooltip" class="btn btn-sm btn-info" id="sort-button" type="button"><i class="fa fa-chevron-down"></i></button>
+			</a>
+		<?php else: ?>
+			<a class="btn_asc" href="<?php echo $this->getOrderUrl(null, 'desc') ?>" title="<?php echo $this->__('Set Descending Direction') ?>">
+				<button data-original-title="Sort Descending" title="" data-placement="top" data-toggle="tooltip" class="btn btn-sm btn-info" id="sort-button" type="button"><i class="fa fa-chevron-up"></i></button>
+			</a>
+		<?php endif; ?>
+        <span class="limit_label"><?php echo $this->__('Show') ?></span>
+    	<div class="limiter btn-group">
+			<select class="select-limit-show" onchange="setLocation(this.value)">
             <?php foreach ($this->getAvailableLimit() as  $_key=>$_limit): ?>
                 <option value="<?php echo $this->getLimitUrl($_key) ?>"<?php if($this->isLimitCurrent($_key)): ?> selected="selected"<?php endif ?>>
                     <?php echo $_limit; ?>
                 </option>
             <?php endforeach; ?>
-            </select></div></div> <?php echo $this->__('per page') ?>
-        </div>
-        <div class="pager">
-            <p class="amount">
-                <?php if($this->getLastPageNum()>1): ?>
-                    <?php echo $this->__('Items %s to %s of %s total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
-                <?php else: ?>
-                   <?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?>
-                <?php endif; ?>
-            </p>
-            <?php echo $this->getPagerHtml() ?>
+            </select>
         </div>
     </div>
     <?php endif; ?>
-    
 </div>
+<?php echo $this->getPagerHtml() ?>
 <script type="text/javascript" >
     jQuery(function($){
         // Transforming the form's Select control using jqTransform Plugin.
-        $(".toolbar .limiter .select-new .select-inner").jqTransform();
-        $(".toolbar .sort-by .select-new .select-inner").jqTransform();
+        $(".toolbar .limiter").jqTransform();
+        $(".toolbar .sort-by").jqTransform();
     });
 </script>
 <?php endif ?>

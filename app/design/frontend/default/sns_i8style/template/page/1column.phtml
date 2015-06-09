@@ -37,72 +37,55 @@
 <?php echo $this->getChildHtml('head') ?>
 </head>
 <?php
-$bclass = '';
-if( $themeCfg->getField('general_layoutType')==2 ){
-    $bclass .= ' boxed-layout';
-    if($themeCfg->getField('general_bodyBgImage')!=''){
-        $bclass .= ' '.$themeCfg->getField('general_bodyBgImage');
-    }
+$request = $this->getRequest();
+$module = $request->getModuleName();
+$controller = $request->getControllerName();
+$action = $request->getActionName();
+if($module == 'checkout' && $controller == 'cart' && $action == 'index')
+{
+  //Cart Page
 }
-if(!$this->getChildHtml('breadcrumbs')){
-    $bclass .= ' no-breadcrumbs';
-}
-$bclass .= ' '.Mage::helper('i8style/data')->getBrowser();
-$bclass .= ' '.Mage::getSingleton('core/design_package')->getTheme('frontend');
-$bclass .= ($this->getUrl('') == $this->getUrl('*/*/*', array('_current'=>true, '_use_rewrite'=>true))) ? ' homepage' : '';
-$bclass .= (Mage::registry('current_category')) ? ' catpage' : '';
-$bclass .= (Mage::registry('current_product')) ? ' detailpage' : '';
-$bclass .= (Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms') ? ' cmspage' : '';
+$wrapClass = (!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!='catalog')? ' page-wrap' : '';
+$skinyClass = (Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms' && !Mage::getBlockSingleton('page/html_header')->getIsHomePage()) ? ' skinny-page' : '';
 ?>
 <body id="bd" class="<?php echo $this->getBodyClass();?><?php echo $bclass; ?>">
-    <div id="sns_wrapper">
-        <?php echo $this->getChildHtml('after_body_start') ?>
-        <?php echo $this->getChildHtml('header') ?>
-        <!-- BEGIN: Top Spotlight -->
-        <?php if ($this->getChildHtml('topsl')) : ?>
-        <div id="sns_topsl" class="wrap">
-            <div class="container">
-                <div class="row">
-                    <?php echo $this->getChildHtml('topsl') ?>
-                </div>
-            </div>
-        </div>
+	<?php echo $this->getChildHtml('after_body_start') ?>
+	<header>
+		<?php echo $this->getChildHtml('header') ?>
+	</header>
+	<div class="grey-area">
+		<div id="my_slideshow">
+			<?php echo $this->getChildHtml('slideshow') ?>
+		</div>
+		<?php if($this->getChildHtml('breadcrumbs')): ?>
+       	<div class="row top-bar">
+			<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && !$module=='checkout') { ?>
+				<div class="container">
+					<div style="" class="col-xs-12 col-sm-12 col-md-12">
+						<?php echo $this->getChildHtml('breadcrumbs') ?>
+					</div>
+				</div>
+			<?php } ?>	
+		</div>	
         <?php endif; ?>
-        <!-- END: Top Spotlight -->
-        <?php if($this->getChildHtml('breadcrumbs')): ?>
-        <!-- BEGIN: breadcrumbs -->
-        <div id="sns_breadcrumbs" class="wrap">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="sns_titlepage"></div>
-                        <?php echo $this->getChildHtml('breadcrumbs') ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END: breadcrumbs -->
-        <?php endif; ?>
-        <!-- BEGIN: Main Content -->
-        <div id="sns_content" class="wrap layout-m">
-           <div class="container">
-                <div class="row">
-                    <div id="sns_main" class="col-md-12 col-main">
-                        <?php echo $this->getChildHtml('global_messages') ?>
-                        <?php if( $this->getChildHtml('content') ): ?>
-                        <div id="sns_mainmidle">
-                            <?php echo $this->getChildHtml('content') ?>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END: Main Content -->
-        <?php echo $this->getChildHtml('before_footer'); ?>
-        <?php echo $this->getChildHtml('footer') ?>
-        <?php echo $this->getAbsoluteFooter(); ?>
-        <?php echo $this->getChildHtml('before_body_end'); ?>
-    </div>
+       	<div class="container">
+			<?php if($wrapClass!='' || $skinyClass!=''): ?>
+			<div class="<?php echo $wrapClass.$skinyClass ?>">
+			<?php endif;?>
+			<?php echo $this->getChildHtml('global_messages') ?>
+				<?php if($this->getChildHtml('content')): ?>
+					<?php echo $this->getChildHtml('content') ?>
+				<?php endif; ?>
+            <?php if($wrapClass!='' || $skinyClass!=''): ?>
+			</div>
+			<?php endif;?>
+		</div>
+	</div>
+    <?php echo $this->getChildHtml('before_footer'); ?>
+	<footer class="footer">
+		<?php echo $this->getChildHtml('footer') ?>
+	</footer>
+	<?php echo $this->getAbsoluteFooter(); ?>
+	<?php echo $this->getChildHtml('before_body_end'); ?>
 </body>
 </html>

@@ -15,11 +15,18 @@
         	<action method="addItem"><type>js_css</type><name>sns/owl-carousel/owl.carousel.css</name></action>
         	<action method="addItem"><type>js_css</type><name>sns/owl-carousel/owl.transitions.css</name></action>
         	
-        	<action method="addItem"><type>js_css</type><name>sns/jqtransform/css/jqtransform.css</name></action>
+        	<!--<action method="addItem"><type>js_css</type><name>sns/jqtransform/css/jqtransform.css</name></action>-->
 			
             <action method="addItem"><type>skin_css</type><name helper="i8style/data/getThemeCSS"/><params/></action>
-            <action method="addItem"><type>js_css</type><name>sns/tdstyle.css</name></action>
-			<action method="addItem"><type>js_css</type><name>sns/tdcustomstyle.css</name></action>
+            <!--<action method="addItem"><type>js_css</type><name>sns/tdstyle.css</name></action>-->
+			<!--<action method="addItem"><type>js_css</type><name>sns/tdcustomstyle.css</name></action>-->
+			
+			<action method="addCss"><stylesheet>css/style.css</stylesheet></action>
+			<action method="addCss"><stylesheet>css/devstyle.css</stylesheet></action>
+			
+			<action method="addCss"><stylesheet>css/mystyle.css</stylesheet></action>
+			
+			<action method="addItem"><type>skin_css</type><name>css/ie.css</name><params/><if>lt IE 9</if></action>
             <!-- End Theme css -->
             
             <!-- Theme js -->

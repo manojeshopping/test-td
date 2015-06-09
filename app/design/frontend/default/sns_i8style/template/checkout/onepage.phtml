@@ -24,26 +24,36 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<div class="page-title">
-    <h1><?php echo $this->__('Checkout') ?></h1>
-</div>
-<script type="text/javascript" src="<?php echo $this->getJsUrl('varien/accordion.js') ?>"></script>
-<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
-<ol class="opc" id="checkoutSteps">
-<?php $i=0; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
-<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; $i++ ?>
-    <li id="opc-<?php echo $_stepId ?>" class="section<?php echo !empty($_stepInfo['allow'])?' allow':'' ?><?php echo !empty($_stepInfo['complete'])?' saved':'' ?>">
-        <div class="step-title">
-            <span class="number"><?php echo $i ?></span>
-            <h2><?php echo $_stepInfo['label'] ?></h2>
-            <a href="#"><?php echo $this->__('Edit') ?></a>
-        </div>
-        <div id="checkout-step-<?php echo $_stepId ?>" class="step a-item" style="display:none;">
-            <?php echo $this->getChildHtml($_stepId) ?>
-        </div>
-    </li>
-<?php endforeach ?>
-</ol>
+<div class="row">
+	<div class="hidden-xs col-sm-3 col-pad-right">
+		<h2 class="uppercase dark">Checkout</h2>
+		<?php echo $this->getChildHtml('checkout.progress.wrapper'); ?>
+	</div>	
+	<script type="text/javascript" src="<?php echo $this->getJsUrl('varien/accordion.js') ?>"></script>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
+	<div class="col-xs-12 col-sm-9">
+		<div class="panel-group" id="checkoutSteps" role="tablist" aria-multiselectable="true">
+			<?php $i=0; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
+			<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; $i++ ?>
+				<div class="panel panel-default section<?php echo !empty($_stepInfo['allow'])?' allow':'' ?><?php echo !empty($_stepInfo['complete'])?' saved':'' ?>" id="opc-<?php echo $_stepId ?>">
+					<div class="panel-heading step-title" role="tab">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion" href="#" aria-expanded="true" aria-controls="collapseOne">
+							  <button class="btn1 btn-default1 btn-td-info btn-xs pull-right" ><?php echo $this->__('Edit') ?></button>
+							  <h4><?php echo $_stepInfo['label'] ?></h4>
+							</a>
+						</h4>
+					</div>
+					<div id="checkout-step-<?php echo $_stepId ?>" class="panel-collapse collapse in step a-item" role="tabpanel" aria-labelledby="headingOne" style="display:none;">
+						<div class="panel-body">
+							<?php echo $this->getChildHtml($_stepId) ?>
+						</div>
+					</div>
+				</div>
+			<?php endforeach ?>
+		</div>
+	</div>	
+
 <script type="text/javascript">
 //<![CDATA[
     var accordion = new Accordion('checkoutSteps', '.step-title', true);
@@ -58,3 +68,5 @@
     );
 //]]>
 </script>
+</div>
+

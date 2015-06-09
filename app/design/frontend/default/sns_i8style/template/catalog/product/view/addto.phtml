@@ -27,14 +27,16 @@
 
 <?php $_product = $this->getProduct(); ?>
 <?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
-<ul class="add-to-links">
-<?php if ($this->helper('wishlist')->isAllow()) : ?>
-    <li><a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist" data-toggle="tooltip" data-original-title="<?php echo $this->__('Add to Wishlist') ?>"><?php echo $this->__('Add to Wishlist') ?></a></li>
-<?php endif; ?>
 <?php
     $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product);
 ?>
-<?php if($_compareUrl) : ?>
-    <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare" data-toggle="tooltip" data-original-title="<?php echo $this->__('Add to Compare') ?>"><?php echo $this->__('Add to Compare') ?></a></li>
-<?php endif; ?>
-</ul>
+<div class="col-xs-4 1showMeRed">
+	<div class="input-group input-group-lg floatright">
+		<?php if ($this->helper('wishlist')->isAllow()) : ?>
+			<button data-url="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, '<?php echo $_wishlistSubmitUrl ?>'); return false;" data-original-title="<?php echo $this->__('Add to Wishlist') ?>" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-margin-rt btn-td-primary btn-md" type="button"><i class="fa fa-star"></i></button>
+		<?php endif; ?>	
+		<?php if($_compareUrl) : ?>
+			<button onclick="setLocation('<?php echo  $_compareUrl ?>')" data-original-title="<?php echo $this->__('Add to Compare') ?>" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-margin-rt btn-td-info btn-md" type="button"><i class="fa fa-align-left fa-rotate-270"></i></button>
+		<?php endif; ?>
+	</div>
+</div>

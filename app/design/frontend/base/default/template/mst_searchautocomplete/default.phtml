@@ -6,17 +6,26 @@ $_currentAttribute = Mage::getSingleton('core/app')->getRequest()->getParam('att
 $_filterType      = $this->getFilterType();
 $_url             = $this->getAjaxUrl();
 ?>
-<form id="search_mini_form" action="<?php echo $_helper->getResultUrl() ?>" method="get"
+<form id="search_mini_form" action="<?php echo $_helper->getResultUrl() ?>"    method="get"
     class="searchautocomplete UI-SEARCHAUTOCOMPLETE"
-    data-tip="<?php echo $this->__(Mage::getStoreConfig('searchautocomplete/general/tip')) ?>"
     data-url="<?php echo $_url ?>"
     data-minchars="<?php echo Mage::getStoreConfig('searchautocomplete/general/min_chars') ?>"
     data-delay="<?php echo Mage::getStoreConfig('searchautocomplete/general/delay') ?>">
 
-    <div class="form-search">
-        <label for="search"><?php echo $this->__('Search:') ?></label>
+    <div class="form-search input-group">
+       <!-- <label for="search"><?php // echo $this->__('Search:') ?></label>-->
 
-        <?php if ($_filterType == 'category'): ?>
+        <input id="search" type="text" onblur="this.placeholder = 'enter your text'" onfocus="this.placeholder = ''" placeholder="Product Search. e.g '1700mm Bath'" autocomplete="off"  name="<?php echo $_helper->getQueryParamName() ?>" value="<?php echo $_helper->getEscapedQueryText() ?>" class="form-control UI-SEARCH UI-NAV-INPUT" maxlength="<?php echo $_helper->getMaxQueryLength();?>" />
+
+		<span class="input-group-btn">
+			<button type="submit" title="<?php echo $this->__('Search') ?>" class="btn btn-search"><?php echo $this->__('GO!');?></button>
+		</span>
+		<br>
+		<div class="clearfix"></div>
+        <div class="searchautocomplete-loader UI-LOADER" style="display:none;"></div>
+        <div style="display:none" id="search_autocomplete" class="UI-PLACEHOLDER search-autocomplete search-results"></div>
+		
+		<?php if ($_filterType == 'category'): ?>
         <div class="nav-search-in">
             <span class="category-fake UI-CATEGORY-TEXT"><?php echo $this->__('All') ?></span>
             <span class="nav-down-arrow"></span>
@@ -43,12 +52,5 @@ $_url             = $this->getAjaxUrl();
                 </select>
             </div>
         <?php endif ?>
-
-        <input id="search" type="text" autocomplete="off"  name="<?php echo $_helper->getQueryParamName() ?>" value="<?php echo $_helper->getEscapedQueryText() ?>" class="input-text UI-SEARCH UI-NAV-INPUT" maxlength="<?php echo $_helper->getMaxQueryLength();?>" />
-
-        <button type="submit" title="<?php echo $this->__('Search') ?>" class="button search-button"><span><span><?php echo $this->__('Search') ?></span></span></button>
-
-        <div class="searchautocomplete-loader UI-LOADER" style="display:none;"></div>
-        <div style="display:none" id="search_autocomplete" class="UI-PLACEHOLDER search-autocomplete"></div>
     </div>
 </form>

@@ -3,21 +3,26 @@ $_helper = Mage::helper('searchautocomplete');
 $_query  = Mage::helper('catalogsearch')->getQueryText();
 ?>
 <?php if (count($this->getIndexes()) > 0): ?>
-    <div class="top"></div>
+    <!--<div class="top"></div>-->
 
     <?php foreach ($this->getIndexes() as $_index => $_label): ?>
         <?php if (count($this->getIndexes()) > 1): ?>
         <div class="index-title"><?php echo $this->__($_label) ?> <span>(<?php echo $this->getCollection($_index)->getSize() ?>)</span></div>
         <?php endif ?>
-        <ul>
+        <div class="search-box">
+			<div class="vspace4 clearfix"></div>
+			<button onclick="location.href='<?php echo Mage::getUrl('catalogsearch/result', array('_query' => array('q' => $_query))) ?>'" type="button" class="btn btn-td-info btn-md btn-margin-rt">View All Results <i class="fa fa-chevron-right"></i></button>
+			<button type="button" class="btn btn-td-primary-quiet pull-right btn-md "><i class="fa fa-times"></i></button>
+			<hr>
+			<div class="clearfix"></div>
         <?php
             $_collection = $this->getCollection($_index);
         ?>
         <?php foreach ($_collection as $_item): ?>
             <?php echo $this->getItemHtml($_index, $_item) ?>
         <?php endforeach ?>
-        </ul>
+		</div>
     <?php endforeach ?>
-    <div class="all"><a href="<?php echo Mage::getUrl('catalogsearch/result', array('_query' => array('q' => $_query))) ?>"><?php echo $this->__('All search results →') ?></a></div>
-    <div class="clearfix"></div>
+    <!--<div class="all"><a href="<?php // echo Mage::getUrl('catalogsearch/result', array('_query' => array('q' => $_query))) ?>"><?php // vecho $this->__('All search results →') ?></a></div>
+    <div class="clearfix"></div>-->
 <?php endif ?>

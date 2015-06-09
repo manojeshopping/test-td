@@ -42,74 +42,60 @@ $blockCol5 = $themeCfg->getField('footer_staticblock_col5');
 
 $footerStyle .= ($bgColor) ? 'background-color: '.$bgColor.';' : '';
 ?>
-<div class="footer-strip"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_strip')->toHtml(); ?></div>
-<div id="sns_wraper_footer" class="wrap" style="<?php echo $footerStyle; ?>">
-	<div id="sns_footer_top" class="footer">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-2d4 col-xs-6 col-sm-4 column column1">
+
+	<div class="container">
+		<div class="vspace12"></div>
+		<div class="row">
+			<div class="col-xs-4 col-sm-4 col-pad-right col-pad-left">
+				<div class="logo"></div>
+				<div class="vspace12"></div>
+			</div>
+			<div class="col-sm-8 col-pad-right col-pad-left hidden-xs">
+				<div class="vspace12"></div>
+				<div class="pull-right">
 					<?php if($blockCol1) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol1)->toHtml(); ?>
 				</div>
-				<div class="col-md-2d4 col-xs-6 col-sm-4 column column2">
-					<?php if($blockCol2) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol2)->toHtml(); ?>
-				</div>
-				<div class="col-md-2d4 col-xs-6 col-sm-4 column column3">
-					<?php if($blockCol3) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol3)->toHtml(); ?>
-				</div>
-				<div class="col-md-2d4 col-xs-6 col-sm-4 column column4">
-					<?php if($blockCol4) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol4)->toHtml(); ?>
-				</div>
-				<div class="col-md-2d4 col-sm-4 column column5">
-					<?php if($blockCol5) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol5)->toHtml(); ?>
-				</div>
-			</div>
-			<div class="sns-social">
-				<?php
-				if($themeCfg->getField('social_status')) :
-					
-					$items = $themeCfg->getField('social_items');
-					$array_items = unserialize($items);
-					$id = 1;
-					$collect_items = array();
-					foreach($array_items as $key=>$item){
-						$item['id'] = $id;
-						$item['link'] = Mage::helper('cms')->getBlockTemplateProcessor()->filter($item['link']);
-						$item['class'] = ($item['icon']) ? 'fa ' . $item['icon'] : '';
-						$collect_items[] = $item;
-						$id++;
-					}
-				?>
-					<ul>
-					<?php foreach($collect_items as $item) : ?>
-						<li>
-							<a 
-								data-toggle="tooltip" 
-								data-original-title="<?php echo $item['title']; ?>" 
-								href="<?php echo $item['link']; ?>" 
-								target="<?php echo $item['target']; ?>"
-								title="<?php echo $item['title']; ?>" 
-								class="<?php echo $item['class']; ?>">
-									<?php //echo $item['title']; ?>
-							</a>
-						</li>
-					<?php endforeach; ?>
-					</ul>
-				<?php endif; ?>
 			</div>
 		</div>
-	</div>
-	<div id="sns_footer_bottom" class="footer">
-		<div class="container">
-			<div class="sns-copyright">
-				<?php echo $this->getCopyright() ?>
-				 <br />Designed by <a href="http://www.dolcemedia.co.nz/" data-toggle="tooltip" title="Dolcemedia Web Development">www.dolcemedia.co.nz</a>.
+		<div class="vspace12"></div>
+		<div class="row">
+			<div class="col-sm-4 col-pad-right col-pad-left">
+				<div class="vspace12"></div>
+				<?php if($blockCol2) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol2)->toHtml(); ?>
+ 				<div class="vspace40"></div>
+ 				<h3 class="reverse special-font">Secure Online Shopping</h3>
+				<img src="http://www.tradedepot.co.nz//media/wysiwyg/i8style/GeoTrust_Partner_logo.png" class="" alt="GeoTrust SSL" width="148" height="72">
+
 			</div>
-			<div class="payment-method">
-				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('i8style_payment')->toHtml(); ?>
+			<div class="col-sm-4 col-pad-right col-pad-left">
+				<div class="vspace12"></div>
+				<?php if($blockCol3) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol3)->toHtml(); ?>
+			</div>
+			<div class="col-sm-4 col-pad-right col-pad-left">
+				<div class="vspace12"></div>
+				<?php if($blockCol4) echo $this->getLayout()->createBlock('cms/block')->setBlockId($blockCol4)->toHtml(); ?>
 			</div>
 		</div>
+		<div class="vspace100"></div>
+		<div class="well1 medium">
+			<div class="row">
+				<div class="col-sm-6 col-pad-right col-pad-left">
+					<div class="">
+						<a href="http://dolcemedia.co.nz/" target="_blank">
+							<div class="dolcemedia">
+								<span class="pull-left small byline">Web Development by:</span><span class="dmlogo pull-left"></span>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col-sm-6 col-pad-right col-pad-left">
+				</div>
+			</div>
+		</div>
+		<div class="vspace60"></div>
+		<!--- END INCLUDE IN STATIC BLOCK -->
 	</div>
-</div>
+
 <?php if($themeCfg->getField('advance_showTooltip')):?>
 <script type="text/javascript">
 //<![CDATA[
@@ -125,3 +111,4 @@ $footerStyle .= ($bgColor) ? 'background-color: '.$bgColor.';' : '';
 //]]>
 </script>
 <?php endif; ?>
+
