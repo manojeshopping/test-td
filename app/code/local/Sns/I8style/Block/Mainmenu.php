@@ -192,8 +192,10 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
         	if($menutypes == 2){
 	            $classes[] = 'drop-submenu-blocks';
 	        }
-			if (!empty($li) && $hasActiveChildren && $showsubmenu == true){
+			if (!empty($li) && $hasActiveChildren && $showsubmenu == true && $showblock){
 				$classes[] = 'dropdown yamm-fw';
+			}elseif(!empty($li) && $hasActiveChildren && $showsubmenu == true && !$showblock){
+				$classes[] = 'dropdown';
 			}
 			
         }
@@ -287,21 +289,37 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
         if (!empty($li) && $hasActiveChildren && $showsubmenu == true) {
             if($level == 0){
             	if($this->_isgroup) {
-            		if($showblock) $html[] = '<div class="wrap_group  col-sm-'.$submenuwidth.'">';
-            		else $html[] = '<div class="wrap_group fullwidth">';
-            		
-	                $html[] = '<ul class="row level' . $level . '">';
+            		if($showblock) { $html[] = '<div class="wrap_group  col-sm-'.$submenuwidth.'">';
+					$dropdownmenuClass = '';}
+            		elseif(!$showblock){ $html[] = '';
+					$dropdownmenuClass = ' dropdown-menu'; }
+					else { $html[] = '<div class="wrap_group fullwidth">';
+            		$dropdownmenuClass = ''; }
+					
+	                $html[] = '<ul class="row level' . $level . $dropdownmenuClass.'">';
 	                $html[] = $li;
 	                $html[] = '</ul>';
-	                $html[] = '</div>';
+	                if($showblock) $html[] = '</div>';
+					elseif(!$showblock) $html[] = '';
+					else $html[] = '</div>';
             	} else {
-            		if($showblock) $html[] = '<div class="wrap_submenu col-sm-'.$submenuwidth.'">';
-            		else $html[] = '<div class="wrap_submenu">';
-            		
-	                $html[] = '<ul class="level' . $level . '">';
+            		if($showblock) { $html[] = '<div class="wrap_submenu col-sm-'.$submenuwidth.'">';
+					$dropdownmenuClass = '';
+					}
+            		elseif(!$showblock){ 
+						$html[] = '';
+						$dropdownmenuClass = ' dropdown-menu';
+					}
+					else{ 
+					$html[] = '<div class="wrap_submenu">';
+					$dropdownmenuClass = '';
+            		}
+	                $html[] = '<ul class="level' . $level . $dropdownmenuClass.'">';
 	                $html[] = $li;
 	                $html[] = '</ul>';
-	                $html[] = '</div>';
+	                if($showblock) $html[] = '</div>';
+					elseif(!$showblock) $html[] = '';
+					else $html[] = '</div>';
             	}
             }elseif($level == 1){
 				$html[] = '<ul class="level' . $level . ' mega-list dropdown-menu1">';
@@ -338,6 +356,7 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 			$html[] = '</div>'; // end row
 			$html[] = '</ul>';
 		}
+		
 
         $html[] = '</li>';
 
