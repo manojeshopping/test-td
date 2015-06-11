@@ -84,7 +84,7 @@ class Magentoguys_Checkoutc_OnepageController extends Mage_Checkout_OnepageContr
 					// $grandPickupTotal = $this->getOnepage()->getQuote()->getSubTotal();
 					$baseGrandPickupTotal = Mage::app()->getStore()->getBaseCurrency()->format($grandPickupTotal, array(), true);
 					
-					$result['grand_pickup_total'] = '<strong>Total:'.$baseGrandPickupTotal.'</strong>';
+					$result['grand_pickup_total'] = '<h6 class="dark uppercase">Total</h6><h1 class="dark">'.$baseGrandPickupTotal.'</h1>';
                     $result['goto_section'] = 'payment';
                     $result['update_section'] = array(
                         'name' => 'payment-method',

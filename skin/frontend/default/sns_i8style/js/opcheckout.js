@@ -130,7 +130,22 @@ Checkout.prototype = {
         var sectionElement = $('opc-' + section);
         sectionElement.addClassName('allow');
         this.accordion.openSection('opc-' + section);
-		$('sns_header_top').scrollTo();
+		// $('myAffix').scrollTo();
+		jQuery.noConflict();
+		
+		if (jQuery('#myAffix').hasClass('affix-top')) {
+			jQuery('html,body').animate({
+				scrollTop: jQuery('#opc-' + section).offset().top - 240}
+			,'slow'
+			);
+ 		}
+		else{
+			jQuery('html,body').animate({
+				scrollTop: jQuery('#opc-' + section).offset().top - 100}
+			,'slow'
+			);
+		}
+		
         if(!reloadProgressBlock) {
             this.resetPreviousSteps();
         }

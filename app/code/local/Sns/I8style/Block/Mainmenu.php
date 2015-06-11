@@ -227,6 +227,10 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 				$below_arrow = '<span class="caret"></span>';
 				$data_toggle_elm = 'data-toggle="dropdown"';
 			}
+			else{
+				$below_arrow = '';
+				$data_toggle_elm = '';
+			}
 		
 			if($category->getId()==14){
 				$caret_down = '<i class="fa fa-caret-down menu-caret"></i>';
@@ -252,17 +256,17 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 	        $html[] = '</a>';
 		} else {
 			if (!empty($li) && $hasActiveChildren && $showsubmenu == true){
-				$submenuClass = 'dropdown-submenu1';
-				$dataToggleClass = '';
+				// $submenuClass = 'dropdown-submenu1';
+				// $dataToggleClass = '';
 				// $dataToggle = 'data-toggle="dropdown"';
 				$gourl= $this->getCategoryUrl($category);
-				$area_expanded = 'aria-expanded="false"';
+				// $area_expanded = 'aria-expanded="false"';
 			}
 			else{
 				$gourl = $this->getCategoryUrl($category);
 			}
-			$html[] = '<li class="'.$liclass.' '.$submenuClass.'">';
-	        $html[] = '<a '.$area_expanded.' href="'.$gourl.'" class="'.$linkClass.' '.$dataToggleClass.'" '.$dataToggle.'>';
+			$html[] = '<li class="'.$liclass.'">';
+	        $html[] = '<a href="'.$gourl.'" class="'.$linkClass.'">';
 	        $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
 	        $html[] = '</a>';
 		}

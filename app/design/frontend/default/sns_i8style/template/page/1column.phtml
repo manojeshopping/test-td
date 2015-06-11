@@ -48,7 +48,7 @@ if($module == 'checkout' && $controller == 'cart' && $action == 'index')
 $wrapClass = (!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!='catalog')? ' page-wrap' : '';
 $skinyClass = (Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms' && !Mage::getBlockSingleton('page/html_header')->getIsHomePage()) ? ' skinny-page' : '';
 ?>
-<body id="bd" class="<?php echo $this->getBodyClass();?><?php echo $bclass; ?>">
+<body id="bd" class="<?php echo $this->getBodyClass();?>">
 	<?php echo $this->getChildHtml('after_body_start') ?>
 	<header>
 		<?php echo $this->getChildHtml('header') ?>
