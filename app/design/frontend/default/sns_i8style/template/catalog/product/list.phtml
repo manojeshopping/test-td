@@ -38,6 +38,7 @@
 	$_helper = $this->helper('catalog/output');
     $themeConfig =   Mage::helper('i8style/data')->get();
     $imgSize = Mage::helper('i8style/data')->getImgSize('L');
+	$_currentCategory = Mage::registry('current_category');
 ?>
 <?php if(!$_productCollection->count()): ?>
 <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
@@ -47,6 +48,12 @@
 	<?php echo $this->getToolbarHtml() ?>
 </div>
 <?php echo $this->getChildHtml('related_searches') ?>
+
+<?php if($_description=$_currentCategory->getDescription()): ?>
+	<div class="category-description std">
+		<?php echo $_helper->categoryAttribute($_currentCategory, $_description, 'description') ?>
+	</div>
+<?php endif; ?>
 <?php // List mode ?>
 <?php if($this->getMode()!='grid'): ?>
 <?php $_iterator = 0; ?>
@@ -146,6 +153,7 @@
 
 <?php // Grid Mode ?>
     <div class="wrap">
+		
 		<?php $_collectionSize = $_productCollection->count() ?>
 		<?php 
 			// $_columnCount = $this->getColumnCount(); 

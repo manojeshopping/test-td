@@ -40,7 +40,6 @@ $_helper = $this->helper('catalog/output'); ?>
 <script type="text/javascript">
     var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
 </script>
-
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
 <div class="product-detail product-view">
 	<div class="row product-essential">
@@ -54,7 +53,7 @@ $_helper = $this->helper('catalog/output'); ?>
 				</div>
 				<div class="col-xs-12 col-sm-6 hidden-xs">
 					<div class="box">	
-						<?php echo $this->getChildHtml('right.bannerslide') ?>
+						<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('product-detail-advert')->toHtml(); ?>
 					</div>
 				</div>	
 			</div>	
@@ -89,6 +88,7 @@ $_helper = $this->helper('catalog/output'); ?>
 						</div>
 					</div>
 					<hr/>
+					<?php if($_product->getTypeID()!=='bundle'):?>
 					<div class="cart-buttons">
 						<div class="row">
 							<?php echo $this->getChildHtml('alert_urls') ?>
@@ -107,6 +107,7 @@ $_helper = $this->helper('catalog/output'); ?>
 					</div>	
 					<div class="vspace4 clearfix"></div>
 					<hr>
+					<?php endif; ?>
 					<?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
 					
 					<?php echo $this->getChildHtml('other');?>

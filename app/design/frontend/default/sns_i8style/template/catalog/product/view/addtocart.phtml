@@ -34,7 +34,7 @@
 								<div class="input-group-addon padding0">
 									<button data-original-title="Decrease Qty" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-td-info button-addon-left" type="submit" onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty ) && qty > 1 ) qty_el.value--;return false;">-</button>
 								</div>
-								<input type="text" name="qty" id="qty" placeholder="1" value="<?php echo $this->getProductDefaultQty() * 1 ?>" onblur="this.placeholder = '1'" onfocus="this.placeholder = ''" class="form-control add-to-cart" title="<?php echo $this->__('Qty') ?>">
+								<input type="text" name="qty" id="qty" placeholder="1" onblur="this.placeholder = '1'" onfocus="this.placeholder = ''" class="form-control add-to-cart" title="<?php echo $this->__('Qty') ?>">
 								<div class="input-group-addon padding0 btn-margin-rt">
 									<button onclick="var qty_el = document.getElementById('qty'); var qty = qty_el.value; if( !isNaN( qty )) qty_el.value++;return false;" data-original-title="Increase Qty" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-td-info button-addon-right" type="submit">+</button>
 								</div>

@@ -48,7 +48,7 @@
 		<?php foreach ($this->getTotals() as $_code => $_total): ?>
 			<?php if($_code=='shipping' || $_code=='shipping_incl'): ?>
 				<td <?php echo $this->getValueProperties()?>>
-					<?php echo $this->formatValue($_total) ?>
+					<?php echo $this->formatValue($_total); ?>
 				</td>
 			<?php endif; ?>
 		<? endforeach; ?>
@@ -69,7 +69,7 @@
 	
 	<tr class="grand_total">
         <td <?php echo $this->getLabelProperties()?>>
-            <strong><?php echo "Grand Total"; ?></strong>
+            <strong><?php echo "Total"; ?></strong>
         </td>
 		<?php foreach ($this->getTotals() as $_code => $_total): ?>
 			<?php if($_code=='grand_total' || $_code=='grand_total_incl'): ?>
@@ -82,7 +82,7 @@
 	
 	<tr class="grand_total">
         <td <?php echo $this->getLabelProperties()?>>
-            <strong><?php echo "Total to pay"; ?></strong>
+            <strong><?php echo "Grand Total"; ?></strong>
         </td>
 		<?php foreach ($this->getTotals() as $_code => $_total): ?>
 			<?php if($_code=='grand_total_incl'): ?>
