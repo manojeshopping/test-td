@@ -28,72 +28,53 @@
  * @see Mage_Sales_Block_Order_Totals
  */
 ?>
-	<tr class="subtotal_excl">
-        <td <?php echo $this->getLabelProperties()?>>
-            <?php echo "Subtotal"; ?>
-        </td>
-		<?php foreach ($this->getTotals() as $_code => $_total): ?>
-			<?php if($_code=='subtotal_excl' || $_code=='subtotal_incl'): ?>
-				<td <?php echo $this->getValueProperties()?>>
-					<?php echo $this->formatValue($_total) ?>
-				</td>
-			<?php endif; ?>
-		<? endforeach; ?>
-	</tr>
-	
-	<tr class="shipping">
-        <td <?php echo $this->getLabelProperties()?>>
-            <?php echo "Shipping & Handling"; ?>
-        </td>
-		<?php foreach ($this->getTotals() as $_code => $_total): ?>
-			<?php if($_code=='shipping' || $_code=='shipping_incl'): ?>
-				<td <?php echo $this->getValueProperties()?>>
-					<?php echo $this->formatValue($_total); ?>
-				</td>
-			<?php endif; ?>
-		<? endforeach; ?>
-	</tr>
-	
-	<?php foreach ($this->getTotals() as $_code => $_total): ?>
-		<?php if($_code=='adjustment_positive' || $_code=='adjustment_negative'): ?>
-			<tr>
-				<td <?php echo $this->getLabelProperties()?>>
-					<?php echo $this->escapeHtml($_total->getLabel());?>
-				</td>
-				<td <?php echo $this->getValueProperties()?>>
-					<?php echo $this->formatValue($_total) ?>
-				</td>
-			</tr>
-		<?php endif; ?>
-	<?php endforeach; ?>
-	
-	<tr class="grand_total">
-        <td <?php echo $this->getLabelProperties()?>>
-            <strong><?php echo "Total"; ?></strong>
-        </td>
-		<?php foreach ($this->getTotals() as $_code => $_total): ?>
-			<?php if($_code=='grand_total' || $_code=='grand_total_incl'): ?>
-				<td <?php echo $this->getValueProperties()?>>
-					<?php echo $this->formatValue($_total) ?>
-				</td>
-			<?php endif; ?>
-		<? endforeach; ?>
-	</tr>
-	
-	<tr class="grand_total">
-        <td <?php echo $this->getLabelProperties()?>>
-            <strong><?php echo "Grand Total"; ?></strong>
-        </td>
-		<?php foreach ($this->getTotals() as $_code => $_total): ?>
-			<?php if($_code=='grand_total_incl'): ?>
-				<td <?php echo $this->getValueProperties()?>>
-				</td>
-				<td <?php echo $this->getValueProperties()?>>
-					<?php echo $this->formatValue($_total) ?>
-				</td>
-			<?php endif; ?>
-		<?php endforeach; ?>
-	</tr>
+<?php
+	$eachArray=array();
+	foreach($this->getTotals() as $_code => $_total){
+		if($_code=="subtotal_excl" || $_code=='subtotal_incl'){
+			$eachArray['Subtotal'][]= $_total;
+		}
+		elseif($_code=='shipping' || $_code=='shipping_incl'){
+			$eachArray['Shipping & Handling'][]= $_total;
+		}
+		elseif($_code=='adjustment_positive'){
+			$eachArray[$this->escapeHtml($_total->getLabel())][]= $_total;
+		}
+		elseif($_code=='adjustment_negative'){
+			$eachArray[$this->escapeHtml($_total->getLabel())][]= $_total;
+		}
+		elseif($_code=='grand_total'){
+			$eachArray['Total'][]= $_total;
+		}
+		elseif($_code=='grand_total_incl'){
+			$eachArray['Total'][]= $_total;
+			$eachArray['Grand Total'][]= $_total;
+		}
+	}
+
+foreach($eachArray as $key=>$value){
+?>
+		<tr>
+			<td <?php echo $this->getLabelProperties()?>>
+				<?php if($key=='Total' || $key=='Grand Total'){?>
+					<strong><?php echo $key; ?></strong>
+				<?php }else{ ?>
+					<?php echo $key; ?>
+				<?php } ?>
+			</td>
+		<?php foreach($value as $subValue){ ?>
+			<?php if($key=='Adjustment Refund' || $key=='Adjustment Fee' || $key=='Grand Total'){?>
+			<td <?php echo $this->getValueProperties()?>>
+			</td>
+			<?php } ?>
+			<td <?php echo $this->getValueProperties()?>>
+				<?php echo $this->formatValue($subValue) ?>
+			</td>
+		<?php } ?>
+		</tr>
+<?php	
+}
+?>
 
 	
 	

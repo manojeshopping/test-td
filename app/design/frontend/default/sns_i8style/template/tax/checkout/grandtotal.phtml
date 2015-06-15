@@ -30,13 +30,13 @@
 ?>
 <?php if ($this->includeTax() && $this->getTotalExclTax()>=0):?>
 <tr>
-	<th style="<?php echo $this->getStyle() ?>" class="warning" scope="row" colspan="<?php echo $this->getColspan(); ?>">
+	<th style="<?php echo $this->getStyle() ?>" class="" scope="row" colspan="<?php echo $this->getColspan(); ?>">
         <?php echo $this->helper('tax')->__('Grand Total')?>
     </th>
-	<td style="<?php echo $this->getStyle() ?>" class="text-right warning">
+	<td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getTotalExclTax()) ?>
     </td>
-	<td style="<?php echo $this->getStyle() ?>" class="text-right warning">
+	<td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?>
     </td>
     
@@ -52,3 +52,13 @@
     </td>
 </tr>
 <?php endif;?>
+<tr>
+	<th style="<?php echo $this->getStyle() ?>" class="warning" scope="row" colspan="<?php echo $this->getColspan(); ?>">
+        <?php echo $this->helper('tax')->__('Total To Pay')?>
+    </th>
+	<td style="<?php echo $this->getStyle() ?>" class="text-right warning">
+    </td>
+	<td style="<?php echo $this->getStyle() ?>" class="text-right warning">
+        <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?>
+    </td>
+</tr>
