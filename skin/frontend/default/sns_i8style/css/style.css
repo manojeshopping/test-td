@@ -1351,6 +1351,15 @@ button {
   display: none;
   z-index: 0;
 }
+.carousel .carousel-control {
+  background-image: none !important;
+}
+.carousel .carousel-control.left:hover {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.0001) 100%) !important;
+}
+.carousel .carousel-control.right:hover {
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.0001) 100%) !important;
+}
 .carousel .carousel-inner {
   background-color: #CCC;
 }
@@ -2049,6 +2058,67 @@ button {
 }
 .bs-callout-info h4 {
   color: #5bc0de;
+}
+
+.mini-cart-item {
+  margin-bottom: 4px;
+  border-bottom: 1px solid #828c8f;
+  /*background-color: #DDD;*/
+
+  padding: 4px;
+  /*  &:hover {
+    background-color: lighten(@td-yellow, 40%);
+  }*/
+
+}
+.qty-updater {
+  display: inline !important;
+  border: 2px solid #b8bdbf;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  /*float: left;*/
+
+  width: 34px;
+  height: 34px;
+  color: #828c8f;
+  text-align: center;
+}
+.mymenu {
+  padding: 12px;
+  width: 450px;
+  /*background-color: #f1f1f1;*/
+
+  position: absolute;
+  right: 0px;
+}
+.notification {
+  display: none;
+  /* SO IT IS HIDDEN ON SMALL DEVICES */
+
+}
+@media screen and (min-width: 480px) {
+  .notification {
+    display: block;
+    background-color: #ec1c24;
+    height: 26px;
+    width: 26px;
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    font-size: 11px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    padding-top: 6px;
+    text-align: center;
+  }
 }
 /*
 

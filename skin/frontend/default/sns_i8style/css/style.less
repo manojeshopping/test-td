@@ -787,6 +787,19 @@ button {
 .carousel {
   display: none;
   z-index: 0;
+  .carousel-control {
+    background-image: none !important;
+    &.left {
+      &:hover {
+        background-image: linear-gradient(to right, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%) !important;
+      }
+    }
+    &.right {
+      &:hover {
+        background-image: linear-gradient(to left, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%) !important;
+      }
+    }    
+  }
   .carousel-inner {
     background-color: #CCC;
     img {
@@ -797,7 +810,6 @@ button {
     }
   }
 }
-
 
 @media (min-width: 768px) {
   .carousel {
@@ -1485,6 +1497,52 @@ button {
     color: #5bc0de;
 }
 
+.mini-cart-item {
+  margin-bottom: 4px;
+  border-bottom: 1px solid @td-grey;
+  /*background-color: #DDD;*/
+  padding: 4px;
+/*  &:hover {
+    background-color: lighten(@td-yellow, 40%);
+  }*/
+}
+
+.qty-updater {
+  display: inline !important;
+  border: 2px solid lighten(@td-grey,20%);
+  .border-radius (4px);
+  /*float: left;*/
+  width: 34px;
+  height: 34px;
+  color: @td-grey;
+  text-align: center;
+}
+
+
+.mymenu {
+  padding: 12px;
+  width: 450px;
+  /*background-color: #f1f1f1;*/
+  position: absolute;
+  right: 0px;
+}
+
+.notification {
+  display: none; /* SO IT IS HIDDEN ON SMALL DEVICES */
+  @media screen and (min-width: 480px) {
+    display: block;
+    background-color: @td-red;
+    height: 26px;
+    width: 26px;
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    font-size: 11px;
+    .border-radius (15px);
+    padding-top: 6px;
+    text-align: center;
+  }
+}
 
 
 

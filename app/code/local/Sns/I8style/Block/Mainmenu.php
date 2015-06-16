@@ -234,11 +234,14 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 				$data_toggle_elm = '';
 			}
 		
-			if($category->getId()==14){
-				$caret_down = '<i class="fa fa-caret-down menu-caret"></i>';
+			if($category->getId()==13){
+				// $caret_down = '<i class="fa fa-caret-down menu-caret"></i>';
+				$products_count = Mage::getModel('catalog/category')->load($category->getId())->getProductCount();
+				$notification = '<div class="notification">'.$products_count.'</div>';
 			}
 			else{
-				$caret_down = ''; 
+				// $caret_down = ''; 
+				$notification = '';
 			}
 			if($hidelink) {
 				$url = 'javascript:void(0)';
@@ -248,10 +251,11 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 			
 			$html[] = '<li class="'.$liclass.'">';
 	        $html[] = '<a href="'.$url.'" class="'.$linkClass.' dropdown-toggle" '.$data_toggle_elm.'>';
-	        $html[] = '<span>' . $this->escapeHtml($category->getName()) .$caret_down. '</span>';
+	        $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
 			$html[] = $below_arrow;
 	        $html[] = '</a>';
-		} elseif($level == 1) {
+			$html[] = $notification;
+  		} elseif($level == 1) {
 			$html[] = '<li class="'.$liclass.' dropdown1">';
 	        $html[] = '<a href="'.$this->getCategoryUrl($category).'" class="'.$linkClass.' dropdown-toggle" tabindex="0">';
 	        $html[] = '<span>' . $this->escapeHtml($category->getName()) . '</span>';
