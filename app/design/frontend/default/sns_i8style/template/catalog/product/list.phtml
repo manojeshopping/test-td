@@ -48,11 +48,12 @@
 	<?php echo $this->getToolbarHtml() ?>
 </div>
 <?php echo $this->getChildHtml('related_searches') ?>
-
+<?php if($_currentCategory): ?>
 <?php if($_description=$_currentCategory->getDescription()): ?>
 	<div class="category-description std">
 		<?php echo $_helper->categoryAttribute($_currentCategory, $_description, 'description') ?>
 	</div>
+<?php endif; ?>
 <?php endif; ?>
 <?php // List mode ?>
 <?php if($this->getMode()!='grid'): ?>
