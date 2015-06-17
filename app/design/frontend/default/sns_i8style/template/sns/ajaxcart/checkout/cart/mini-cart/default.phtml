@@ -47,8 +47,8 @@
 			<img src="<?php echo $this->getProductThumbnail()->resize(90, 60)->setWatermarkSize('90x60'); ?>" class="img-responsive" alt="<?php echo $this->htmlEscape($this->getProductName()) ?>" />
 		</div>
 		<div class="col-xs-6">
-			<?php if ($_product->getShortDescription()):?>
-			<h5 class=""><?php echo $_product->getShortDescription(); ?></h5>
+			<?php if ($_product->getName()):?>
+			<h5 class=""><?php echo $_product->getName(); ?></h5>
 			<?php endif; ?>
 		</div>
 		<div class="col-xs-3">
