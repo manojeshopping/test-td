@@ -189,11 +189,13 @@
 						</a>
 					</div>
 					<div class="product-details">
+						<a href="<?php echo $_product->getProductUrl() ?>">
 						<div class="product-title clearfix">
 							<h2>
 								<?php echo $_product->getShortDescription() ?>	
 							</h2>
 						</div>
+						</a>
 						<div class="product-info row">
 							<div class="col-xs-6">
 								<div class="product-brand">	<?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_product)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?></div>
