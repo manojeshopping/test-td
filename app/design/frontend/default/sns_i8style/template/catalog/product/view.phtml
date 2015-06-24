@@ -146,7 +146,7 @@ $categoryCollection = Mage::getResourceModel('catalog/category_collection')
 							foreach($categoryCollection as $cat){
 								if($cat->getIsActive()){
 								?>
-									<li><a href="<?php echo $cat->getUrl(); ?>"><?php echo $cat->getName(); ?></a></li>
+									<!--<li><a href="<?php //echo $cat->getUrl(); ?>"><?php // echo $cat->getName(); ?></a></li>-->
 							<?php 	
 									$relatedCats = $cat->getRelatedCategories();
 									if($relatedCats){
