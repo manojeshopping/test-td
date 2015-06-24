@@ -237,28 +237,13 @@ class Sns_I8style_Block_Mainmenu extends Mage_Catalog_Block_Navigation {
 			if($category->getId()==13){
 				// $caret_down = '<i class="fa fa-caret-down menu-caret"></i>';
 				
-				$parentCategoryId = 13;
-				$categories = Mage::getModel('catalog/category')->load($parentCategoryId)->getChildren();
+				$current_category = Mage::getModel('catalog/category')->load($category->getId());
+				$productsToolbar_count = Mage::getModel('catalog/product')->getCollection()
+                ->addFieldToFilter('visibility',4)
+                ->addFieldToFilter('status',1)
+                ->addCategoryFilter($current_category)->getSize();
 				
-				$catArray = explode(',', $categories);
-				$iCount = 0;
-				foreach($catArray as $child)
-				{
-					$_child = Mage::getModel( 'catalog/category' )->load( $child );
-					if($_child->getIsActive()){
-					
-						$prodCollection = Mage::getResourceModel('catalog/product_collection')->addCategoryFilter($_child);
-						Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($prodCollection);
-						Mage::getSingleton('catalog/product_visibility')->addVisibleInCatalogFilterToCollection($prodCollection);
-						
-						$_childCount = Mage::getModel( 'catalog/category' )->load( $child )->getProductCount();
-						$iCount+= $prodCollection->count();
-					}
-				}
-				
-				$products_count = Mage::getModel('catalog/category')->load($category->getId())->getProductCount();
-				$iCount+= $products_count;
-				$notification = '<div class="notification">'.$iCount.'</div>';
+				$notification = '<div class="notification">'.$productsToolbar_count.'</div>';
 			}
 			else{
 				// $caret_down = ''; 
