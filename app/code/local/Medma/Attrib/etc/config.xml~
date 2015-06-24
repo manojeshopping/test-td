@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Medma_Attrib>
+            <version>0.1.0</version>
+        </Medma_Attrib>
+    </modules>
+
+    <global>
+        <resources>
+            <attrib_setup>
+                <setup>
+                    <module>Medma_Attrib</module>
+					<class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </attrib_setup>
+            <attrib_setup_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </attrib_setup_write>
+            <attrib_setup_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </attrib_setup_read>
+        </resources>
+    </global>
+</config>

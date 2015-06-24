@@ -40,6 +40,7 @@
     $imgSize = Mage::helper('i8style/data')->getImgSize('L');
 	$_currentCategory = Mage::registry('current_category');
 ?>
+
 <?php if(!$_productCollection->count()): ?>
 <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
 <?php else: ?>
@@ -191,7 +192,7 @@
 					<div class="product-details">
 						<a href="<?php echo $_product->getProductUrl() ?>">
 						<div class="product-title clearfix">
-							<h2>
+							<h2 class="short-description">
 								<?php echo $_product->getShortDescription() ?>	
 							</h2>
 						</div>
@@ -207,9 +208,41 @@
 							</div>
 						</div>
 					</div>
-				</div>					
+				</div>
 				<div class="product-wrap-bottom">
 					<div class="product-option">
+					<?php 		
+						$currentCatIds = $_product->getCategoryIds();
+						$categoryCollection = Mage::getResourceModel('catalog/category_collection')
+							->addAttributeToSelect('name')
+							->addAttributeToSelect('url_path')
+							->addAttributeToSelect('related_categories')
+							->addAttributeToFilter('entity_id', $currentCatIds)
+							->addAttributeToFilter('entity_id', array('neq' => '2'))
+							->addIsActiveFilter();
+						
+						$assignedCategories = $categoryCollection->getData();
+						$levelArray = array();
+						foreach($categoryCollection as $cat){
+							if($cat->getIsActive()){
+								$levelArray[] = $cat->getLevel();
+							}
+						}
+						
+						$maxs = array_keys($levelArray, max($levelArray));
+						$highestLevelCatIndex = $maxs[0]; 
+						$deepestCategoryId = $assignedCategories[$highestLevelCatIndex]['entity_id'];
+						$deepestCategory = Mage::getModel('catalog/category')->load($deepestCategoryId);
+						
+						$parentCatLabel = 'ALL:';
+						$parentCat =$deepestCategory->getName();
+						$parentCatUrlPath = $deepestCategory->getUrlPath();
+						?>
+						<div class="parent-category">
+							<h5 class="dark"><?php echo $parentCatLabel ?> 
+							<div class="label label-info"><a href="<?php echo Mage::getUrl($parentCatUrlPath); ?>"><?php echo $parentCat; ?></a></div></h5>
+						</div>
+						
 						<?php if($_product->isSaleable()): ?>
 						   <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action btn-warning btn-md btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class="fa fa-shopping-cart"></i></button>
 					   <?php else: ?>

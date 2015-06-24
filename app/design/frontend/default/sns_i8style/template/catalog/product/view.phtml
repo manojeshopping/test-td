@@ -36,6 +36,18 @@
 $_helper = $this->helper('catalog/output'); ?>
 <?php $_product = $this->getProduct(); ?>
 
+<?php
+$currentCatIds = $_product->getCategoryIds();
+$categoryModel = Mage::getModel('catalog/category');
+$categoryCollection = Mage::getResourceModel('catalog/category_collection')
+                     ->addAttributeToSelect('name')
+                     ->addAttributeToSelect('url')
+					 ->addAttributeToSelect('related_categories')
+                     ->addAttributeToFilter('entity_id', $currentCatIds)
+					 ->addAttributeToFilter('entity_id', array('neq' => '2'))
+                     ->addIsActiveFilter();
+					 
+?>
 
 <script type="text/javascript">
     var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
@@ -123,6 +135,36 @@ $_helper = $this->helper('catalog/output'); ?>
 							<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4e8f59ab369ce1e0"></script>
 						<?php } ?>
 				</form>
+				<div class="float-right">
+					<div class="related-categories">
+						<div class="related-categories-label">
+							Quick Links
+						</div>
+						<ul>
+						<?php 
+							$relatedCatArray = array();
+							foreach($categoryCollection as $cat){
+								if($cat->getIsActive()){
+								?>
+									<li><a href="<?php echo $cat->getUrl(); ?>"><?php echo $cat->getName(); ?></a></li>
+							<?php 	
+									$relatedCats = $cat->getRelatedCategories();
+									if($relatedCats){
+										$relatedCatArray = explode(',',$relatedCats);
+										foreach($relatedCatArray as $relatedCatId){
+											$categoryModel->load($relatedCatId);
+											if($categoryModel->getIsActive()){
+							?>	
+												<li><a href="<?php echo Mage::getUrl($categoryModel->getUrlPath()); ?>"><?php echo $categoryModel->getName(); ?></a></li>
+							<?php 			}
+										}
+									}
+								}
+							}	
+							?>
+						</ul>
+					</div>
+				</div>
 				
 				<?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
 						<?php echo $html; ?>
@@ -186,6 +228,7 @@ $_helper = $this->helper('catalog/output'); ?>
         //]]>
         </script>
 	</div>
+	
 	<?php if ($this->getChildHtml('related_products')): ?>
 		<div class="product-related box">
 			<?php echo $this->getChildHtml('related_products') ?>

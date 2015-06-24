@@ -1361,6 +1361,63 @@ button {
   background-color: lighten(@td-grey,20%);
 }
 
+/********************* RELATED CATEGORIES *************************/ 
+
+.short-description {
+  margin-bottom: 30px !important;
+}
+
+.parent-category {
+  text-transform: uppercase;
+  /*background-color: #FC0;*/
+  margin: 14px 4px;
+  /*font-size: .8em;*/
+  .label {
+    background-color: lighten(@td-grey, 20%);
+    .border-radius (@radius: 10px);
+    padding: 4px 6px 4px 6px;
+    a {
+      color: white;
+    }
+    &:hover {
+      /*background-color: darken(@td-grey, 10%);*/
+      background-color: @td-blue;
+    }
+  }
+}
+
+.related-categories {
+  background-color: darken(@td-blue, 30%);
+  padding: 4px 0px;
+  color: white;
+  font-family: @td-headline;
+  .border-radius (@radius: 5px);
+  .related-categories-label {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    padding: 4px 4px;
+  }
+  ul {
+    background-color: @td-blue;
+    padding: 0px;
+    margin: 0px;
+    list-style-type: none;
+    li {
+      a {
+        padding: 6px 8px 4px 8px;
+        display: block;
+        color: white;
+        &:hover {
+          background-color: darken(@td-blue, 20%);
+        }
+      }
+    }
+  }
+}
+
+
+
 /********************* SCROLL TO TOP BUTTON STYLE *************************/ 
 
 /*
@@ -2023,24 +2080,35 @@ footer {
   }
 }
 
-.td-label {
-  display: none !important;
-  background-color: @td-red;
-  color: white;
-  font-size: 0.8em;
-  padding: 2px 6px;
-  border-radius: 6px;
+.sold-out {
   position: absolute;
-  top: -60px;
-  display: inline-block;
-  @media (min-width: 480px) {
-    display: block !important;
-  } 
-  &.yellow {
-    background-color: @td-yellow;
+  top: -70px;
+  left: 10px;
+  background: linear-gradient(
+    to bottom right, 
+    @td-grey 0%, 
+    darken(@td-grey, 15%) 100%
+  );
+  border: 3px solid white;
+  box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.2) !important;
+  width: 80px;
+  height: 80px;
+  padding: 20px 12px 0px 12px;
+  line-height: 1em;
+  color: white;
+  text-align: center;
+  transform: rotate(-15deg);
+  .border-radius (@radius: 50px);
+  @media screen and (min-width: 768px) {
+  top: -200px;
+  left: 10px;
   }
-  &.blue {
-    background-color: @td-blue;
-    color: white;
+  h4 {
+  font-size: 1.2em;
+  margin-bottom: 4px;
+  }
+  .eta {
+    font-size: .8em;
+    font-family: @td-special;
   }
 }
