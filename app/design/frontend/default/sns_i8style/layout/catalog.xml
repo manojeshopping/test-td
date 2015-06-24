@@ -76,6 +76,9 @@ Category default layout
             <!--<block type="cms/block" name="left-custom" as="left-custom">
                 <action method="setBlockId"><block_id>left-custom</block_id></action>
             </block>-->
+			<block type="cms/block" name="catalog-column-advert-block" after="catalog.compare.sidebar">
+				<action method="setBlockId"><block_id>catalog-column-advert</block_id></action>
+			</block>
             <remove name="tags_popular" />
         </reference>
         <reference name="content">
@@ -134,6 +137,9 @@ Category layered navigation layout
             <!--<block type="cms/block" name="left-custom" as="left-custom">
                 <action method="setBlockId"><block_id>left-custom</block_id></action>
             </block>-->
+			<block type="cms/block" name="catalog-column-advert-block" after="catalog.compare.sidebar">
+				<action method="setBlockId"><block_id>catalog-column-advert</block_id></action>
+			</block>
             <remove name="tags_popular" />
         </reference>
 		<reference name="right">
