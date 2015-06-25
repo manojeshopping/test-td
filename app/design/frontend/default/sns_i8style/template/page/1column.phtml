@@ -59,7 +59,7 @@ $skinyClass = (Mage::app()->getFrontController()->getRequest()->getRouteName() =
 		</div>
 		<?php if($this->getChildHtml('breadcrumbs')): ?>
        	<div class="row top-bar">
-			<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && !$module=='checkout') { ?>
+			<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!=='checkout') { ?>
 				<div class="container">
 					<div style="" class="col-xs-12 col-sm-12 col-md-12">
 						<?php echo $this->getChildHtml('breadcrumbs') ?>

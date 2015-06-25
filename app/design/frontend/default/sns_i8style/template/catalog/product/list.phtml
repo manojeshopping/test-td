@@ -193,6 +193,11 @@
 						<a href="<?php echo $_product->getProductUrl() ?>">
 						<div class="product-title clearfix">
 							<h2 class="short-description">
+								<?php if($_product->getOverlayMessage()): ?>
+								<div class="td-label">
+									<?php echo $_product->getOverlayMessage(); ?>
+								</div>
+								<?php endif; ?>
 								<?php echo $_product->getShortDescription() ?>	
 							</h2>
 						</div>

@@ -65,7 +65,14 @@ if( !empty($child_items) ) {
 				<div class="product-details">
 					<a href="<?php echo $item->link ?>">
 					<div class="product-title">
-						<h2 class="short-description"><?php echo $item->description; ?></h2>
+						<h2 class="short-description">
+						<?php if($_product->getOverlayMessage()): ?>
+							<div class="td-label">
+								<?php echo $_product->getOverlayMessage(); ?>
+							</div>
+							<?php endif; ?>
+							<?php echo $item->description; ?>
+						</h2>
 					</div>
 					</a>
 					<div class="product-info row">
