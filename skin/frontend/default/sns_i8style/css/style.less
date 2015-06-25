@@ -2080,6 +2080,34 @@ footer {
   }
 }
 
+.td-label {
+  display: none !important;
+  background-color: @td-grey;
+  border: 1 px solid white;
+  box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.2) !important;  
+  z-index: 1;
+  color: white;
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  position: absolute;
+  top: -60px;
+  display: inline-block;
+  @media (min-width: 480px) {
+    display: block !important;
+  }
+  &.red {
+    background-color: @td-red;
+  }  
+  &.yellow {
+    background-color: @td-yellow;
+  }
+  &.blue {
+    background-color: @td-blue;
+    color: white;
+  }
+}
+
 .sold-out {
   position: absolute;
   top: -70px;

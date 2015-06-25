@@ -2663,6 +2663,38 @@ footer .logo {
 .dolcemedia .byline {
   margin-top: 8px;
 }
+
+.td-label {
+  display: none !important;
+  background-color: #828c8f;
+  border: 1 px solid white;
+  box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.2) !important;
+  z-index: 1;
+  color: white;
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  position: absolute;
+  top: -60px;
+  display: inline-block;
+}
+@media (min-width: 480px) {
+  .td-label {
+    display: block !important;
+  }
+}
+.td-label.red {
+  background-color: #ec1c24;
+}
+.td-label.yellow {
+  background-color: #ffb400;
+}
+.td-label.blue {
+  background-color: #0495d7;
+  color: white;
+}
+
+
 .sold-out {
   position: absolute;
   top: -70px;
