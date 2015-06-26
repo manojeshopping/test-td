@@ -2082,7 +2082,7 @@ footer {
 
 .td-label {
   display: none !important;
-  background-color: @td-grey;
+  background-color: @td-red;
   border: 1 px solid white;
   box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.2) !important;  
   z-index: 1;
@@ -2096,6 +2096,9 @@ footer {
   @media (min-width: 480px) {
     display: block !important;
   }
+  &.grey {
+    background-color: @td-grey;
+  }    
   &.red {
     background-color: @td-red;
   }  
@@ -2107,7 +2110,6 @@ footer {
     color: white;
   }
 }
-
 .sold-out {
   position: absolute;
   top: -70px;
@@ -2139,4 +2141,10 @@ footer {
     font-size: .8em;
     font-family: @td-special;
   }
+}
+
+.product-detail .td-label {
+  position: absolute;
+  top: 10px !important;
+  display: inline;
 }

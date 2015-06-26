@@ -2666,7 +2666,7 @@ footer .logo {
 
 .td-label {
   display: none !important;
-  background-color: #828c8f;
+  background-color: #ec1c24;
   border: 1 px solid white;
   box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.2) !important;
   z-index: 1;
@@ -2683,6 +2683,9 @@ footer .logo {
     display: block !important;
   }
 }
+.td-label.grey {
+  background-color: #828c8f;
+}
 .td-label.red {
   background-color: #ec1c24;
 }
@@ -2693,6 +2696,7 @@ footer .logo {
   background-color: #0495d7;
   color: white;
 }
+
 
 
 .sold-out {
@@ -2729,4 +2733,10 @@ footer .logo {
 .sold-out .eta {
   font-size: .8em;
   font-family: 'Architects Daughter', sans-serif;
+}
+
+.product-detail .td-label {
+  position: absolute;
+  top: 10px !important;
+  display: inline;
 }
