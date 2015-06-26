@@ -78,7 +78,11 @@ $categoryCollection = Mage::getResourceModel('catalog/category_collection')
 					<input type="hidden" name="related_product" id="related-products-field" value="" />
 					<h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
 					<?php if ($_product->getShortDescription()):?>
-						<p class="lead"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></p>
+						<p class="lead"></p>
+						<?php if($_product->getOverlayMessage()): ?>
+							<div class="td-label"><?php echo $_product->getOverlayMessage(); ?></div>
+						<?php endif; ?>
+						<?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?>
 					<?php endif;?>
 					<hr/>
 					<div class="row">
