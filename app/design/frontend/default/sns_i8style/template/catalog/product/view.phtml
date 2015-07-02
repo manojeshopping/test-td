@@ -175,6 +175,11 @@ $categoryCollection = Mage::getResourceModel('catalog/category_collection')
 				<?php endforeach;?>
 				<div class="vspace20 clearfix"></div>
 				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('product_feature_link')->toHtml(); ?>
+				<?php if($tdNotices=$_product->getAttributeText('notices')){
+					foreach($tdNotices as $tdNotice){
+						echo $this->getLayout()->createBlock('cms/block')->setBlockId($tdNotice)->toHtml();
+					}
+				} ?>
 			</div>
 		</div>
 	
