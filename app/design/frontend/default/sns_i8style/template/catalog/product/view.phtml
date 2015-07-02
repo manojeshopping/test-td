@@ -175,11 +175,20 @@ $categoryCollection = Mage::getResourceModel('catalog/category_collection')
 				<?php endforeach;?>
 				<div class="vspace20 clearfix"></div>
 				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('product_feature_link')->toHtml(); ?>
-				<?php if($tdNotices=$_product->getAttributeText('notices')){
-					foreach($tdNotices as $tdNotice){
-						echo $this->getLayout()->createBlock('cms/block')->setBlockId($tdNotice)->toHtml();
+				<?php 
+				
+					$noticesCount = count($_product->getAttributeText('notices')); 
+					$tdNotices=$_product->getAttributeText('notices')
+				?>
+				<?php 
+					if($tdNotices && $noticesCount==1){
+						echo $this->getLayout()->createBlock('cms/block')->setBlockId($tdNotices)->toHtml();
+					}elseif($tdNotices && $noticesCount>1){
+						foreach($tdNotices as $tdNotice){
+							echo $this->getLayout()->createBlock('cms/block')->setBlockId($tdNotice)->toHtml();
+						}
 					}
-				} ?>
+				?>
 			</div>
 		</div>
 	
