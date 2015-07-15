@@ -1,6 +1,13 @@
 <?php
 class Web_States_Adminhtml_StatesController extends Mage_Adminhtml_Controller_Action
 {
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     protected function _initAction()
     {
         $this->loadLayout()

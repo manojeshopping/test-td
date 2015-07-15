@@ -17,6 +17,13 @@
 
 class Mirasvit_SearchIndex_Adminhtml_ValidationController extends Mage_Adminhtml_Controller_Action
 {
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     public function preDispatch()
     {
         parent::preDispatch();

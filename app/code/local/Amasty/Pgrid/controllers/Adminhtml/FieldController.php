@@ -9,6 +9,13 @@ class Amasty_Pgrid_Adminhtml_FieldController extends Mage_Adminhtml_Controller_A
     protected $_product = null;
     protected $_colProp = null;
     
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     protected function _initProduct($productId, $field)
     {
         $productId = $productId;

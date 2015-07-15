@@ -7,6 +7,13 @@
 class Amasty_Pgrid_Adminhtml_ProductController extends Mage_Adminhtml_Controller_Action
 {
     /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
+    /**
      * Export order grid to CSV format
      */
     public function exportCsvAction()

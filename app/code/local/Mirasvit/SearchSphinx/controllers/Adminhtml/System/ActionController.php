@@ -21,6 +21,13 @@
  */
 class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Adminhtml_Controller_Action
 {
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     protected function _getNativeEngine()
     {
         return Mage::getSingleton('searchsphinx/engine_sphinx_native');

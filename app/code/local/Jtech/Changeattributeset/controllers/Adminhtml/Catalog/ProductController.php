@@ -17,7 +17,12 @@
  
 class Jtech_Changeattributeset_Adminhtml_Catalog_ProductController extends Mage_Adminhtml_Controller_Action
 {
-	
+	/**
+	 * Temporarily allow access for all users
+	 */
+	protected function _isAllowed() {
+		return true;
+	}
 	
 	public function massAttributeSetAction()
 	{

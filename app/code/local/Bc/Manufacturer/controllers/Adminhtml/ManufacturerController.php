@@ -2,6 +2,12 @@
 
 class Bc_Manufacturer_Adminhtml_ManufacturerController extends Mage_Adminhtml_Controller_action
 {
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
 
 	protected function _initAction() {
 		$this->loadLayout()

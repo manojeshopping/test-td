@@ -7,6 +7,13 @@ class Amasty_Table_Adminhtml_MethodController extends Mage_Adminhtml_Controller_
     protected $_title     = 'Custom Shipping Methods';
     protected $_modelName = 'method';
     
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     protected function _setActiveMenu($menuPath)
     {
         $this->getLayout()->getBlock('menu')->setActive($menuPath);

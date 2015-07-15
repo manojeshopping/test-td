@@ -2,6 +2,12 @@
 
 class Mageworks_Import_Adminhtml_Import_CategoryController extends Mage_Adminhtml_Controller_Action
 {
+	/**
+	 * Temporarily allow access for all users
+	 */
+	protected function _isAllowed() {
+		return true;
+	}
 
 	public function categoriesAction() {
 		if ($this->getRequest()->isPost()) {

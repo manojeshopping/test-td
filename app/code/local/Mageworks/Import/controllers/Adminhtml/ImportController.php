@@ -2,6 +2,12 @@
 
 class Mageworks_Import_Adminhtml_ImportController extends Mage_Adminhtml_Controller_Action
 {
+	/**
+	 * Temporarily allow access for all users
+	 */
+	protected function _isAllowed() {
+		return true;
+	}
 
 	public function indexAction() {
 		$this->_title(Mage::helper('mageworks_import')->__('Import Profiles'));

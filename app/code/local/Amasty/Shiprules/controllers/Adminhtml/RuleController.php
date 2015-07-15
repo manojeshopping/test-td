@@ -7,6 +7,13 @@ class Amasty_Shiprules_Adminhtml_RuleController extends Mage_Adminhtml_Controlle
     protected $_title     = 'Shipping Rule';
     protected $_modelName = 'rule';
     
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     protected function _setActiveMenu($menuPath)
     {
         $this->getLayout()->getBlock('menu')->setActive($menuPath);

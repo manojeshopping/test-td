@@ -6,6 +6,13 @@
 */
 class Amasty_Pgrid_Adminhtml_AttributeController extends Mage_Adminhtml_Controller_Action
 {
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     public function saveAction()
     {
         $attributes = Mage::app()->getRequest()->getParam('pattribute', array());

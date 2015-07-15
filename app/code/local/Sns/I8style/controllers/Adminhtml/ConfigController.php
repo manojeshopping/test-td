@@ -1,6 +1,14 @@
 <?php
 define('PHP_TAB', chr(9));
 class Sns_I8style_Adminhtml_ConfigController extends Mage_Adminhtml_Controller_Action{ 
+
+	/**
+	 * Temporarily allow access for all users
+	 */
+	protected function _isAllowed() {
+		return true;
+	}
+
     public function indexAction() {
         $this->getResponse()->setRedirect($this->getUrl("adminhtml/system_config/edit/section/sns_i8style_cfg/"));
     }

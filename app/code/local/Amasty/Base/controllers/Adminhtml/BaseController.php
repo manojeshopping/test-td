@@ -1,6 +1,13 @@
 <?php
 class Amasty_Base_Adminhtml_BaseController extends Mage_Adminhtml_Controller_Action
 {
+    /**
+     * Temporarily allow access for all users
+     */
+    protected function _isAllowed() {
+        return true;
+    }
+
     public function ajaxAction()
     {
         $helper = Mage::helper("ambase");
