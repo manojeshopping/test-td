@@ -40,6 +40,13 @@ EOT;
 EOT;
 
   /**
+   * Temporarily allow access for all users
+   */
+  protected function _isAllowed() {
+    return true;
+  }
+
+  /**
    * Pseudo-constructor
    */
   protected function _construct () {
