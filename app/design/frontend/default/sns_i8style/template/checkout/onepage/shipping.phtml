@@ -77,7 +77,7 @@
 		<?php endif; ?>
 		<div class="form-group">
 			<label for="shipping:city" class="required col-sm-2 control-label"><em>*</em><?php echo $this->__('City') ?></label>
-			<div class="input-box">
+			<div class="col-sm-10">
 				<input type="text" title="<?php echo $this->__('City') ?>" name="shipping[city]" value="<?php echo $this->escapeHtml($this->getAddress()->getCity()) ?>" class="form-control <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="shipping:city" onchange="shipping.setSameAsBilling(false);" placeholder="City"/>
 			</div>
 		</div>
@@ -105,7 +105,7 @@
 			<label for="shipping:country_id" class="required col-sm-2 control-label"><em>*</em><?php echo $this->__('Country') ?></label>
 			<div class="col-sm-10">
 				<?php // echo $this->getCountryHtmlSelect('shipping') ?>
-				<input type="text" class="form-control" value="New Zeland" readonly />
+				<input type="text" class="form-control" value="New Zealand" readonly />
 				<input type="hidden" id="shipping:country_id" name="shipping[country_id]" class="form-control" value="NZ"/>
 			</div>
 		</div>
