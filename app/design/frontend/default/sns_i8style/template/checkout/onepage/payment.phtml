@@ -40,7 +40,9 @@
 <h1 class="dark"><?php echo Mage::app()->getStore()->getBaseCurrency()->format($grandtotal, array(), true) ?></h1>
 </div>
 <form action="" id="co-payment-form" class="form-horizontal">
-   <?php echo $this->getChildHtml('methods') ?>
+	<div id="checkout-payment-method-load">
+		<?php echo $this->getChildHtml('methods') ?>
+	</div>
 </form>
 <div class="tool-tip" id="payment-tool-tip" style="display:none;">
     <div class="btn-close"><a href="#" id="payment-tool-tip-close" title="<?php echo $this->__('Close') ?>"><?php echo $this->__('Close') ?></a></div>

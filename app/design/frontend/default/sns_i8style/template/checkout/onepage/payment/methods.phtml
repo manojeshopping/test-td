@@ -41,25 +41,37 @@
         <?php echo $this->__('No Payment Methods') ?>
     </div>
 <?php else:
+?>
+<div class="form-group">
+<div class="col-sm-10">
+<?php 
+	$i = 1;
     foreach ($methods as $_method):
         $_code = $_method->getCode();
 ?>
-    <div>
-    <?php if(!$oneMethod): ?>
-        <input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->escapeHtml($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php endif; ?> class="radio" />
+	<div class="radio-inline">
+	<label>    
+	<?php if(!$oneMethod): ?>
+		<?php if( $i == 1 ): ?>
+			<input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->escapeHtml($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')" checked="checked" class="radio" />
+		<?php else: ?>
+			<input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" title="<?php echo $this->escapeHtml($_method->getTitle()) ?>" onclick="payment.switchMethod('<?php echo $_code ?>')"<?php if($this->getSelectedMethodCode()==$_code): ?> checked="checked"<?php endif; ?> class="radio" />
+		<?php endif; ?>	
     <?php else: ?>
-        <span class="no-display"><input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
+		 <span class="no-display"><input id="p_method_<?php echo $_code ?>" value="<?php echo $_code ?>" type="radio" name="payment[method]" checked="checked" class="radio" /></span>
         <?php $oneMethod = $_code; ?>
     <?php endif; ?>
-        <label for="p_method_<?php echo $_code ?>"><?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?></label>
-    </div>
-    <?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
-    <div>
+        <?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?>
+	</label>
+	</div>
+	<?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
         <?php echo $html; ?>
-    </div>
     <?php endif; ?>
-<?php endforeach;
-    endif;
+	
+<?php $i = $i + 1; endforeach; ?>
+</div>
+</div>
+<?php    endif;
 ?>
 <?php echo $this->getChildChildHtml('additional'); ?>
 <script type="text/javascript">
