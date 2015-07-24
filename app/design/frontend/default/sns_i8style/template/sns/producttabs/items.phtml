@@ -26,11 +26,7 @@ if( !empty($child_items) ) {
 		$k = 0;
 	}
 	$_collectionSize = count($child_items);
-	if($isiPad){
-		$_columnCount = 3;
-	}else{
-		$_columnCount = 4;
-	}
+	
 	$i=0;
     foreach( $child_items  as $item ){ $k++;
         $_product = Mage::getModel('catalog/product')->load($item->id);

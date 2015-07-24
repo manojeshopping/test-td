@@ -29,7 +29,7 @@ class Medma_Attrib_Model_Attribute_Backend_Provider extends Mage_Eav_Model_Entit
 		if ($attributeCode == 'related_categories') {
             $data = $object->getData($attributeCode);
             if ($data) {
-                $object->setData($attributeCode, explode(',', $data));
+                $object->setData($attributeCode, $data);
             }
         }
         return $this;
