@@ -50,9 +50,9 @@ $imgSize = Mage::helper('i8style/data')->getImgSize('L');
 				<div class="product-wrap-top">
 					<div class="badges">
 						<?php
-						if ($now>=$newsFrom && $now<=$newsTo && $themeConfig['general_useTagNew']==1)
+						if ($now>=$newsFrom && $now<=$newsTo)
 							echo "<span class='ico-product ico-new'>New</span>";
-						if (isset($price) && isset($finalPrice) && $finalPrice < $price && $themeConfig['general_useTagSale']==1)
+						if (isset($price) && isset($finalPrice) && $finalPrice < $price)
 							echo "<span class='ico-product ico-sale'>".floor(100-($finalPrice/$price)*100)."% OFF</span>";
 								//echo "<span class='ico-product ico-sale'>Sale</span>";
 						?>
