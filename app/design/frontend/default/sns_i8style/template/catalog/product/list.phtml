@@ -33,6 +33,7 @@
  * @see Mage_Catalog_Block_Product_List
  */
 ?>
+
 <?php 
     $_productCollection=$this->getLoadedProductCollection();
 	$_helper = $this->helper('catalog/output');
@@ -40,7 +41,10 @@
     $imgSize = Mage::helper('i8style/data')->getImgSize('L');
 	$_currentCategory = Mage::registry('current_category');
 ?>
-
+<!--<form method='post' id='form_size'>
+<input type='hidden' name='screen_width' id='inp_width'/>
+<input type='hidden' name='screen_height' id='inp_height'/>
+</form>-->
 <?php if(!$_productCollection->count()): ?>
 <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
 <?php else: ?>
@@ -160,6 +164,7 @@
 		<?php 
 			// $_columnCount = $this->getColumnCount(); 
 			$_columnCount = 4;
+			$totalProductsCount = count($_productCollection);
 		?>
 		<?php 
 			$i=0; foreach ($_productCollection as $_product): 
@@ -264,6 +269,27 @@
 				</div>
 			</div>
 		<?php endforeach ?>
+		<?php
+			$scrnWidth = Mage::getSingleton('core/session')->getScreenWidth();
+			if($scrnWidth && $scrnWidth>=1280 && $scrnWidth<1920){
+				if($totalProductsCount%4!=0){
+					$ratio4 = $totalProductsCount%4;
+					$loop4 = 4-$ratio4;
+					for($i=1;$i<=$loop4;$i++){
+						echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
+					}
+				}
+			}
+			if($scrnWidth && $scrnWidth>=1920){
+				if($totalProductsCount%5!=0){
+					$ratio5 = $totalProductsCount%5;
+					$loop5 = 5-$ratio5;
+					for($i=1;$i<=$loop5;$i++){
+						echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
+					}
+				}
+			}	
+		?>
 	</div>
 <?php endif; ?>
 	<div class="clearfix vspace40 "></div>

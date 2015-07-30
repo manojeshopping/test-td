@@ -103,6 +103,22 @@ function ajaxFilter(url) {
 }
 <?php endif; ?>
 
+function getSize(detectwidthurl){
+	var screenWidth = screen.width;
+	var screenHeight = screen.height;
+	jQuery.ajax({
+		type: "POST",
+		url: detectwidthurl,
+		data: { screen_width : screenWidth },
+		success: function(data)
+		{
+			console.log( data );
+		}
+	});
+
+}
+
+window.onload = getSize("<?php echo Mage::getBaseUrl().'detectwidth/index/index' ?>");
 function callback(){
 	// return;
 }
