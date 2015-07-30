@@ -10,32 +10,36 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Model_System_Config_Source_Filter
 {
     public function toOptionArray()
     {
-        $options = array(
-            'category' => array(
-                'value' => 'category',
-                'label' => Mage::helper('searchautocomplete')->__('Category'),
-            ),
-            'attribute' => array(
+        $options = array();
+
+        $options['category'] = array(
+            'value' => 'category',
+            'label' => Mage::helper('searchautocomplete')->__('Category'),
+        );
+
+        if (Mage::helper('core')->isModuleEnabled('Mirasvit_SearchIndex')) {
+            $options['attribute'] = array(
                 'value' => 'attribute',
                 'label' => Mage::helper('searchautocomplete')->__('Attribute'),
-            ),
-            'none' => array(
-                'value' => 'none',
-                'label' => Mage::helper('searchautocomplete')->__('No Display'),
-            ),
+            );
+        }
+
+        $options['none'] = array(
+            'value' => 'none',
+            'label' => Mage::helper('searchautocomplete')->__('No Display'),
         );
 
         return $options;

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_Case
@@ -38,7 +39,7 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
     /**
      * @test
      * @cover buildQuery
-     * 
+     *
      * @loadFixture synonyms
      *
      * @dataProvider buildQuerySynonymsProvider
@@ -63,13 +64,13 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
                                 'or' => array(
                                     'british' => 'british',
                                     'england' => 'england',
-                                    'gb'      => 'gb',
-                                    'uk'      => 'uk',
-                                )
+                                    'gb' => 'gb',
+                                    'uk' => 'uk',
+                                ),
                             ),
                         ),
                     ),
-                )
+                ),
             ),
             array(
                 'UK',
@@ -80,13 +81,13 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
                                 'or' => array(
                                     'british' => 'british',
                                     'england' => 'england',
-                                    'gb'      => 'gb',
-                                    'uk'      => 'uk',
-                                )
+                                    'gb' => 'gb',
+                                    'uk' => 'uk',
+                                ),
                             ),
                         ),
                     ),
-                )
+                ),
             ),
         );
     }
@@ -94,7 +95,7 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
     /**
      * @test
      * @cover buildQuery
-     * 
+     *
      * @loadFixture stopwords
      *
      * @dataProvider buildQueryStopwordsProvider
@@ -118,11 +119,11 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
                             'british' => array(
                                 'or' => array(
                                     'british' => 'british',
-                                )
+                                ),
                             ),
                         ),
                     ),
-                )
+                ),
             ),
             array(
                 'UK and London',
@@ -132,17 +133,17 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
                             'uk' => array(
                                 'or' => array(
                                     'uk' => 'uk',
-                                )
+                                ),
                             ),
                             'london' => array(
                                 'or' => array(
                                     'london' => 'london',
-                                )
+                                ),
                             ),
                         ),
                     ),
-                )
-            )
+                ),
+            ),
         );
     }
 
@@ -171,12 +172,12 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
                             'british' => array(
                                 'or' => array(
                                     'british' => 'british',
-                                )
+                                ),
                             ),
                         ),
                     ),
                 ),
-                true
+                true,
             ),
             array(
                 'UK London',
@@ -186,18 +187,18 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
                             'uk' => array(
                                 'or' => array(
                                     ' uk ' => ' uk ',
-                                )
+                                ),
                             ),
                             'london' => array(
                                 'or' => array(
                                     ' london ' => ' london ',
-                                )
+                                ),
                             ),
                         ),
                     ),
                 ),
-                false
-            )
+                false,
+            ),
         );
     }
 
@@ -228,7 +229,6 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
-
     // /**
     // * @test
     // * @loadFixture stopword
@@ -248,7 +248,7 @@ class Mirasvit_SearchSphinx_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_C
     //                         ' uk '      => ' uk '
     //                     )
     //                 ),
-                    
+
     //             ),
     //         ),
     //         'not like' => array(

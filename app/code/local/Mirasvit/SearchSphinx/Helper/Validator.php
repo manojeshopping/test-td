@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchSphinx_Helper_Validator extends Mirasvit_MstCore_Helper_Validator_Abstract
@@ -29,24 +30,9 @@ class Mirasvit_SearchSphinx_Helper_Validator extends Mirasvit_MstCore_Helper_Val
             $categoryName = $rootCategory->getName();
             if ($rootCategory->getIsAnchor() == 0) {
                 $result = self::FAILED;
-                $description[] = "Go to the Catalog > Manage Categories";
+                $description[] = 'Go to the Catalog > Manage Categories';
                 $description[] = "Change option 'Is Anchor' to 'Yes' for category '$categoryName (ID: $rootCategoryId)'";
             }
-        }
-
-        return array($result, $title, $description);
-    }
-
-    public function testCatalogsearchLayerClass()
-    {
-        $result = self::SUCCESS;
-        $title = 'Search Sphinx: CatalogSearch Layer Rewrite';
-        $description = '';
-
-        $validateRewrite = $this->validateRewrite('catalogsearch/layer', 'Mirasvit_SearchIndex_Model_Catalogsearch_Layer');
-        if ($validateRewrite !== true) {
-            $result = self::FAILED;
-            $description = $validateRewrite;
         }
 
         return array($result, $title, $description);
@@ -84,7 +70,7 @@ class Mirasvit_SearchSphinx_Helper_Validator extends Mirasvit_MstCore_Helper_Val
             if (!$this->dbTableExists($table)) {
                 $description[] = "Table '$table' not exists";
                 $result = self::FAILED;
-            } 
+            }
         }
 
         return array($result, $title, $description);
@@ -121,29 +107,28 @@ class Mirasvit_SearchSphinx_Helper_Validator extends Mirasvit_MstCore_Helper_Val
     public function testDomainNameIsPinged()
     {
         $execIsEnabled = $this->testExecIsEnabled();
-        $result        = self::SUCCESS;
-        $title         = 'Search Sphinx: The server can connect to the domain name';
-        $description   = array();
-        
+        $result = self::SUCCESS;
+        $title = 'Search Sphinx: The server can connect to the domain name';
+        $description = array();
+
         if (Mage::getSingleton('searchsphinx/config')->getSearchEngine() === 'sphinx') {
             if ($execIsEnabled[0] == self::SUCCESS) {
-                $opts   = array('http' =>
-                            array(
-                                'timeout' => 3
-                            )
+                $opts = array('http' => array(
+                                'timeout' => 3,
+                            ),
                         );
-                $context  = stream_context_create($opts);
+                $context = stream_context_create($opts);
 
                 Mage::register('custom_entry_point', true, true);
 
-                $store      = Mage::app()->getStore(0);
-                $url        = parse_url($store->getUrl());                
-                $isPinged   = file_get_contents($url['scheme'].'://'.$url['host'].'/shell/search.php?ping', false, $context);
+                $store = Mage::app()->getStore(0);
+                $url = parse_url($store->getUrl());
+                $isPinged = file_get_contents($url['scheme'].'://'.$url['host'].'/shell/search.php?ping', false, $context);
 
                 if ($isPinged !== 'ok') {
-                    $result         = self::FAILED;
-                    $description[]  = "Your server can't connect to the domain {$url['host']}. In the 'External Sphinx Search' mode extension can't run reindexing via backend.";
-                    $description[]  = "To solve this issue, you need to ask your hosting administrator to add record '127.0.0.1 {$url['host']}' to the file /etc/hosts.";
+                    $result = self::FAILED;
+                    $description[] = "Your server can't connect to the domain {$url['host']}. In the 'External Sphinx Search' mode extension can't run reindexing via backend.";
+                    $description[] = "To solve this issue, you need to ask your hosting administrator to add record '127.0.0.1 {$url['host']}' to the file /etc/hosts.";
                 }
             } else {
                 $description[] = "Please enable the function 'exec' for this test.";
@@ -165,14 +150,45 @@ class Mirasvit_SearchSphinx_Helper_Validator extends Mirasvit_MstCore_Helper_Val
             $attributes = Mage::getModel('searchindex/index')->load($index->getId())->getAttributes();
 
             if (empty($attributes)) {
-                $url =  Mage::helper("adminhtml")->getUrl("searchindex/adminhtml_index/edit", array('id' => $index->getId()));
+                $url = Mage::helper('adminhtml')->getUrl('searchindex/adminhtml_index/edit', array('id' => $index->getId()));
                 $result = self::WARNING;
                 $description[] = "Please configure the search index 'Products' to see more relevant search results.";
                 $description[] = "For this, go to the Search / Manage Search Indexes and open index 'Products': <a href='$url' target='_blank'>$url</a>";
                 $description[] = "For more information refer to our manual: <a href='http://mirasvit.com/doc/ssu/2.3.2/r/product_index' target='_blank'>http://mirasvit.com/doc/ssu/2.3.2/r/product_index</a>";
             }
         } else {
-            $description[] = "First you need to create a search index for products.";
+            $description[] = 'First you need to create a search index for products.';
+        }
+
+        return array($result, $title, $description);
+    }
+
+    public function testBlockCatalogSearchLayerExists()
+    {
+        $result = self::SUCCESS;
+        $title = 'Search Sphinx: The block "catalogsearch/layer" exists.';
+        $description = '';
+
+        $container = $this->getHandleNodesFromLayout('catalogsearch.xml', 'catalogsearch_result_index');
+
+        if (false === array_search('catalogsearch/layer', $container)) {
+            $result = self::FAILED;
+            $description = 'The block "catalogsearch/layer" does not exist.';
+        }
+
+        return array($result, $title, $description);
+    }
+
+    public function testCatalogSearchQuerySize()
+    {
+        $result = self::SUCCESS;
+        $title = 'Search Sphinx: catalogsearch_query size';
+        $description = array();
+
+        $size = Mage::getModel('catalogsearch/query')->getCollection()->getSize();
+        if ($size > 50000) {
+            $result = self::FAILED;
+            $description[] = "The table `catalogsearch_query` is very big ($size rows). We suggest clear table for improve search performance.";
         }
 
         return array($result, $title, $description);

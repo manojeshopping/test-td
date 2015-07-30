@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchLandingPage_Block_Adminhtml_Page_Grid extends Mage_Adminhtml_Block_Widget_Grid
@@ -25,7 +26,7 @@ class Mirasvit_SearchLandingPage_Block_Adminhtml_Page_Grid extends Mage_Adminhtm
         $this->setDefaultSort('page_id');
         $this->setDefaultDir('desc');
         $this->setSaveParametersInSession(true);
-    
+
         return $this;
     }
 
@@ -41,26 +42,25 @@ class Mirasvit_SearchLandingPage_Block_Adminhtml_Page_Grid extends Mage_Adminhtm
     {
         $this->addColumn('page_id', array(
             'header' => Mage::helper('searchlandingpage')->__('ID'),
-            'align'  => 'right',
-            'width'  => '50px',
-            'index'  => 'page_id',
+            'align' => 'right',
+            'width' => '50px',
+            'index' => 'page_id',
         ));
 
         $this->addColumn('query_text', array(
             'header' => Mage::helper('searchlandingpage')->__('Search Phase'),
-            'align'  => 'left',
-            'index'  => 'query_text',
+            'align' => 'left',
+            'index' => 'query_text',
         ));
 
         $this->addColumn('url_key', array(
             'header' => Mage::helper('searchlandingpage')->__('Landing Url'),
-            'align'  => 'left',
-            'index'  => 'url_key',
+            'align' => 'left',
+            'index' => 'url_key',
         ));
 
         return parent::_prepareColumns();
     }
-
 
     public function getRowUrl($row)
     {

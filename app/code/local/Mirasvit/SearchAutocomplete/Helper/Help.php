@@ -10,31 +10,31 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Helper_Help extends Mirasvit_MstCore_Helper_Help
 {
     protected $_help = array(
         'system' => array(
-            'general_min_chars'              => '',
-            'general_delay'                  => 'Time delay before start search (milliseconds)',
-            'general_max_results'            => '',
-            'general_tip'                    => '',
-            'general_show_price'             => '',
-            'general_show_image'             => '',
-            'general_image_size'             => 'Thumbnail image size. Format WIDTHxHEIGHT',
+            'general_min_chars' => '',
+            'general_delay' => 'Time delay before start search (milliseconds)',
+            'general_max_results' => '',
+            'general_tip' => '',
+            'general_show_price' => '',
+            'general_show_image' => '',
+            'general_image_size' => 'Thumbnail image size. Format WIDTHxHEIGHT',
             'general_show_short_description' => '',
-            'general_short_description_len'  => '',
-            'general_categories'             => 'By default extension display in dropdown list all active top level categories.
+            'general_short_description_len' => '',
+            'general_categories' => 'By default extension display in dropdown list all active top level categories.
                 If you need shows another categories, you can select them from list.',
-            'general_indexes'                => 'By default autocomplete shows only products. You can include any enabled index to autocomlete results.
+            'general_indexes' => 'By default autocomplete shows only products. You can include any enabled index to autocomlete results.
                 Total number of results always less or equal than "Maximum number of results in the dropdown list"',
         ),
     );

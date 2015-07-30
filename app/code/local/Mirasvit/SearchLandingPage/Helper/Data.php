@@ -10,12 +10,12 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchLandingPage_Helper_Data extends Mage_Core_Helper_Abstract
 {
-	
 }

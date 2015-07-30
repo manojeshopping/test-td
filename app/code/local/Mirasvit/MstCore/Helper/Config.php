@@ -8,18 +8,26 @@
  * Please refer to http://www.magentocommerce.com for more information.
  *
  * @category  Mirasvit
- * @package   Full Page Cache
- * @version   1.0.1
- * @build     268
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @package   Sphinx Search Ultimate
+ * @version   2.3.2
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
 class Mirasvit_MstCore_Helper_Config extends Mage_Core_Helper_Data
 {
     const UPDATES_FEED_URL    = 'http://mirasvit.com/blog/category/updates/feed/';
-    const EXTENSIONS_FEED_URL = 'http://mirasvit.com/version/feed/';
+    const EXTENSIONS_FEED_URL = 'http://mirasvit.com/pc/feed/';
     const STORE_URL           = 'http://mirasvit.com/estore/';
+    const DEVELOPER_IP        = 'mstcore/logger/developer_ip';
+
+    public function getDeveloperIp()
+    {
+        $ips = explode(',', Mage::getStoreConfig(self::DEVELOPER_IP));
+
+        return $ips;
+    }
 }
 
 if (!function_exists('pr')) {

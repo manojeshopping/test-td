@@ -8,10 +8,10 @@
  * Please refer to http://www.magentocommerce.com for more information.
  *
  * @category  Mirasvit
- * @package   Full Page Cache
- * @version   1.0.1
- * @build     268
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @package   Sphinx Search Ultimate
+ * @version   2.3.2
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -22,7 +22,7 @@ class Mirasvit_MstCore_Block_System_Config_Form_Extensions extends Mage_Adminhtm
         $html = $this->_getHeaderHtml($element);
 
         $html .= '<table class="form-list">';
-        $html .= '<tr><th style="padding: 5px;">Extension</th><th style="padding: 5px;">Your Version</th><th style="padding: 5px;">Latest Version</th><th></th></tr>';
+        $html .= '<tr><th style="padding: 5px;">Extension</th><th style="padding: 5px;">Your Version</th><th style="padding: 5px;">Latest Version</th></tr>';
         foreach ($this->getExtensions() as $extension) {
             $html .= $this->_renderExtension($extension);
         }
@@ -43,20 +43,6 @@ class Mirasvit_MstCore_Block_System_Config_Form_Extensions extends Mage_Adminhtm
         $tds[] = '<a href="'.$ext->getUrl().'">'.$ext->getName().'</a>';
         $tds[] = $ext->getVersion();
         $tds[] = $ext->getLatest();
-
-
-        $modules = array();
-        $path = $ext->getPath();
-        $path = explode('|', $path);
-        foreach ($path as $p) {
-            $p = explode('/', $p);
-            $modules[] = $p[0];
-        }
-        $modules = implode(',', $modules);
-        $url = Mage::getSingleton('adminhtml/url')->getUrl('mstcore/adminhtml_validator/index', array('modules' => $modules));
-
-        $tds[] = '<button onclick="window.location=\''.$url.'\'" type="button"><span>Run validation tests</span></button>';
-        $tds[] = '';
 
         $html = '<tr>';
         foreach ($tds as $value) {
@@ -79,18 +65,14 @@ class Mirasvit_MstCore_Block_System_Config_Form_Extensions extends Mage_Adminhtm
             }
             $info = $list[$extension['s']];
 
-            $version = $extension['v'].'.'.$extension['r'];
-            if ($version == '.') {
-                $version = '-';
-            }
+            $version = $extension['v'].'.<small>'.$extension['r'].'</small>';
 
             $result[$extension['s']] = new Varien_Object(array(
                 'extension' => $extension['s'],
                 'version'   => $version,
                 'name'      => $info['name'],
                 'url'       => $info['url'],
-                'latest'    => $info['version'].'.'.$info['revision'],
-                'path'      => $extension['p'],
+                'latest'    => $info['version'].'.<small>'.$info['revision'].'</small>',
             ));
         }
         return $result;

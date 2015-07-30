@@ -10,21 +10,20 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Model_System_Config_Source_Attribute
 {
     public function toOptionArray()
     {
         if (Mage::helper('core')->isModuleEnabled('Mirasvit_SearchIndex')) {
-
             $productIndex = Mage::helper('searchindex/index')->getIndex('mage_catalog_product');
             $attributes = array_keys($productIndex->getAttributes());
 
@@ -41,7 +40,7 @@ class Mirasvit_SearchAutocomplete_Model_System_Config_Source_Attribute
                 'label' => '',
             );
 
-            foreach($productAttributeCollection as $attribute) {
+            foreach ($productAttributeCollection as $attribute) {
                 $values[$attribute->getAttributeCode()] = array(
                     'value' => $attribute->getAttributeCode(),
                     'label' => $attribute->getFrontendLabel(),

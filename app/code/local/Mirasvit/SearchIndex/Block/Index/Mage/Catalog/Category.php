@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Index_Mage_Catalog_Category extends Mirasvit_SearchIndex_Block_Index_Template
@@ -21,10 +22,10 @@ class Mirasvit_SearchIndex_Block_Index_Mage_Catalog_Category extends Mirasvit_Se
     {
         $rootId = Mage::app()->getStore()->getRootCategoryId();
         $result = array();
-        $id     = $categoryId;
+        $id = $categoryId;
         do {
             $parent = Mage::getModel('catalog/category')->load($id)->getParentCategory();
-            $id     = $parent->getId();
+            $id = $parent->getId();
 
             if (!$parent->getId()) {
                 break;
@@ -37,7 +38,7 @@ class Mirasvit_SearchIndex_Block_Index_Mage_Catalog_Category extends Mirasvit_Se
             if ($parent->getId() != $rootId) {
                 $result[] = $parent;
             }
-        } while($parent->getId() != $rootId);
+        } while ($parent->getId() != $rootId);
 
         $result = array_reverse($result);
 

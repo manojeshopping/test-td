@@ -10,26 +10,26 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * Ð¥ÐµÐ»Ð¿ÐµÑ Ð´Ð»Ñ Ð¿ÑÐµÐ¾Ð±ÑÐ°Ð·Ð¾Ð²Ð°Ð½Ð¸Ñ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÑÑÐºÐ¾Ð³Ð¾ Ð·Ð°Ð¿ÑÐ¾ÑÐ° Ð² Ð³Ð¾ÑÐ¾Ð²ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ (Ð´Ð»Ñ ÑÐ¸ÑÑÐµÐ¼Ñ - Ð¼Ð°ÑÐ¸Ð²)
+ * Хелпер для преобразования пользовательского запроса в готовый запрос (для системы - масив).
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
 {
     /**
-     * ÐÐ»ÑÑÐµÐ²Ð°Ñ ÑÑÐ½ÐºÑÐ¸Ñ. ÐÑÐµÐ¾Ð±ÑÐ°Ð·ÑÐµÑ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÑÑÐºÐ¸Ð¹ Ð·Ð°Ð¿ÑÐ¾Ñ Ð² Ð¼Ð°ÑÐ¸Ð² Ñ
-     * ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼Ð°Ð¼Ð¸, Ð±ÐµÐ· ÑÑÐ¾Ð¿cÐ»Ð¾Ð², Ð¸ÑÐºÐ»ÑÑÐµÐ½Ð¸ÑÐ¼Ð¸ wildcard, Ð/ÐÐÐ ÑÑÐ»Ð¾Ð²Ð¸ÑÐ¼Ð¸
+     * Ключевая функция. Преобразует пользовательский запрос в масив с
+     * синонимами, без стопcлов, исключениями wildcard, И/ИЛИ условиями.
      *
-     * @param  string  $query      Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÑÑÐºÐ¸Ð¹ Ð·Ð°Ð¿ÑÐ¾Ñ
-     * @param  int     $store      ÐÐ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ð°
-     * @param  boolean $inverseNot Ð¸Ð·Ð¼ÐµÐ½Ð¸ÑÐµÐ¼ Ð Ð½Ð° ÐÐÐ
+     * @param string $query      пользовательский запрос
+     * @param int    $store      ИД магазина
+     * @param bool   $inverseNot изменияем И на ИЛИ
      *
      * @return array
      */
@@ -44,7 +44,7 @@ class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
 
         $query = strtolower($query);
 
-        // Ð½ÐµÐ¾Ð±ÑÐ¾Ð´Ð¸Ð¼Ð¾ ÐµÑÐ»Ð¸ ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼ ÑÐ¾ÑÑÐ¾Ð¸Ñ Ð¸Ð· 2Ñ Ð¸ Ð±Ð¾Ð»ÐµÐµ ÑÐ»Ð¾Ð²
+        // необходимо если синоним состоит из 2х и более слов
         $query = ' '.$query.' ';
 
         $replaceWords = Mage::getSingleton('searchsphinx/config')->getReplaceWords();
@@ -55,7 +55,7 @@ class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
             }
         }
 
-        $arWords    = Mage::helper('core/string')->splitWords($query, true, Mage::helper('catalogsearch')->getMaxQueryWords());
+        $arWords = Mage::helper('core/string')->splitWords($query, true, Mage::helper('catalogsearch')->getMaxQueryWords());
         $arSynonyms = Mage::getSingleton('searchsphinx/synonym')->getSynonymsByWord($arWords, $store);
 
         $logic = 'like';
@@ -81,12 +81,12 @@ class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
                 $this->_addWord($wordArr, $singular);
 
                 if (isset($arSynonyms[$word])) {
-                    $this->_addWord($wordArr, $arSynonyms[$word]);
+                    # for synonyms we always diable wildcards
+                    $this->_addWord($wordArr, $arSynonyms[$word], Mirasvit_SearchSphinx_Model_Config::WILDCARD_DISABLED);
                 }
 
                 $template = Mage::getSingleton('searchsphinx/config')->getMatchMode();
                 $result[$logic][$template][$word] = array('or' => $wordArr);
-
             } else {
                 if (!$inverseNot) {
                     $result[$logic]['and'][$word] = array('and' => $wordArr);
@@ -100,12 +100,12 @@ class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Ð­ÑÐ¾ ÑÑÐ¾Ð¿-ÑÐ»Ð¾Ð²Ð¾?
+     * Это стоп-слово?
      *
-     * @param  string  $word
-     * @param  int     $store
+     * @param string $word
+     * @param int    $store
      *
-     * @return boolean
+     * @return bool
      */
     public function isStopword($word, $store)
     {
@@ -117,9 +117,9 @@ class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * ÐÐ»Ñ ÑÐ»Ð¾Ð²Ð° Ð²ÑÐ¿Ð¾Ð»Ð½ÑÐµÑ ÑÐµÐ³ÑÐ»ÑÑÐ½ÑÐµ Ð²ÑÑÐ°Ð¶ÐµÐ½Ð¸Ñ Ð·Ð°Ð´Ð°Ð½ÑÐµ Ð² Ð½Ð°ÑÑÑÐ¾Ð¹ÐºÐ°Ñ SearchIndex
+     * Для слова выполняет регулярные выражения заданые в настройках SearchIndex.
      *
-     * @param  string $word
+     * @param string $word
      *
      * @return string
      */
@@ -141,17 +141,17 @@ class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * ÐÐ¾Ð±Ð°Ð²Ð»ÑÐµÑ ÑÐ»Ð¾Ð²Ð° Ð² Ð¼Ð°ÑÐ¸Ð², Ð¿ÑÐ¸ ÑÑÐ¾Ð¼ ÑÑÐ¸ÑÑÐ²Ð°ÐµÑ wildcard Ð¸ Ð¸ÑÐºÐ»ÑÑÐµÐ½Ð¸Ñ Ð¸Ð· wildcard
+     * Добавляет слова в масив, при этом учитывает wildcard и исключения из wildcard.
      *
-     * @param array $to    Ð¼Ð°ÑÐ¸Ð² ÐºÑÐ´Ð° Ð½Ð°Ð´Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð¸ÑÑ ÑÐ»Ð¾Ð²Ð°
-     * @param array $words ÑÐ»Ð¾Ð²Ð°, ÐºÐ¾ÑÐ¾ÑÑÐµ Ð½Ð°Ð´Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð¸ÑÑ
-     *
-     * @return void
+     * @param array $to    масив куда надо добавить слова
+     * @param array $words слова, которые надо добавить
      */
-    protected function _addWord(&$to, $words)
+    protected function _addWord(&$to, $words, $wildcard = null)
     {
         $exceptions = Mage::getSingleton('searchsphinx/config')->getWildcardExceptions();
-        $wildcard   = Mage::getSingleton('searchsphinx/config')->getWildcardMode();
+        if ($wildcard == null) {
+            $wildcard = Mage::getSingleton('searchsphinx/config')->getWildcardMode();
+        }
 
         if (!is_array($words)) {
             $words = array($words);
@@ -166,7 +166,7 @@ class Mirasvit_SearchSphinx_Helper_Query extends Mage_Core_Helper_Abstract
                 $word = ' '.$word.' ';
             }
 
-            if (trim($word)) {
+            if (trim($word) !== '') {
                 $to[$word] = $word;
             }
         }

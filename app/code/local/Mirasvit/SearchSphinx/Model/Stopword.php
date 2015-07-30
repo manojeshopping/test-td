@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ¾Ð´ÐµÐ»Ñ Ð´Ð»Ñ ÑÐ°Ð±Ð¾ÑÑ ÑÐ¾ ÑÑÐ¾Ð¿-ÑÐ»Ð¾Ð²Ð°Ð¼Ð¸
+ * Модель для работы со стоп-словами.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_Stopword extends Mage_Core_Model_Abstract
 {
@@ -29,12 +29,12 @@ class Mirasvit_SearchSphinx_Model_Stopword extends Mage_Core_Model_Abstract
     }
 
     /**
-     * ÐÐ¼Ð¿Ð¾ÑÑ ÑÑÐ¾Ð¿-ÑÐ»Ð¾Ð²
+     * Импорт стоп-слов.
      *
-     * @param  string $filePath Ð¿Ð¾Ð»Ð½ÑÐ¹ Ð¿ÑÑÑ Ðº ÑÐ°Ð¹Ð»Ñ (csv)
-     * @param  array  $stores
+     * @param string $filePath полный путь к файлу (csv)
+     * @param array  $stores
      *
-     * @return integer ÐºÐ¾Ð»-Ð²Ð¾ Ð¸Ð¼Ð¿Ð¾ÑÑÐ¸ÑÐ¾Ð²Ð°Ð½ÑÑ ÑÑÐ¾Ð¿-ÑÐ»Ð¾Ð²
+     * @return int кол-во импортированых стоп-слов
      */
     public function import($filePath, $stores)
     {
@@ -42,21 +42,21 @@ class Mirasvit_SearchSphinx_Model_Stopword extends Mage_Core_Model_Abstract
             $stores = array($stores);
         }
 
-        $resource   = Mage::getSingleton('core/resource');
+        $resource = Mage::getSingleton('core/resource');
         $connection = $resource->getConnection('core_write');
-        $tableName  = Mage::getSingleton('core/resource')->getTableName('searchsphinx/stopword');
+        $tableName = Mage::getSingleton('core/resource')->getTableName('searchsphinx/stopword');
 
         $content = file_get_contents($filePath);
         $lines = explode("\n", $content);
         foreach ($stores as $store) {
-            $rows   = array();
+            $rows = array();
             $errors = array();
 
             foreach ($lines as $num => $value) {
                 try {
                     $value = $this->prepareWord($value);
                 } catch (Exception $e) {
-                    $errors[$store.$num] = 'Warning on line #' . ($num + 1) . ': ' . $e->getMessage();
+                    $errors[$store.$num] = 'Warning on line #'.($num + 1).': '.$e->getMessage();
                     continue;
                 }
                 $rows[] = array(
@@ -97,14 +97,17 @@ class Mirasvit_SearchSphinx_Model_Stopword extends Mage_Core_Model_Abstract
     }
 
     /**
-     * @param  string $word
+     * @param string $word
+     *
      * @return string $word
+     *
      * @throws Mage_Core_Exception
      */
     public function prepareWord($word)
     {
         $word = trim(strtolower($word));
-        if (count(explode(' ', $word)) > 1) {;
+        if (count(explode(' ', $word)) > 1) {
+            ;
             Mage::throwException('Stopword "'.$word.'" can contain only one word.');
         }
         if ($word === '?') {

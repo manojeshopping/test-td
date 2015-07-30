@@ -10,21 +10,21 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ»Ð¾Ðº Ð²ÑÐ²Ð¾Ð´Ð° ÑÐµÐ·ÑÐ»ÑÑÐ°ÑÐ¾Ð² Ð¿Ð¾Ð¸ÑÐºÐ°. ÐÑÐ½Ð¾Ð²Ð½Ð°Ñ Ð·Ð°Ð´Ð°ÑÐ° - Ð´Ð¾ÑÐµÑÐ½Ð¸Ðµ Ð±Ð»Ð¾ÐºÐ¸ Ð²ÑÐµÑ Ð²ÐºÐ»ÑÑÐµÐ½Ð½ÑÑ Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð², Ð¾Ð³ÑÐ°Ð½Ð¸ÑÐ¸ÑÑ ÐºÐ¾Ð»-Ð²Ð¾ Ð²ÑÐ²Ð¾Ð´Ð¸Ð¼ÑÑ ÐµÐ»ÐµÐ¼ÐµÐ½ÑÐ¾Ð²
+ * Блок вывода результатов поиска. Основная задача - дочерние блоки всех включенных индексов, ограничить кол-во выводимых елементов.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Block_Result extends Mage_Catalog_Block_Product_Abstract
 {
     protected $_collections = array();
-    protected $_indexes     = array();
+    protected $_indexes = array();
 
     public function _prepareLayout()
     {
@@ -48,9 +48,9 @@ class Mirasvit_SearchAutocomplete_Block_Result extends Mage_Catalog_Block_Produc
             $this->_indexes = Mage::helper('searchautocomplete')->getIndexes(false);
         }
 
-        $maxCount   = Mage::getStoreConfig('searchautocomplete/general/max_results');
-        $perIndex   = ceil($maxCount / count($this->_indexes));
-        $sizes      = array();
+        $maxCount = Mage::getStoreConfig('searchautocomplete/general/max_results');
+        $perIndex = ceil($maxCount / count($this->_indexes));
+        $sizes = array();
         $additional = 0;
         foreach ($this->_indexes as $index => $label) {
             $st = microtime(true);
@@ -93,12 +93,14 @@ class Mirasvit_SearchAutocomplete_Block_Result extends Mage_Catalog_Block_Produc
             if (Mage::helper('core')->isModuleEnabled('Mirasvit_SearchIndex')) {
                 $model = Mage::helper('searchindex/index')->getIndex($index);
                 $collection = $model->getCollection();
+            } elseif (Mage::helper('core')->isModuleEnabled('Enterprise_Search')) {
+                $collection = Mage::getSingleton('enterprise_search/search_layer')->getProductCollection();
             } else {
                 $collection = Mage::getSingleton('catalogsearch/layer')->getProductCollection();
             }
-            
-            if($index != 'mage_catalog_attribute') {
-               $collection->getSelect()->order('relevance desc');
+
+            if ($index != 'mage_catalog_attribute' && !Mage::helper('core')->isModuleEnabled('Enterprise_Search')) {
+                $collection->getSelect()->order('relevance desc');
             }
 
             if ($index == 'mage_catalog_product' && $this->getCategoryId()) {
@@ -119,5 +121,19 @@ class Mirasvit_SearchAutocomplete_Block_Result extends Mage_Catalog_Block_Produc
             ->setItem($item);
 
         return $block->toHtml();
+    }
+
+    public function getProductShortDescription($product)
+    {
+        $shortDescription = $product->getShortDescription();
+        if (Mage::helper('mstcore')->isModuleInstalled('Mirasvit_Seo') &&
+            method_exists(Mage::helper('seo'), 'getCurrentSeoShortDescriptionForSearch')
+        ) {
+            if ($seoShortDescription = Mage::helper('seo')->getCurrentSeoShortDescriptionForSearch($product)) {
+                $shortDescription = $seoShortDescription;
+            }
+        }
+
+        return $shortDescription;
     }
 }

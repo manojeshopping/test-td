@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Model_System_Config_Source_Category
 {
@@ -46,7 +46,7 @@ class Mirasvit_SearchAutocomplete_Model_System_Config_Source_Category
 
         $root = $tree->getNodeById($parentId);
 
-        if($root && $root->getId() == 1) {
+        if ($root && $root->getId() == 1) {
             $root->setName(Mage::helper('catalog')->__('Root'));
         }
 

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 abstract class Mirasvit_SearchIndex_Model_Engine
@@ -26,8 +27,8 @@ abstract class Mirasvit_SearchIndex_Model_Engine
         }
 
         $result = array();
-        $max    = max(array_values($input));
-        $max    = $max > 0 ? $max : 1;
+        $max = max(array_values($input));
+        $max = $max > 0 ? $max : 1;
         foreach ($input as $key => $value) {
             $result[$key] = intval($value / $max * 100);
         }

@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_System_Config_Source_SearchEngine
 {
@@ -26,18 +26,18 @@ class Mirasvit_SearchSphinx_Model_System_Config_Source_SearchEngine
         $options = array(
             array(
                 'value' => Mirasvit_SearchSphinx_Model_Config::ENGINE_FULLTEXT,
-                'label' => Mage::helper('searchsphinx')->__('Built-in Sphinx Search Engine')
-            )
+                'label' => Mage::helper('searchsphinx')->__('Built-in Sphinx Search Engine'),
+            ),
         );
 
         $options[] = array(
             'value' => Mirasvit_SearchSphinx_Model_Config::ENGINE_SPHINX,
-            'label' => Mage::helper('searchsphinx')->__('External Sphinx Search Engine')
+            'label' => Mage::helper('searchsphinx')->__('External Sphinx Search Engine'),
         );
 
         $options[] = array(
             'value' => Mirasvit_SearchSphinx_Model_Config::ENGINE_SPHINX_EXTERNAL,
-            'label' => Mage::helper('searchsphinx')->__('External Sphinx Search Engine (another server)')
+            'label' => Mage::helper('searchsphinx')->__('External Sphinx Search Engine (another server)'),
         );
 
         return $options;

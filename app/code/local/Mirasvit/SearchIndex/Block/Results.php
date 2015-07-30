@@ -10,14 +10,15 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
 {
-    static $_outputs = 0;
+    public static $_outputs = 0;
 
     protected $_indexes = null;
 
@@ -31,7 +32,7 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
             if ($breadcrumbs) {
                 $breadcrumbs->addCrumb('search', array(
                     'label' => $page->getTitle(),
-                    'title' => $page->getTitle()
+                    'title' => $page->getTitle(),
                 ));
             }
 
@@ -42,6 +43,34 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
         } else {
             return parent::_prepareLayout();
         }
+    }
+
+    protected function _beforeToHtml()
+    {
+        if (
+            Mage::getSingleton('searchindex/config')->isRedirectEnabled() &&
+            Mage::getSingleton('searchindex/config')->isMultiStoreResultsEnabled()
+        ) {
+            foreach ($this->getIndexes() as $index) {
+                if (!$index instanceof Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Product_Index) {
+                    continue;
+                }
+
+                if (
+                    $index->getIndexCode() === 'mage_catalog_product' &&
+                    $index->getStoreId() === Mage::app()->getStore()->getId() &&
+                    $index->getCountResults()
+                ) {
+                    break;
+                } elseif ($index->getCountResults()) {
+                    Mage::app()->getResponse()
+                        ->clearHeaders()
+                        ->setRedirect($this->getIndexUrl($index));
+                }
+            }
+        }
+
+        return parent::_beforeToHtml();
     }
 
     public function getHeaderText()
@@ -55,10 +84,9 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
         return false;
     }
 
-
     /**
      * If layouts in other themes add this block too, we clear template
-     * for not output search results twice
+     * for not output search results twice.
      */
     public function _toHtml()
     {
@@ -72,7 +100,8 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
     }
 
     /**
-     * Retrieve all enabled indexes
+     * Retrieve all enabled indexes.
+     *
      * @return array
      */
     public function getIndexes()
@@ -88,8 +117,10 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
     }
 
     /**
-     * Return url to search by specific index
-     * @param  Mirasvit_SearchIndex_Model_Index_Abstract $index
+     * Return url to search by specific index.
+     *
+     * @param Mirasvit_SearchIndex_Model_Index_Abstract $index
+     *
      * @return string
      */
     public function getIndexUrl($index)
@@ -97,20 +128,21 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
         if ($index->getStoreId() == null || $index->getStoreId() == Mage::app()->getStore()->getId()) {
             return Mage::getUrl('*/*/*', array(
                 '_current' => true,
-                '_query'   => array('index' => $index->getCode(), 'p' => null)
+                '_query' => array('index' => $index->getCode(), 'p' => null),
             ));
         } else {
             return Mage::getUrl('*/*/*', array(
-                '_current'      => true,
-                '_query'        => array('index' => $index->getCode(), 'p' => null),
-                '_store'        => $index->getStoreId(),
-                '_store_to_url' => true
+                '_current' => true,
+                '_query' => array('index' => $index->getCode(), 'p' => null),
+                '_store' => $index->getStoreId(),
+                '_store_to_url' => true,
             ));
         }
     }
 
     /**
-     * Return first index with results greater zero or catalog index
+     * Return first index with results greater zero or catalog index.
+     *
      * @return Mirasvit_SearchIndex_Model_Index_Abstract
      */
     public function getFirstMatchedIndex()
@@ -126,14 +158,16 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
     }
 
     /**
-     * Return current index or first matched index
+     * Return current index or first matched index.
+     *
      * @return Mirasvit_SearchIndex_Model_Index_Abstract
      */
     public function getCurrentIndex()
     {
-        $indexCode    = $this->getRequest()->getParam('index');
+        $indexCode = $this->getRequest()->getParam('index');
         $currentIndex = Mage::helper('searchindex/index')->getIndex($indexCode);
-        if ($indexCode === null || $currentIndex->getCountResults() == 0) {
+
+        if ($indexCode === null || $currentIndex == false || $currentIndex->getCountResults() == 0) {
             $currentIndex = $this->getFirstMatchedIndex();
         }
 
@@ -151,7 +185,8 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
     }
 
     /**
-     * Return current search content
+     * Return current search content.
+     *
      * @return string
      */
     public function getCurrentContent()
@@ -165,11 +200,10 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
     public function getContentBlock($indexModel)
     {
         if ($indexModel->getCode() == 'mage_catalog_product') {
-            $block =  $this->getChild('search_result_list');
+            $block = $this->getChild('search_result_list');
         } else {
             $block = $this->getChild('searchindex_result_'.$indexModel->getCode());
         }
-
 
         if (!$block) {
             Mage::throwException("Can't find child block for index ".$indexModel->getCode());
@@ -181,7 +215,7 @@ class Mirasvit_SearchIndex_Block_Results extends Mage_CatalogSearch_Block_Result
     public function isShowTabs()
     {
         $cntNotEmpty = 0;
-        $isShowTabs  = false;
+        $isShowTabs = false;
         foreach ($this->getIndexes() as $_code => $_index) {
             if ($_index->getCountResults() && ($_index->getContentBlock()->getIsVisible() == null || $_index->getContentBlock()->getIsVisible() == true)) {
                 $cntNotEmpty++;

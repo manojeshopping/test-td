@@ -10,14 +10,15 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Model_Abstract
 {
-    const TABLE_PREFIX     = 'm_searchindex_';
+    const TABLE_PREFIX = 'm_searchindex_';
     protected $_connection = null;
 
     public function getTableName()
@@ -40,12 +41,14 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
         if ($this->_connection === null) {
             $this->_connection = Mage::getSingleton('core/resource')->getConnection('core_write');
         }
+
         return $this->_connection;
     }
 
     protected function _getTableName()
     {
         $tablePrefix = (string) Mage::getConfig()->getTablePrefix();
+
         return $tablePrefix.self::TABLE_PREFIX.strtolower($this->getIndexCode()).'_'.$this->getIndexModel()->getId();
     }
 
@@ -55,6 +58,7 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
         if (is_array($tables) && in_array($this->_getTableName(), $tables)) {
             return true;
         }
+
         return false;
     }
 
@@ -62,45 +66,45 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
     {
         $columns = array(
             $this->getPrimaryKey() => array(
-                'type'     => 'int(11)',
+                'type' => 'int(11)',
                 'unsigned' => true,
-                'is_null'  => false,
-                'default'  => null,
+                'is_null' => false,
+                'default' => null,
             ),
             'store_id' => array(
-                'type'     => 'int(11)',
+                'type' => 'int(11)',
                 'unsigned' => true,
-                'is_null'  => false,
-                'default'  => null,
+                'is_null' => false,
+                'default' => null,
             ),
             'updated' => array(
-                'type'     => 'int(1)',
+                'type' => 'int(1)',
                 'unsigned' => true,
-                'is_null'  => false,
-                'default'  => '1',
+                'is_null' => false,
+                'default' => '1',
             ),
             'searchindex_weight' => array(
-                'type'     => 'int(1)',
+                'type' => 'int(1)',
                 'unsigned' => false,
-                'is_null'  => false,
-                'default'  => '0',
+                'is_null' => false,
+                'default' => '0',
             ),
             'data_index' => array(
-                'type'     => 'text',
+                'type' => 'text',
                 'unsigned' => false,
-                'is_null'  => true,
-                'default'  => '',
-            )
+                'is_null' => true,
+                'default' => '',
+            ),
         );
 
         $attributes = $this->getIndexModel()->getAttributes();
 
         foreach ($attributes as $code => $weight) {
             $columns[$code] = array(
-                'type'     => 'text',
+                'type' => 'text',
                 'unsigned' => false,
-                'is_null'  => true,
-                'default'  => '',
+                'is_null' => true,
+                'default' => '',
             );
         }
 
@@ -131,11 +135,11 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
         }
 
         if (count($columnSql)) {
-            $queryString = "CREATE TABLE ".$this->_getTableName()." ("
-                .implode(", ", $columnSql)
+            $queryString = 'CREATE TABLE '.$this->_getTableName().' ('
+                .implode(', ', $columnSql)
                 .', PRIMARY KEY (`'.$this->getPrimaryKey().'`,`store_id`)'
                 .")\n"
-                ."ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+                .'ENGINE=InnoDB DEFAULT CHARSET=utf8;';
             $this->_getConnection()->raw_query($queryString);
 
             $this->_getConnection()->resetDdlCache($this->_getTableName());
@@ -148,8 +152,9 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
 
     protected function _dropTable()
     {
-        $queryString = sprintf("DROP TABLE IF EXISTS %s", $this->_getConnection()->quoteIdentifier($this->_getTableName()));
+        $queryString = sprintf('DROP TABLE IF EXISTS %s', $this->_getConnection()->quoteIdentifier($this->_getTableName()));
         $this->_getConnection()->raw_query($queryString);
+
         return $this;
     }
 
@@ -158,12 +163,13 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
         $queryString = '';
         $queryString .= "`{$name}` {$column['type']}";
         if ($column['unsigned']) {
-            $queryString .= " unsigned";
+            $queryString .= ' unsigned';
         }
-        $queryString .= " ".($column['is_null'] ? 'NULL' : 'NOT NULL');
+        $queryString .= ' '.($column['is_null'] ? 'NULL' : 'NOT NULL');
         if ($column['default']) {
-            $queryString .= " DEFAULT ".$this->_getConnection()->quoteInto('?', $column['default']);
+            $queryString .= ' DEFAULT '.$this->_getConnection()->quoteInto('?', $column['default']);
         }
+
         return $queryString;
     }
 
@@ -209,14 +215,14 @@ abstract class Mirasvit_SearchIndex_Model_Indexer_Abstract extends Mage_Core_Mod
             foreach ($collection as $entity) {
                 $data = array($this->getPrimaryKey() => $entity->getData($this->getPrimaryKey()));
                 $columns = $this->_getColumns(true);
-                foreach($columns as $name => $column) {
+                foreach ($columns as $name => $column) {
                     $data[$name] = Mage::helper('searchindex')->prepareString($entity->getData($name));
                 }
-                $lastEntityId     = $entity->getData($this->getPrimaryKey());
+                $lastEntityId = $entity->getData($this->getPrimaryKey());
                 $data['store_id'] = $storeId;
-                $data['updated']  = 1;
+                $data['updated'] = 1;
                 $data['data_index'] = implode(' ', $data);
-                $rows[]           = $data;
+                $rows[] = $data;
             }
 
             if (count($rows)) {

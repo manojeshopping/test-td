@@ -10,20 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Adminhtml_ValidationController extends Mage_Adminhtml_Controller_Action
 {
-    /**
-     * Temporarily allow access for all users
-     */
-    protected function _isAllowed() {
-        return true;
-    }
-
     public function preDispatch()
     {
         parent::preDispatch();
@@ -43,7 +37,13 @@ class Mirasvit_SearchIndex_Adminhtml_ValidationController extends Mage_Adminhtml
     {
         $this->_title($this->__('Search Validation'));
         $this->_initAction();
-        $this->_addContent($this->getLayout()->createBlock('searchindex/adminhtml_validation'));
+        $this->_addContent($this->getLayout()->createBlock('searchindex/adminhtml_validation'))
+            ->_addLeft($this->getLayout()->createBlock('searchindex/adminhtml_validation_tabs'));
         $this->renderLayout();
     }
+
+	protected function _isAllowed()
+	{
+		return Mage::getSingleton('admin/session')->isAllowed('search/searchindex_validation');
+	}
 }

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Index extends Mirasvit_SearchIndex_Model_Index
@@ -37,14 +38,14 @@ class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Index extends Mir
         return array(
             'External_Database',
             'External_Store',
-            'External_Url'
+            'External_Url',
         );
     }
 
     public function getAvailableAttributes()
     {
         $result = array(
-            'post_title'   => Mage::helper('searchindex')->__('Post Title'),
+            'post_title' => Mage::helper('searchindex')->__('Post Title'),
             'post_content' => Mage::helper('searchindex')->__('Post Content'),
             'post_excerpt' => Mage::helper('searchindex')->__('Post Excerpt'),
         );

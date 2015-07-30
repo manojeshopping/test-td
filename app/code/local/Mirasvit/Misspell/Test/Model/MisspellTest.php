@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_Misspell_Test_Model_MisspellTest extends EcomDev_PHPUnit_Test_Case
@@ -28,10 +29,10 @@ class Mirasvit_Misspell_Test_Model_MisspellTest extends EcomDev_PHPUnit_Test_Cas
     /**
      * @test
      * @cover getSuggest
-     * 
+     *
      * @loadFixture  products
      * @dataProvider getSuggestProvider
-     * 
+     *
      * @doNotIndex catalog_product_price
      */
     public function getSuggestTest($correct, $fail)
@@ -43,42 +44,42 @@ class Mirasvit_Misspell_Test_Model_MisspellTest extends EcomDev_PHPUnit_Test_Cas
     public function getSuggestProvider()
     {
         return array(
-            // Ð¾Ð´Ð½Ð° Ð¾ÑÐ¸Ð±ÐºÐ°
+            // одна ошибка
             array('canon', 'canin'),
             array('canon', 'canun'),
             array('samsung', 'simsung'),
             array('samsung', 'samsing'),
             array('diamond', 'diemond'),
 
-            // Ð´Ð²Ðµ Ð¾ÑÐ¸Ð±ÐºÐ¸
+            // две ошибки
             array('canon', 'cinun'),
             array('samsung', 'simuung'),
             array('samsung', 'simuung'),
 
-            // Ð¿ÑÐ¾Ð¿ÑÑÐº Ð±ÑÐºÐ²Ñ
+            // пропуск буквы
             array('canon', 'caon'),
             array('samsung', 'samung'),
             array('diamond', 'diamod'),
 
-            // Ð»Ð¸ÑÐ½ÑÑ Ð±ÑÐºÐ²Ð°
+            // лишняя буква
             array('canon', 'cannon'),
             array('samsung', 'samsiung'),
             array('diamond', 'diammond'),
 
-            // Ð¿ÐµÑÐµÑÑÐ°Ð½Ð¾Ð²ÐºÐ°
+            // перестановка
             array('canon', 'caonn'),
             array('samsung', 'samsugn'),
             array('diamond', 'diamnod'),
 
-            // ÑÐ»Ð¸ÑÐ½Ð¾Ðµ Ð½Ð°Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ
+            // слитное написание
             array('samsung phone', 'samsungphone'),
             array('htc diamond touch', 'htc diamondtouch'),
             array('htc diamond phone', 'htc diamond phone'),
 
-            // ÑÐµÐ³Ð¸ÑÑÑ
+            // регистр
             array('Samsung Phone SMG-GLX-6798', 'SamsungPhone SMG-GLX-6798'),
 
-            // Ð½ÐµÑ ÑÐ¾Ð¾ÑÐ²ÐµÑÑÐ²Ð¸Ñ
+            // нет соотвествия
             array('SMG-GLX-6798', 'SMG-GLX-6798'),
             array('', 'apple'),
             array('', 'nikon'),

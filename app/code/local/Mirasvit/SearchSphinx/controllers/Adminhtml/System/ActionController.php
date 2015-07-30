@@ -10,24 +10,17 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Adminhtml_Controller_Action
 {
-    /**
-     * Temporarily allow access for all users
-     */
-    protected function _isAllowed() {
-        return true;
-    }
-
     protected function _getNativeEngine()
     {
         return Mage::getSingleton('searchsphinx/engine_sphinx_native');
@@ -45,22 +38,11 @@ class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Admin
             $message = $this->_getNativeEngine()->reindex();
 
             $result['message'] = $message;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $result['message'] = nl2br($e->getMessage());
         }
 
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-    }
-
-    public function reindexdeltaAction()
-    {
-        try {
-            $this->_getNativeEngine()->reindexDelta();
-
-            $this->getResponse()->setBody('Reindex Delta completed!');
-        } catch(Exception $e) {
-            $this->getResponse()->setBody(nl2br($e->getMessage()));
-        }
     }
 
     public function stopstartAction()
@@ -69,11 +51,11 @@ class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Admin
             $result = array();
             if ($this->_getNativeEngine()->isSearchdRunning()) {
                 $this->_getNativeEngine()->stop();
-                $result['message']   = Mage::helper('searchsphinx')->__('Stopped');
+                $result['message'] = Mage::helper('searchsphinx')->__('Stopped');
                 $result['btn_label'] = Mage::helper('searchsphinx')->__('Start Sphinx daemon');
             } else {
                 $this->_getNativeEngine()->start();
-                $result['message']   = Mage::helper('searchsphinx')->__('Launched');
+                $result['message'] = Mage::helper('searchsphinx')->__('Launched');
                 $result['btn_label'] = Mage::helper('searchsphinx')->__('Stop Sphinx daemon');
             }
         } catch (Exception $e) {
@@ -90,11 +72,15 @@ class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Admin
             $path = $this->_getExternalEngine()->makeConfigFile();
 
             $result['message'] = Mage::helper('searchsphinx')->__('Sphinx configuration file: '.$path);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $result['message'] = nl2br($e->getMessage());
         }
 
         $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
     }
 
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('search');
+    }
 }

@@ -10,17 +10,18 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Observer
 {
     /**
-     * ÐÐ¾ÑÐ»Ðµ Ð·Ð°Ð²ÐµÑÑÐµÐ½Ð¸Ñ ÑÐµÐ¸Ð½Ð´ÐµÐºÑÐ° Ð¸Ð½Ð´ÐµÐºÑÐ° catalogsearc_fulltext (System/Index Management)
-     * Ð¿ÐµÑÐµÐ²Ð¾Ð´Ð¸Ð¼ Ð²ÑÐµ Ð½Ð°ÑÐ¸ Ð¸Ð½Ð´ÐµÐºÑÑ Ð² ÑÑÐ°ÑÑÑ Ready
-     * 
+     * После завершения реиндекса индекса catalogsearc_fulltext (System/Index Management)
+     * переводим все наши индексы в статус Ready.
+     *
      * @return object
      */
     public function onIndexProcessComplete()
@@ -29,6 +30,15 @@ class Mirasvit_SearchIndex_Model_Observer
         foreach ($collection as $index) {
             $index->setStatus(1)
                 ->save();
+        }
+
+        return $this;
+    }
+
+    public function onNoRoute(Varien_Event_Observer $observer)
+    {
+        if (Mage::getSingleton('searchindex/config')->isSearchOn404Enabled()) {
+            Mage::helper('searchindex/route')->process($observer->getEvent()->getControllerAction());
         }
 
         return $this;

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Resource_Index extends Mage_Core_Model_Mysql4_Abstract
@@ -24,6 +25,7 @@ class Mirasvit_SearchIndex_Model_Resource_Index extends Mage_Core_Model_Mysql4_A
 
     protected function _beforeSave(Mage_Core_Model_Abstract  $object)
     {
+        $object->validate();
         $object->setUpdatedAt(Mage::getSingleton('core/date')->gmtDate());
 
         if ($object->getAttributes() && is_array($object->getAttributes())) {

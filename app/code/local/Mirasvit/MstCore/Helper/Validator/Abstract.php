@@ -8,10 +8,10 @@
  * Please refer to http://www.magentocommerce.com for more information.
  *
  * @category  Mirasvit
- * @package   Full Page Cache
- * @version   1.0.1
- * @build     268
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @package   Sphinx Search Ultimate
+ * @version   2.3.2
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -22,13 +22,13 @@ class Mirasvit_MstCore_Helper_Validator_Abstract extends Mage_Core_Helper_Abstra
     const INFO    = 3;
     const FAILED  = 0;
 
-    public function runTests()
+    public function runTests($testType)
     {
         $results = array();
 
         $methods = get_class_methods($this);
         foreach ($methods as $method) {
-            if (substr($method, 0, 4) == 'test') {
+            if (substr($method, 0, strlen($testType)) == $testType) {
                 $key = get_class($this).$method;
                 try {
                     $results[$key] = call_user_func(array($this, $method));
@@ -70,6 +70,7 @@ class Mirasvit_MstCore_Helper_Validator_Abstract extends Mage_Core_Helper_Abstra
             if (!$this->dbTableExists($table)) {
                 $description[] = "Table '$table' doesn't exist";
                 $result = self::FAILED;
+                continue;
             }
             if ($table == 'catalogsearch/fulltext') {
                 continue;
@@ -153,5 +154,31 @@ class Mirasvit_MstCore_Helper_Validator_Abstract extends Mage_Core_Helper_Abstra
     protected function _dbConn()
     {
         return $this->_dbRes()->getConnection('core_write');
+    }
+
+    /**
+     * @param string $layoutName - e.g. catalogsearch.xml
+     * @param string $handleName - e.g. catalogsearch_result_index
+     * @return array $container  - one-dimensional array with nodes
+     */
+    protected function getHandleNodesFromLayout($layoutName, $handleName)
+    {
+        $container = array();
+        $appEmulation = Mage::getSingleton('core/app_emulation');
+        $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation(
+            Mage::app()->getDefaultStoreView()->getId(),
+            Mage_Core_Model_App_Area::AREA_FRONTEND
+        );
+
+        $catalogSearchLayoutFile = Mage::getDesign()->getLayoutFilename($layoutName);
+        $catalogSearchXml = new Zend_Config_Xml($catalogSearchLayoutFile, $handleName);
+        $catalogSearchArray = $catalogSearchXml->toArray();
+
+        $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($catalogSearchArray));
+        $container = iterator_to_array($iterator, false);
+
+        $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
+
+        return $container;
     }
 }

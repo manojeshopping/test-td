@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_CatalogSearch_Model_Mysql4_Fulltext
@@ -31,14 +32,14 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
         $uid = Mage::helper('mstcore/debug')->start();
 
         $tableName = $this->getMainTable();
-        $adapter   = $this->_getWriteAdapter();
+        $adapter = $this->_getWriteAdapter();
 
         $adapter->resetDdlCache($tableName);
 
         $describe = $adapter->describeTable($tableName);
-        $columns  = $this->getColumns();
+        $columns = $this->getColumns();
 
-        $addColumns  = array_diff_key($columns, $describe);
+        $addColumns = array_diff_key($columns, $describe);
         $dropColumns = array_diff_key($describe, $columns);
 
         // Drop columns
@@ -49,7 +50,7 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
                     'data_index',
                     'fulltext_id',
                     'updated',
-                    'searchindex_weight')
+                    'searchindex_weight', )
                 )) {
                 $adapter->dropColumn($tableName, $columnName);
             }
@@ -71,7 +72,7 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
 
         if ($this->_columns === null) {
             $this->_columns = array();
-            $this->_columns['updated']            = "int(1) NOT NULL default '1'";
+            $this->_columns['updated'] = "int(1) NOT NULL default '1'";
             $this->_columns['searchindex_weight'] = "int(11) NOT NULL default '0'";
 
             $columns = array();
@@ -111,12 +112,28 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
     protected function _getProductChildIds($productId, $typeId)
     {
         if (!$this->getIndexModel()->getIndexInstance()->getProperty('include_bundled')) {
-            return null;
+            return;
         }
 
-        $result = parent::_getProductChildIds($productId, $typeId);
+        $typeInstance = $this->_getProductTypeInstance($typeId);
+        $relation = $typeInstance->isComposite()
+            ? $typeInstance->getRelationInfo()
+            : false;
 
-        return $result;
+        if ($relation && $relation->getTable() && $relation->getParentFieldName() && $relation->getChildFieldName()) {
+            $select = $this->_getReadAdapter()->select()
+                ->from(
+                    array('main' => $this->getTable($relation->getTable())),
+                    array($relation->getChildFieldName()))
+                ->where("{$relation->getParentFieldName()}=?", $productId);
+            if (!is_null($relation->getWhere())) {
+                $select->where($relation->getWhere());
+            }
+
+            return $this->_getReadAdapter()->fetchCol($select);
+        }
+
+        return;
     }
 
     protected function _saveProductIndexes($storeId, $productIndexes)
@@ -140,36 +157,31 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext extends Mage_Ca
             $staticFields[] = $attribute->getAttributeCode();
         }
 
-        $x = 0;
-        $a = 0;
-        $b = 0;
-        $c = 0;
         foreach ($index as $entityId => $data) {
-            try {
-                $productChildren = array();
+            $productChildren = array();
 
-                $arGrouped = $this->_getProductChildIds($entityId, 'grouped');
-                if (is_array($arGrouped) && count($arGrouped)) {
-                    $productChildren = array_merge($productChildren, $arGrouped);
-                }
+            $arGrouped = $this->_getProductChildIds($entityId, 'grouped');
+            if (is_array($arGrouped) && count($arGrouped)) {
+                $productChildren = array_merge($productChildren, $arGrouped);
+            }
 
-                $arConfigurable = $this->_getProductChildIds($entityId, 'configurable');
-                if (is_array($arConfigurable) && count($arConfigurable)) {
-                    $productChildren = array_merge($productChildren, $arConfigurable);
-                }
+            $arConfigurable = $this->_getProductChildIds($entityId, 'configurable');
+            if (is_array($arConfigurable) && count($arConfigurable)) {
+                $productChildren = array_merge($productChildren, $arConfigurable);
+            }
 
-                if (count($productChildren)) {
-                    $relatedProducts = $this->_getSearchableProducts($storeId, $staticFields, $productChildren, 0);
-                    foreach ($relatedProducts as $pr) {
-                        foreach ($pr as $attr => $value) {
-                            if (isset($index[$entityId][$attr])) {
-                                $index[$entityId][$attr] .= ' '.$value;
-                                $index[$entityId]['data_index'] .= ' '.$value;
-                            }
+            if (count($productChildren)) {
+                $relatedProducts = $this->_getSearchableProducts($storeId, $staticFields, $productChildren, 0);
+
+                foreach ($relatedProducts as $pr) {
+                    foreach ($pr as $attr => $value) {
+                        if (isset($index[$entityId][$attr])) {
+                            $index[$entityId][$attr] .= ' '.$value;
+                            $index[$entityId]['data_index'] .= ' '.$value;
                         }
                     }
                 }
-            } catch (Exception $e) {}
+            }
         }
 
         return $this;

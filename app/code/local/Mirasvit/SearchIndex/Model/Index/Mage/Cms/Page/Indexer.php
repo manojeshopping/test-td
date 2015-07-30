@@ -10,15 +10,18 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Mage_Cms_Page_Indexer extends Mirasvit_SearchIndex_Model_Indexer_Abstract
 {
     protected function _getSearchableEntities($storeId, $entityIds, $lastEntityId, $limit = 100)
     {
+        $currentStoreId = Mage::app()->getStore()->getId();
+
         Mage::app()->setCurrentStore($storeId);
         $collection = Mage::getModel('cms/page')->getCollection();
         $collection->addStoreFilter($storeId)
@@ -44,6 +47,8 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Cms_Page_Indexer extends Mirasvit_Se
 
             $page->setContent($processor->filter($page->getContent()));
         }
+
+        Mage::app()->setCurrentStore($currentStoreId);
 
         return $collection;
     }

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
@@ -22,9 +23,9 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Edit_Form extends Mage_Admin
         $model = Mage::registry('current_model');
 
         $form = new Varien_Data_Form(array(
-            'id'      => 'edit_form',
-            'action'  => $this->getData('action'),
-            'method'  => 'post',
+            'id' => 'edit_form',
+            'action' => $this->getData('action'),
+            'method' => 'post',
             'enctype' => 'multipart/form-data',
         ));
 
@@ -32,25 +33,25 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Edit_Form extends Mage_Admin
 
         if ($model->getId()) {
             $general->addField('synonym_id', 'hidden', array(
-                'name'  => 'synonym_id',
+                'name' => 'synonym_id',
                 'value' => $model->getId(),
             ));
         }
 
         $general->addField('synonyms', 'textarea', array(
-            'name'     => 'synonyms',
-            'label'    => Mage::helper('searchsphinx')->__('Synonyms'),
+            'name' => 'synonyms',
+            'label' => Mage::helper('searchsphinx')->__('Synonyms'),
             'required' => true,
-            'value'    => $model->getSynonyms(),
-            'note'     => __('Use comma as separator')
+            'value' => $model->getSynonyms(),
+            'note' => __('Use comma as separator'),
         ));
 
         $general->addField('store', 'select', array(
-            'label'    => Mage::helper('searchsphinx')->__('Store View'),
+            'label' => Mage::helper('searchsphinx')->__('Store View'),
             'required' => true,
-            'name'     => 'store',
-            'value'    => $model->getStore(),
-            'values'   => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, false),
+            'name' => 'store',
+            'value' => $model->getStore(),
+            'values' => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, false),
         ));
 
         $form->setAction($this->getUrl('*/*/save'));
@@ -59,5 +60,4 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Edit_Form extends Mage_Admin
 
         return parent::_prepareForm();
     }
-
 }

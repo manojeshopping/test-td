@@ -10,17 +10,17 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ°ÑÐº. ÐÐ¾ÑÑÐ»Ð°ÐµÑ Ð½Ð° Ð¿Ð¾Ð¸ÑÐº Ð¿Ð¾Ð¾ÑÐµÑÐµÐ´Ð¸ Ð·Ð°Ð¿ÑÐ¾ÑÑ ÑÐµÐ¼ ÑÐ°Ð¼ÑÐ¼ Ð½Ð°Ð¿Ð¾Ð»Ð½ÑÑ ÐºÐµÑ.
- * ÐÑÐµÐ¼ÐµÐ½Ð½Ð¾ Ð¾ÑÐºÐ»ÑÑÐµÐ½.
- * 
+ * Паук. Посылает на поиск поочереди запросы тем самым наполняя кеш.
+ * Временно отключен.
+ *
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Model_Crawler extends Mage_Core_Model_Abstract
 {
@@ -35,6 +35,7 @@ class Mirasvit_SearchAutocomplete_Model_Crawler extends Mage_Core_Model_Abstract
             $urls
         );
         $urls = $urls[1];
+
         return $urls;
     }
 
@@ -45,11 +46,11 @@ class Mirasvit_SearchAutocomplete_Model_Crawler extends Mage_Core_Model_Abstract
         foreach (Mage::app()->getStores() as $store) {
             $website = Mage::app()->getWebsite($store->getWebsiteId());
             $defaultWebsiteStore = $website->getDefaultStore();
-            $defaultWebsiteBaseUrl      = $defaultWebsiteStore->getBaseUrl();
+            $defaultWebsiteBaseUrl = $defaultWebsiteStore->getBaseUrl();
             $defaultWebsiteBaseCurrency = $defaultWebsiteStore->getDefaultCurrencyCode();
 
-            $baseUrl            = Mage::app()->getStore($store)->getBaseUrl();
-            $defaultCurrency    = Mage::app()->getStore($store)->getDefaultCurrencyCode();
+            $baseUrl = Mage::app()->getStore($store)->getBaseUrl();
+            $defaultCurrency = Mage::app()->getStore($store)->getDefaultCurrencyCode();
 
             $cookie = '';
             if (($baseUrl == $defaultWebsiteBaseUrl) && ($defaultWebsiteStore->getId() != $store->getId())) {
@@ -59,7 +60,7 @@ class Mirasvit_SearchAutocomplete_Model_Crawler extends Mage_Core_Model_Abstract
             $baseUrls[] = array(
                 'store_id' => $store->getId(),
                 'base_url' => $baseUrl,
-                'cookie'   => $cookie,
+                'cookie' => $cookie,
             );
 
             $currencies = $store->getAvailableCurrencyCodes(true);
@@ -68,25 +69,25 @@ class Mirasvit_SearchAutocomplete_Model_Crawler extends Mage_Core_Model_Abstract
                     $baseUrls[] = array(
                         'store_id' => $store->getId(),
                         'base_url' => $baseUrl,
-                        'cookie'   => $cookie.'currency='.$currencyCode.';'
+                        'cookie' => $cookie.'currency='.$currencyCode.';',
                     );
                 }
             }
-            
         }
+
         return $baseUrls;
     }
 
     public function crawl()
     {
         return $this;
-        
+
         Mage::register('custom_entry_point', true, true);
 
-        $counter    = 0;
-        $timeStart  = time();
+        $counter = 0;
+        $timeStart = time();
         $storesInfo = $this->getStoresInfo();
-        $adapter    = new Varien_Http_Adapter_Curl();
+        $adapter = new Varien_Http_Adapter_Curl();
 
         foreach ($storesInfo as $info) {
             $options = array(CURLOPT_USERAGENT => self::USER_AGENT);
@@ -97,26 +98,26 @@ class Mirasvit_SearchAutocomplete_Model_Crawler extends Mage_Core_Model_Abstract
                 $options[CURLOPT_COOKIE] = $info['cookie'];
             }
 
-            $urls       = array();
-            $urlsCount  = 0;
+            $urls = array();
+            $urlsCount = 0;
             $totalCount = 0;
 
             $queries = Mage::getModel('catalogsearch/query')->getCollection()
                 ->addFieldToFilter('store_id', $storeId)
                 ->setOrder('popularity', 'desc');
-                
+
             foreach ($queries as $query) {
                 $queryText = $query->getQueryText();
 
                 $part = '';
                 for ($i = 0; $i < strlen($queryText); $i++) {
                     $part .= $queryText[$i];
-                    $url   = $info['base_url'].'searchautocomplete/ajax/get/?q='.$part.'&cat=0';
+                    $url = $info['base_url'].'searchautocomplete/ajax/get/?q='.$part.'&cat=0';
 
                     $urls[] = $url;
                     $urlsCount++;
                     $totalCount++;
-                    $counter ++;
+                    $counter++;
                     if ($urlsCount == $threads) {
                         $result = $adapter->multiRequest($urls, $options);
                         $urlsCount = 0;

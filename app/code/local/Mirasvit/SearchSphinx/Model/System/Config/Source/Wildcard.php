@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchSphinx_Model_System_Config_Source_Wildcard
@@ -22,20 +23,20 @@ class Mirasvit_SearchSphinx_Model_System_Config_Source_Wildcard
         return array(
             array(
                 'value' => Mirasvit_SearchSphinx_Model_Config::WILDCARD_INFIX,
-                'label' => 'Enabled (*word*)'
+                'label' => 'Enabled (*word*)',
             ),
             array(
                 'value' => Mirasvit_SearchSphinx_Model_Config::WILDCARD_SUFFIX,
-                'label' => 'Enabled at end (word*)'
+                'label' => 'Enabled at end (word*)',
             ),
             array(
                 'value' => Mirasvit_SearchSphinx_Model_Config::WILDCARD_PREFIX,
-                'label' => 'Enabled at start (*word)'
+                'label' => 'Enabled at start (*word)',
             ),
             array(
                 'value' => Mirasvit_SearchSphinx_Model_Config::WILDCARD_DISABLED,
-                'label' => 'Disabled'
-            )
+                'label' => 'Disabled',
+            ),
         );
     }
-} 
+}

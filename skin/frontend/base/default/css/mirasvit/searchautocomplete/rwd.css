@@ -49,12 +49,12 @@
   color: black;
   cursor: pointer;
   height: 29px;
-  left: 5px;
+  left: 0;
   margin: 0;
   outline: 0;
   padding: 0;
   position: absolute;
-  top: 5px;
+  top: 0;
   visibility: visible;
   width: auto;
 }
@@ -67,16 +67,18 @@
   padding: 0px 25px 0px 10px;
   text-align: center;
   white-space: nowrap;
+  margin-top: 6px;
 }
 .searchautocomplete .nav-search-in .nav-down-arrow {
-  background: url('../../../images/mirasvit/sprite.png');
-  width: 9px;
-  height: 5px;
-  background-position: -26px -34px;
-  display: block;
   right: 10px;
   top: 16px;
   position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 4.5px 0 4.5px;
+  border-color: #000000 transparent transparent transparent;
+  line-height: 0px;
 }
 .searchautocomplete .nav-search-in:hover .category-fake {
   color: #000;
@@ -90,9 +92,10 @@
   border-radius: 5px 5px 5px 5px;
   background: #FFF;
   border: 1px solid #ccc;
-  padding-top: 15px;
   position: absolute;
   z-index: 102;
+  box-shadow: 0 10px 10px #5E5E5E;
+  top: 30px;
 }
 .searchautocomplete .searchautocomplete-placeholder:before {
   border-color: transparent transparent #CCC transparent;
@@ -107,13 +110,19 @@
 }
 .searchautocomplete .searchautocomplete-placeholder ul {
   list-style: none;
-  padding: 0;
   margin: 0;
+  border: none!important;
+  background: none!important;
+  box-shadow: none;
+  position: relative;
+  padding: 5px;
 }
 .searchautocomplete .searchautocomplete-placeholder ul li {
   *zoom: 1;
   text-align: left;
   padding: 5px 5px;
+  border: 1px solid #e2e2e2;
+  margin-bottom: 5px;
 }
 .searchautocomplete .searchautocomplete-placeholder ul li:before,
 .searchautocomplete .searchautocomplete-placeholder ul li:after {
@@ -131,7 +140,8 @@
   float: right;
 }
 .searchautocomplete .searchautocomplete-placeholder ul li.active {
-  background-color: #eeeeee;
+  background-color: #eeffee;
+  box-shadow: 0 0 1px #525252;
   cursor: pointer;
 }
 .searchautocomplete .searchautocomplete-placeholder ul li.active a {
@@ -160,11 +170,20 @@
   font-size: 0.9em;
   color: #999;
 }
+.searchautocomplete .searchautocomplete-placeholder ul li .ratings {
+  margin: 0;
+  line-height: 14px;
+}
+.searchautocomplete .searchautocomplete-placeholder ul li .ratings .rating-box {
+  float: left;
+  margin: 0 5px 0 0;
+}
 .searchautocomplete .searchautocomplete-placeholder .index-title {
   text-align: right;
   color: #0A263C;
   border-bottom: 1px solid #CCC;
   padding: 2px 5px;
+  background-color: #F7F7F6;
 }
 .searchautocomplete .searchautocomplete-placeholder .index-title span {
   color: #666;
@@ -178,11 +197,130 @@
   float: left;
   margin: 0px 5px 5px 0px;
 }
+.searchautocomplete .searchautocomplete-loader {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 11px;
+  right: 44px;
+  z-index: 99;
+  -webkit-transform: scale(0.6);
+  -moz-transform: scale(0.6);
+  -ms-transform: scale(0.6);
+  -o-transform: scale(0.6);
+  transform: scale(0.6);
+  display: none;
+}
+.searchautocomplete .searchautocomplete-loader div {
+  position: absolute;
+  background-color: #FFFFFF;
+  height: 3px;
+  width: 3px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-animation-name: f_autocomplete_loader;
+  animation-name: f_autocomplete_loader;
+  -webkit-animation-duration: 0.64s;
+  animation-duration: 0.64s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-direction: normal;
+  animation-direction: normal;
+}
+.searchautocomplete .searchautocomplete-loader div#g01 {
+  left: 0px;
+  top: 7px;
+  -webkit-animation-delay: 0.24s;
+  animation-delay: 0.24s;
+}
+.searchautocomplete .searchautocomplete-loader div#g02 {
+  left: 2px;
+  top: 2px;
+  -webkit-animation-delay: 0.32s;
+  animation-delay: 0.32s;
+}
+.searchautocomplete .searchautocomplete-loader div#g03 {
+  left: 7px;
+  top: 0px;
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+.searchautocomplete .searchautocomplete-loader div#g04 {
+  right: 2px;
+  top: 2px;
+  -webkit-animation-delay: 0.48s;
+  animation-delay: 0.48s;
+}
+.searchautocomplete .searchautocomplete-loader div#g05 {
+  right: 0px;
+  top: 7px;
+  -webkit-animation-delay: 0.56s;
+  animation-delay: 0.56s;
+}
+.searchautocomplete .searchautocomplete-loader div#g06 {
+  right: 2px;
+  bottom: 2px;
+  -webkit-animation-delay: 0.64s;
+  animation-delay: 0.64s;
+}
+.searchautocomplete .searchautocomplete-loader div#g07 {
+  left: 7px;
+  bottom: 0px;
+  -webkit-animation-delay: 0.72s;
+  animation-delay: 0.72s;
+}
+.searchautocomplete .searchautocomplete-loader div#g08 {
+  left: 2px;
+  bottom: 2px;
+  -webkit-animation-delay: 0.8s;
+  animation-delay: 0.8s;
+}
+@-moz-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@-webkit-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@-ms-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@-o-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
 .searchautocomplete .nav-search-in {
   top: 0px;
 }
 .searchautocomplete .nav-search-in .category-fake {
-  padding-top: 13px;
+  padding-top: 7px;
 }
 .searchautocomplete .nav-search-in .nav-down-arrow {
   top: 19px;
@@ -191,4 +329,22 @@
   top: 0px;
   left: 0px;
   height: 40px;
+}
+.searchautocomplete .searchautocomplete-placeholder {
+  top: 7px !important;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+}
+.searchautocomplete .searchautocomplete-placeholder ul li {
+  border: 1px solid #fff;
+}
+.searchautocomplete .searchautocomplete-placeholder ul li div.highlight {
+  color: #666;
+}
+.searchautocomplete .searchautocomplete-placeholder ul li:last-child {
+  border: 1px solid #fff;
+}
+.searchautocomplete .searchautocomplete-placeholder ul li.active {
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid #3399cc !important;
 }

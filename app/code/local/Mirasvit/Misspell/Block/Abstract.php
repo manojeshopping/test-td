@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 abstract class Mirasvit_Misspell_Block_Abstract extends Mage_Core_Block_Template
 {
@@ -30,7 +30,7 @@ abstract class Mirasvit_Misspell_Block_Abstract extends Mage_Core_Block_Template
         return false;
     }
 
-    abstract function getOriginalQueryText();
+    abstract public function getOriginalQueryText();
 
     public function getQueryUrl($query)
     {
@@ -49,31 +49,36 @@ abstract class Mirasvit_Misspell_Block_Abstract extends Mage_Core_Block_Template
     {
         $ret = '';
         $diff = $this->_diff(explode(' ', $old), explode(' ', $new));
-        foreach($diff as $k) {
-            if(is_array($k))
-                $ret .= !empty($k['i']) ? "<".$tag.">".implode(' ',$k['i'])."</".$tag."> " : '';
-            else $ret .= $k . ' ';
+        foreach ($diff as $k) {
+            if (is_array($k)) {
+                $ret .= !empty($k['i']) ? '<'.$tag.'>'.implode(' ', $k['i']).'</'.$tag.'> ' : '';
+            } else {
+                $ret .= $k.' ';
+            }
         }
+
         return $ret;
     }
 
     protected function _diff($old, $new)
     {
         $maxlen = 0;
-        foreach($old as $oindex => $ovalue){
+        foreach ($old as $oindex => $ovalue) {
             $nkeys = array_keys($new, $ovalue);
-            foreach($nkeys as $nindex){
+            foreach ($nkeys as $nindex) {
                 $matrix[$oindex][$nindex] = isset($matrix[$oindex - 1][$nindex - 1]) ?
                     $matrix[$oindex - 1][$nindex - 1] + 1 : 1;
-                if($matrix[$oindex][$nindex] > $maxlen) {
+                if ($matrix[$oindex][$nindex] > $maxlen) {
                     $maxlen = $matrix[$oindex][$nindex];
-                    $omax   = $oindex + 1 - $maxlen;
-                    $nmax   = $nindex + 1 - $maxlen;
+                    $omax = $oindex + 1 - $maxlen;
+                    $nmax = $nindex + 1 - $maxlen;
                 }
             }
         }
 
-        if($maxlen == 0) return array(array('d' => $old, 'i' => $new));
+        if ($maxlen == 0) {
+            return array(array('d' => $old, 'i' => $new));
+        }
 
         return array_merge(
             $this->_diff(array_slice($old, 0, $omax), array_slice($new, 0, $nmax)),

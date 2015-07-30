@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * Ð¢Ð°Ð±Ð»Ð¸ÑÐ° ÑÑÐ¾Ð¿-ÑÐ»Ð¾Ð²
+ * Таблица стоп-слов.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
@@ -31,7 +31,7 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword_Grid extends Mage_Adminhtml
         $this->setDefaultSort('stopword_id');
         $this->setDefaultDir('desc');
         $this->setSaveParametersInSession(true);
-    
+
         return $this;
     }
 
@@ -47,24 +47,24 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword_Grid extends Mage_Adminhtml
     {
         $this->addColumn('stopword_id', array(
             'header' => Mage::helper('searchsphinx')->__('ID'),
-            'align'  => 'right',
-            'width'  => '50px',
-            'index'  => 'stopword_id',
+            'align' => 'right',
+            'width' => '50px',
+            'index' => 'stopword_id',
         ));
 
         $this->addColumn('word', array(
             'header' => Mage::helper('searchsphinx')->__('Word'),
-            'align'  => 'left',
-            'index'  => 'word',
+            'align' => 'left',
+            'index' => 'word',
         ));
 
         $this->addColumn('store', array(
-            'header'  => Mage::helper('searchsphinx')->__('Store'),
-            'align'   => 'left',
-            'width'   => '200px',
-            'index'   => 'store',
-            'type'    => 'options',
-            'options' => Mage::getSingleton('adminhtml/system_store')->getStoreOptionHash()
+            'header' => Mage::helper('searchsphinx')->__('Store'),
+            'align' => 'left',
+            'width' => '200px',
+            'index' => 'store',
+            'type' => 'options',
+            'options' => Mage::getSingleton('adminhtml/system_store')->getStoreOptionHash(),
         ));
 
         return parent::_prepareColumns();
@@ -76,10 +76,11 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword_Grid extends Mage_Adminhtml
         $this->getMassactionBlock()->setFormFieldName('stopword');
 
         $this->getMassactionBlock()->addItem('delete', array(
-            'label'   => Mage::helper('searchsphinx')->__('Delete'),
-            'url'     => $this->getUrl('*/*/massDelete'),
-            'confirm' => Mage::helper('searchsphinx')->__('Are you sure?')
+            'label' => Mage::helper('searchsphinx')->__('Delete'),
+            'url' => $this->getUrl('*/*/massDelete'),
+            'confirm' => Mage::helper('searchsphinx')->__('Are you sure?'),
         ));
+
         return $this;
     }
 

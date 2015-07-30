@@ -8,10 +8,10 @@
  * Please refer to http://www.magentocommerce.com for more information.
  *
  * @category  Mirasvit
- * @package   Full Page Cache
- * @version   1.0.1
- * @build     268
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @package   Sphinx Search Ultimate
+ * @version   2.3.2
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -21,27 +21,45 @@ class Mirasvit_MstCore_Helper_Cron extends Mage_Core_Helper_Data
      * Method allows to display message about not working cron job in admin panel.
      * Need call at start of adminhtml controller action.
      * @param  string  $jobCode cronjob code (from config.xml)
-     * @param  boolean $link    link to manual about cronjob configuration
+     * @param  boolean $output  by default - return cron error as adminhtml error message, otherwise - as string
+     * @param  string  $prefix  additonal text to cronjob error message
      */
- 	public function checkCronStatus($jobCode, $link = false)
+ 	public function checkCronStatus($jobCode, $output = true, $prefix = '')
     {
     	if (!$this->isCronRunning($jobCode)) {
-    		$message = $this->__('Cron is not running. You need to setup a cron job for Magento. To do this, add following expression to your crontab <br><i>%s</i>', $this->getCronExpression());
-    		if ($link) {
-    			$message .= $this->__('<br><a href="%s" target="_blank">Read more</a>', $link);
-    		}
-            Mage::getSingleton('adminhtml/session')->addError($message);
+            $message = '';
+            if ($prefix) {
+                $message .= $prefix.' ';
+            }
+            
+    		$message .= $this->__('Cron for magento is not running. 
+                To setup a cron job follow the 
+                <a href="https://mirasvit.com/doc/common/cron?magento_path=%s&php_path=%s" target="_blank"><b>link</b></a>.',
+                Mage::getBaseDir(),
+                $this->getPhpBin());
+
+            if ($output) {
+                Mage::getSingleton('adminhtml/session')->addError($message);
+            } else {
+                return $message;
+            }
     	}
+
+        return true;
 	}
 
  	public function isCronRunning($jobCode)
     {
-        $job = Mage::getModel('cron/schedule')->getCollection()
-            ->addFieldToFilter('job_code', $jobCode)
+        $collection = Mage::getModel('cron/schedule')->getCollection();
+        if ($jobCode) {
+            $collection->addFieldToFilter('job_code', $jobCode);
+        }
+        $collection
             ->addFieldToFilter('status', 'success')
             ->setOrder('scheduled_at', 'desc')
-            ->getFirstItem();
+            ;
 
+        $job = $collection->getFirstItem();
         if (!$job->getId()) {
             return false;
         }

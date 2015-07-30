@@ -10,8 +10,8 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -20,24 +20,25 @@ class Mirasvit_SearchIndex_Helper_Highlighter extends Mage_Core_Helper_Abstract
 {
     private static $productId = array(
         'name' => array('(<[\w]{1,3}[^>]class="product-name"><a[^>]*>)', '(<\/a><\/[\w]{1,3}>)'),
-        'desc' => array('(<div[^>]*class="desc[^"]*">)', '(<a.*)')
+        'desc' => array('(<div[^>]*class="desc[^"]*">)', '(<a.*)'),
     );
 
     private static $categoryId = array(
         '(<a[^>]*>)',
-        '(<\/a>)'
+        '(<\/a>)',
     );
 
     private static $otherId = array(
-        'title'   => array('(<div class="title">[\s]*<a[^>]*>)', '(<\/a>[\s]*<\/div>)'),
-        'content' => array('(<div class="content">[\s]*)', '([\s]*<\/div>)')
+        'title' => array('(<div class="title">[\s]*<a[^>]*>)', '(<\/a>[\s]*<\/div>)'),
+        'content' => array('(<div class="content">[\s]*)', '([\s]*<\/div>)'),
     );
 
     /**
-     * Highlight search term on the search result pages
+     * Highlight search term on the search result pages.
      *
      * @param $block
      * @param $transport
+     *
      * @return $this
      */
     public function highlightTerms($block, $transport)
@@ -46,32 +47,32 @@ class Mirasvit_SearchIndex_Helper_Highlighter extends Mage_Core_Helper_Abstract
             return $this;
         }
 
-        $html         = $transport->getHtml();
-        $query        = $this->escapeSpecialChars(Mage::helper('catalogsearch')->getQueryText());
-        $replacement  = array();
-        $pattern      = array();
+        $html = $transport->getHtml();
+        $query = $this->escapeSpecialChars(Mage::helper('catalogsearch')->getQueryText());
+        $replacement = array();
+        $pattern = array();
 
         switch ($block->getCurrentIndex()->getIndexCode()) {
             case 'mage_catalog_product':
-                $matchName      = $this->getMatches(self::$productId['name'][0], self::$productId['name'][1], $html);
-                $matchDesc      = $this->getMatches(self::$productId['desc'][0], self::$productId['desc'][1], $html);
-                $pattern[]      = $this->createPattern(self::$productId['name'][0], self::$productId['name'][1], $matchName);
-                $pattern[]      = $this->createPattern(self::$productId['desc'][0], self::$productId['desc'][1], $matchDesc);
-                $replacement[]  = $this->createReplacement($query, $matchName);
-                $replacement[]  = $this->createReplacement($query, $matchDesc);
+                $matchName = $this->getMatches(self::$productId['name'][0], self::$productId['name'][1], $html);
+                $matchDesc = $this->getMatches(self::$productId['desc'][0], self::$productId['desc'][1], $html);
+                $pattern[] = $this->createPattern(self::$productId['name'][0], self::$productId['name'][1], $matchName);
+                $pattern[] = $this->createPattern(self::$productId['desc'][0], self::$productId['desc'][1], $matchDesc);
+                $replacement[] = $this->createReplacement($query, $matchName);
+                $replacement[] = $this->createReplacement($query, $matchDesc);
                 break;
             case 'mage_catalog_category':
-                $matchCats      = $this->getMatches(self::$categoryId[0], self::$categoryId[1], $html);
-                $pattern[]      = $this->createPattern(self::$categoryId[0], self::$categoryId[1], $matchCats);
-                $replacement[]  = $this->createReplacement($query, $matchCats);
+                $matchCats = $this->getMatches(self::$categoryId[0], self::$categoryId[1], $html);
+                $pattern[] = $this->createPattern(self::$categoryId[0], self::$categoryId[1], $matchCats);
+                $replacement[] = $this->createReplacement($query, $matchCats);
                 break;
             default:
-                $matchTitle     = $this->getMatches(self::$otherId['title'][0], self::$otherId['title'][1], $html);
-                $matchContent   = $this->getMatches(self::$otherId['content'][0], self::$otherId['content'][1], $html);
-                $pattern[]      = $this->createPattern(self::$otherId['title'][0], self::$otherId['title'][1], $matchTitle);
-                $pattern[]      = $this->createPattern(self::$otherId['content'][0], self::$otherId['content'][1], $matchContent);
-                $replacement[]  = $this->createReplacement($query, $matchTitle);
-                $replacement[]  = $this->createReplacement($query, $matchContent);
+                $matchTitle = $this->getMatches(self::$otherId['title'][0], self::$otherId['title'][1], $html);
+                $matchContent = $this->getMatches(self::$otherId['content'][0], self::$otherId['content'][1], $html);
+                $pattern[] = $this->createPattern(self::$otherId['title'][0], self::$otherId['title'][1], $matchTitle);
+                $pattern[] = $this->createPattern(self::$otherId['content'][0], self::$otherId['content'][1], $matchContent);
+                $replacement[] = $this->createReplacement($query, $matchTitle);
+                $replacement[] = $this->createReplacement($query, $matchContent);
                 break;
         }
 
@@ -101,10 +102,10 @@ class Mirasvit_SearchIndex_Helper_Highlighter extends Mage_Core_Helper_Abstract
     private function createReplacement($pattern, $subject)
     {
         $replacement = array();
-        $arrPattern  = explode(' ', $pattern);
-        $replace     = '${1}<span class="highlight">${2}</span>${3}';
+        $arrPattern = explode(' ', $pattern);
+        $replace = '${1}<span class="searchindex-highlight">${2}</span>${3}';
         foreach ($arrPattern as $pattern) {
-            $pattern  = '/(.*)(' . $pattern . ')(?![^<>]*[>\'])(.*)/iU';
+            $pattern = '/(.*)('.$pattern.')(?![^<>]*[>])(.*)/iU';
             $replacement = preg_replace($pattern, $replace, $subject);
             $subject = $replacement;
         }
@@ -130,16 +131,17 @@ class Mirasvit_SearchIndex_Helper_Highlighter extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Escape special chars in regex
+     * Escape special chars in regex.
      *
-     * @param  string $chars
+     * @param string $chars
+     *
      * @return string $chars
      */
     public function escapeSpecialChars($chars)
     {
-        $search  = array('\\', '/', '^', '[', ']', '-', ')', '(', '.', '?', '+');
-        $replace = array('\\\\', '\/', '\^', '\[', '\]', '\-', '\)', '\(', '\.', '\?', '\+');
+        $search = array('\\', '/', '^', '[', '{', '-', '(', ')', '.', '?', '+', '|', '*');
+        $replace = array('\\\\', '\/', '\^', '\[', '\{', '\-', '\(', '\)', '\.', '\?', '\+', '\|', '\*');
 
         return str_replace($search, $replace, $chars);
     }
-} 
+}

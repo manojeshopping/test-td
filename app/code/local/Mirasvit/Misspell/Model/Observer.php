@@ -10,20 +10,27 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Model_Observer
 {
     public function onPostdispatchCatalogsearchResultIndex($observer)
     {
         $queryHelper = Mage::helper('misspell/query');
+
+        $messageRoute404 = Mage::getSingleton('core/session')->getData('route404');
+
+        if (!empty($messageRoute404)) {
+            Mage::getSingleton('core/session')->unsetData('route404');
+            Mage::getSingleton('core/session')->addNotice($messageRoute404);
+        }
 
         if ($queryHelper->getCountResult($queryHelper->getCurrentPhase()) == 0) {
             $result = $this->doSpellCorrection();
@@ -40,7 +47,7 @@ class Mirasvit_Misspell_Model_Observer
         if (!Mage::getStoreConfig('misspell/general/misspell')) {
             return false;
         }
-        $queryHelper  = Mage::helper('misspell/query');
+        $queryHelper = Mage::helper('misspell/query');
         $currentPhase = $queryHelper->getCurrentPhase();
 
         $suggestedPhase = $queryHelper->suggestMisspellPhase($currentPhase);
@@ -68,7 +75,7 @@ class Mirasvit_Misspell_Model_Observer
             return false;
         }
 
-        $queryHelper  = Mage::helper('misspell/query');
+        $queryHelper = Mage::helper('misspell/query');
         $currentPhase = $queryHelper->getCurrentPhase();
 
         $suggestedPhase = $queryHelper->suggestFallbackPhase($currentPhase);
@@ -77,7 +84,6 @@ class Mirasvit_Misspell_Model_Observer
             && $suggestedPhase != $queryHelper->getCurrentPhase()
             && $suggestedPhase != $queryHelper->getFallbackPhase()
             ) {
-
             $url = $queryHelper->getFallbackUrl($currentPhase, $suggestedPhase);
 
             Mage::app()->getFrontController()->getResponse()->setRedirect($url);

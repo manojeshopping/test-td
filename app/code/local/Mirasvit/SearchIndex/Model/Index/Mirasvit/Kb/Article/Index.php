@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Mirasvit_Kb_Article_Index extends Mirasvit_SearchIndex_Model_Index
@@ -39,12 +40,12 @@ class Mirasvit_SearchIndex_Model_Index_Mirasvit_Kb_Article_Index extends Mirasvi
 
     public function getAvailableAttributes()
     {
-         $result = array(
-            'name'              => Mage::helper('searchindex')->__('Name'),
-            'text'              => Mage::helper('searchindex')->__('Text'),
-            'meta_title'        => Mage::helper('searchindex')->__('Meta Title'),
-            'meta_keywords'     => Mage::helper('searchindex')->__('Meta Keywords'),
-            'meta_description'  => Mage::helper('searchindex')->__('Meta Description'),
+        $result = array(
+            'name' => Mage::helper('searchindex')->__('Name'),
+            'text' => Mage::helper('searchindex')->__('Text'),
+            'meta_title' => Mage::helper('searchindex')->__('Meta Title'),
+            'meta_keywords' => Mage::helper('searchindex')->__('Meta Keywords'),
+            'meta_description' => Mage::helper('searchindex')->__('Meta Description'),
         );
 
         return $result;
@@ -56,6 +57,7 @@ class Mirasvit_SearchIndex_Model_Index_Mirasvit_Kb_Article_Index extends Mirasvi
         $collection->addFieldToFilter('main_table.is_active', 1);
 
         $this->joinMatched($collection, 'main_table.article_id');
+
         return $collection;
     }
 }

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Config
@@ -21,20 +22,20 @@ class Mirasvit_SearchIndex_Model_Config
     {
         $expressions = array();
 
-        $matchExpr   = Mage::getStoreConfig('searchsphinx/merge/match_expr');
+        $matchExpr = Mage::getStoreConfig('searchsphinx/merge/match_expr');
         $replaceExpr = Mage::getStoreConfig('searchsphinx/merge/replace_expr');
         $replaceChar = Mage::getStoreConfig('searchsphinx/merge/replace_char');
 
-        $matchExpr   = explode('|', $matchExpr);
+        $matchExpr = explode('|', $matchExpr);
         $replaceExpr = explode('|', $replaceExpr);
         $replaceChar = explode('|', $replaceChar);
 
         foreach ($matchExpr as $indx => $match) {
             if (isset($replaceExpr[$indx]) && isset($replaceChar[$indx]) && $match) {
                 $expressions[] = array(
-                    'match'   => $match,
+                    'match' => $match,
                     'replace' => $replaceExpr[$indx],
-                    'char'    => $replaceChar[$indx],
+                    'char' => $replaceChar[$indx],
                 );
             }
         }
@@ -55,5 +56,15 @@ class Mirasvit_SearchIndex_Model_Config
     public function isRelatedTermsEnabled()
     {
         return (bool) Mage::getStoreConfig('searchsphinx/advanced/related_terms');
+    }
+
+    public function isRedirectEnabled()
+    {
+        return (bool) Mage::getStoreConfig('searchsphinx/multistore/redirect');
+    }
+
+    public function isSearchOn404Enabled()
+    {
+        return (bool) Mage::getStoreConfig('searchsphinx/noroute/enabled');
     }
 }

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Helper_Help extends Mirasvit_MstCore_Helper_Help
@@ -20,18 +21,18 @@ class Mirasvit_SearchIndex_Helper_Help extends Mirasvit_MstCore_Helper_Help
     protected $_help = array(
         'index_edit_form' => array(
             'index_code' => 'The type of content for searching',
-            'title'      => 'Title of this index in the search results.',
-            'position'   => 'Position of this index in the search results tabs.',
-            'is_active'  => '',
+            'title' => 'Title of this index in the search results.',
+            'position' => 'Position of this index in the search results tabs.',
+            'is_active' => '',
         ),
 
         'index_edit_index_mage_catalog_product_additional' => array(
-            'include_category'       => 'If option enabled, customer can find a product by it\'s parent categories.',
-            'include_bundled'        => 'If option enabled, customer can find bundled or grouped product by information from it\'s associated products.',
-            'include_tag'            => 'If option enabled, customer can find product by related tags.',
-            'include_id'             => 'If option enabled, customer can find product by product id (entity_id).',
+            'include_category' => 'If option enabled, customer can find a product by it\'s parent categories.',
+            'include_bundled' => 'If option enabled, customer can find bundled or grouped product by information from it\'s associated products.',
+            'include_tag' => 'If option enabled, customer can find product by related tags.',
+            'include_id' => 'If option enabled, customer can find product by product id (entity_id).',
             'include_custom_options' => 'If option enabled, customer can find product by product custom options (SKU and title)',
-            'out_of_stock_to_end'    => 'If option enabled, "out of stock" products will be displayed at end of list',
+            'out_of_stock_to_end' => 'If option enabled, "out of stock" products will be displayed at end of list',
         ),
 
         'index_edit_index_mage_cms_page_additional' => array(
@@ -40,7 +41,7 @@ class Mirasvit_SearchIndex_Helper_Help extends Mirasvit_MstCore_Helper_Help
 
         'index_edit_index_external_database' => array(
             'db_connection_name' => 'Database connection name defined at app/etc/local.xml (ex. wordpress_setup)',
-            'db_table_prefix'    => 'Table prefix for connection. Leave empty, if tables without prefix (ex. wp_, mag_)'
+            'db_table_prefix' => 'Table prefix for connection. Leave empty, if tables without prefix (ex. wp_, mag_)',
         ),
 
         'index_edit_index_external_url' => array(

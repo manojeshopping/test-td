@@ -10,31 +10,29 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Adminhtml_System_ActionController extends Mage_Adminhtml_Controller_Action
 {
-    /**
-     * Temporarily allow access for all users
-     */
-    protected function _isAllowed() {
-        return true;
-    }
-
     public function reindexAction()
     {
         try {
             $cntWords = Mage::getModel('misspell/indexer')->reindexAll();
             $this->getResponse()->setBody('Reindex completed! Total words: '.$cntWords);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->getResponse()->setBody(nl2br($e->getMessage()));
         }
     }
+
+	protected function _isAllowed()
+	{
+		return true;
+	}
 }

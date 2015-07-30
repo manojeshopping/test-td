@@ -10,19 +10,19 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
-     * ÐÐ¾Ð²ÑÐ°ÑÐ°ÐµÑ Ð¾Ð±ÑÐµÐºÑ Ð¿Ð¾Ð¸ÑÐºÐ¾Ð²Ð¾Ð³Ð¾ Ð´Ð²Ð¸Ð¶ÐºÐ° (Sphinx (External), Sphinx Native Ð¸Ð»Ð¸ Fulltext)
+     * Воврашает объект поискового движка (Sphinx (External), Sphinx Native или Fulltext).
      *
      * @return object
      */
@@ -50,11 +50,11 @@ class Mirasvit_SearchSphinx_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * ÐÑÐ¾Ð²ÐµÑÑÐµÑ, ÑÐ²Ð»ÑÐµÑÑÑÑ Ð»Ð¸ ÑÐ»Ð¾Ð²Ð¾ Ð¸ÑÐºÐ»ÑÑÐµÐ½Ð¸ÐµÐ¼ Ð¸Ð· wildcard
+     * Проверяет, являеться ли слово исключением из wildcard.
      *
-     * @param  string  $word
+     * @param string $word
      *
-     * @return boolean
+     * @return bool
      */
     public function isWildcardException($word)
     {

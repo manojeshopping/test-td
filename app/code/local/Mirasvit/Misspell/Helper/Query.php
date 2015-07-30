@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Helper_Query extends Mage_Core_Helper_Abstract
 {
@@ -53,7 +53,7 @@ class Mirasvit_Misspell_Helper_Query extends Mage_Core_Helper_Abstract
     public function suggestMisspellPhase($phase)
     {
         if (!isset($this->_suggests[$phase])) {
-            $model  = Mage::getModel('misspell/suggest')->loadByQuery($phase);
+            $model = Mage::getModel('misspell/suggest')->loadByQuery($phase);
             $result = $model->getSuggest();
 
             $stringHelper = Mage::helper('misspell/string');
@@ -77,12 +77,13 @@ class Mirasvit_Misspell_Helper_Query extends Mage_Core_Helper_Abstract
             foreach ($combinations as $combination) {
                 $newQuery = $phase;
                 foreach ($combination as $word) {
-                    $newQuery   = str_replace($word, '', $newQuery);
+                    $newQuery = str_replace($word, '', $newQuery);
                     $cntResults = $this->getCountResult($newQuery, $storeId);
 
                     if ($cntResults > 0) {
                         // remove extra spaces
                         $newQuery = preg_replace('/\s{2,}/', ' ', $newQuery);
+
                         return trim($newQuery);
                     }
                 }
@@ -114,7 +115,7 @@ class Mirasvit_Misspell_Helper_Query extends Mage_Core_Helper_Abstract
         return $cntResults;
     }
 
-    protected $_combResult      = array();
+    protected $_combResult = array();
     protected $_combCombination = array();
 
     protected function _fallbackCombinations(array $array, $choose)
@@ -127,7 +128,6 @@ class Mirasvit_Misspell_Helper_Query extends Mage_Core_Helper_Abstract
 
     protected function _inner($start, $choose, $arr, $n)
     {
-
         if ($choose == 0) {
             array_push($this->_combResult, $this->_combCombination);
         } else {

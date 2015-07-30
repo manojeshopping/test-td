@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchLandingPage_Model_Page extends Mage_Core_Model_Abstract
@@ -27,11 +28,12 @@ class Mirasvit_SearchLandingPage_Model_Page extends Mage_Core_Model_Abstract
         $page = $this->getCollection()
             ->addFieldToFilter('url_key', $identifier)
             ->addFieldToFilter('is_active', 1)
+            ->addStoreFilter(Mage::app()->getStore()->getId())
             ->getFirstItem();
 
-       	if ($page->getId()) {
+        if ($page->getId()) {
             return $page;
-       	}
+        }
 
         return false;
     }

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
@@ -24,9 +25,9 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Form extends Mage_Adminhtm
         $model = Mage::registry('current_model');
 
         $form = new Varien_Data_Form(array(
-            'id'      => 'edit_form',
-            'action'  => $this->getData('action'),
-            'method'  => 'post',
+            'id' => 'edit_form',
+            'action' => $this->getData('action'),
+            'method' => 'post',
             'enctype' => 'multipart/form-data',
         ));
 
@@ -34,56 +35,56 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Form extends Mage_Adminhtm
 
         if ($model->getId()) {
             $general->addField('index_id', 'hidden', array(
-                'name'      => 'index_id',
-                'value'     => $model->getId(),
+                'name' => 'index_id',
+                'value' => $model->getId(),
             ));
         }
 
         $general->addField('store_id', 'hidden', array(
-            'name'  => 'store_id',
-            'value' => (int)$this->getRequest()->getParam('store')
+            'name' => 'store_id',
+            'value' => (int) $this->getRequest()->getParam('store'),
         ));
 
         $general->addField('index_code', 'select', array(
-            'label'    => Mage::helper('searchindex')->__('Index'),
+            'label' => Mage::helper('searchindex')->__('Index'),
             'required' => true,
-            'name'     => 'index_code',
-            'value'    => $model->getIndexCode(),
-            'values'   => Mage::getSingleton('searchindex/system_config_source_index')->toOptionArray(),
+            'name' => 'index_code',
+            'value' => $model->getIndexCode(),
+            'values' => Mage::getSingleton('searchindex/system_config_source_index')->toOptionArray(),
             'disabled' => $model->getIndexCode() ? true : false,
-            'note'     => Mage::helper('searchindex/help')->field('index_code')
+            'note' => Mage::helper('searchindex/help')->field('index_code'),
         ));
 
         $general->addField('title', 'text', array(
-            'name'               => 'title',
-            'label'              => Mage::helper('searchindex')->__('Title'),
-            'required'           => true,
-            'value'              => $model->getTitle(),
+            'name' => 'title',
+            'label' => Mage::helper('searchindex')->__('Title'),
+            'required' => true,
+            'value' => $model->getTitle(),
             'after_element_html' => ' [STORE VIEW]',
         ));
 
         $general->addField('position', 'text', array(
-            'name'     => 'position',
-            'label'    => Mage::helper('searchindex')->__('Position'),
+            'name' => 'position',
+            'label' => Mage::helper('searchindex')->__('Position'),
             'required' => true,
-            'value'    => $model->getPosition(),
-            'note'     => Mage::helper('searchindex/help')->field('position')
+            'value' => $model->getPosition(),
+            'note' => Mage::helper('searchindex/help')->field('position'),
         ));
 
         if (!$model->getId()
             || !$model->getIndexInstance()->isLocked()) {
             $general->addField('is_active', 'select', array(
-                'name'     => 'is_active',
-                'label'    => Mage::helper('searchindex')->__('Active'),
+                'name' => 'is_active',
+                'label' => Mage::helper('searchindex')->__('Active'),
                 'required' => true,
-                'value'    => $model->getIsActive(),
-                'values'   => Mage::getSingleton('adminhtml/system_config_source_yesno')->toOptionArray(),
-                'note'     => Mage::helper('searchindex/help')->field('is_active')
+                'value' => $model->getIsActive(),
+                'values' => Mage::getSingleton('adminhtml/system_config_source_yesno')->toOptionArray(),
+                'note' => Mage::helper('searchindex/help')->field('is_active'),
             ));
         } elseif ($model->getIndexInstance()->isLocked()) {
             $general->addField('is_active', 'hidden', array(
-                'name'     => 'is_active',
-                'value'    => 1
+                'name' => 'is_active',
+                'value' => 1,
             ));
         }
 
@@ -91,12 +92,13 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Form extends Mage_Adminhtm
             // adding attribute fieldset
             $attributes = $form->addFieldset('attributes',
                 array('legend' => Mage::helper('searchindex')->__('Attributes')));
-            
+
             $renderer = $this->getLayout()->createBlock('adminhtml/widget_form_renderer_fieldset')
                 ->setTemplate('searchindex/form/renderer/fieldset/attributes.phtml')
                 ->setAvailableAttributes($model->getIndexInstance()->getAvailableAttributes())
-                ->setAttributes($model->getAttributes());
-            
+                ->setAttributes($model->getAttributes())
+                ->setIndexCode($model->getIndexInstance()->getCode());
+
             $attributes->setName('attributes')
                 ->setRenderer($renderer);
 
@@ -116,5 +118,4 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Form extends Mage_Adminhtm
 
         return parent::_prepareForm();
     }
-
 }

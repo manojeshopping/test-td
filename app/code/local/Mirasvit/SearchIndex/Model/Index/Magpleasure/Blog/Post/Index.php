@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Magpleasure_Blog_Post_Index extends Mirasvit_SearchIndex_Model_Index
@@ -39,12 +40,12 @@ class Mirasvit_SearchIndex_Model_Index_Magpleasure_Blog_Post_Index extends Miras
 
     public function getAvailableAttributes()
     {
-         $result = array(
-            'title'            => Mage::helper('searchindex')->__('Title'),
-            'short_content'    => Mage::helper('searchindex')->__('Short Content'),
-            'full_content'     => Mage::helper('searchindex')->__('Full Content'),
-            'meta_title'       => Mage::helper('searchindex')->__('Meta Title'),
-            'meta_tags'        => Mage::helper('searchindex')->__('Meta Tags'),
+        $result = array(
+            'title' => Mage::helper('searchindex')->__('Title'),
+            'short_content' => Mage::helper('searchindex')->__('Short Content'),
+            'full_content' => Mage::helper('searchindex')->__('Full Content'),
+            'meta_title' => Mage::helper('searchindex')->__('Meta Title'),
+            'meta_tags' => Mage::helper('searchindex')->__('Meta Tags'),
             'meta_description' => Mage::helper('searchindex')->__('Meta Description'),
         );
 

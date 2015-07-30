@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Indexer extends Mirasvit_SearchIndex_Model_Indexer_Abstract
@@ -21,7 +22,7 @@ class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Indexer extends M
     {
         Mage::register('searchindex_wordpress_index', $this->getIndexModel(), true);
 
-        $resource   = Mage::getSingleton('core/resource');
+        $resource = Mage::getSingleton('core/resource');
         $connection = $resource->getConnection('core_read');
         $collection = Mage::getModel('searchindex/index_external_wordpress_post_collection');
 

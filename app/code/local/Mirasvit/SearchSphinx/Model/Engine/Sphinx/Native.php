@@ -10,37 +10,37 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
- * ÐÐ»Ð°ÑÑ ÑÐµÐ°Ð»Ð¸Ð·ÑÐµÑ Ð¼ÐµÑÐ¾Ð´Ñ Ð´Ð»Ñ ÑÐ°Ð±Ð¾ÑÑ ÑÐ¾ ÑÑÐ¸Ð½ÐºÑÐ¾Ð¼ Ð½Ð° ÑÐ¾Ð¼Ð¶Ðµ ÑÐµÑÐ²ÐµÑÐµ ÑÑÐ¾ Ð¸ magento
- * ÐÐ¾Ð¿Ð¾Ð»Ð½ÑÐµÑ Ð±Ð°Ð·Ð¾Ð²ÑÐ¹ ÐºÐ»Ð°ÑÑ Mirasvit_SearchSphinx_Model_Engine_Sphinx Ð¼ÐµÑÐ¾Ð´Ð°Ð¼Ð¸ ÑÐ¿ÑÐ°Ð²Ð»ÐµÐ½Ð¸Ñ Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð¼ Ð¸ Ð´ÐµÐ¼Ð¾Ð½Ð¾Ð¼
- * reindex/delta reindex/stop/start
+ * Класс реализует методы для работы со сфинксом на томже сервере что и magento
+ * Дополняет базовый класс Mirasvit_SearchSphinx_Model_Engine_Sphinx методами управления индексом и демоном
+ * reindex/delta reindex/stop/start.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSphinx_Model_Engine_Sphinx
 {
-    const SEARCHD                 = 'searchd';
-    const INDEXER                 = 'indexer';
+    const SEARCHD = 'searchd';
+    const INDEXER = 'indexer';
     const REINDEX_SUCCESS_MESSAGE = 'rotating indices: succesfully sent SIGHUP to searchd';
 
-    protected $_indexerCommand    = null;
-    protected $_searchdCommand    = null;
+    protected $_indexerCommand = null;
+    protected $_searchdCommand = null;
 
     /**
-     * Ð£ÑÑÐ°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¿ÐµÑÐµÐ¼ÐµÐ½Ð½ÑÐ¹ ÑÐ²Ð¾Ð¹ÑÑÐ²ÐµÐ½Ð½ÑÐµ Ð´Ð»Ñ Ð»Ð¾ÐºÐ°Ð»ÑÐ½Ð¾ ÑÑÐ¸Ð½ÐºÑÐ°
+     * Устанавливаем переменный свойственные для локально сфинкса.
      */
     public function __construct()
     {
         parent::__construct();
 
         $binPath = Mage::getStoreConfig('searchsphinx/general/bin_path');
-        // ÐµÑÐ»Ð¸ Ð² Ð¿ÑÑÐ¸ ÐµÑÑÑ searchd, ÑÐ±ÐµÑÐ°ÐµÐ¼ ÐµÐ³Ð¾
+        // если в пути есть searchd, убераем его
         if (substr($binPath, strlen($binPath) - strlen(self::SEARCHD)) == self::SEARCHD) {
             $binPath = substr($binPath, 0, strlen($binPath) - strlen(self::SEARCHD));
         }
@@ -48,31 +48,31 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
         $this->_indexerCommand = $binPath.self::INDEXER;
         $this->_searchdCommand = $binPath.self::SEARCHD;
 
-        $this->_spxHost        = Mage::getStoreConfig('searchsphinx/general/host');
-        $this->_spxPort        = Mage::getStoreConfig('searchsphinx/general/port');
+        $this->_spxHost = Mage::getStoreConfig('searchsphinx/general/host');
+        $this->_spxPort = Mage::getStoreConfig('searchsphinx/general/port');
 
-        $this->_spxHost        = $this->_spxHost ? $this->_spxHost : 'localhost';
-        $this->_spxPort        = intval($this->_spxPort ? $this->_spxPort : '9315');
+        $this->_spxHost = $this->_spxHost ? $this->_spxHost : 'localhost';
+        $this->_spxPort = intval($this->_spxPort ? $this->_spxPort : '9315');
 
-        $this->_basePath       = Mage::getBaseDir('var').DS.'sphinx';
+        $this->_basePath = Mage::getBaseDir('var').DS.'sphinx';
 
         return $this;
     }
 
     /**
-     * ÐÐµÑÐµÐ¸Ð½Ð´ÐµÐºÑÐ°ÑÐ¸Ñ - Ð¾ÑÐ¿ÑÐ°Ð²ÐºÐ° http Ð·Ð°Ð¿ÑÐ¾ÑÐ°
+     * Переиндексация - отправка http запроса.
      *
-     * @param  boolean $delta Ð²ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÑ Ð´ÐµÐ»ÑÐ°-ÑÐµÐ¸Ð½Ð´ÐµÐºÑ
+     * @param bool $delta выполнить делта-реиндекс
      *
      * @return string
      */
     public function reindex($delta = false)
     {
-        return $this->_request('reindex');
+        return $this->_request('reindex/delta/'.$delta);
     }
 
     /**
-     * ÐÐ°Ð¿ÑÑÐº Ð´ÐµÐ¼Ð¾Ð½Ð° - Ð¾ÑÐ¿ÑÐ°Ð²ÐºÐ° http Ð·Ð°Ð¿ÑÐ¾ÑÐ°
+     * Запуск демона - отправка http запроса.
      */
     public function start()
     {
@@ -86,7 +86,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÑÐ°Ð½Ð¾Ð²ÐºÐ° Ð´ÐµÐ¼Ð¾Ð½Ð° - Ð¾ÑÐ¿ÑÐ°Ð²ÐºÐ° http Ð·Ð°Ð¿ÑÐ¾ÑÐ°
+     * Остановка демона - отправка http запроса.
      */
     public function stop()
     {
@@ -100,7 +100,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * Ð ÐµÑÑÐ°ÑÑ Ð´ÐµÐ¼Ð¾Ð½Ð° - Ð¾ÑÐ¿ÑÐ°Ð²ÐºÐ° 2Ñ http Ð·Ð°Ð¿ÑÐ¾ÑÐ¾Ð² (ÑÑÐ¾Ð¿, ÑÑÐ°ÑÑ)
+     * Рестарт демона - отправка 2х http запросов (стоп, старт).
      */
     public function restart()
     {
@@ -111,9 +111,9 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÐ¿Ð¾Ð»Ð½ÑÐµÑ ÑÐµÐ¸Ð½Ð´ÐµÐºÑ Ð²ÑÐµÑ Ð°ÐºÑÐ¸Ð²Ð½ÑÑ Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð²
+     * Выполняет реиндекс всех активных индексов.
      *
-     * @param  boolean $delta Ð²ÑÐ¿Ð¾Ð»Ð½Ð¸ÑÑ Ð´ÐµÐ»ÑÐ°-ÑÐµÐ¸Ð½Ð´ÐµÐºÑ
+     * @param bool $delta выполнить делта-реиндекс
      *
      * @return string
      */
@@ -136,8 +136,8 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
                 $toReindex[] = $indexCode;
             }
 
-            $exec   = $this->_exec($this->_indexerCommand.' --config '.$this ->_configFilepath.' --rotate '.implode(' ', $toReindex));
-            $result = ($exec['status'] == 0) || (strpos($exec['data'], self::REINDEX_SUCCESS_MESSAGE) !== FALSE);
+            $exec = $this->_exec($this->_indexerCommand.' --config '.$this->_configFilepath.' --rotate '.implode(' ', $toReindex));
+            $result = ($exec['status'] == 0) || (strpos($exec['data'], self::REINDEX_SUCCESS_MESSAGE) !== false);
 
             if (!$result) {
                 Mage::throwException('Error on reindex '.$exec['data']);
@@ -155,7 +155,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÐ¿Ð¾Ð»Ð½ÑÐµÑ Ð·Ð°Ð¿ÑÑÐº Ð´ÐµÐ¼Ð¾Ð½Ð°
+     * Выполняет запуск демона.
      */
     public function doStart()
     {
@@ -166,7 +166,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
         }
 
         if (!is_readable($this->_configFilepath)) {
-            Mage::throwException("Please run full reindex, before start sphinx daemon");
+            Mage::throwException('Please run full reindex, before start sphinx daemon');
         }
 
         $command = $this->_searchdCommand.' --config '.$this->_configFilepath;
@@ -179,14 +179,14 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÐ¿Ð¾Ð»Ð½ÑÐµÑ Ð¾ÑÑÐ°Ð½Ð¾Ð²ÐºÑ Ð´ÐµÐ¼Ð¾Ð½Ð°
+     * Выполняет остановку демона.
      */
     public function doStop()
     {
-        $find    = 'ps aux | grep searchd | grep '.$this->_configFilepath.'  | awk \'{print $2}\'';
+        $find = 'ps aux | grep searchd | grep '.$this->_configFilepath.'  | awk \'{print $2}\'';
         $exec = $this->_exec($find);
 
-        foreach(explode(PHP_EOL, $exec['data']) as $id) {
+        foreach (explode(PHP_EOL, $exec['data']) as $id) {
             $command = 'kill -9 '.$id;
             $this->_exec($command);
         }
@@ -195,9 +195,9 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÐ¾Ð²ÐµÑÑÐµÑ Ð·Ð°Ð¿ÑÑÐµÐ½-Ð»Ð¸ ÑÐµÐ¸Ð½Ð´ÐµÐºÑ
+     * Проверяет запущен-ли реиндекс.
      *
-     * @return boolean
+     * @return bool
      */
     public function isIndexerRunning()
     {
@@ -209,6 +209,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
             $pos = strpos($exec['data'], '--rotate');
             if ($pos !== false) {
                 $status = $exec['data'];
+
                 return $status;
             }
         }
@@ -217,9 +218,9 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÐ¾Ð²ÐµÑÑÐµÑ Ð·Ð°Ð¿ÑÑÐµÐ½-Ð»Ð¸ Ð´ÐµÐ¼Ð¾Ð½
+     * Проверяет запущен-ли демон.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSearchdRunning()
     {
@@ -238,9 +239,9 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÐ¾Ð²ÐµÑÑÑ Ð½Ð°Ð¹Ð´ÐµÐ½-Ð»Ð¸ Ð½Ð° ÑÐµÑÐ²ÐµÑ ÑÑÐ¸Ð½ÐºÑ (searchd)
+     * Проверят найден-ли на сервер сфинкс (searchd).
      *
-     * @return boolean
+     * @return bool
      */
     public function isSphinxFounded()
     {
@@ -254,31 +255,31 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÐ°Ð¿ÑÑÐºÐ°ÐµÑ Ð¾Ð±ÑÐµÐ´ÐµÐ½ÐµÐ½Ð¸Ðµ Ð¾ÑÐ½Ð¾Ð²Ð½Ð¾Ð³Ð¾ Ð¸Ð½Ð´ÐµÐºÑÐ° Ñ Ð´ÐµÐ»ÑÐ°-Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð¼
-     * Ð´Ð»Ñ Ð²ÑÐµÑ Ð°ÐºÑÐ¸Ð²Ð½ÑÑ Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð²
+     * Запускает объеденение основного индекса с делта-индексом
+     * для всех активных индексов.
      */
     public function mergeDeltaWithMain()
     {
         $indexes = Mage::helper('searchindex/index')->getIndexes();
         foreach ($indexes as $index) {
-            $exec = $this->_exec($this->_indexerCommand.' --config '.$this ->_configFilepath.' --merge '.$index->getCode().' delta_'.$index->getCode().' --merge-dst-range deleted 0 0 --rotate');
+            $exec = $this->_exec($this->_indexerCommand.' --config '.$this->_configFilepath.' --merge '.$index->getCode().' delta_'.$index->getCode().' --merge-dst-range deleted 0 0 --rotate');
         }
 
         return $this;
     }
 
     /**
-     * ÐÑÐ¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ php ÐºÐ¾Ð¼Ð¼Ð°Ð½Ð´Ñ exec() Ñ Ð¿ÑÐ¾Ð²ÐµÑÐºÐ¾Ð¹ Ð½Ð° ÑÑÑÐµÑÑÐ²Ð¾Ð²Ð°Ð½Ð¸Ðµ ÑÑÐ½ÐºÑÐ¸Ð¸
-     * ÐÐ° Ð½ÐµÐºÐ¾ÑÐ¾ÑÑÑ ÑÐµÑÐ²ÐµÑÐ°Ñ ÑÑÐ½ÐºÑÐ¸Ñ Ð½Ð°ÑÐ¾Ð´Ð¸ÑÑÑÑ Ð² Ð¸Ð³Ð½Ð¾Ñ-Ð»Ð¸ÑÑÐµ. Ð ÑÑÐ¾Ð¼ ÑÐ»ÑÑÐ°Ðµ ÐµÐµ Ð½Ð°Ð´Ð¾ Ð²ÐºÐ»ÑÑÐ¸ÑÑ ÑÐµÑÐµÐ· php.ini
+     * Выполнение php комманды exec() с проверкой на существование функции
+     * На некоторых серверах функция находиться в игнор-листе. В этом случае ее надо включить через php.ini.
      *
-     * @param  string $command ÐºÐ¾Ð¼Ð¼Ð°Ð½Ð´ÑÐ°
+     * @param string $command коммандра
      *
      * @return array
      */
     protected function _exec($command)
     {
         $status = null;
-        $data   = array();
+        $data = array();
 
         if (function_exists('exec')) {
             exec($command, $data, $status);
@@ -293,10 +294,11 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * ÐÑÐ¿ÑÐ°Ð²Ð»ÑÐµÑ http Ð·Ð°Ð¿ÑÐ¾Ñ Ð½Ð° ÐºÐ¾Ð½ÑÑÐ¾Ð»ÐµÐµÑ ÑÐ°ÑÑÐ¸ÑÐµÐ½Ð¸Ñ
-     * Ð¢Ð°ÐºÐ¸Ð¼ Ð¾Ð±ÑÐ°Ð·Ð¾Ð¼ Ð²ÑÐµ Ð´ÐµÐ¹ÑÑÐ²Ð¸Ñ ÑÐ¾ ÑÑÐ¸Ð½ÐºÑÐ¾Ð¼ Ð²ÑÐ¿Ð¾Ð»Ð½ÑÑÑÑÑÑ Ð¾Ñ apache Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»Ñ
+     * Отправляет http запрос на контролеер расширения
+     * Таким образом все действия со сфинксом выполняються от apache пользователя.
      *
-     * @param  string $command ÐºÐ¾Ð¼Ð¼Ð°Ð½Ð´Ð° (ÑÑÐ°ÑÑ\ÑÑÐ¾Ð¿\ÑÐµÐ¸Ð½Ð´ÐµÐºÑ)
+     * @param string $command комманда (старт\стоп\реиндекс)
+     *
      * @return string
      */
     protected function _request($command)
@@ -306,8 +308,8 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
 
         Mage::register('custom_entry_point', true, true);
 
-        $store  = Mage::app()->getStore(0);
-        $url    = $store->getUrl('searchsphinx/action/'.$command);
+        $store = Mage::app()->getStore(0);
+        $url = $store->getUrl('searchsphinx/action/'.$command, array('_query' => array('rand' => microtime(true))));
         $result = $httpClient->setUri($url)->request()->getBody();
 
         Mage::helper('mstcore/logger')->log($this, __FUNCTION__, $url."\n".$result);
@@ -316,16 +318,16 @@ class Mirasvit_SearchSphinx_Model_Engine_Sphinx_Native extends Mirasvit_SearchSp
     }
 
     /**
-     * Define sphinx version
+     * Define sphinx version.
      *
      * @return string $version
      */
     public function getSphinxVersion()
     {
         $version = '2.0';
-        $cmd     = 'searchd --help';
-        $exec    = $this->_exec($cmd);
-        $res     = preg_match('/Sphinx[\s]?([\d.]*)([\s\w\d.-]*)?/i', $exec['data'], $match);
+        $cmd = $this->_searchdCommand.' --help';
+        $exec = $this->_exec($cmd);
+        $res = preg_match('/Sphinx[\s]?([\d.]*)([\s\w\d.-]*)?/i', $exec['data'], $match);
         if ($res === 1 && ($match[1] != '' || null != $match[1])) {
             if ($match[1] > 2.1) {
                 $version = '2.2';

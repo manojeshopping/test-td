@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Mage_Cms_Page_Index extends Mirasvit_SearchIndex_Model_Index
@@ -21,7 +22,7 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Cms_Page_Index extends Mirasvit_Sear
     {
         return 'Magento';
     }
-    
+
     public function getBaseTitle()
     {
         return 'Cms Pages';
@@ -35,18 +36,18 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Cms_Page_Index extends Mirasvit_Sear
     public function getFieldsets()
     {
         return array(
-            'Mage_Cms_Page_Additional'
+            'Mage_Cms_Page_Additional',
         );
     }
 
     public function getAvailableAttributes()
     {
-         $result = array(
-            'title'            => Mage::helper('searchindex')->__('Title'),
-            'meta_keywords'    => Mage::helper('searchindex')->__('Meta Keywords'),
+        $result = array(
+            'title' => Mage::helper('searchindex')->__('Title'),
+            'meta_keywords' => Mage::helper('searchindex')->__('Meta Keywords'),
             'meta_description' => Mage::helper('searchindex')->__('Meta Description'),
-            'content_heading'  => Mage::helper('searchindex')->__('Content Heading'),
-            'content'          => Mage::helper('searchindex')->__('Content'),
+            'content_heading' => Mage::helper('searchindex')->__('Content Heading'),
+            'content' => Mage::helper('searchindex')->__('Content'),
         );
 
         return $result;

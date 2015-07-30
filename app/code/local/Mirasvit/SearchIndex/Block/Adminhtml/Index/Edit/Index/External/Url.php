@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Index_External_Url extends Varien_Data_Form_Element_Fieldset
@@ -24,11 +25,11 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Index_External_Url extends
         parent::__construct(array('legend' => __('URL Settings')));
 
         $this->addField('url_template', 'text', array(
-            'name'     => 'properties[url_template]',
-            'label'    => __('Url Template'),
+            'name' => 'properties[url_template]',
+            'label' => __('Url Template'),
             'required' => true,
-            'value'    => $model->getProperty('url_template'),
-            'note'     => Mage::helper('searchindex/help')->field('url_template')
+            'value' => $model->getProperty('url_template'),
+            'note' => Mage::helper('searchindex/help')->field('url_template'),
         ));
 
         return parent::toHtml();

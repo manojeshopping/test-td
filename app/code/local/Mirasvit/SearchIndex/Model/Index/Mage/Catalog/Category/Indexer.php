@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Category_Indexer extends Mirasvit_SearchIndex_Model_Indexer_Abstract
@@ -20,7 +21,7 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Category_Indexer extends Mir
     protected function _getSearchableEntities($storeId, $entityIds, $lastEntityId, $limit = 100)
     {
         $rootCategoryId = Mage::app()->getStore($storeId)->getRootCategoryId();
-        $rootCategory   = Mage::getModel('catalog/category')->load($rootCategoryId);
+        $rootCategory = Mage::getModel('catalog/category')->load($rootCategoryId);
 
         $collection = Mage::getResourceModel('catalog/category_collection');
         $collection
@@ -49,16 +50,15 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Category_Indexer extends Mir
         $collection->getSelect()->group('entity_id');
 
         foreach ($collection as $category) {
-
-            $helper    = Mage::helper('cms');
+            $helper = Mage::helper('cms');
             $processor = $helper->getPageTemplateProcessor();
 
             $category->setDescription($processor->filter($category->getDescription()));
 
-            // Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ ÐºÐ¾Ð½ÑÐµÐ½Ñ ÑÑÐ°ÑÐ¸Ð½Ð¾Ð³Ð¾ Ð±Ð»Ð¾ÐºÐ°, ÑÐ²ÑÐ·Ð°Ð½Ð³Ð¾ Ñ ÐºÐ°ÑÐµÐ³Ð¾ÑÐ¸ÐµÐ¹
+            // добавляем контент стачиного блока, связанго с категорией
             if ($category->getLandingPage()) {
                 $cmsBlock = Mage::getModel('cms/block')->load($category->getLandingPage());
-                $text     = $cmsBlock->getContent();
+                $text = $cmsBlock->getContent();
 
                 $category->setDescription($category->getDescription().' '.$text);
             }

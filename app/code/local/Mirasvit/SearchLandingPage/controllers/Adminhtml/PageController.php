@@ -10,20 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchLandingPage_Adminhtml_PageController extends Mage_Adminhtml_Controller_Action
 {
-    /**
-     * Temporarily allow access for all users
-     */
-    protected function _isAllowed() {
-        return true;
-    }
-
     public function preDispatch()
     {
         parent::preDispatch();
@@ -63,20 +57,19 @@ class Mirasvit_SearchLandingPage_Adminhtml_PageController extends Mage_Adminhtml
 
         if ($model->getId()) {
             $this->_title(Mage::helper('searchlandingpage')->__('Edit Search Index "%s"', $model->getTitle()));
-            
+
             $this->_initAction()
                 ->_addContent($this->getLayout()->createBlock('searchlandingpage/adminhtml_page_edit'))
                 ->renderLayout();
         } else {
             Mage::getSingleton('adminhtml/session')->addError(Mage::helper('action')->__('The search index does not exist.'));
             $this->_redirect('*/*/');
-        } 
+        }
     }
 
     public function saveAction()
     {
         if ($data = $this->getRequest()->getPost()) {
-
             try {
                 $model = $this->_getModel();
                 $model->addData($data)
@@ -87,6 +80,7 @@ class Mirasvit_SearchLandingPage_Adminhtml_PageController extends Mage_Adminhtml
 
                 if ($this->getRequest()->getParam('back')) {
                     $this->_redirect('*/*/edit', array('id' => $model->getId()));
+
                     return;
                 }
 
@@ -126,4 +120,9 @@ class Mirasvit_SearchLandingPage_Adminhtml_PageController extends Mage_Adminhtml
 
         return $model;
     }
+
+	protected function _isAllowed()
+	{
+		return Mage::getSingleton('admin/session')->isAllowed('search/searchlandingpage_page');
+	}
 }

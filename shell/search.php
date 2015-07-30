@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 require_once 'abstract.php';
@@ -49,8 +50,8 @@ class Mirasvit_Shell_Search extends Mage_Shell_Abstract
 
     protected function _importSynonyms($file)
     {
-        $csv    = file_get_contents(Mage::getBaseDir('var').DS.'import'.DS.$file);
-        $data   = explode(PHP_EOL, $csv);
+        $csv = file_get_contents(Mage::getBaseDir('var').DS.'import'.DS.$file);
+        $data = explode(PHP_EOL, $csv);
         $result = array();
         $i = 0;
         foreach ($data as $value) {
@@ -70,19 +71,19 @@ class Mirasvit_Shell_Search extends Mage_Shell_Abstract
 
     protected function _importStopwords($file)
     {
-        $csv    = new Varien_File_Csv();
-        $data   = $csv->getData(Mage::getBaseDir('var').DS.'import'.DS.$file);
+        $csv = new Varien_File_Csv();
+        $data = $csv->getData(Mage::getBaseDir('var').DS.'import'.DS.$file);
         $result = array();
 
         foreach ($data as $value) {
             $result[] = array(
-                'stopword' => $value[0]
+                'stopword' => $value[0],
             );
         }
 
         if (strlen(serialize($result)) < 65535) {
             $config = new Mage_Core_Model_Config();
-            $config ->saveConfig('searchsphinx/advanced/stopwords', serialize($result), 'default', 0);
+            $config->saveConfig('searchsphinx/advanced/stopwords', serialize($result), 'default', 0);
         } else {
             return 'File too long';
         }
@@ -92,7 +93,6 @@ class Mirasvit_Shell_Search extends Mage_Shell_Abstract
 
     public function _validate()
     {
-
     }
 
     public function usageHelp()
@@ -103,8 +103,8 @@ Usage:  php -f search.php -- [options]
   --engine                      Get Current Engine Class Name
   --reindex                     Run sphinx reindex
   --reindex-delta               Run sphinx delta reindex
-  --import-synonyms <csv file>  Import synonyms 
-  --import-stopwords <csv file>  Import synonyms 
+  --import-synonyms <csv file>  Import synonyms
+  --import-stopwords <csv file>  Import synonyms
   help                          This help
 USAGE;
     }

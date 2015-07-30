@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ»Ð°ÑÑ Ð´Ð»Ñ Ð²ÑÑÐµÑÐ»ÐµÐ½Ð¸Ñ ÑÐ°ÑÑÐ¾ÑÐ½Ð¸Ñ Ð¼ÐµÐ¶Ð´Ñ Ð´Ð²ÑÐ¼Ñ ÑÑÑÐ¾ÐºÐ°Ð¼Ð¸ Ñ ÑÑÐµÑÐ¾Ð¼ Ð¿ÐµÑÐµÑÑÐ°Ð½Ð¾Ð²Ð¾Ðº
+ * Класс для вычесления растояния между двумя строками с учетом перестановок.
  *
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Model_Dameraulevenshtein extends Varien_Object
 {
@@ -39,17 +39,17 @@ class Mirasvit_Misspell_Model_Dameraulevenshtein extends Varien_Object
             return $len1;
         }
 
-        for ($i=0; $i <= $len1; $i++) {
-            $d[$i]    = array();
+        for ($i = 0; $i <= $len1; $i++) {
+            $d[$i] = array();
             $d[$i][0] = $i;
         }
 
-        for ($j=0; $j <= $len2; $j++) {
+        for ($j = 0; $j <= $len2; $j++) {
             $d[0][$j] = $j;
         }
 
-        for ($i=1; $i <= $len1; $i++) {
-            for ($j=1; $j <= $len2; $j++) {
+        for ($i = 1; $i <= $len1; $i++) {
+            for ($j = 1; $j <= $len2; $j++) {
                 $cost = substr($str1, $i - 1, 1) == substr($str2, $j - 1, 1) ? 0 : 1;
 
                 $d[$i][$j] = min($d[$i - 1][$j] + 1,                 // deletion
@@ -61,12 +61,14 @@ class Mirasvit_Misspell_Model_Dameraulevenshtein extends Varien_Object
                     $j > 1 &&
                     substr($str1, $i - 1, 1) == substr($str2, $j - 2, 1) &&
                     substr($str1, $i - 2, 1) == substr($str2, $j - 1, 1)
-                )
-                   $d[$i][$j] = min($d[$i][$j],
+                ) {
+                    $d[$i][$j] = min($d[$i][$j],
                                     $d[$i - 2][$j - 2] + $cost          // transposition
                                 );
+                }
             }
         }
+
         return $d[$len1][$len2];
     }
 
@@ -83,11 +85,13 @@ class Mirasvit_Misspell_Model_Dameraulevenshtein extends Varien_Object
         $len1 = Mage::helper('misspell/string')->strlen($str1);
         $len2 = Mage::helper('misspell/string')->strlen($str2);
 
-        if ($len1 == 0 && $len2 == 0)
+        if ($len1 == 0 && $len2 == 0) {
             return 100;
+        }
 
         $distance = $this->distance($str1, $str2);
-        $similarity = 100 - (int)round(200 * $distance / ($len1 + $len2));
+        $similarity = 100 - (int) round(200 * $distance / ($len1 + $len2));
+
         return $similarity >= 100 ? 100 : $similarity;
     }
 

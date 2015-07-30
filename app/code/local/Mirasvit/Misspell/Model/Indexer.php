@@ -10,16 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÑÐ²ÐµÑÐ°ÐµÑ Ð·Ð° Ð¿Ð¾ÑÑÑÐ¾ÐµÐ½Ð¸Ðµ Ð¸Ð½Ð´ÐµÐºÑÐ° ÑÐ»Ð¾Ð² (ÑÐ°Ð±Ð»Ð¸ÑÐ° m_misspell)
- *
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Model_Indexer extends Varien_Object
 {
@@ -32,12 +30,16 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
         'catalog_category_entity_varchar',
     );
 
+    protected $_dislikeTables = array(
+        'm_searchindex_mage_catalogsearch_query',
+    );
+
     public function reindexAll()
     {
-        $helper     = Mage::helper('misspell/string');
-        $resource   = Mage::getSingleton('core/resource');
+        $helper = Mage::helper('misspell/string');
+        $resource = Mage::getSingleton('core/resource');
         $connection = $resource->getConnection('core_write');
-        $tables     = $connection->listTables();
+        $tables = $connection->listTables();
         $preresults = array();
 
         $obj = new Varien_Object();
@@ -49,11 +51,17 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
         }
 
         foreach ($tables as $table) {
-            $like   = false;
+            $like = false;
 
             foreach ($this->_likeTables as $likeTable) {
                 if (strpos($table, $likeTable) !== false) {
                     $like = true;
+                }
+            }
+
+            foreach ($this->_dislikeTables as $dislikeTable) {
+                if (strpos($table, $dislikeTable) !== false) {
+                    $like = false;
                 }
             }
 
@@ -70,7 +78,7 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
                 $columns[$idx] = '`'.$col.'`';
             }
 
-            $select      = $connection->select();
+            $select = $connection->select();
             $fromColumns = new Zend_Db_Expr('CONCAT('.implode(",' ',", $columns).') as data_index');
             $select->from($table, $fromColumns);
 
@@ -89,7 +97,7 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
             $rows[] = array(
                 'keyword' => $word,
                 'trigram' => $helper->getTrigram($word),
-                'freq'    => $freq / count($preresults),
+                'freq' => $freq / count($preresults),
             );
 
             if (count($rows) > 1000) {
@@ -111,7 +119,7 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
     {
         $helper = Mage::helper('misspell/string');
         $string = $helper->cleanString($string);
-        $words  = $helper->splitWords($string, false, 0);
+        $words = $helper->splitWords($string, false, 0);
 
         foreach ($words as $word) {
             if ($helper->strlen($word) >= $helper->getGram()
@@ -129,7 +137,7 @@ class Mirasvit_Misspell_Model_Indexer extends Varien_Object
     protected function _getTextColumns($table)
     {
         $result = array();
-        $types  = array('text', 'varchar', 'mediumtext', 'longtext');
+        $types = array('text', 'varchar', 'mediumtext', 'longtext');
         $columns = Mage::getSingleton('core/resource')->getConnection('core_write')->describeTable($table);
         foreach ($columns as $column => $info) {
             if (in_array($info['DATA_TYPE'], $types)) {

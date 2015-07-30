@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Product_Index extends Mirasvit_SearchIndex_Model_Index
@@ -69,7 +70,7 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Product_Index extends Mirasv
     public function getFieldsets()
     {
         return array(
-            'Mage_Catalog_Product_Additional'
+            'Mage_Catalog_Product_Additional',
         );
     }
 
@@ -82,18 +83,18 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Product_Index extends Mirasv
             $result[$attribute->getAttributeCode()] = $attribute->getFrontendLabel();
         }
 
-        $result['tags']                      = __('Tags');
-        $result['category_name']             = __('Category');
-        $result['category_description']      = __('Category Description');
-        $result['category_meta_title']       = __('Category Meta Title');
-        $result['category_meta_keywords']    = __('Category Meta Keywords');
+        $result['tags'] = __('Tags');
+        $result['category_name'] = __('Category');
+        $result['category_description'] = __('Category Description');
+        $result['category_meta_title'] = __('Category Meta Title');
+        $result['category_meta_keywords'] = __('Category Meta Keywords');
         $result['category_meta_description'] = __('Category Meta Description');
 
         return $result;
     }
 
     /**
-     * After process search, we save count search resutls to query
+     * After process search, we save count search resutls to query.
      *
      * @return Mirasvit_SearchIndex_Model_Index_Catalog
      */
@@ -101,7 +102,7 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Product_Index extends Mirasv
     {
         parent::_processSearch($queryText, $storeId);
 
-        $query  = Mage::helper('catalogsearch')->getQuery();
+        $query = Mage::helper('catalogsearch')->getQuery();
         $query->setNumResults(count($this->_matchedIds[$queryText]))
             ->setIsProcessed(1)
             ->save();

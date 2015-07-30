@@ -71,14 +71,15 @@
             }
 
             .nav-down-arrow {
-                .sprite();
-                width: 9px;
-                height: 5px;
-                background-position: -26px -34px;
-                display: block;
                 right: 10px;
                 top: 16px;
                 position: absolute;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 5px 4.5px 0 4.5px;
+                border-color: #000000 transparent transparent transparent;
+                line-height: 0px;
             }
 
             &:hover {
@@ -244,6 +245,16 @@
                         color: #f00;
                     }
                 }
+
+                .ratings {
+                    margin: 0;
+                    line-height: 14px;
+
+                    .rating-box {
+                        float: left;
+                        margin: 0 5px 0 0;
+                    }
+                }
             }
         }
 
@@ -266,10 +277,85 @@
 
     .searchautocomplete-loader {
         position: absolute;
-        top: 11px;
+        .size(18px, 18px);
+        top: 9px;
         right: 10px;
-        .size(16px, 16px);
-        background: url('../../../images/mirasvit/loader.gif');
+        z-index: 99;
+        .scale(0.6);
+        display: none;
+
+        div {
+            position:absolute;
+            background-color:#FFFFFF;
+            height: 3px;
+            width: 3px;
+            .border-radius(4px);
+            .animation-name(f_autocomplete_loader);
+            .animation-duration(0.64s);
+            .animation-iteration-count(infinite);
+            .animation-direction(normal);
+
+            &#g01 {
+                left: 0px;
+                top: 7px;
+                .animation-delay(0.24s);
+            }
+            &#g02 {
+                left: 2px;
+                top: 2px;
+                .animation-delay(0.32s);
+            }
+            &#g03 {
+                left: 7px;
+                top: 0px;
+                .animation-delay(0.4s);
+            }
+            &#g04 {
+                right: 2px;
+                top: 2px;
+                .animation-delay(0.48s);
+            }
+            &#g05 {
+                right: 0px;
+                top: 7px;
+                .animation-delay(0.56s);
+            }
+            &#g06 {
+                right: 2px;
+                bottom: 2px;
+                .animation-delay(0.64s);
+            }
+            &#g07 {
+                left: 7px;
+                bottom: 0px;
+                .animation-delay(0.72s);
+            }
+            &#g08 {
+                left: 2px;
+                bottom: 2px;
+                .animation-delay(0.8s);
+            }
+        }
+        @-moz-keyframes f_autocomplete_loader{
+            0%{ background-color:#000000 }
+            100%{ background-color:#FFFFFF }
+        }
+        @-webkit-keyframes f_autocomplete_loader{
+            0%{ background-color:#000000 }
+            100%{ background-color:#FFFFFF }
+        }
+        @-ms-keyframes f_autocomplete_loader{
+            0%{ background-color:#000000 }
+            100%{ background-color:#FFFFFF }
+        }
+        @-o-keyframes f_autocomplete_loader{
+            0%{ background-color:#000000 }
+            100%{ background-color:#FFFFFF }
+        }
+        @keyframes f_autocomplete_loader{
+            0%{ background-color:#000000 }
+            100%{ background-color:#FFFFFF }
+        }
     }
 }
 

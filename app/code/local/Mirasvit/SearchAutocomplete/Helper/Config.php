@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Helper_Config extends Mage_Core_Helper_Data
 {
@@ -43,10 +43,10 @@ class Mirasvit_SearchAutocomplete_Helper_Config extends Mage_Core_Helper_Data
 
     public function getImageSize()
     {
-        $width  = 70;
+        $width = 70;
         $height = 50;
-        $size   = Mage::getStoreConfig('searchautocomplete/general/image_size');
-        $size   = explode('x', $size);
+        $size = Mage::getStoreConfig('searchautocomplete/general/image_size');
+        $size = explode('x', $size);
         if (isset($size[0]) && intval($size[0]) > 0) {
             $width = intval($size[0]);
         }
@@ -70,5 +70,26 @@ class Mirasvit_SearchAutocomplete_Helper_Config extends Mage_Core_Helper_Data
         $size = $this->getImageSize();
 
         return $size[1];
+    }
+
+    public function isShowRating()
+    {
+        return Mage::getStoreConfig('searchautocomplete/general/show_rating');
+    }
+
+    /**
+     * Getting average of ratings/reviews.
+     *
+     * @param int $productId
+     *
+     * @return Mage_Review_Model_Review_Summary
+     */
+    public function getReviewSummary($productId)
+    {
+        $reviewSummary = Mage::getModel('review/review_summary')
+            ->setStoreId(Mage::app()->getStore()->getStoreId())
+            ->load($productId);
+
+        return $reviewSummary;
     }
 }

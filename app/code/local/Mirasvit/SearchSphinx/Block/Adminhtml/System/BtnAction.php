@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ»Ð¾Ðº Ð²ÑÐ²Ð¾Ð´Ð° ÐºÐ½Ð¾Ð¿ÐºÐ¸ Ð´Ð»Ñ ÑÐ¿ÑÐ°Ð²Ð»ÐµÐ½Ð¸Ñ Ð´ÐµÐ¼Ð¾Ð½Ð¾Ð² (ÑÑÐ¾Ð¿\ÑÑÐ°ÑÑ...)
+ * Блок вывода кнопки для управления демонов (стоп\старт...).
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Block_Adminhtml_System_BtnAction extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
@@ -29,12 +29,14 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_System_BtnAction extends Mage_Adminh
         if (!$this->getTemplate()) {
             $this->setTemplate('searchsphinx/system/btn_action.phtml');
         }
+
         return $this;
     }
 
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         $element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue();
+
         return parent::render($element);
     }
 
@@ -42,9 +44,10 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_System_BtnAction extends Mage_Adminh
     {
         $originalData = $element->getOriginalData();
         $this->addData(array(
-            'button_label' => $this->_getBtnLabel($originalData),
-            'html_id'      => $element->getHtmlId(),
-            'ajax_url'     => Mage::getSingleton('adminhtml/url')->getUrl('searchsphinx/adminhtml_system_action/'.$originalData['button_action'])
+            'button_action' => $originalData['button_action'],
+            'button_label'  => $this->_getBtnLabel($originalData),
+            'html_id'       => $element->getHtmlId(),
+            'ajax_url'      => Mage::getSingleton('adminhtml/url')->getUrl('searchsphinx/adminhtml_system_action/'.$originalData['button_action']),
         ));
 
         return $this->_toHtml();
@@ -57,13 +60,14 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_System_BtnAction extends Mage_Adminh
         switch ($originalData['button_action']) {
             case 'stopstart':
                 $engine = Mage::getSingleton('searchsphinx/engine_sphinx_native');
-                
+
                 $isRunning = false;
                 try {
                     $isRunning = $engine->isSearchdRunning();
-                } catch (Exception $e)  {}
+                } catch (Exception $e) {
+                }
 
-                if ($isRunning ) {
+                if ($isRunning) {
                     $label = 'Stop Sphinx daemon';
                 } else {
                     $label = 'Start Sphinx daemon';

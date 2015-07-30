@@ -10,20 +10,20 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_Observer
 {
     /**
-     * ÐÑÐ»Ð¸ Search Engine = Sphinx
-     * Ð·Ð°Ð¿ÑÑÐºÐ°ÐµÑ ÑÐµÐ¸Ð½Ð´ÐµÐºÑ
+     * Если Search Engine = Sphinx
+     * запускает реиндекс.
      */
     public function reindex()
     {
@@ -33,8 +33,8 @@ class Mirasvit_SearchSphinx_Model_Observer
     }
 
     /**
-     * ÐÑÐ»Ð¸ Search Engine = Sphinx
-     * Ð·Ð°Ð¿ÑÑÐºÐ°ÐµÑ Ð´ÐµÐ»ÑÐ°-ÑÐµÐ¸Ð½Ð´ÐµÐºÑ
+     * Если Search Engine = Sphinx
+     * запускает делта-реиндекс.
      */
     public function reindexDelta()
     {
@@ -44,8 +44,8 @@ class Mirasvit_SearchSphinx_Model_Observer
     }
 
     /**
-     * ÐÑÐ»Ð¸ Search Engine = Sphinx
-     * Ð¿ÑÐ¾Ð²ÐµÑÑÐµÑ ÐµÑÐ»Ð¸ ÑÑÐ¸Ð½ÐºÑ Ð½Ðµ Ð·Ð°Ð¿ÑÑÐµÐ½ - Ð´ÐµÐ»Ð°ÐµÑ ÑÐµÑÑÐ°ÑÑ
+     * Если Search Engine = Sphinx
+     * проверяет если сфинкс не запущен - делает рестарт.
      */
     public function checkDaemon()
     {
@@ -58,9 +58,9 @@ class Mirasvit_SearchSphinx_Model_Observer
     }
 
     /**
-     * ÐÑÐ¸ Ð¸Ð½Ð´ÐµÐºÑÐ°ÑÐ¸Ð¸ Misspell (Spell Correction) Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼Ñ Ð·Ð°Ð´Ð°Ð½ÑÐµ Ð¿Ð¾Ð»ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»Ñ Ðº Ð¿ÑÐ°Ð²Ð¸Ð»ÑÐ½ÑÐ¼ ÑÐ»Ð¾Ð²Ð°Ð¼ (Ð¸Ð½Ð´ÐµÐºÑÑ misspell'a)
+     * При индексации Misspell (Spell Correction) добавляем синонимы заданые пользователь к правильным словам (индексу misspell'a).
      *
-     * @param  object $observer
+     * @param object $observer
      */
     public function onMisspellIndexerPrepare($observer)
     {
@@ -77,7 +77,7 @@ class Mirasvit_SearchSphinx_Model_Observer
     }
 
     /**
-     * Redirect to product if redirect is enabled and search return one item
+     * Redirect to product if redirect is enabled and search return one item.
      */
     public function singleResultRedirect($observer)
     {
@@ -85,23 +85,22 @@ class Mirasvit_SearchSphinx_Model_Observer
 
         if (Mage::getSingleton('searchsphinx/config')->isSingleResultRedictEnabled()
             && $collection->count() == 1) {
-
-            $product = Mage::getSingleton('catalogsearch/layer')->getProductCollection()->getFirstItem();
+            $product = $collection->getFirstItem();
             header('Location: '.$product->getProductUrl());
             exit;
         }
     }
 
     /**
-     * Get current block and transport and handle it
+     * Get current block and transport and handle it.
      *
      * @param $observer
      */
     public function beforeOutput($observer)
     {
-        $block      = $observer->getEvent()->getBlock();
-        $transport  = $observer->getEvent()->getTransport();
-        if(empty($transport)) { //it does not work for magento 1.4 and older
+        $block = $observer->getEvent()->getBlock();
+        $transport = $observer->getEvent()->getTransport();
+        if (empty($transport)) { //it does not work for magento 1.4 and older
             return $this;
         }
 

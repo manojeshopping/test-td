@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchAutocomplete_Helper_Validator extends Mirasvit_MstCore_Helper_Validator_Abstract
@@ -23,7 +24,7 @@ class Mirasvit_SearchAutocomplete_Helper_Validator extends Mirasvit_MstCore_Help
         $title = 'Search Autocomplete: Conflicts with similar extensions';
         $description = array();
 
-        $modules = array_keys((array)Mage::getConfig()->getNode('modules')->children());
+        $modules = array_keys((array) Mage::getConfig()->getNode('modules')->children());
 
         foreach ($modules as $module) {
             if (stripos($module, 'autocomplete') !== false && $module != 'Mirasvit_SearchAutocomplete') {

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Index_External_Store extends Varien_Data_Form_Element_Fieldset
@@ -24,12 +25,12 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Index_External_Store exten
         if (!Mage::app()->isSingleStoreMode()) {
             parent::__construct(array('legend' => Mage::helper('searchindex')->__('Store Settings')));
 
-            $this->addField('store_id', 'multiselect', array(
-                'label'    => Mage::helper('searchindex')->__('Store View'),
+            $this->addField('store_ids', 'multiselect', array(
+                'label' => Mage::helper('searchindex')->__('Store View'),
                 'required' => true,
-                'name'     => 'properties[store_id]',
-                'value'    => $model->getProperty('store_id'),
-                'values'   => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(),
+                'name' => 'properties[store_id]',
+                'value' => $model->getProperty('store_id'),
+                'values' => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(),
             ));
         }
 

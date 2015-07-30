@@ -7,7 +7,7 @@
     <p>
     <?php echo $this->__('Related Searches: ') ?>
     <?php foreach ($_collection as $_query): ?>
-        <a href="<?php echo $this->getQueryUrl($_query) ?>"><?php echo $_query->getQueryText() ?></a><?php if($_query != $_collection->getLastItem()): ?>, <?php endif ?>
+        <a href="<?php echo $this->getQueryUrl($_query) ?>"><?php echo strip_tags($_query->getQueryText()) ?></a><?php if($_query != $_collection->getLastItem()): ?>, <?php endif ?>
     <?php endforeach ?>
     </p>
 </div>

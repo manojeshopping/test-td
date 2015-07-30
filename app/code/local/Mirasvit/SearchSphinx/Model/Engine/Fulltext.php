@@ -10,34 +10,34 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ»Ð°ÑÑ ÑÐµÐ°Ð»Ð¸Ð·ÑÐµÑ Ð¼ÐµÑÐ¾Ð´Ñ Ð´Ð»Ñ Ð¿Ð¾Ð¸ÑÐºÐ° Ð¿Ð¾ Ð³Ð¾ÑÐ¾Ð²ÑÐ¼ mysql ÑÐ°Ð±Ð»Ð¸ÑÐ°Ð¼ Ð¿Ð¾Ð¸ÑÐºÐ¾Ð²ÑÑ Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð²
+ * Класс реализует методы для поиска по готовым mysql таблицам поисковых индексов.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_Model_Engine
 {
     /**
-     * ÐÐ¾Ð´Ð³Ð¾ÑÐ°Ð²Ð»Ð¸Ð²Ð°ÐµÑ Ð·Ð°Ð¿ÑÐ¾Ñ, Ð²ÑÐ¿Ð¾Ð»Ð½ÑÑÐµ Ð·Ð°Ð¿ÑÐ¾Ñ, Ð²Ð¾Ð·ÑÐ°ÑÐ°ÐµÑ Ð¿Ð¾Ð´Ð³Ð¾ÑÐ¾Ð²Ð»ÑÐ½Ð½ÑÐµ ÑÐµÐ·ÑÐ»ÑÑÐ°ÑÑ
+     * Подготавливает запрос, выполняте запрос, возращает подготовлынные результаты.
      *
-     * @param  string  $queryText  Ð¿Ð¾Ð¸ÑÐºÐ¾Ð²ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ (Ð² Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»ÑÐ½Ð¾Ð¼ Ð²Ð¸Ð´Ðµ)
-     * @param  integer $store      ÐÐ ÑÐµÐºÑÑÐµÐ³Ð¾ Ð¼Ð°Ð³Ð°Ð·Ð¸Ð½Ð°
-     * @param  object  $index      Ð¸Ð½Ð´ÐµÐºÑ Ð¿Ð¾ ÐºÐ¾ÑÐ¾ÑÐ¾Ð¼Ñ Ð½ÑÐ¶Ð½Ð¾ Ð¿ÑÐ¾Ð²ÐµÑÑÐ¸ Ð¿Ð¾Ð¸ÑÐº
+     * @param string $queryText поисковый запрос (в оригинальном виде)
+     * @param int    $store     ИД текущего магазина
+     * @param object $index     индекс по которому нужно провести поиск
      *
-     * @return array Ð¼Ð°ÑÐ¸Ð² ÐÐ ÐµÐ»ÐµÐ¼ÐµÐ½ÑÐ¾Ð², Ð³Ð´Ðµ ÐÐ - ÐºÐ»ÑÑ, ÑÐµÐ»ÐµÐ²Ð°Ð½ÑÐ½Ð¾ÑÑÑ Ð·Ð½Ð°ÑÐµÐ½Ð¸Ðµ
+     * @return array масив ИД елементов, где ИД - ключ, релевантность значение
      */
     public function query($query, $store, $index)
     {
         $connection = $this->_getReadAdapter();
-        $table      = $index->getIndexer()->getTableName();
+        $table = $index->getIndexer()->getTableName();
         $attributes = $this->_getAttributes($index);
-        $pk         = $index->getIndexer()->getPrimaryKey();
+        $pk = $index->getIndexer()->getPrimaryKey();
 
         $select = $connection->select();
         $select->from(array('s' => $table), array($pk));
@@ -50,7 +50,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
 
         $searchableAttributes = $index->getSearchableAttributes();
 
-        $caseCondition  = $this->_getCaseCondition($query, $arQuery, $attributes);
+        $caseCondition = $this->_getCaseCondition($query, $arQuery, $attributes);
         $whereCondition = $this->_getWhereCondition($arQuery, $searchableAttributes);
 
         if (intval($store) > 0) {
@@ -70,10 +70,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
         $result = array();
         $weight = array();
 
-        // if ($_SERVER['REMOTE_ADDR'] == '80.78.40.163'){
-        //     echo $select.'<hr>';
-        //     die();
-        // }
+        // echo $select.'<hr>';
 
         $stmt = $connection->query($select);
         while ($row = $stmt->fetch(Zend_Db::FETCH_NUM)) {
@@ -94,20 +91,20 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
     }
 
     /**
-     * Ð¡ÑÑÐ¾Ð¸Ñ sql CASE WHEN .. THEN .. ELSE .. END Ð´Ð»Ñ ÑÐµÐºÑÐ¸Ð¸ SELECT
-     * Ñ.Ðµ. Ð½Ð° Ð¾ÑÐ½Ð¾Ð²Ð°Ð½Ð¸Ð¸Ðµ Ð²ÐµÑÐ¾Ð² Ð°ÑÑÐ¸Ð±ÑÑÐ¾Ð² ÑÑÑÐ¾Ð¸Ñ ÑÐ°ÑÑÐ¸ Ð·Ð°Ð¿ÑÐ¾ÑÐ° Ð´Ð»Ñ Ð²ÑÑÐµÑÐ»ÐµÐ½Ð¸Ñ ÑÐµÐ»ÐµÐ²Ð°Ð½ÑÐ½Ð¾ÑÑÐ¸
+     * Строит sql CASE WHEN .. THEN .. ELSE .. END для секции SELECT
+     * т.е. на основаниие весов атрибутов строит части запроса для вычесления релевантности.
      *
-     * @param  string $query      Ð¾ÑÐ¸Ð³Ð¸Ð½Ð°Ð»ÑÐ½ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ
-     * @param  array  $arQuery    Ð¿Ð¾Ð´Ð³Ð¾ÑÐ¾Ð²Ð»ÐµÐ½Ð½ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ
-     * @param  array  $attributes Ð°ÑÑÐ¸Ð±ÑÑÑ Ñ Ð²ÐµÑÐ¾Ð¼
+     * @param string $query      оригинальный запрос
+     * @param array  $arQuery    подготовленный запрос
+     * @param array  $attributes атрибуты с весом
      *
      * @return string
      */
     protected function _getCaseCondition($query, $arQuery, $attributes)
     {
         $uid = Mage::helper('mstcore/debug')->start();
-        $select    = '';
-        $cases     = array();
+        $select = '';
+        $cases = array();
         $fullCases = array();
         $words = Mage::helper('core/string')->splitWords($query, true);
 
@@ -164,11 +161,11 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
     }
 
     /**
-     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ sql WHERE ÑÑÐ»Ð¾Ð²Ð¸Ðµ - ÑÑÐ¾ Ð¸ ÐµÑÑÑ Ð¿Ð¾Ð¸ÑÐº
-     * WHERE ÑÐ¾ÑÑÐ¾Ð¸Ñ Ð¸Ð· ÑÐµÐºÑÐ¸Ð¹ - 1 ÑÐ»Ð¾Ð²Ð¾ - 1 ÑÐµÐºÑÐ¸Ñ
+     * Возвращает sql WHERE условие - это и есть поиск
+     * WHERE состоит из секций - 1 слово - 1 секция.
      *
-     * @param  array $arWords    Ð¿Ð¾Ð´Ð³Ð¾ÑÐ¾Ð²Ð»ÐµÐ½Ð½ÑÐ¹ Ð·Ð°Ð¿ÑÐ¾Ñ
-     * @param  array $attributes Ð°ÑÑÐ¸Ð±ÑÑÑ Ñ Ð²ÐµÑÐ°Ð¼Ð¸
+     * @param array $arWords    подготовленный запрос
+     * @param array $attributes атрибуты с весами
      *
      * @return string
      */
@@ -183,16 +180,16 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
             $result[] = $this->_buildWhere($key, $array, $searchableAttributes);
         }
 
-        $where = '(' . join(' AND ', $result) . ')';
+        $where = '('.implode(' AND ', $result).')';
 
         return $where;
     }
 
     /**
-     * Ð¡ÑÑÐ¾Ð¸Ñ ÑÐµÐºÑÐ¸Ñ Ð´Ð»Ñ ÑÐ»Ð¾Ð²Ð°/ÑÐ»Ð¾Ð²
+     * Строит секцию для слова/слов.
      *
-     * @param  string $type  Ð»Ð¾Ð³Ð¸ÐºÐ° Ð/ÐÐÐ
-     * @param  array  $array ÑÐ»Ð¾Ð²Ð°
+     * @param string $type  логика И/ИЛИ
+     * @param array  $array слова
      *
      * @return array
      */
@@ -224,13 +221,12 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
         }
 
         return $array;
-
     }
 
     /**
-     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ Ð¾Ð±ÑÐµÐ´ÐµÐ½ÐµÐ½ÑÐ¹ Ð¼Ð°ÑÐ¸Ð² Ð°ÑÑÐ¸Ð±ÑÑÐ¾Ð² Ð¸ ÐºÐ¾Ð»Ð¾Ð½Ð¾Ðº Ð² ÑÐ°Ð±Ð»Ð¸ÑÐµ ÑÐµÐºÑÑÐµÐ³Ð¾ Ð¸Ð½Ð´ÐµÐºÑÐ°
+     * Возвращает объедененый масив атрибутов и колонок в таблице текущего индекса.
      *
-     * @param  object $index Ð¾Ð±ÑÐµÐºÑ Ð¸Ð½Ð´ÐµÐºÑÐ°
+     * @param object $index объект индекса
      *
      * @return array
      */
@@ -239,7 +235,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
         $uid = Mage::helper('mstcore/debug')->start();
 
         $attributes = $index->getAttributes(true);
-        $columns    = $this->_getTableColumns($index->getIndexer()->getTableName());
+        $columns = $this->_getTableColumns($index->getIndexer()->getTableName());
 
         foreach ($attributes as $attr => $weight) {
             if (!in_array($attr, $columns)) {
@@ -260,16 +256,17 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
     }
 
     /**
-     * Ð¤ÑÐ½ÐºÑÐ¸Ñ ÐµÑÑÑ ÑÐ¾Ð»ÑÐºÐ¾ Ð² magento 1.6+, Ð´ÑÐ±Ð»Ð¸ÑÑÐµÐ¼
+     * Функция есть только в magento 1.6+, дублируем.
      */
     public function getCILike($field, $value, $options = array(), $type = 'LIKE')
     {
         $quotedField = $this->_getReadAdapter()->quoteIdentifier($field);
-        return new Zend_Db_Expr($quotedField . ' '.$type.' "' . $this->escapeLikeValue($value, $options).'"');
+
+        return new Zend_Db_Expr($quotedField.' '.$type.' "'.$this->escapeLikeValue($value, $options).'"');
     }
 
     /**
-     * Ð¤ÑÐ½ÐºÑÐ¸Ñ ÐµÑÑÑ ÑÐ¾Ð»ÑÐºÐ¾ Ð² magento 1.6+, Ð´ÑÐ±Ð»Ð¸ÑÑÐµÐ¼
+     * Функция есть только в magento 1.6+, дублируем.
      */
     public function escapeLikeValue($value, $options = array())
     {
@@ -288,13 +285,13 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
         if (isset($options['position'])) {
             switch ($options['position']) {
                 case 'any':
-                    $value = '%' . $value . '%';
+                    $value = '%'.$value.'%';
                     break;
                 case 'start':
-                    $value = $value . '%';
+                    $value = $value.'%';
                     break;
                 case 'end':
-                    $value = '%' . $value;
+                    $value = '%'.$value;
                     break;
             }
         }
@@ -303,9 +300,10 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
     }
 
     /**
-     * ÐÐ¾Ð·ÑÐ°ÑÐ°ÐµÑ Ð¼Ð°ÑÐ¸Ð² ÐºÐ¾Ð»Ð¾Ð½Ð¾Ðº Ð´Ð»Ñ ÑÐ°Ð±Ð»Ð¸ÑÑ ÐÐ
+     * Возращает масив колонок для таблицы БД.
      *
-     * @param  string $tableName
+     * @param string $tableName
+     *
      * @return array
      */
     protected function _getTableColumns($tableName)
@@ -315,6 +313,7 @@ class Mirasvit_SearchSphinx_Model_Engine_Fulltext extends Mirasvit_SearchIndex_M
         $columns = array_keys($this->_getReadAdapter()->describeTable($tableName));
 
         Mage::helper('mstcore/debug')->end($uid, array('$tableName' => $tableName, '$columns' => $columns));
+
         return $columns;
     }
 }

@@ -10,22 +10,22 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_System_Config_Source_GoogleSitelinksSearchBox
 {
     public function toOptionArray()
     {
         return array(
-            array('value'=>1, 'label'=>Mage::helper('adminhtml')->__('Enable')),
-            array('value'=>0, 'label'=>Mage::helper('adminhtml')->__('Disable')),
+            array('value' => 1, 'label' => Mage::helper('adminhtml')->__('Enable')),
+            array('value' => 0, 'label' => Mage::helper('adminhtml')->__('Disable')),
         );
     }
 }

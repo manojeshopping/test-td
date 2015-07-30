@@ -10,27 +10,27 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchLandingPage_Block_Adminhtml_Page_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
-    public function __construct ()
+    public function __construct()
     {
         parent::__construct();
 
-        $this->_objectId   = 'page_id';
+        $this->_objectId = 'page_id';
         $this->_blockGroup = 'searchlandingpage';
-        $this->_mode       = 'edit';
+        $this->_mode = 'edit';
         $this->_controller = 'adminhtml_page';
-        
 
         $this->_addButton('saveandcontinue', array(
-            'label'     => Mage::helper('searchlandingpage')->__('Save And Continue Edit'),
-            'onclick'   => 'saveAndContinueEdit()',
-            'class'     => 'save',
+            'label' => Mage::helper('searchlandingpage')->__('Save And Continue Edit'),
+            'onclick' => 'saveAndContinueEdit()',
+            'class' => 'save',
         ), -100);
 
         $this->_formScripts[] = "
@@ -47,7 +47,7 @@ class Mirasvit_SearchLandingPage_Block_Adminhtml_Page_Edit extends Mage_Adminhtm
         if (Mage::registry('current_model')->getId() > 0) {
             return Mage::helper('searchlandingpage')->__("Edit Landing Page '%s'", $this->htmlEscape(Mage::registry('current_model')->getTitle()));
         } else {
-            return Mage::helper('searchlandingpage')->__("Add Landing Page");
+            return Mage::helper('searchlandingpage')->__('Add Landing Page');
         }
     }
 }

@@ -103,14 +103,15 @@
   white-space: nowrap;
 }
 .searchautocomplete .nav .nav-search-in .nav-down-arrow {
-  background: url('../../../images/mirasvit/sprite.png');
-  width: 9px;
-  height: 5px;
-  background-position: -26px -34px;
-  display: block;
   right: 10px;
   top: 16px;
   position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 4.5px 0 4.5px;
+  border-color: #000000 transparent transparent transparent;
+  line-height: 0px;
 }
 .searchautocomplete .nav .nav-search-in:hover .category-fake {
   background-color: #eeeeee;
@@ -291,6 +292,14 @@
 .searchautocomplete .searchautocomplete-placeholder ul li .highlight strong {
   color: #f00;
 }
+.searchautocomplete .searchautocomplete-placeholder ul li .ratings {
+  margin: 0;
+  line-height: 14px;
+}
+.searchautocomplete .searchautocomplete-placeholder ul li .ratings .rating-box {
+  float: left;
+  margin: 0 5px 0 0;
+}
 .searchautocomplete .searchautocomplete-placeholder .index-title {
   text-align: right;
   color: #0A263C;
@@ -307,11 +316,122 @@
 }
 .searchautocomplete .searchautocomplete-loader {
   position: absolute;
-  top: 11px;
+  width: 18px;
+  height: 18px;
+  top: 9px;
   right: 10px;
-  width: 16px;
-  height: 16px;
-  background: url('../../../images/mirasvit/loader.gif');
+  z-index: 99;
+  -webkit-transform: scale(0.6);
+  -moz-transform: scale(0.6);
+  -ms-transform: scale(0.6);
+  -o-transform: scale(0.6);
+  transform: scale(0.6);
+  display: none;
+}
+.searchautocomplete .searchautocomplete-loader div {
+  position: absolute;
+  background-color: #FFFFFF;
+  height: 3px;
+  width: 3px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-animation-name: f_autocomplete_loader;
+  animation-name: f_autocomplete_loader;
+  -webkit-animation-duration: 0.64s;
+  animation-duration: 0.64s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-direction: normal;
+  animation-direction: normal;
+}
+.searchautocomplete .searchautocomplete-loader div#g01 {
+  left: 0px;
+  top: 7px;
+  -webkit-animation-delay: 0.24s;
+  animation-delay: 0.24s;
+}
+.searchautocomplete .searchautocomplete-loader div#g02 {
+  left: 2px;
+  top: 2px;
+  -webkit-animation-delay: 0.32s;
+  animation-delay: 0.32s;
+}
+.searchautocomplete .searchautocomplete-loader div#g03 {
+  left: 7px;
+  top: 0px;
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+.searchautocomplete .searchautocomplete-loader div#g04 {
+  right: 2px;
+  top: 2px;
+  -webkit-animation-delay: 0.48s;
+  animation-delay: 0.48s;
+}
+.searchautocomplete .searchautocomplete-loader div#g05 {
+  right: 0px;
+  top: 7px;
+  -webkit-animation-delay: 0.56s;
+  animation-delay: 0.56s;
+}
+.searchautocomplete .searchautocomplete-loader div#g06 {
+  right: 2px;
+  bottom: 2px;
+  -webkit-animation-delay: 0.64s;
+  animation-delay: 0.64s;
+}
+.searchautocomplete .searchautocomplete-loader div#g07 {
+  left: 7px;
+  bottom: 0px;
+  -webkit-animation-delay: 0.72s;
+  animation-delay: 0.72s;
+}
+.searchautocomplete .searchautocomplete-loader div#g08 {
+  left: 2px;
+  bottom: 2px;
+  -webkit-animation-delay: 0.8s;
+  animation-delay: 0.8s;
+}
+@-moz-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@-webkit-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@-ms-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@-o-keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}
+@keyframes f_autocomplete_loader {
+  0% {
+    background-color: #000000;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }
 .searchautocomplete-widget {
   position: relative;

@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Block_Adminhtml_System_BtnAction extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
@@ -27,12 +27,14 @@ class Mirasvit_Misspell_Block_Adminhtml_System_BtnAction extends Mage_Adminhtml_
         if (!$this->getTemplate()) {
             $this->setTemplate('misspell/system/btn_action.phtml');
         }
+
         return $this;
     }
 
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         $element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue();
+
         return parent::render($element);
     }
 
@@ -41,8 +43,8 @@ class Mirasvit_Misspell_Block_Adminhtml_System_BtnAction extends Mage_Adminhtml_
         $originalData = $element->getOriginalData();
         $this->addData(array(
             'button_label' => Mage::helper('customer')->__($originalData['button_label']),
-            'html_id'      => $element->getHtmlId(),
-            'ajax_url'     => Mage::getSingleton('adminhtml/url')->getUrl('misspell/adminhtml_system_action/'.$originalData['button_action'])
+            'html_id' => $element->getHtmlId(),
+            'ajax_url' => Mage::getSingleton('adminhtml/url')->getUrl('misspell/adminhtml_system_action/'.$originalData['button_action']),
         ));
 
         return $this->_toHtml();

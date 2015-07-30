@@ -10,19 +10,19 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Helper_Debug extends Mage_Core_Helper_Abstract
 {
     /**
-     * Return result of request to table catalogsearch_fulltext
+     * Return result of request to table catalogsearch_fulltext.
      *
      * @param array  $result - products ids and their search relevance
      * @param array  $weight - products ids and their search weight
@@ -33,8 +33,8 @@ class Mirasvit_SearchSphinx_Helper_Debug extends Mage_Core_Helper_Abstract
         echo '<h3 style="text-align:center;">Query:</h3>';
         echo '<p style="border:3px solid gray;padding:10px;">'.$select->__toString().'</p>';
         echo '<table border="2" cellpadding="2" cellspacing="0" align="center"><caption style="text-align:center;font-size:1.17em;font-weight:bold">Result:</caption><tr><th>Product Id</th><th>Relevance</th><th>Search Weight</th></tr>';
-        
-        foreach ($result as $entity_id => $entity) {            
+
+        foreach ($result as $entity_id => $entity) {
             echo '<tr style="text-align:center;"><td>'.$entity_id.'</td><td>'.$entity.'</td><td>'.$weight[$entity_id].'</td></tr>';
         }
         echo '</table>';

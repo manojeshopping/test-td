@@ -1,11 +1,10 @@
 <?php
 class Mirasvit_SearchSphinx_Helper_Code extends Mirasvit_MstCore_Helper_Code
 {
-    protected $k = "Q70S29I5HZ";
+    protected $k = "GC4VT6IF1O";
     protected $s = "SSU";
-    protected $o = "6704";
+    protected $l = "7033";
     protected $v = "2.3.2";
-    protected $r = "962";
-    protected $b = "962";
-    protected $p = "";
+    protected $b = "1216";
+    protected $d = "tradedepot.co.nz";
 }

@@ -10,27 +10,28 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
-    public function __construct ()
+    public function __construct()
     {
         parent::__construct();
 
-        $this->_objectId   = 'index_id';
+        $this->_objectId = 'index_id';
         $this->_blockGroup = 'searchindex';
-        $this->_mode       = 'edit';
+        $this->_mode = 'edit';
         $this->_controller = 'adminhtml_index';
 
         $this->_removeButton('reset');
         $this->_addButton('saveandcontinue', array(
-            'label'     => __('Save And Continue Edit'),
-            'onclick'   => 'saveAndContinueEdit()',
-            'class'     => 'save',
+            'label' => __('Save And Continue Edit'),
+            'onclick' => 'saveAndContinueEdit()',
+            'class' => 'save',
         ), -100);
 
         $this->_formScripts[] = "
@@ -52,7 +53,7 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit extends Mage_Adminhtml_Blo
         if (Mage::registry('current_model')->getId() > 0) {
             return __("Edit Search Index '%s'", $this->htmlEscape(Mage::registry('current_model')->getTitle()));
         } else {
-            return __("Add Search Index");
+            return __('Add Search Index');
         }
     }
 
@@ -64,6 +65,7 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit extends Mage_Adminhtml_Blo
             $this->getUrl('*/*/*/', array('store' => null, '_current' => true))
         );
         $html = $switcher->toHtml().$html;
+
         return $html;
     }
 }

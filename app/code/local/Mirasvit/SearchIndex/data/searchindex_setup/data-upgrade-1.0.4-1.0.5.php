@@ -10,15 +10,20 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 $installer = $this;
 
 $collection = Mage::getModel('searchindex/index')->getCollection()
     ->addFieldToFilter('index_code', 'mage_catalog_product');
+
+$attributes = array(
+    'name' => '100',
+);
 
 if ($collection->count() == 0) {
     $index = Mage::getModel('searchindex/index')
@@ -27,6 +32,7 @@ if ($collection->count() == 0) {
         ->setPosition(0)
         ->setStatus(3)
         ->setIsActive(1)
+        ->setAttributes($attributes)
         ->save();
 }
 

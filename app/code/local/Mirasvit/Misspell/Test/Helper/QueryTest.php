@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_Misspell_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_Case
@@ -29,10 +30,10 @@ class Mirasvit_Misspell_Test_Helper_QueryTest extends EcomDev_PHPUnit_Test_Case
     /**
      * @test
      * @cover suggestFallbackPhase
-     * 
+     *
      * @loadFixture  products
      * @dataProvider suggestFallbackPhaseProvider
-     * 
+     *
      * @doNotIndex catalog_product_price
      */
     public function suggestFallbackPhaseTest($fallback, $phase)

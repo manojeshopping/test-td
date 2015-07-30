@@ -56,6 +56,11 @@
                     <block type="page/html_pager" name="pager" />
                 </block>
 
+                <block type="searchindex/index_template" name="searchindex_result_mage_cms_block" template="searchindex/index/mage/cms/block.phtml">
+                    <action method="setIndexCode"><value>mage_cms_block</value></action>
+                    <block type="page/html_pager" name="pager" />
+                </block>
+
                 <block type="searchindex/index_template" name="searchindex_result_azebiz_support_kbarticle" template="searchindex/index/azebiz/support/kbarticle.phtml">
                     <action method="setIndexCode"><value>azebiz_support_kbarticle</value></action>
                     <block type="page/html_pager" name="pager" />
@@ -89,6 +94,17 @@
 
                 <block type="searchindex/index_template" name="searchindex_result_dotsquares_faq_faq" template="searchindex/index/dotsquares/faq/faq.phtml">
                     <action method="setIndexCode"><value>dotsquares_faq_faq</value></action>
+                    <block type="page/html_pager" name="pager" />
+                </block>
+
+                <block type="searchindex/index_template" name="searchindex_result_magentothem_blog_post" template="searchindex/index/magentothem/blog/post.phtml">
+                    <action method="setIndexCode"><value>magentothem_blog_post</value></action>
+                    <action method="setIsVisible"><value>1</value></action>
+                    <block type="page/html_pager" name="pager" />
+                </block>
+
+                <block type="searchindex/index_template" name="searchindex_result_smartwave_blog_post" template="searchindex/index/smartwave/blog/post.phtml">
+                    <action method="setIndexCode"><value>smartwave_blog_post</value></action>
                     <block type="page/html_pager" name="pager" />
                 </block>
 

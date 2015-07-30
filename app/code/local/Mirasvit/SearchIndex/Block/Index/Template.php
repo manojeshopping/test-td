@@ -10,15 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Index_Template extends Mage_Core_Block_Template
 {
     protected $_collection = null;
-    protected $_isVisible  = true;
+    protected $_isVisible = true;
 
     public function getIsVisible()
     {
@@ -55,13 +56,12 @@ class Mirasvit_SearchIndex_Block_Index_Template extends Mage_Core_Block_Template
             }
         }
 
-
         return $this->_collection;
     }
 
-
     /**
-     * Return pager html for current collection
+     * Return pager html for current collection.
+     *
      * @return html
      */
     public function getPager()
@@ -70,6 +70,7 @@ class Mirasvit_SearchIndex_Block_Index_Template extends Mage_Core_Block_Template
         if (!$pager->getCollection()) {
             $pager->setCollection($this->getCollection());
         }
+
         return $pager->toHtml();
     }
 }

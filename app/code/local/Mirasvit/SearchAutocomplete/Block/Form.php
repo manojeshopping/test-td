@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * Search form block
+ * Search form block.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
 {
@@ -27,9 +27,8 @@ class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
     {
         $url = Mage::getUrl('searchautocomplete/ajax/get');
 
-        if (Mage::app()->getStore()->isCurrentlySecure()) {
-            $url = str_replace('http://', 'https://', $url);
-        }
+        $url = str_replace('http:', '', $url);
+        $url = str_replace('https:', '', $url);
 
         return $url;
     }
@@ -38,8 +37,8 @@ class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
     {
         $rootId = Mage::app()->getStore()->getRootCategoryId();
         $root = Mage::getModel('catalog/category')->load($rootId);
-        
-        $collection  = Mage::getModel('catalog/category')->getCollection()
+
+        $collection = Mage::getModel('catalog/category')->getCollection()
             ->addAttributeToSelect('name');
 
         if ($this->getUserCategories()) {
@@ -66,7 +65,7 @@ class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
     {
         $result = array();
 
-        $attributes        = Mage::getSingleton('searchautocomplete/system_config_source_attribute')->toOptionArray();
+        $attributes = Mage::getSingleton('searchautocomplete/system_config_source_attribute')->toOptionArray();
         $allowedAttributes = Mage::getStoreConfig('searchautocomplete/general/attributes');
 
         if ($allowedAttributes == '') {
@@ -96,7 +95,6 @@ class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
         return $categories;
     }
 
-
     public function getFilterType()
     {
         $filterType = Mage::getStoreConfig('searchautocomplete/general/filter_type');
@@ -107,9 +105,7 @@ class Mirasvit_SearchAutocomplete_Block_Form extends Mage_Core_Block_Template
         return $filterType;
     }
 
-
     public function getFiltertOptions()
     {
-
     }
 }

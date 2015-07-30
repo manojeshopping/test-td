@@ -5,6 +5,7 @@ $_htmlClass  = $this->getElement()->getClass();
 $_htmlName   = $this->getElement()->getName();
 $_availableAttributes = $this->getAvailableAttributes();
 $_attributes = $this->getAttributes();
+$_indexCode  = $this->getIndexCode();
 ?>
 
 <?php if ($_element->getFieldsetContainerId()): ?>
@@ -74,6 +75,13 @@ $_attributes = $this->getAttributes();
                         <button style="" onclick="SearchIndexAttributes.addItem()" class="scalable add" type="button"><span>Add attribute</span></button>
                     </td>
                 </tr>
+                <?php if ($_indexCode == "mage_catalog_product"): ?>
+                <tr>
+                    <td colspan="3">
+                        <div class="a-attention">Extension perform search by all searchable attributes available at Catalog/Manage Attributes, where "Use in Quick Search" is "Yes"</div>
+                    </td>
+                </tr>
+                <?php endif ?>
             </tfoot>
             <tbody id="<?php echo $_htmlId ?>_container">
             </tbody>

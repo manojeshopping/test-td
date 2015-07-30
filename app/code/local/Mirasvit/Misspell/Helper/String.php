@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÑÐ²ÐµÑÐ°ÐµÑ Ð·Ð° ÑÐ°Ð±Ð¾ÑÑ/Ð¿ÑÐµÐ¾Ð±ÑÐ°Ð·Ð¾Ð²Ð°Ð½Ð¸Ðµ ÑÑÑÐ¾Ðº
+ * Отвечает за работу/преобразование строк.
  *
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Helper_String extends Mage_Core_Helper_String
 {
@@ -44,7 +44,7 @@ class Mirasvit_Misspell_Helper_String extends Mage_Core_Helper_String
     public function getTrigram($keyword)
     {
         $trigram = array();
-        $len     = $this->strlen($keyword);
+        $len = $this->strlen($keyword);
 
         for ($i = 1; $i < $len + $this->getGram(); $i++) {
             $trig = '';

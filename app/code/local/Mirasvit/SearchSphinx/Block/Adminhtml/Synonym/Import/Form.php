@@ -10,30 +10,30 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * Ð¤Ð¾ÑÐ¼Ð° Ð¸Ð¼Ð¿Ð¾ÑÑÐ° ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼Ð¾Ð²
+ * Форма импорта синонимов.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Import_Form extends Mage_Adminhtml_Block_Widget_Form
 {
     protected function _prepareForm()
     {
         $form = new Varien_Data_Form(array(
-            'id'      => 'edit_form',
-            'action'  => $this->getData('action'),
-            'method'  => 'post',
+            'id' => 'edit_form',
+            'action' => $this->getData('action'),
+            'method' => 'post',
             'enctype' => 'multipart/form-data',
         ));
 
         $general = $form->addFieldset('general', array('legend' => Mage::helper('searchsphinx')->__('Import')));
-        
+
         $dictionaries = $this->getDictionaries();
         if (!is_array($dictionaries)) {
             $general->addField('file', 'label', array(
@@ -41,23 +41,23 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Import_Form extends Mage_Adm
             ));
         } else {
             $general->addField('file', 'select', array(
-                'name'     => 'file',
-                'label'    => Mage::helper('searchsphinx')->__('Dictionary'),
+                'name' => 'file',
+                'label' => Mage::helper('searchsphinx')->__('Dictionary'),
                 'required' => true,
-                'values'   => $dictionaries,
+                'values' => $dictionaries,
             ));
 
             if (!Mage::app()->isSingleStoreMode()) {
                 $general->addField('store', 'multiselect', array(
-                    'label'    => Mage::helper('searchindex')->__('Store View'),
+                    'label' => Mage::helper('searchindex')->__('Store View'),
                     'required' => true,
-                    'name'     => 'store',
-                    'values'   => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(),
+                    'name' => 'store',
+                    'values' => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(),
                 ));
             } else {
                 $general->addField('store', 'hidden', array(
-                    'name'  => 'store',
-                    'value' => Mage::app()->getStore(true)->getId()
+                    'name' => 'store',
+                    'value' => Mage::app()->getStore(true)->getId(),
                 ));
             }
         }
@@ -72,14 +72,14 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Import_Form extends Mage_Adm
     protected function getDictionaries()
     {
         $values = array();
-        $path   = Mage::getBaseDir('var').DS.'sphinx'.DS.'synonyms'.DS;
+        $path = Mage::getBaseDir('var').DS.'sphinx'.DS.'synonyms'.DS;
         if (file_exists($path)) {
             if ($handle = opendir($path)) {
                 while (false !== ($entry = readdir($handle))) {
                     if (substr($entry, 0, 1) != '.') {
                         $values[] = array(
                             'label' => $entry,
-                            'value' => $path.DS.$entry
+                            'value' => $path.DS.$entry,
                         );
                     }
                 }

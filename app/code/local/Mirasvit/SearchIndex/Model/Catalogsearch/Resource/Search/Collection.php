@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Catalogsearch_Resource_Search_Collection
@@ -21,8 +22,8 @@ class Mirasvit_SearchIndex_Model_Catalogsearch_Resource_Search_Collection
     public function addSearchFilter($query)
     {
         $catalogIndex = Mage::helper('searchindex/index')->getIndex('mage_catalog_product');
-        $engine       = Mage::helper('searchindex')->getSearchEngine();
-        $result       = $engine->query($query, null, $catalogIndex);
+        $engine = Mage::helper('searchindex')->getSearchEngine();
+        $result = $engine->query($query, null, $catalogIndex);
         $catalogIndex->setMatchedIds($result);
         $catalogIndex->joinMatched($this);
 

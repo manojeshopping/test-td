@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ»Ð¾Ðº ÑÐ°Ð±Ð»Ð¸ÑÑ Ð²Ð²Ð¾Ð´Ð° Ð¸ÑÐºÐ»ÑÑÐµÐ½Ð¸Ð¹ Ð¸Ð· Ð²Ð¸Ð»Ð´-ÐºÐ°ÑÐ´ Ð² Ð½Ð°ÑÑÑÐ¾Ð¹ÐºÐ°Ñ
+ * Блок таблицы ввода исключений из вилд-кард в настройках.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Block_Adminhtml_System_WildcardException extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract
 {

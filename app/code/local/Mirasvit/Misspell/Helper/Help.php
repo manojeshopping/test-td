@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Helper_Help extends Mirasvit_MstCore_Helper_Help
 {
@@ -25,7 +25,7 @@ class Mirasvit_Misspell_Helper_Help extends Mirasvit_MstCore_Helper_Help
         'system' => array(
             'general_misspell' => 'Enable search spell-correction feature.
                 When search return zero result, extension will try fix possible typos in search phase',
-            'general_reindex'  => 'Run spell-correction reindex.
+            'general_reindex' => 'Run spell-correction reindex.
                 During this process, extension select and save all words from your database to own index',
 
             'general_fallback' => 'Enable fallback search feature.

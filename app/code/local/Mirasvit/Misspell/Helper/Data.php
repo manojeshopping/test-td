@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Helper_Data extends Mage_CatalogSearch_Helper_Data
 {
@@ -37,14 +37,14 @@ class Mirasvit_Misspell_Helper_Data extends Mage_CatalogSearch_Helper_Data
     public function clearText($text)
     {
         $text = Mage::helper('misspell/string')->strtolower($text);
-        $text = preg_replace('/[-\+()|"\'\><!\[\]~=\^\:,\/?.@#$â¬;]/', ' ', $text);
+        $text = preg_replace('/[-\+()|"\'\><!\[\]~=\^\:,\/?.@#$€;]/', ' ', $text);
         $text = str_replace('  ', ' ', $text);
 
         return trim($text);
     }
 
     /**
-     * Retrieve query model object
+     * Retrieve query model object.
      *
      * @return Mage_CatalogSearch_Model_Query
      */
@@ -52,7 +52,7 @@ class Mirasvit_Misspell_Helper_Data extends Mage_CatalogSearch_Helper_Data
     {
         if (substr($this->_queryText, 0, 1) == '@'
             || substr($this->_queryText, 0, 1) == '=') {
-            return null;
+            return;
         }
         $this->_queryText = $this->getSuggestQueryText();
 
@@ -64,12 +64,10 @@ class Mirasvit_Misspell_Helper_Data extends Mage_CatalogSearch_Helper_Data
             $this->_query->setStoreId(Mage::app()->getStore()->getId());
             if ($this->_query->getId()) {
                 $this->_query->setPopularity($this->_query->getPopularity() + 1);
-            }
-            else {
+            } else {
                 $this->_query->setPopularity(1);
             }
             $this->_query->prepare();
         }
     }
-
 }

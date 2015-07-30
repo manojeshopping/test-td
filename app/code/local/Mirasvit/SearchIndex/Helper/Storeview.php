@@ -10,23 +10,24 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Helper_Storeview
 {
     public function setStoreViewValue($object, $field, $value)
     {
-        $storeId = (int)$object->getStoreId();
+        $storeId = (int) $object->getStoreId();
         $serializedValue = $object->getData($field);
         $arr = $this->unserialize($serializedValue);
 
         if ($storeId === 0) {
-            $arr[0] =  $value;
+            $arr[0] = $value;
         } else {
-            $arr[$storeId] =  $value;
+            $arr[$storeId] = $value;
             if (!isset($arr[0])) {
                 $arr[0] = $value;
             }

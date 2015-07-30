@@ -61,8 +61,8 @@
                         <class>misspell/observer</class>
                         <method>onPostdispatchCatalogsearchResultIndex</method>
                     </mirasvit_misspell_postdispatch_catalogsearch_result_index>
-                </observers>            
-            </controller_action_postdispatch_catalogsearch_result_index>     
+                </observers>
+            </controller_action_postdispatch_catalogsearch_result_index>
         </events>
     </global>
     <adminhtml>

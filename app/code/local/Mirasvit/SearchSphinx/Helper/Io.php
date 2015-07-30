@@ -10,20 +10,20 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Helper_Io extends Mage_Core_Helper_Abstract
 {
     public function write($filename, $content, $mode = 'w')
     {
-        $fp   = fopen($filename, $mode);
+        $fp = fopen($filename, $mode);
         fwrite($fp, $content);
         fclose($fp);
 
@@ -36,10 +36,9 @@ class Mirasvit_SearchSphinx_Helper_Io extends Mage_Core_Helper_Abstract
 
     public function read($filename)
     {
-        if(!$this->fileExists($filename)) {
+        if (!$this->fileExists($filename)) {
             Mage::throwException(sprintf('File %s not exists.', $filename));
         } else {
-
             $fp = fopen($filename, 'r');
             $content = file_get_contents($filename);
             fclose($fp);
@@ -74,6 +73,7 @@ class Mirasvit_SearchSphinx_Helper_Io extends Mage_Core_Helper_Abstract
             return is_writable($path);
         } else {
             $info = pathinfo($path);
+
             return is_writable($info['dirname']);
         }
     }

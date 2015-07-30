@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 //2.2.8 - 2.2.9
@@ -38,53 +39,52 @@ CREATE TABLE `{$installer->getTable('searchindex/index')}` (
 Mage::app()->getStore()->resetConfig();
 
 $indexes = array(
-   'catalog'   => 'mage_catalog_product',
-   'category'  => 'mage_catalog_category',
-   'cms'       => 'mage_cms_page',
-   'awblog'    => 'aw_blog_post',
-   'maction'   => 'mirasvit_action_action',
-   'wordpress' => 'external_wordpress_post'
+   'catalog' => 'mage_catalog_product',
+   'category' => 'mage_catalog_category',
+   'cms' => 'mage_cms_page',
+   'awblog' => 'aw_blog_post',
+   'maction' => 'mirasvit_action_action',
+   'wordpress' => 'external_wordpress_post',
 );
 
 foreach ($indexes as $oldCode => $newCode) {
-   $path = 'searchindex/'.$oldCode.'/';
+    $path = 'searchindex/'.$oldCode.'/';
 
-   $enabled  = Mage::getStoreConfig($path.'enabled');
-   $title    = Mage::getStoreConfig($path.'title');
-   $position = Mage::getStoreConfig($path.'position');
+    $enabled = Mage::getStoreConfig($path.'enabled');
+    $title = Mage::getStoreConfig($path.'title');
+    $position = Mage::getStoreConfig($path.'position');
 
-   $oldAttrs = Mage::getStoreConfig($path.'attribute');
-   $oldAttrs = unserialize($oldAttrs);
-   $newAttrs = array();
-   if (is_array($oldAttrs)) {
-      foreach ($oldAttrs as $item) {
-         $newAttrs[$item['attribute']] = $item['value'];
-      }
-   }
+    $oldAttrs = Mage::getStoreConfig($path.'attribute');
+    $oldAttrs = unserialize($oldAttrs);
+    $newAttrs = array();
+    if (is_array($oldAttrs)) {
+        foreach ($oldAttrs as $item) {
+            $newAttrs[$item['attribute']] = $item['value'];
+        }
+    }
 
-   if ($oldCode == 'catalog') {
-      $enabled = 1;
-   }
+    if ($oldCode == 'catalog') {
+        $enabled = 1;
+    }
 
-   if ($enabled && $title) {
-      $collection = Mage::getModel('searchindex/index')->getCollection()
+    if ($enabled && $title) {
+        $collection = Mage::getModel('searchindex/index')->getCollection()
          ->addFieldToFilter('index_code', $newCode);
 
-      if ($collection->count()) {
-         $index = $collection->getFirstItem();
-      } else {
-         $index = Mage::getModel('searchindex/index');
-      }
+        if ($collection->count()) {
+            $index = $collection->getFirstItem();
+        } else {
+            $index = Mage::getModel('searchindex/index');
+        }
 
-      $index->setIndexCode($newCode)
+        $index->setIndexCode($newCode)
          ->setTitle($title)
          ->setPosition($position)
          ->setStatus(3)
          ->setIsActive(1)
          ->setAttributes($newAttrs)
          ->save();
-   }
-
+    }
 }
 
 $installer->endSetup();

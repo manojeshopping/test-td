@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 //2.2.9 - 2.2.9.1
@@ -21,28 +22,27 @@ $setup = new Mage_Eav_Model_Entity_Setup('core_setup');
 $installer->startSetup();
 try {
     $setup->addAttribute('catalog_category', 'searchindex_weight', array(
-        'group'        => 'General Information',
-        'input'        => 'text',
-        'type'         => 'text',
-        'label'        => 'Search Weight',
-        'backend'      => '',
-        'visible'      => 1,
-        'required'     => 0,
+        'group' => 'General Information',
+        'input' => 'text',
+        'type' => 'text',
+        'label' => 'Search Weight',
+        'backend' => '',
+        'visible' => 1,
+        'required' => 0,
         'user_defined' => 1,
-        'global'       => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
+        'global' => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
     ));
 
-
     $setup->addAttribute('catalog_product', 'searchindex_weight', array(
-        'group'        => 'General',
-        'input'        => 'text',
-        'type'         => 'text',
-        'label'        => 'Search Weight',
-        'backend'      => '',
-        'visible'      => 1,
-        'required'     => 0,
+        'group' => 'General',
+        'input' => 'text',
+        'type' => 'text',
+        'label' => 'Search Weight',
+        'backend' => '',
+        'visible' => 1,
+        'required' => 0,
         'user_defined' => 1,
-        'global'       => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
+        'global' => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
     ));
 } catch (Exception $e) {
     Mage::logException($e);

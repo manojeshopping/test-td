@@ -10,15 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 $installer = $this;
 $installer->startSetup();
 
-$resource   = Mage::getSingleton('core/resource');
+$resource = Mage::getSingleton('core/resource');
 $connection = $resource->getConnection('core_write');
 $connection->update($resource->getTableName('searchsphinx/synonym'), array('synonyms' => new Zend_Db_Expr('CONCAT(word, ",", synonyms)')));
 

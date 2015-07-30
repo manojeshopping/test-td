@@ -10,39 +10,39 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_Config
 {
-    const ENGINE_SPHINX          = 'sphinx';
+    const ENGINE_SPHINX = 'sphinx';
     const ENGINE_SPHINX_EXTERNAL = 'sphinx_external';
-    const ENGINE_FULLTEXT        = 'fulltext';
+    const ENGINE_FULLTEXT = 'fulltext';
 
-    const XML_PATH_SEARCH_ENGINE           = 'searchsphinx/general/search_engine';
+    const XML_PATH_SEARCH_ENGINE = 'searchsphinx/general/search_engine';
 
-    const XML_PATH_WILDCARD_EXCEPTION      = 'searchsphinx/advanced/wildcard_exception';
-    const XML_PATH_NOTWORDS                = 'searchsphinx/advanced/notword';
-    const XML_PATH_REPLACE_WORD            = 'searchsphinx/advanced/replace_word';
+    const XML_PATH_WILDCARD_EXCEPTION = 'searchsphinx/advanced/wildcard_exception';
+    const XML_PATH_NOTWORDS = 'searchsphinx/advanced/notword';
+    const XML_PATH_REPLACE_WORD = 'searchsphinx/advanced/replace_word';
 
-    const XML_PATH_MATH_MODE               = 'searchsphinx/advanced/match_mode';
-    const XML_PATH_RESULT_LIMIT            = 'searchsphinx/advanced/result_limit';
+    const XML_PATH_MATH_MODE = 'searchsphinx/advanced/match_mode';
+    const XML_PATH_RESULT_LIMIT = 'searchsphinx/advanced/result_limit';
 
-    const XML_PATH_WILDCARD                = 'searchsphinx/advanced/wildcard';
-    const WILDCARD_INFIX                   = 'infix';
-    const WILDCARD_SUFFIX                  = 'suffix';
-    const WILDCARD_PREFIX                  = 'prefix';
-    const WILDCARD_DISABLED                = 'disabled';
+    const XML_PATH_WILDCARD = 'searchsphinx/advanced/wildcard';
+    const WILDCARD_INFIX = 'infix';
+    const WILDCARD_SUFFIX = 'suffix';
+    const WILDCARD_PREFIX = 'prefix';
+    const WILDCARD_DISABLED = 'disabled';
 
-    const XML_PATH_SINGLE_RESULT_REDIRECT  = 'searchsphinx/advanced/single_result';
+    const XML_PATH_SINGLE_RESULT_REDIRECT = 'searchsphinx/advanced/single_result';
 
-    const XML_PATH_TERMS_HIGHLIGHT         = 'searchsphinx/advanced/terms_highlighting';
+    const XML_PATH_TERMS_HIGHLIGHT = 'searchsphinx/advanced/terms_highlighting';
 
     public function getSearchEngine()
     {
@@ -59,7 +59,7 @@ class Mirasvit_SearchSphinx_Model_Config
         if (!in_array(Mage::getStoreConfig(self::XML_PATH_MATH_MODE), array('and', 'or'))) {
             return 'and';
         }
-        
+
         return Mage::getStoreConfig(self::XML_PATH_MATH_MODE);
     }
 
@@ -110,7 +110,7 @@ class Mirasvit_SearchSphinx_Model_Config
         if (Mage::getStoreConfig(self::XML_PATH_REPLACE_WORD)) {
             $array = unserialize(Mage::getStoreConfig(self::XML_PATH_REPLACE_WORD));
             foreach ($array as $value) {
-                $word     = strtolower($value['replace']);
+                $word = strtolower($value['replace']);
                 $synonyms = explode(',', $value['find']);
 
                 foreach ($synonyms as $synonym) {

@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
@@ -21,12 +22,13 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
     protected $_columns = null;
 
     /**
-     * Add entity data to fulltext search table
+     * Add entity data to fulltext search table.
      *
-     * @param int $entityId
-     * @param int $storeId
-     * @param array $index
-     * @param string $entity 'product'|'cms'
+     * @param int    $entityId
+     * @param int    $storeId
+     * @param array  $index
+     * @param string $entity   'product'|'cms'
+     *
      * @return Mage_CatalogSearch_Model_Resource_Fulltext_Engine
      */
     public function saveEntityIndex($entityId, $storeId, $index, $entity = 'product')
@@ -34,24 +36,25 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
         $uid = Mage::helper('mstcore/debug')->start();
 
         $index['product_id'] = $entityId;
-        $index['store_id']   = $storeId;
-        $index['updated']    = 1;
+        $index['store_id'] = $storeId;
+        $index['updated'] = 1;
         $this->_getWriteAdapter()->insert($this->getMainTable(), $index);
 
         Mage::helper('mstcore/debug')->end($uid, array(
             '$entityId' => $entityId,
-            '$index'    => $index,
-            '$storeId'  => $storeId));
+            '$index' => $index,
+            '$storeId' => $storeId, ));
 
         return $this;
     }
 
     /**
-     * Multi add entities data to fulltext search table
+     * Multi add entities data to fulltext search table.
      *
-     * @param int $storeId
-     * @param array $entityIndexes
-     * @param string $entity 'product'|'cms'
+     * @param int    $storeId
+     * @param array  $entityIndexes
+     * @param string $entity        'product'|'cms'
+     *
      * @return Mage_CatalogSearch_Model_Resource_Fulltext_Engine
      */
     public function saveEntityIndexes($storeId, $entityIndexes, $entity = 'product')
@@ -59,8 +62,8 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
         $uid = Mage::helper('mstcore/debug')->start();
 
         $adapter = $this->_getWriteAdapter();
-        $data    = array();
-        $storeId = (int)$storeId;
+        $data = array();
+        $storeId = (int) $storeId;
 
         $this->_addCategoryData($entityIndexes, $storeId)
             ->_addWeights($entityIndexes, $storeId)
@@ -76,9 +79,9 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
             }
             $index['data_index'] = str_replace('|', ' | ', $index['data_index']);
             $index['product_id'] = $entityId;
-            $index['store_id']   = $storeId;
-            $index['updated']    = 1;
-            $data[]              = $index;
+            $index['store_id'] = $storeId;
+            $index['updated'] = 1;
+            $data[] = $index;
         }
 
         if ($data) {
@@ -91,10 +94,11 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
     }
 
     /**
-     * Prepare index array as a string glued by separator
+     * Prepare index array as a string glued by separator.
      *
-     * @param array $index
+     * @param array  $index
      * @param string $separator
+     *
      * @return array
      */
     public function prepareEntityIndex($index, $separator = ' ')
@@ -133,9 +137,10 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
     }
 
     /**
-     * Return array of category
+     * Return array of category.
      *
      * @param array $productIds in keys
+     *
      * @return Mirasvit_SearchSphinx_Model_Resource_Fulltext_Engine
      */
     protected function _addCategoryData(&$index, $storeId)
@@ -153,6 +158,13 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
             }
         }
 
+        if (!$this->_getWriteAdapter()->tableColumnExists($this->getMainTable(), 'category_name')) {
+            $this->_addCategoryDataByAttribute($index, $storeId, 'name');
+            foreach ($index as &$field) {
+                unset($field['category_name']);
+            }
+        }
+
         return $this;
     }
 
@@ -161,8 +173,8 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
         $uid = Mage::helper('mstcore/debug')->start();
 
         $productIds = array_keys($index);
-        $adapter    = $this->_getWriteAdapter();
-        $attr       = $this->_getCategoryAttribute($attrCode);
+        $adapter = $this->_getWriteAdapter();
+        $attr = $this->_getCategoryAttribute($attrCode);
 
         if (!$attr || !$attr->getId()) {
             return $this;
@@ -180,7 +192,7 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
 
         $columns = array(
             'product_id' => 'product_id',
-            'category'   => new Zend_Db_Expr('('.$nameSelect.')'),
+            'category' => new Zend_Db_Expr('('.$nameSelect.')'),
         );
 
         $select = $adapter->select()
@@ -192,7 +204,6 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
             ->where('product_id IN (?)', $productIds);
         $result = array();
 
-
         foreach ($index as $productId => $data) {
             $index[$productId]['category_'.$attrCode] = '';
         }
@@ -201,7 +212,6 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
             $index[$row['product_id']]['data_index']          .= '|'.$row['category'];
             $index[$row['product_id']]['category_'.$attrCode] .= ' '.$row['category'];
         }
-
 
         Mage::helper('mstcore/debug')->end($uid, array('$index' => $index));
 
@@ -216,7 +226,7 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
             return $this;
         }
 
-        $productIds   = array_keys($index);
+        $productIds = array_keys($index);
         $tableColumns = $this->getTableColumns();
 
         $adapter = $this->_getWriteAdapter();
@@ -255,14 +265,14 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
     protected function _addWeights(&$index, $storeId)
     {
         $productIds = array_keys($index);
-        $adapter    = $this->_getWriteAdapter();
+        $adapter = $this->_getWriteAdapter();
 
         $weightAttr = $this->_getCategoryAttribute('searchindex_weight');
 
         if ($weightAttr) {
             $columns = array(
                 'product_id' => 'product_id',
-                'weight'     => new Zend_Db_Expr("SUM(value)"),
+                'weight' => new Zend_Db_Expr('SUM(value)'),
             );
 
             $select = $adapter->select()
@@ -285,7 +295,7 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
         if ($weightAttr) {
             $columns = array(
                 'entity_id' => 'entity_id',
-                'weight'    => new Zend_Db_Expr("SUM(value)"),
+                'weight' => new Zend_Db_Expr('SUM(value)'),
             );
 
             $select = $adapter->select()
@@ -322,7 +332,9 @@ class Mirasvit_SearchIndex_Model_Resource_Catalogsearch_Fulltext_Engine
         }
 
         $productIds = array_keys($index);
-        $adapter    = $this->_getWriteAdapter();
+        $adapter = $this->_getWriteAdapter();
+
+        $adapter->query('SET SESSION group_concat_max_len = 1000000;');
 
         $select = $adapter->select()
             ->from(array('main_table' => $this->getTable('catalog/product_option')), array('product_id'))

@@ -10,27 +10,27 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
-    public function __construct ()
+    public function __construct()
     {
         parent::__construct();
 
-        $this->_objectId   = 'stopword_id';
+        $this->_objectId = 'stopword_id';
         $this->_blockGroup = 'searchsphinx';
-        $this->_mode       = 'edit';
+        $this->_mode = 'edit';
         $this->_controller = 'adminhtml_stopword';
-        
 
         $this->_addButton('saveandcontinue', array(
-            'label'     => Mage::helper('searchsphinx')->__('Save And Continue Edit'),
-            'onclick'   => 'saveAndContinueEdit()',
-            'class'     => 'save',
+            'label' => Mage::helper('searchsphinx')->__('Save And Continue Edit'),
+            'onclick' => 'saveAndContinueEdit()',
+            'class' => 'save',
         ), -100);
 
         $this->_formScripts[] = "
@@ -45,9 +45,9 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword_Edit extends Mage_Adminhtml
     public function getHeaderText()
     {
         if (Mage::registry('current_model')->getId() > 0) {
-            return Mage::helper('searchsphinx')->__("Edit Stopwords");
+            return Mage::helper('searchsphinx')->__('Edit Stopwords');
         } else {
-            return Mage::helper('searchsphinx')->__("Add Stopwords");
+            return Mage::helper('searchsphinx')->__('Add Stopwords');
         }
     }
 }

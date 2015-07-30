@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchAutocomplete
  */
 class Mirasvit_SearchAutocomplete_Helper_Data extends Mage_Core_Helper_Data
 {
@@ -25,11 +25,13 @@ class Mirasvit_SearchAutocomplete_Helper_Data extends Mage_Core_Helper_Data
 
     public function toSingleRegister($base, $needle)
     {
-        for ($i = 0; $i < strlen($base); $i ++) {
+        for ($i = 0; $i < strlen($base); $i++) {
             if (ctype_lower($base[$i])) {
-                $needle{$i} = strtolower($needle{$i});
+                $needle{$i}
+                = strtolower($needle{$i});
             } else {
-                $needle{$i} = strtoupper($needle{$i});
+                $needle{$i}
+                = strtoupper($needle{$i});
             }
         }
 
@@ -43,7 +45,7 @@ class Mirasvit_SearchAutocomplete_Helper_Data extends Mage_Core_Helper_Data
         $query = preg_split("/[,\. ]/", $query);
 
         foreach ($query as $word) {
-            $result = preg_replace("|($word)|Ui", "<strong>$1</strong>", $result);
+            $result = preg_replace("|($word)|Ui", '<strong>$1</strong>', $result);
         }
 
         return $result;
@@ -81,7 +83,7 @@ class Mirasvit_SearchAutocomplete_Helper_Data extends Mage_Core_Helper_Data
     }
 
     /**
-     * Sort indexes by position, in ascending order
+     * Sort indexes by position, in ascending order.
      */
     private function sortIndexes($a, $b)
     {

@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ¾Ð´ÐµÐ»Ñ Ð´Ð»Ñ ÑÐ°Ð±Ð¾ÑÑ Ñ ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼Ð°Ð¼Ð¸
+ * Модель для работы с синонимами.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_Synonym extends Mage_Core_Model_Abstract
 {
@@ -29,12 +29,12 @@ class Mirasvit_SearchSphinx_Model_Synonym extends Mage_Core_Model_Abstract
     }
 
     /**
-     * ÐÐ¼Ð¿Ð¾ÑÑ ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼Ð¾Ð²
+     * Импорт синонимов.
      *
-     * @param  string $filePath Ð¿Ð¾Ð»Ð½ÑÐ¹ Ð¿ÑÑÑ Ðº ÑÐ°Ð¹Ð»Ñ (csv)
-     * @param  array  $stores
+     * @param string $filePath полный путь к файлу (csv)
+     * @param array  $stores
      *
-     * @return integer ÐºÐ¾Ð»-Ð²Ð¾ Ð¸Ð¼Ð¿Ð¾ÑÑÐ¸ÑÐ¾Ð²Ð°Ð½ÑÑ ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼Ð¾Ð²
+     * @return int кол-во импортированых синонимов
      */
     public function import($filePath, $stores)
     {
@@ -42,27 +42,26 @@ class Mirasvit_SearchSphinx_Model_Synonym extends Mage_Core_Model_Abstract
             $stores = array($stores);
         }
 
-        $resource   = Mage::getSingleton('core/resource');
+        $resource = Mage::getSingleton('core/resource');
         $connection = $resource->getConnection('core_write');
-        $tableName  = Mage::getSingleton('core/resource')->getTableName('searchsphinx/synonym');
+        $tableName = Mage::getSingleton('core/resource')->getTableName('searchsphinx/synonym');
 
         $content = file_get_contents($filePath);
-        $lines   = explode("\n", $content);
+        $lines = explode("\n", $content);
 
         foreach ($stores as $store) {
-            $rows    = array();
-            $errors  = array();
+            $rows = array();
+            $errors = array();
 
             foreach ($lines as $num => $value) {
-                $value    = strtolower($value);
-                $value    = explode(',', $value);
+                $value = explode(',', $value);
                 $synonyms = array();
 
                 foreach ($value as $ind => $val) {
                     try {
                         $val = $this->prepareWord($val);
                     } catch (Exception $e) {
-                        $errors[$store.$num.$ind] = 'Warning on line #' . ($num + 1) . ': ' . $e->getMessage();
+                        $errors[$store.$num.$ind] = 'Warning on line #'.($num + 1).': '.$e->getMessage();
                         continue;
                     }
                     if (count(Mage::helper('core/string')->splitWords($val, true)) == 1 && $val) {
@@ -88,7 +87,7 @@ class Mirasvit_SearchSphinx_Model_Synonym extends Mage_Core_Model_Abstract
                 $connection->insertArray($tableName, array('synonyms', 'store'), $rows);
             }
         }
-        
+
         if (count($errors) > 0) {
             foreach ($errors as $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e);
@@ -130,12 +129,14 @@ class Mirasvit_SearchSphinx_Model_Synonym extends Mage_Core_Model_Abstract
 
     /**
      * @param $word
+     *
      * @return string $word
+     *
      * @throws Mage_Core_Exception
      */
     public function prepareWord($word)
     {
-        $word = trim($word);
+        $word = trim(strtolower($word));
         if (strlen($word) <= 1) {
             Mage::throwException(sprintf(__('The lenght of synonym "%s" must be greater than 1'), $word));
         }

@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ¾Ð½ÑÑÐ¾Ð»Ð»ÐµÑ Ð´Ð»Ñ Ð¿Ð¾Ð»ÑÑÐµÐ½Ð¸Ñ Ð·Ð°Ð¿ÑÐ¾ÑÐ¾Ð² Ð½Ð° ÑÐ¿ÑÐ°Ð²Ð»ÐµÐ½Ð¸Ðµ ÑÑÐ¸Ð½ÐºÑÐ¾Ð¼ (ÑÑÐ¾ Ð±Ñ Ð²ÑÐµ Ð´ÐµÐ¹ÑÑÐ²Ð¸Ñ Ð¿ÑÐ¾Ð¸Ð·Ð²Ð¾Ð´Ð¸Ð»Ð¸ÑÑ Ð¿Ð¾Ð´ apache Ð¿Ð¾Ð»ÑÐ·ÑÐ·Ð¾Ð²Ð°ÑÐµÐ»ÐµÐ¼)
- * 
+ * Контроллер для получения запросов на управление сфинксом (что бы все действия производились под apache пользьзователем).
+ *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_ActionController extends Mage_Core_Controller_Front_Action
 {
@@ -39,30 +39,24 @@ class Mirasvit_SearchSphinx_ActionController extends Mage_Core_Controller_Front_
         } catch (Exception $e) {
             $this->getResponse()->setBody($e->getMessage());
         }
-
     }
 
     public function reindexAction()
     {
         $result = null;
+        $isDelta = false;
+
+        if ($this->getRequest()->has('delta')) {
+            $isDelta = true;
+        }
 
         try {
-            $result = $this->_getEngine()->doReindex();
+            $result = $this->_getEngine()->doReindex($isDelta);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }
 
         $this->getResponse()->setBody(Mage::helper('searchsphinx')->__($result));
-    }
-
-    public function reindexdeltaAction()
-    {
-        try {
-            $this->_getEngine()->doReindexDelta();
-        } catch (Exception $e) {
-            $this->getResponse()->setBody($e->getMessage());
-        }
-
     }
 
     protected function _getEngine()

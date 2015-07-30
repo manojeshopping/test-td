@@ -8,10 +8,10 @@
  * Please refer to http://www.magentocommerce.com for more information.
  *
  * @category  Mirasvit
- * @package   Full Page Cache
- * @version   1.0.1
- * @build     268
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @package   Sphinx Search Ultimate
+ * @version   2.3.2
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -22,9 +22,13 @@ class Mirasvit_MstCore_Helper_Attachment extends Mage_Core_Helper_Data
 	 * <action method="addJs"><script>mirasvit/core/jquery.min.js</script></action>
      * <action method="addJs"><script>mirasvit/core/jquery.MultiFile.js</script></action>
 	 */
-	public function getFileInputHtml()
+	public function getFileInputHtml($allowedFileExtensions = array())
 	{
-		return "<input type='file' class='multi' name='attachment[]' id='attachment'>";
+        $accept = '';
+        if (count($allowedFileExtensions)) {
+            $accept = "accept='".implode('|', $allowedFileExtensions)."'";
+        }
+		return "<input type='file' class='multi' name='attachment[]' id='attachment' $accept>";
 	}
 
     public function getAttachment($entityType, $entityId) {
@@ -62,7 +66,10 @@ class Mirasvit_MstCore_Helper_Attachment extends Mage_Core_Helper_Data
     	return isset($_FILES[$field]['name'][0]) && $_FILES[$field]['name'][0] != '';
     }
 
-    public function saveAttachments($entityType, $entityId, $field = 'attachment') {
+    /**
+     * @param  boolean $fileSizeLimit        in bytes
+     */
+    public function saveAttachments($entityType, $entityId, $field = 'attachment', $allowedFileExtensions = array(), $fileSizeLimit = false) {
 
         if (!$this->hasAttachments($field)) {
             return false;
@@ -72,7 +79,20 @@ class Mirasvit_MstCore_Helper_Attachment extends Mage_Core_Helper_Data
             if ($name == '') {
                 continue;
             }
-            $this->_saveFile($entityType, $entityId, $name, $_FILES[$field]['tmp_name'][$i], $_FILES[$field]['type'][$i], $_FILES[$field]['size'][$i]);
+
+            $type = $_FILES[$field]['type'][$i];
+            $size = $_FILES[$field]['size'][$i];
+            $ext = pathinfo($name, PATHINFO_EXTENSION);
+
+            if (count($allowedFileExtensions) && !in_array($ext, $allowedFileExtensions)) {
+                continue;
+            }
+
+            if ($fileSizeLimit && $size > $fileSizeLimit) {
+                continue;
+            }
+
+            $this->_saveFile($entityType, $entityId, $name, $_FILES[$field]['tmp_name'][$i], $type, $size);
             $i++;
         }
         return true;

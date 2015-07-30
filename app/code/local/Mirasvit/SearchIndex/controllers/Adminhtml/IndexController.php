@@ -10,20 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action
 {
-    /**
-     * Temporarily allow access for all users
-     */
-    protected function _isAllowed() {
-        return true;
-    }
-
     public function preDispatch()
     {
         parent::preDispatch();
@@ -101,6 +95,7 @@ class Mirasvit_SearchIndex_Adminhtml_IndexController extends Mage_Adminhtml_Cont
 
                 if ($this->getRequest()->getParam('back')) {
                     $this->_redirect('*/*/edit', array('id' => $model->getId()));
+
                     return;
                 }
 
@@ -108,6 +103,12 @@ class Mirasvit_SearchIndex_Adminhtml_IndexController extends Mage_Adminhtml_Cont
             } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
                 Mage::getSingleton('adminhtml/session')->setFormData($data);
+
+                if ($this->getRequest()->getParam('back')) {
+                    $this->_redirect('*/*/edit', array('id' => $model->getId()));
+
+                    return;
+                }
 
                 $this->_redirect('*/*/');
             }
@@ -132,12 +133,11 @@ class Mirasvit_SearchIndex_Adminhtml_IndexController extends Mage_Adminhtml_Cont
     {
         $model = $this->_getModel();
 
-        $result = array();
         try {
             $model->reindexAll();
 
             Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchindex')->__('Index "%s" has been successfully rebuilt', $model->getTitle()));
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
         }
 
@@ -152,7 +152,7 @@ class Mirasvit_SearchIndex_Adminhtml_IndexController extends Mage_Adminhtml_Cont
                 $model->reindexAll();
 
                 Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchindex')->__('Index "%s" has been successfully rebuilt', $model->getTitle()));
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             }
         }
@@ -172,10 +172,10 @@ class Mirasvit_SearchIndex_Adminhtml_IndexController extends Mage_Adminhtml_Cont
             $model->load($id);
         }
 
-        if ($storeId = (int)$this->getRequest()->getParam('store')) {
+        if ($storeId = (int) $this->getRequest()->getParam('store')) {
             $model->setStoreId($storeId);
         }
-        if ($storeId = (int)$this->getRequest()->getParam('store_id')) {
+        if ($storeId = (int) $this->getRequest()->getParam('store_id')) {
             $model->setStoreId($storeId);
         }
 
@@ -183,4 +183,9 @@ class Mirasvit_SearchIndex_Adminhtml_IndexController extends Mage_Adminhtml_Cont
 
         return $model;
     }
+
+	protected function _isAllowed()
+	{
+		return Mage::getSingleton('admin/session')->isAllowed('search/searchindex_index');
+	}
 }

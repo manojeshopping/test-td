@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchLandingPage_Controller_Router extends Mage_Core_Controller_Varien_Router_Abstract
@@ -32,13 +33,17 @@ class Mirasvit_SearchLandingPage_Controller_Router extends Mage_Core_Controller_
             $page = Mage::getModel('searchlandingpage/page')->getCollection()
                 ->addFieldToFilter('query_text', Mage::app()->getRequest()->getParam('q'))
                 ->addFieldToFilter('is_active', 1)
+                ->addStoreFilter(Mage::app()->getStore()->getId())
                 ->getFirstItem();
 
             if ($page->getId()) {
-                Mage::app()->getResponse()
-                    ->clearHeaders()
-                    ->setHeader('Location',  Mage::getUrl($page->getUrlKey()))
-                    ->sendHeaders();
+                $search = array('.html/', '.htm/');
+                $replace = array('.html', '.htm');
+                $parsedUrl = Mage::getModel('core/url')->parseUrl(trim($page->getUrlKey(), '/'));
+                $url = Mage::getUrl($parsedUrl->getPath(), array('_query' => $parsedUrl->getQueryParams()));
+                $url = str_replace($search, $replace, $url);
+
+                Mage::app()->getResponse()->clearHeaders()->setRedirect($url)->sendResponse();
             }
         }
     }
@@ -49,7 +54,7 @@ class Mirasvit_SearchLandingPage_Controller_Router extends Mage_Core_Controller_
 
         $condition = new Varien_Object(array(
             'identifier' => $identifier,
-            'continue'   => true
+            'continue' => true,
         ));
 
         $identifier = $condition->getIdentifier();
@@ -59,6 +64,7 @@ class Mirasvit_SearchLandingPage_Controller_Router extends Mage_Core_Controller_
                 ->setRedirect($condition->getRedirectUrl())
                 ->sendResponse();
             $request->setDispatched(true);
+
             return true;
         }
 

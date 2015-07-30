@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * ÐÐ»Ð¾Ðº ÑÐ°Ð±Ð»Ð¸ÑÑ ÑÑÐ¾Ð¿-ÑÐ»Ð¾Ð²
+ * Блок таблицы стоп-слов.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword extends Mage_Adminhtml_Block_Widget_Grid_Container
 {
@@ -30,9 +30,9 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Stopword extends Mage_Adminhtml_Bloc
         $this->_headerText = Mage::helper('searchsphinx')->__('Dictionary of stopwords');
 
         $this->_addButton('import', array(
-            'label'     => Mage::helper('searchsphinx')->__('Import Dictionary'),
-            'onclick'   => 'setLocation(\'' . $this->getUrl('*/*/import') .'\')',
-            'class'     => 'import',
+            'label' => Mage::helper('searchsphinx')->__('Import Dictionary'),
+            'onclick' => 'setLocation(\''.$this->getUrl('*/*/import').'\')',
+            'class' => 'import',
         ));
 
         parent::__construct();

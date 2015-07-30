@@ -7,11 +7,11 @@
                     <search>
                         <title>Search Configuration</title>
                         <sort_order>20</sort_order>
-                        <children>                           
+                        <children>
                             <searchlandingpage_page>
                                 <title>Manage Landing Pages</title>
                                 <sort_order>20</sort_order>
-                            </searchlandingpage_page>                            
+                            </searchlandingpage_page>
                         </children>
                     </search>
                 </children>
@@ -28,5 +28,5 @@
                 </searchlandingpage_page>
             </children>
         </search>
-    </menu> 
+    </menu>
 </config>

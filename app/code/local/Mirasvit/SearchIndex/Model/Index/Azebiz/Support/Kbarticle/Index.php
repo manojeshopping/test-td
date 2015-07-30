@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Azebiz_Support_Kbarticle_Index extends Mirasvit_SearchIndex_Model_Index
@@ -39,8 +40,8 @@ class Mirasvit_SearchIndex_Model_Index_Azebiz_Support_Kbarticle_Index extends Mi
 
     public function getAvailableAttributes()
     {
-         $result = array(
-            'title'              => __('Title'),
+        $result = array(
+            'title' => __('Title'),
             'kb_article_content' => __('Content'),
         );
 

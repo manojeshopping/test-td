@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_External_Vbulletin_Thread_Index extends Mirasvit_SearchIndex_Model_Index
@@ -36,14 +37,14 @@ class Mirasvit_SearchIndex_Model_Index_External_Vbulletin_Thread_Index extends M
     {
         return array(
             'External_Database',
-            'External_Url'
+            'External_Url',
         );
     }
 
     public function getAvailableAttributes()
     {
         $result = array(
-            'title'   => Mage::helper('searchindex')->__('Title'),
+            'title' => Mage::helper('searchindex')->__('Title'),
         );
 
         return $result;
@@ -53,6 +54,7 @@ class Mirasvit_SearchIndex_Model_Index_External_Vbulletin_Thread_Index extends M
     {
         if ($this->getProperty('db_connection_name')) {
             $connName = $this->getProperty('db_connection_name');
+
             return Mage::getSingleton('core/resource')->getConnection($connName);
         }
 
@@ -64,6 +66,7 @@ class Mirasvit_SearchIndex_Model_Index_External_Vbulletin_Thread_Index extends M
         $collection = Mage::getModel('searchindex/index_external_vbulletin_thread_collection');
 
         $this->joinMatched($collection, 'main_table.threadid');
+
         return $collection;
     }
 }

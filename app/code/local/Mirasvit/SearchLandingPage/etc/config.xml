@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Mirasvit_SearchLandingPage>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </Mirasvit_SearchLandingPage>
     </modules>
     <global>
@@ -18,6 +18,9 @@
                     <page>
                         <table>m_searchlandingpage</table>
                     </page>
+                    <page_store>
+                        <table>m_searchlandingpage_store</table>
+                    </page_store>
                 </entities>
             </searchlandingpage_resource>
         </models>

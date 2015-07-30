@@ -10,16 +10,16 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
+
 /**
- * Ð¢Ð°Ð±Ð»Ð¸ÑÐ° ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼Ð¾Ð²
+ * Таблица синонимов.
  *
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
@@ -31,7 +31,7 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Grid extends Mage_Adminhtml_
         $this->setDefaultSort('synonym_id');
         $this->setDefaultDir('desc');
         $this->setSaveParametersInSession(true);
-    
+
         return $this;
     }
 
@@ -47,25 +47,25 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Grid extends Mage_Adminhtml_
     {
         $this->addColumn('synonym_id', array(
             'header' => Mage::helper('searchsphinx')->__('ID'),
-            'align'  => 'right',
-            'width'  => '50px',
-            'index'  => 'synonym_id',
+            'align' => 'right',
+            'width' => '50px',
+            'index' => 'synonym_id',
         ));
 
         $this->addColumn('synonyms', array(
-            'header'   => Mage::helper('searchsphinx')->__('Synonyms'),
-            'align'    => 'left',
-            'index'    => 'synonyms',
-            'renderer' => 'Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Grid_Renderer_Synonyms'
+            'header' => Mage::helper('searchsphinx')->__('Synonyms'),
+            'align' => 'left',
+            'index' => 'synonyms',
+            'renderer' => 'Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Grid_Renderer_Synonyms',
         ));
 
         $this->addColumn('store', array(
-            'header'  => Mage::helper('searchsphinx')->__('Store'),
-            'align'   => 'left',
-            'width'   => '200px',
-            'index'   => 'store',
-            'type'    => 'options',
-            'options' => Mage::getSingleton('adminhtml/system_store')->getStoreOptionHash()
+            'header' => Mage::helper('searchsphinx')->__('Store'),
+            'align' => 'left',
+            'width' => '200px',
+            'index' => 'store',
+            'type' => 'options',
+            'options' => Mage::getSingleton('adminhtml/system_store')->getStoreOptionHash(),
         ));
 
         return parent::_prepareColumns();
@@ -77,10 +77,11 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_Synonym_Grid extends Mage_Adminhtml_
         $this->getMassactionBlock()->setFormFieldName('synonym');
 
         $this->getMassactionBlock()->addItem('delete', array(
-            'label'   => Mage::helper('searchsphinx')->__('Delete'),
-            'url'     => $this->getUrl('*/*/massDelete'),
-            'confirm' => Mage::helper('searchsphinx')->__('Are you sure?')
+            'label' => Mage::helper('searchsphinx')->__('Delete'),
+            'url' => $this->getUrl('*/*/massDelete'),
+            'confirm' => Mage::helper('searchsphinx')->__('Are you sure?'),
         ));
+
         return $this;
     }
 

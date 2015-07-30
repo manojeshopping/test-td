@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Adminhtml_Index_Grid extends Mage_Adminhtml_Block_Widget_Grid
@@ -40,42 +41,42 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Grid extends Mage_Adminhtml_Blo
     protected function _prepareColumns()
     {
         $this->addColumn('title', array(
-            'header'         => Mage::helper('searchindex')->__('Title'),
-            'align'          => 'left',
-            'index'          => 'title',
+            'header' => Mage::helper('searchindex')->__('Title'),
+            'align' => 'left',
+            'index' => 'title',
             'frame_callback' => array($this, '_renderTitle'),
         ));
 
         $this->addColumn('status', array(
-            'header'   => Mage::helper('searchindex')->__('State'),
-            'align'    => 'left',
-            'index'    => 'status',
-            'width'    => '150px',
+            'header' => Mage::helper('searchindex')->__('State'),
+            'align' => 'left',
+            'index' => 'status',
+            'width' => '150px',
             'renderer' => 'Mirasvit_SearchIndex_Block_Adminhtml_Index_Renderer_State',
-            'filter'   => false,
+            'filter' => false,
         ));
 
         $this->addColumn('action',
             array(
-                'header'  => Mage::helper('searchindex')->__('Action'),
-                'width'   => '100',
-                'type'    => 'action',
-                'getter'  => 'getId',
+                'header' => Mage::helper('searchindex')->__('Action'),
+                'width' => '100',
+                'type' => 'action',
+                'getter' => 'getId',
                 'actions' => array(
                     array(
                         'caption' => Mage::helper('searchindex')->__('Edit'),
-                        'url'     => array('base'=> '*/*/edit'),
-                        'field'   => 'id'
+                        'url' => array('base' => '*/*/edit'),
+                        'field' => 'id',
                     ),
                     array(
                         'caption' => Mage::helper('searchindex')->__('Run Reindex'),
-                        'url'     => array('base'=> '*/*/reindex'),
-                        'field'   => 'id'
+                        'url' => array('base' => '*/*/reindex'),
+                        'field' => 'id',
                     ),
                 ),
-                'filter'    => false,
-                'sortable'  => false,
-                'index'     => 'stores',
+                'filter' => false,
+                'sortable' => false,
+                'index' => 'stores',
                 'is_system' => true,
             )
         );
@@ -94,8 +95,8 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Grid extends Mage_Adminhtml_Blo
         $this->getMassactionBlock()->setFormFieldName('index_id');
 
         $this->getMassactionBlock()->addItem('reindex', array(
-            'label'   => Mage::helper('searchindex')->__('Run Reindex'),
-            'url'     => $this->getUrl('*/*/massReindex'),
+            'label' => Mage::helper('searchindex')->__('Run Reindex'),
+            'url' => $this->getUrl('*/*/massReindex'),
         ));
 
         return $this;

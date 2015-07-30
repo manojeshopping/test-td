@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_Misspell
  */
 class Mirasvit_Misspell_Block_Suggest extends Mirasvit_Misspell_Block_Abstract
 {
@@ -35,6 +35,4 @@ class Mirasvit_Misspell_Block_Suggest extends Mirasvit_Misspell_Block_Abstract
     {
         return Mage::helper('misspell/query')->getCurrentPhase();
     }
-
-    
 }

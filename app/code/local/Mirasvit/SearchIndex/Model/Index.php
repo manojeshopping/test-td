@@ -10,16 +10,17 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
 {
-    protected $_matchedIds       = array();
-    protected $_cache            = false;
-    protected $_tmpTableCreated  = false;
+    protected $_matchedIds = array();
+    protected $_useNativeTables = false;
+    protected $_tmpTableCreated = false;
     protected static $_instances = array();
 
     protected function _construct()
@@ -62,6 +63,7 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
     public function getCode()
     {
         $arr = explode('_', get_class($this));
+
         return strtolower($arr[4].'_'.$arr[5].'_'.$arr[6]);
     }
 
@@ -175,7 +177,7 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
         }
 
         if ($queryText == null) {
-            $query     = $this->getQuery();
+            $query = $this->getQuery();
             $queryText = $query->getQueryText();
 
             if ($query->getSynonymFor()) {
@@ -207,11 +209,14 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
 
     public function getQuery()
     {
-        return Mage::helper('catalogsearch')->getQuery();
+        $queryHelper = new Mage_CatalogSearch_Helper_Data();
+
+        return $queryHelper->getQuery();
     }
 
     /**
-     * List of searchable attributes (search ONLY by these attributes)
+     * List of searchable attributes (search ONLY by these attributes).
+     *
      * @return array
      */
     public function getSearchableAttributes()
@@ -231,7 +236,7 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
     {
         $ts = microtime(true);
 
-        $engine  = Mage::helper('searchindex')->getSearchEngine();
+        $engine = Mage::helper('searchindex')->getSearchEngine();
 
         try {
             $result = $engine->query($queryText, $storeId, $this);
@@ -248,7 +253,7 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
                 $engine = Mage::getModel('searchsphinx/engine_fulltext');
                 $result = $engine->query($queryText, $storeId, $this);
                 $this->setMatchedIds($queryText, $result);
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 Mage::helper('mstcore/logger')->logException($this, $e, $e);
                 $this->setMatchedIds($queryText, array());
             }
@@ -269,13 +274,16 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
 
         $collection->getSelect()->joinLeft(
             array('tmp_table' => $this->_getTemporaryTableName()),
-            '(tmp_table.entity_id='.$mainTableKeyField.')',
+            '(tmp_table.product_id='.$mainTableKeyField.')',
             array('relevance' => 'tmp_table.relevance')
         );
-        if ($this->_cache) {
+
+        if ($this->_useNativeTables) {
             $collection->getSelect()->where('tmp_table.query_id = '.$this->getQuery()->getId());
         }
-        $collection->getSelect()->where('tmp_table.id IS NOT NULL');
+        if (!$this->_useNativeTables) {
+            $collection->getSelect()->where('tmp_table.id IS NOT NULL');
+        }
 
         return $this;
     }
@@ -287,7 +295,7 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
 
     protected function _createTemporaryTable($matchedIds)
     {
-        if ($this->_tmpTableCreated) {
+        if ($this->_tmpTableCreated && Mage::app()->getRequest()->getRequestedControllerName() !== 'adminhtml_report') {
             return $this;
         }
 
@@ -305,27 +313,28 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
         $connection = $this->getConnection();
 
         $query = '';
-        if ($this->_cache) {
-            $query .= "CREATE TABLE IF NOT EXISTS `".$this->_getTemporaryTableName()."` (";
+        if ($this->_useNativeTables) {
+            $query .= 'CREATE TABLE IF NOT EXISTS `'.$this->_getTemporaryTableName().'` (';
         } else {
-            $query .= "CREATE TEMPORARY TABLE IF NOT EXISTS `".$this->_getTemporaryTableName()."` (";
+            $query .= 'CREATE TEMPORARY TABLE IF NOT EXISTS `'.$this->_getTemporaryTableName().'` (';
         }
-        $query .= "
+        $query .= '
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                 `query_id` int(11) unsigned NOT NULL,
-                `entity_id` int(11) unsigned NOT NULL,
+                `product_id` int(11) unsigned NOT NULL,
                 `relevance` int(11) unsigned NOT NULL,
                 PRIMARY KEY (`id`),
-                INDEX `entity_id` (`entity_id`)";
-        if ($this->_cache) {
-            $query .= ")ENGINE=MEMORY DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-            $query .= "DELETE FROM `".$this->_getTemporaryTableName()."` WHERE `query_id`=".$queryId.";";
+                INDEX `product_id` (`product_id`)';
+        if ($this->_useNativeTables) {
+            $query .= ')ENGINE=MEMORY DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;';
+            $query .= 'DELETE FROM `'.$this->_getTemporaryTableName().'` WHERE `query_id`='.$queryId.';';
         } else {
-            $query .= ")ENGINE=MYISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+            $query .= ')ENGINE=MYISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;';
+            $query .= 'DELETE FROM `'.$this->_getTemporaryTableName().'`;';
         }
         if (count($values)) {
-            $query .= "INSERT INTO `".$this->_getTemporaryTableName()."` (`query_id`, `entity_id`, `relevance`)".
-                "VALUES ".implode(',', $values).";";
+            $query .= 'INSERT INTO `'.$this->_getTemporaryTableName().'` (`query_id`, `product_id`, `relevance`)'.
+                'VALUES '.implode(',', $values).';';
         }
 
         $connection->raw_query($query);
@@ -336,6 +345,22 @@ class Mirasvit_SearchIndex_Model_Index extends Mage_Core_Model_Abstract
 
     protected function _getTemporaryTableName()
     {
-        return 'searchindex_result_'.$this->getCode();
+        $tableName = '';
+        if ($this->getCode() === 'mage_catalog_product' && $this->_useNativeTables) {
+            $tableName = Mage::getSingleton('core/resource')->getTableName('catalogsearch/result');
+        } else {
+            $tableName = 'searchindex_result_'.$this->getCode();
+        }
+
+        return $tableName;
+    }
+
+    public function validate()
+    {
+        if ($this->getId() && count($this->getAttributes()) == 0) {
+            Mage::throwException(Mage::helper('searchindex')->__("Search index should contains at least one configured attribute. Go to Search / Manage Search Indexes, open index {$this->getTitle()} and add least one attribute with weight at left bottom corner of page."));
+        }
+
+        return true;
     }
 }

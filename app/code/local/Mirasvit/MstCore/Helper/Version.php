@@ -8,10 +8,10 @@
  * Please refer to http://www.magentocommerce.com for more information.
  *
  * @category  Mirasvit
- * @package   Full Page Cache
- * @version   1.0.1
- * @build     268
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @package   Sphinx Search Ultimate
+ * @version   2.3.2
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
 
 
@@ -29,6 +29,9 @@ class Mirasvit_MstCore_Helper_Version extends Mage_Core_Helper_Abstract
                 $xml = @simplexml_load_file($configEE,'SimpleXMLElement', LIBXML_NOCDATA);
                 if ($xml !== false) {
                     $package = (string)$xml->default->design->package->name;
+                    if (!$package) {
+                        $package = strtolower(Mage::getEdition());
+                    }
                     if ($package == 'enterprise') {
                         self::$_edition = 'ee';
                     } else {

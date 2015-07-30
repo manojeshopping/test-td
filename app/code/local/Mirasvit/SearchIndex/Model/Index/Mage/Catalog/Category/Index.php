@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Category_Index extends Mirasvit_SearchIndex_Model_Index
@@ -34,12 +35,12 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Category_Index extends Miras
 
     public function getAvailableAttributes()
     {
-         $result = array(
-            'name'             => Mage::helper('searchindex')->__('Name'),
-            'meta_title'       => Mage::helper('searchindex')->__('Meta Title'),
-            'meta_keywords'    => Mage::helper('searchindex')->__('Meta Keywords'),
+        $result = array(
+            'name' => Mage::helper('searchindex')->__('Name'),
+            'meta_title' => Mage::helper('searchindex')->__('Meta Title'),
+            'meta_keywords' => Mage::helper('searchindex')->__('Meta Keywords'),
             'meta_description' => Mage::helper('searchindex')->__('Meta Description'),
-            'description'      => Mage::helper('searchindex')->__('Description'),
+            'description' => Mage::helper('searchindex')->__('Description'),
         );
 
         return $result;
@@ -50,7 +51,6 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Category_Index extends Miras
         $collection = Mage::getModel('catalog/category')->getCollection()
             ->addNameToResult();
         $collection->addFieldToFilter('is_active', 1);
-        
 
         $mainTable = 'e';
 

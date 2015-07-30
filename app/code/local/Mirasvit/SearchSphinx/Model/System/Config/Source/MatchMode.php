@@ -10,14 +10,14 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 /**
  * @category Mirasvit
- * @package  Mirasvit_SearchSphinx
  */
 class Mirasvit_SearchSphinx_Model_System_Config_Source_MatchMode
 {
@@ -26,12 +26,12 @@ class Mirasvit_SearchSphinx_Model_System_Config_Source_MatchMode
         return array(
             array(
                 'value' => 'and',
-                'label' => Mage::helper('searchsphinx')->__('AND matching (word1 & word2 & word3...)')
+                'label' => Mage::helper('searchsphinx')->__('AND matching (word1 & word2 & word3...)'),
             ),
             array(
                 'value' => 'or',
-                'label' => Mage::helper('searchsphinx')->__('OR matching (word1 | word2 | word3...)')
-            )
+                'label' => Mage::helper('searchsphinx')->__('OR matching (word1 | word2 | word3...)'),
+            ),
         );
     }
 }

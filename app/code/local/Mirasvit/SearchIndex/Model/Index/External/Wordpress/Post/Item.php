@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Item extends Varien_Object
@@ -27,15 +28,15 @@ class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Item extends Vari
             $key = strtolower($key);
             $url = str_replace('{'.$key.'}', $value, $url);
         }
-        return $url;
 
+        return $url;
     }
 
     public function joinCategoryInfo()
     {
-        $pr         = $this->getIndex()->getProperty('db_table_prefix');
+        $pr = $this->getIndex()->getProperty('db_table_prefix');
         $connection = $this->getIndex()->getConnection();
-        $select     = $connection->select();
+        $select = $connection->select();
 
         $select
             ->from(array('rel' => $pr.'term_relationships'), array())
@@ -72,7 +73,6 @@ class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Item extends Vari
 
         $this->setData('post_name', implode('/', array_reverse($names)));
 
-
         return $this;
     }
 
@@ -82,9 +82,9 @@ class Mirasvit_SearchIndex_Model_Index_External_Wordpress_Post_Item extends Vari
             return false;
         }
 
-        $pr         = $this->getIndex()->getProperty('db_table_prefix');
+        $pr = $this->getIndex()->getProperty('db_table_prefix');
         $connection = $this->getIndex()->getConnection();
-        $select     = $connection->select();
+        $select = $connection->select();
 
         $select
             ->from(array('post' => $pr.'posts'), array('*'))

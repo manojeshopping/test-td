@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Attribute_Index extends Mirasvit_SearchIndex_Model_Index
@@ -35,13 +36,13 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Attribute_Index extends Mira
     public function getFieldsets()
     {
         return array(
-            'Mage_Catalog_Attribute_Additional'
+            'Mage_Catalog_Attribute_Additional',
         );
     }
 
     public function getAvailableAttributes()
     {
-         $result = array(
+        $result = array(
             'label' => Mage::helper('searchindex')->__('Option Label'),
         );
 
@@ -53,8 +54,8 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Attribute_Index extends Mira
         $matchedIds = $this->getMatchedIds();
 
         $attributeCode = $this->getProperty('attribute');
-        $attribute     = Mage::getSingleton('eav/config')->getAttribute(Mage_Catalog_Model_Product::ENTITY, $attributeCode);
-        $options       = $attribute->getSource()->getAllOptions(false);
+        $attribute = Mage::getSingleton('eav/config')->getAttribute(Mage_Catalog_Model_Product::ENTITY, $attributeCode);
+        $options = $attribute->getSource()->getAllOptions(false);
 
         $collection = new Varien_Data_Collection();
         foreach ($options as $option) {
@@ -64,7 +65,6 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Attribute_Index extends Mira
                 $collection->addItem($obj);
             }
         }
-
 
         return $collection;
     }
@@ -76,6 +76,7 @@ class Mirasvit_SearchIndex_Model_Index_Mage_Catalog_Attribute_Index extends Mira
             $key = strtolower($key);
             $url = str_replace('{'.$key.'}', $value, $url);
         }
+
         return $url;
     }
 }

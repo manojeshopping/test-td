@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Index_External_Database extends Varien_Data_Form_Element_Fieldset
@@ -24,19 +25,19 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Index_Edit_Index_External_Database ex
         parent::__construct(array('legend' => __('Database Settings')));
 
         $this->addField('db_connection_name', 'text', array(
-            'name'     => 'properties[db_connection_name]',
-            'label'    => __('Database Connection Name'),
+            'name' => 'properties[db_connection_name]',
+            'label' => __('Database Connection Name'),
             'required' => true,
-            'value'    => $model->getProperty('db_connection_name') ? $model->getProperty('db_connection_name') : 'default_setup',
-            'note'     => Mage::helper('searchindex/help')->field('db_connection_name')
+            'value' => $model->getProperty('db_connection_name') ? $model->getProperty('db_connection_name') : 'default_setup',
+            'note' => Mage::helper('searchindex/help')->field('db_connection_name'),
         ));
 
         $this->addField('db_table_prefix', 'text', array(
-            'name'     => 'properties[db_table_prefix]',
-            'label'    => __('Table Prefix'),
+            'name' => 'properties[db_table_prefix]',
+            'label' => __('Table Prefix'),
             'required' => false,
-            'value'    => $model->getProperty('db_table_prefix'),
-            'note'     => Mage::helper('searchindex/help')->field('db_table_prefix')
+            'value' => $model->getProperty('db_table_prefix'),
+            'note' => Mage::helper('searchindex/help')->field('db_table_prefix'),
         ));
 
         return parent::toHtml();

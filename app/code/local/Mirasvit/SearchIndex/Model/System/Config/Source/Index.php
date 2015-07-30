@@ -10,32 +10,32 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_System_Config_Source_Index
 {
     public function toOptionArray($exclude = true)
     {
-        $result            = array();
+        $result = array();
         $result['Magento'] = array('label' => 'Magento');
 
         $path = Mage::getModuleDir('', 'Mirasvit_SearchIndex').DS.'Model'.DS.'Index';
-        $io   = new Varien_Io_File();
+        $io = new Varien_Io_File();
         $io->open();
         $io->cd($path);
 
         foreach ($io->ls(Varien_Io_File::GREP_DIRS) as $space) {
             $io->cd($space['id']);
             foreach ($io->ls(Varien_Io_File::GREP_DIRS) as $module) {
-
                 $io->cd($module['id']);
                 foreach ($io->ls(Varien_Io_File::GREP_DIRS) as $entity) {
                     if ($io->fileExists($entity['id'].DS.'Index.php', true)) {
                         $indexCode = $space['text'].'_'.$module['text'].'_'.$entity['text'];
-                        $index     = Mage::helper('searchindex/index')->getIndexModel($indexCode);
+                        $index = Mage::helper('searchindex/index')->getIndexModel($indexCode);
 
                         if (is_object($index)) {
                             if ($index->canUse()) {

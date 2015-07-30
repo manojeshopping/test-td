@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchIndex_Model_Index_External_Joomla_Zoo_Index extends Mirasvit_SearchIndex_Model_Index
@@ -41,14 +42,14 @@ class Mirasvit_SearchIndex_Model_Index_External_Joomla_Zoo_Index extends Mirasvi
     {
         return array(
             'External_Database',
-            'External_Url'
+            'External_Url',
         );
     }
 
     public function getAvailableAttributes()
     {
         $result = array(
-            'name'    => Mage::helper('searchindex')->__('Name'),
+            'name' => Mage::helper('searchindex')->__('Name'),
             'content' => Mage::helper('searchindex')->__('Content'),
         );
 
@@ -72,6 +73,7 @@ class Mirasvit_SearchIndex_Model_Index_External_Joomla_Zoo_Index extends Mirasvi
         $collection = Mage::getModel('searchindex/index_external_joomla_zoo_collection');
 
         $this->joinMatched($collection, 'main_table.id');
+
         return $collection;
     }
 }

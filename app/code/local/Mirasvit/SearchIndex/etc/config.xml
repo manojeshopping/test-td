@@ -10,16 +10,16 @@
             <catalogsearch>
                 <rewrite>
                     <indexer_fulltext>Mirasvit_SearchIndex_Model_Catalogsearch_Indexer_Fulltext</indexer_fulltext>
-                    <layer>Mirasvit_SearchIndex_Model_Catalogsearch_Layer</layer>
                 </rewrite>
             </catalogsearch>
 
-            <!-- uncomment for enable extension for Global Search in Magento Admin !-->
-            <!-- <catalogsearch_resource>
+            <catalogsearch_resource>
                 <rewrite>
-                    <search_collection>Mirasvit_SearchIndex_Model_Catalogsearch_Resource_Search_Collection</search_collection>
+                    <fulltext_collection>Mirasvit_SearchIndex_Model_Catalogsearch_Resource_Fulltext_Collection</fulltext_collection>
+                    <!-- uncomment for enable extension for Global Search in Magento Admin !-->
+                    <!-- <search_collection>Mirasvit_SearchIndex_Model_Catalogsearch_Resource_Search_Collection</search_collection> -->
                 </rewrite>
-            </catalogsearch_resource> -->
+            </catalogsearch_resource>
 
             <searchindex>
                 <class>Mirasvit_SearchIndex_Model</class>
@@ -61,6 +61,14 @@
                     </searchindex_index_process_complete>
                 </observers>
             </catalogsearch_index_process_complete>
+            <controller_action_postdispatch_cms_index_noRoute>
+                <observers>
+                    <searchindex_index_no_route>
+                        <class>searchindex/observer</class>
+                        <method>onNoRoute</method>
+                    </searchindex_index_no_route>
+                </observers>
+            </controller_action_postdispatch_cms_index_noRoute>
         </events>
     </global>
     <frontend>

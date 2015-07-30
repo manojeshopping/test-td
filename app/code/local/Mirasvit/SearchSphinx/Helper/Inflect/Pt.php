@@ -10,132 +10,133 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchSphinx_Helper_Inflect_Pt extends Mage_Core_Helper_Abstract
 {
-    static $plural = array(
+    public static $plural = array(
     );
 
-    static $singular = array(
-        '/eza$/i'     => "",
-        '/ezas$/i'     => "",
-        '/ico$/i'     => "",
-        '/ica$/i'     => "",
-        '/icos$/i'     => "",
-        '/icas$/i'     => "",
-        '/ismo$/i'     => "",
-        '/ismos$/i'     => "",
-        '/Ã¡vel$/i'     => "",
-        '/Ã­vel$/i'     => "",
-        '/ista$/i'     => "",
-        '/istas$/i'     => "",
-        '/oso$/i'     => "",
-        '/osa$/i'     => "",
-        '/osos$/i'     => "",
-        '/osas$/i'     => "",
-        '/amento$/i'     => "",
-        '/amentos$/i'     => "",
-        '/imento$/i'     => "",
-        '/imentos$/i'     => "",
-        '/adora$/i'     => "",
-        '/ador$/i'     => "",
-        '/adoras$/i'     => "",
-        '/adores$/i'     => "",
-        '/ante$/i'     => "",
-        '/antes$/i'     => "",
-        '/ador$/i'     => "",
-        '/Ã¢ncia$/i'   => "",
-        '/ado$/i'   => "",
-        '/ais$/i'   => "",
-        '/ando$/i'  => "",
-        '/ara$/i'   => "",
-        '/aram$/i'  => "",
-        '/aras$/i'  => "",
-        '/arei$/i'  => "",
-        '/arem$/i'  => "",
-        '/aria$/i'  => "",
-        '/ariam$/i' => "",
-        '/arias$/i' => "",
-        '/armos$/i' => "",
-        '/asse$/i'  => "",
-        '/assem$/i' => "",
-        '/asses$/i' => "",
-        '/aste$/i'  => "",
-        '/astes$/i' => "",
-        '/ava$/i'   => "",
-        '/avam$/i'  => "",
-        '/eis$/i'   => "",
-        '/endo$/i'  => "",
-        '/era$/i'   => "",
-        '/eram$/i'  => "",
-        '/eras$/i'  => "",
-        '/erei$/i'  => "",
-        '/erem$/i'  => "",
-        '/eria$/i'  => "",
-        '/eriam$/i' => "",
-        '/erias$/i' => "",
-        '/ermos$/i' => "",
-        '/esse$/i'  => "",
-        '/essem$/i' => "",
-        '/esses$/i' => "",
-        '/este$/i'  => "",
-        '/estes$/i' => "",
-        '/heten$/i' => "",
-        '/ias$/i'   => "",
-        '/ida$/i'   => "",
-        '/idas$/i'  => "",
-        '/ido$/i'   => "",
-        '/ima$/i'   => "",
-        '/imos$/i'  => "",
-        '/indo$/i'  => "",
-        '/ira$/i'   => "",
-        '/iram$/i'  => "",
-        '/irei$/i'  => "",
-        '/irem$/i'  => "",
-        '/ires$/i'  => "",
-        '/iria$/i'  => "",
-        '/iriam$/i' => "",
-        '/irias$/i' => "",
-        '/irmos$/i' => "",
-        '/isse$/i'  => "",
-        '/issem$/i' => "",
-        '/isses$/i' => "",
-        '/iste$/i'  => "",
-        '/istes$/i' => "",
-        '/am$/i'    => "",
-        '/ar$/i'    => "",
-        '/ar$/i'    => "",
-        '/as$/i'    => "",
-        '/ei$/i'    => "",
-        '/em$/i'    => "",
-        '/en$/i'    => "",
-        '/er$/i'    => "",
-        '/es$/i'    => "",
-        '/eu$/i'    => "",
-        '/ia$/i'    => "",
-        '/ir$/i'    => "",
-        '/is$/i'    => "",
-        '/iu$/i'    => "",
-        '/os$/i'    => "",
-        '/ou$/i'    => "",
-        '/e$/i'     => "",
-        '/o$/i'     => "",
+    public static $singular = array(
+        '/eza$/i' => '',
+        '/ezas$/i' => '',
+        '/ico$/i' => '',
+        '/ica$/i' => '',
+        '/icos$/i' => '',
+        '/icas$/i' => '',
+        '/ismo$/i' => '',
+        '/ismos$/i' => '',
+        '/ável$/i' => '',
+        '/ível$/i' => '',
+        '/ista$/i' => '',
+        '/istas$/i' => '',
+        '/oso$/i' => '',
+        '/osa$/i' => '',
+        '/osos$/i' => '',
+        '/osas$/i' => '',
+        '/amento$/i' => '',
+        '/amentos$/i' => '',
+        '/imento$/i' => '',
+        '/imentos$/i' => '',
+        '/adora$/i' => '',
+        '/ador$/i' => '',
+        '/adoras$/i' => '',
+        '/adores$/i' => '',
+        '/ante$/i' => '',
+        '/antes$/i' => '',
+        '/ador$/i' => '',
+        '/ância$/i' => '',
+        '/ado$/i' => '',
+        '/ais$/i' => '',
+        '/ando$/i' => '',
+        '/ara$/i' => '',
+        '/aram$/i' => '',
+        '/aras$/i' => '',
+        '/arei$/i' => '',
+        '/arem$/i' => '',
+        '/aria$/i' => '',
+        '/ariam$/i' => '',
+        '/arias$/i' => '',
+        '/armos$/i' => '',
+        '/asse$/i' => '',
+        '/assem$/i' => '',
+        '/asses$/i' => '',
+        '/aste$/i' => '',
+        '/astes$/i' => '',
+        '/ava$/i' => '',
+        '/avam$/i' => '',
+        '/eis$/i' => '',
+        '/endo$/i' => '',
+        '/era$/i' => '',
+        '/eram$/i' => '',
+        '/eras$/i' => '',
+        '/erei$/i' => '',
+        '/erem$/i' => '',
+        '/eria$/i' => '',
+        '/eriam$/i' => '',
+        '/erias$/i' => '',
+        '/ermos$/i' => '',
+        '/esse$/i' => '',
+        '/essem$/i' => '',
+        '/esses$/i' => '',
+        '/este$/i' => '',
+        '/estes$/i' => '',
+        '/heten$/i' => '',
+        '/ias$/i' => '',
+        '/ida$/i' => '',
+        '/idas$/i' => '',
+        '/ido$/i' => '',
+        '/ima$/i' => '',
+        '/imos$/i' => '',
+        '/indo$/i' => '',
+        '/ira$/i' => '',
+        '/iram$/i' => '',
+        '/irei$/i' => '',
+        '/irem$/i' => '',
+        '/ires$/i' => '',
+        '/iria$/i' => '',
+        '/iriam$/i' => '',
+        '/irias$/i' => '',
+        '/irmos$/i' => '',
+        '/isse$/i' => '',
+        '/issem$/i' => '',
+        '/isses$/i' => '',
+        '/iste$/i' => '',
+        '/istes$/i' => '',
+        '/am$/i' => '',
+        '/ar$/i' => '',
+        '/ar$/i' => '',
+        '/as$/i' => '',
+        '/ei$/i' => '',
+        '/em$/i' => '',
+        '/en$/i' => '',
+        '/er$/i' => '',
+        '/es$/i' => '',
+        '/eu$/i' => '',
+        '/ia$/i' => '',
+        '/ir$/i' => '',
+        '/is$/i' => '',
+        '/iu$/i' => '',
+        '/os$/i' => '',
+        '/ou$/i' => '',
+        '/e$/i' => '',
+        '/o$/i' => '',
     );
 
-    static $irregular = array(
+    public static $irregular = array(
     );
 
-    static $uncountable = array(
+    public static $uncountable = array(
     );
 
     /**
-     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ ÑÐ»Ð¾Ð²Ð¾ Ð²Ð¾ Ð¼Ð½Ð¾Ð¶ÐµÑÑÐ²ÐµÐ½Ð½Ð¾Ð¼ ÑÐ¸ÑÐ»Ðµ (shoe -> shoes)
+     * Возврашает слово во множественном числе (shoe -> shoes).
      *
-     * @param  string $string
+     * @param string $string
      *
      * @return string
      */
@@ -148,7 +149,7 @@ class Mirasvit_SearchSphinx_Helper_Inflect_Pt extends Mage_Core_Helper_Abstract
 
         // check for irregular singular forms
         foreach (self::$irregular as $pattern => $result) {
-            $pattern = '/' . $pattern . '$/i';
+            $pattern = '/'.$pattern.'$/i';
 
             if (preg_match($pattern, $string)) {
                 return preg_replace($pattern, $result, $string);
@@ -156,7 +157,7 @@ class Mirasvit_SearchSphinx_Helper_Inflect_Pt extends Mage_Core_Helper_Abstract
         }
 
         // check for matches using regular expressions
-        foreach (self::$plural as $pattern => $result ) {
+        foreach (self::$plural as $pattern => $result) {
             if (preg_match($pattern, $string)) {
                 return preg_replace($pattern, $result, $string);
             }
@@ -166,9 +167,9 @@ class Mirasvit_SearchSphinx_Helper_Inflect_Pt extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * ÐÐ¾Ð·Ð²ÑÐ°ÑÐ°ÐµÑ ÑÐ»Ð¾Ð²Ð¾ Ð² Ð¾Ð´Ð¸Ð½Ð¾ÑÐ½Ð¾Ð¼ ÑÐ¸ÑÐ»Ðµ (shoes -> shoe)
+     * Возврашает слово в одиночном числе (shoes -> shoe).
      *
-     * @param  string $string
+     * @param string $string
      *
      * @return string
      */

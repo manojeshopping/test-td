@@ -1,3 +1,9 @@
+<?php if ($this->getData('button_action') == 'reindex'): ?>
+    <?php $_cronStatus = Mage::helper('mstcore/cron')->checkCronStatus(false, false); ?>
+    <?php if ($_cronStatus !== true): ?>
+        <p><?php echo $_cronStatus ?></p>
+    <?php endif ?>
+<?php endif ?>
 <script type="text/javascript">
 //<![CDATA[
     function func_<?php echo $this->getHtmlId() ?>() {

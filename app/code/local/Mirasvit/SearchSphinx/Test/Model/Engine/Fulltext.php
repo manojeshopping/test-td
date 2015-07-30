@@ -10,9 +10,10 @@
  * @category  Mirasvit
  * @package   Sphinx Search Ultimate
  * @version   2.3.2
- * @build     962
- * @copyright Copyright (C) 2014 Mirasvit (http://mirasvit.com/)
+ * @build     1216
+ * @copyright Copyright (C) 2015 Mirasvit (http://mirasvit.com/)
  */
+
 
 
 class Mirasvit_SearchSphinx_Test_Model_Engine_Fulltext extends EcomDev_PHPUnit_Test_Case
@@ -38,10 +39,10 @@ class Mirasvit_SearchSphinx_Test_Model_Engine_Fulltext extends EcomDev_PHPUnit_T
     }
 
     /**
-    * @test
-    * @loadFixture products
-    * @doNotIndex catalog_product_price
-    */
+     * @test
+     * @loadFixture products
+     * @doNotIndex catalog_product_price
+     */
     public function queryTest()
     {
         $this->mockConfigMethod(array('isAllowedWildcard' => true));
@@ -53,12 +54,11 @@ class Mirasvit_SearchSphinx_Test_Model_Engine_Fulltext extends EcomDev_PHPUnit_T
         $this->assertEquals(1, count($result));
     }
 
-
     /**
-    * @test
-    * @loadFixture products
-    * @doNotIndex catalog_product_price
-    */
+     * @test
+     * @loadFixture products
+     * @doNotIndex catalog_product_price
+     */
     public function wildcardSearchTest()
     {
         /////////////////
@@ -85,10 +85,10 @@ class Mirasvit_SearchSphinx_Test_Model_Engine_Fulltext extends EcomDev_PHPUnit_T
     }
 
     /**
-    * @test
-    * @loadFixture products
-    * @doNotIndex catalog_product_price
-    */
+     * @test
+     * @loadFixture products
+     * @doNotIndex catalog_product_price
+     */
     public function wildcardExceptionsSearchTest()
     {
         $this->mockConfigMethod(array('isAllowedWildcard' => true));
@@ -101,20 +101,19 @@ class Mirasvit_SearchSphinx_Test_Model_Engine_Fulltext extends EcomDev_PHPUnit_T
     }
 
     /**
-    * @test
-    * @loadFixture products_synonyms
-    * @loadFixture synonyms
-    * @doNotIndex catalog_product_price
-    */
+     * @test
+     * @loadFixture products_synonyms
+     * @loadFixture synonyms
+     * @doNotIndex catalog_product_price
+     */
     public function synonymsTableTest()
     {
-        /* Ð¼Ñ Ð¸ÑÐµÐ¼ word01, Ð¾Ð½Ð¾ Ð¸Ð¼ÐµÐµÑ ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼ word04, Ð¿Ð¾ÑÑÐ¾Ð¼Ñ Ð½Ð°ÑÐ¾Ð´Ð¸Ð¼ ÑÐ¾Ð²Ð°Ñ word01 Ð¸ word04 */
+        /* мы ищем word01, оно имеет синоним word04, поэтому находим товар word01 и word04 */
         $result = $this->engine->query('word01', 2, $this->index);
         $this->assertEquals(2, count($result));
 
-        /* Ð¼Ñ Ð¸ÑÐµÐ¼ word04, Ð¾Ð½Ð¾ Ð¸Ð¼ÐµÐµÑ ÑÐ¸Ð½Ð¾Ð½Ð¸Ð¼ word01, Ð¿Ð¾ÑÑÐ¾Ð¼Ñ Ð½Ð°ÑÐ¾Ð´Ð¸Ð¼ ÑÐ¾Ð²Ð°Ñ word01 Ð¸ word04 */
+        /* мы ищем word04, оно имеет синоним word01, поэтому находим товар word01 и word04 */
         $result = $this->engine->query('word04', 2, $this->index);
         $this->assertEquals(2, count($result));
     }
-
 }
