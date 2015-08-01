@@ -123,3 +123,12 @@ label em{padding-right:5px;}
 #sns_content .block.block-account ul li{margin:3px 0;transition:all 0.2s ease-out 0s;}
 #sns_content .block.block-account ul{list-style:outside none none;}
 #sns_content .block.block-account ul {list-style: outside none none;margin: 0;padding: 0;}
+.block_head_center{text-align:center;position:relative;margin-bottom:15px;}.block_head_center:before{content:'';display:block;border-top:1px solid #ddd;position:absolute;top:50%;left:0;width:100%;}.block_head_center h3{font-size:200%;display:inline-block;vertical-align:middle;margin:0;position:relative;padding:0 15px;z-index:1;background:#fff;margin-bottom:3px;font-weight:300;}
+.block_border{border:1px solid #ddd;border-radius:8px;position:relative;margin-top:15px;}
+.block_border .block_content{padding:35px 20px 20px 20px;overflow:hidden;}
+.block-subscribe .block_content {text-align: center;}
+.block-subscribe .block_content .actions{margin-bottom:24px;}
+input.input-text{-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px;-webkit-box-shadow:none;box-shadow:none;padding:4px 10px;-webkit-transition:all 0.2s ease-out;transition:all 0.2s ease-out;color:#aaa;border-color:#ededed;}input.input-text:focus{border-color:#aeaeae;-webkit-box-shadow:none;box-shadow:none;color:#666;}input.input-text.validation-failed{border-color:#b94a48 !important;}
+.block-subscribe .block_content .actions input,.block-subscribe .block_content .actions button{display:inline-block;vertical-align:middle;height:40px;border-radius:8px;border-color:#ddd;}.block-subscribe .block_content .actions input:hover,.block-subscribe .block_content .actions input:active,.block-subscribe .block_content .actions input:focus,.block-subscribe .block_content .actions button:hover,.block-subscribe .block_content .actions button:active,.block-subscribe .block_content .actions button:focus{border-color:#fa0d25;}.block-subscribe .block_content .actions input{width:300px;margin-right:10px;}
+input[type="button"], .button, button {color: #666;font-size: 100%;line-height: 17px;text-transform:uppercase;}
+input[type="button"]:hover, .button:hover, button:hover {border-color: #fa0d25;color: #fa0d25;}
