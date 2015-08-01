@@ -8,21 +8,18 @@
         </reference>
     	<reference name="head">
     		<!-- Theme css -->
-    		<action method="addItem"><type>js_css</type><name>sns/fancybox2/jquery.fancybox.css</name></action>
+    		<!--<action method="addItem"><type>js_css</type><name>sns/fancybox2/jquery.fancybox.css</name></action>
     		<action method="addItem"><type>js_css</type><name>sns/fancybox2/helpers/jquery.fancybox-buttons.css</name></action>
     		<action method="addItem"><type>js_css</type><name>sns/fancybox2/helpers/jquery.fancybox-thumbs.css</name></action>
-
-        	<action method="addItem"><type>js_css</type><name>sns/owl-carousel/owl.carousel.css</name></action>
-        	<action method="addItem"><type>js_css</type><name>sns/owl-carousel/owl.transitions.css</name></action>
-        	
+			-->
         	<!--<action method="addItem"><type>js_css</type><name>sns/jqtransform/css/jqtransform.css</name></action>-->
 			
-            <action method="addItem"><type>skin_css</type><name helper="i8style/data/getThemeCSS"/><params/></action>
+            <!--<action method="addItem"><type>skin_css</type><name helper="i8style/data/getThemeCSS"/><params/></action>-->
             <!--<action method="addItem"><type>js_css</type><name>sns/tdstyle.css</name></action>-->
 			<!--<action method="addItem"><type>js_css</type><name>sns/tdcustomstyle.css</name></action>-->
 			
 			<action method="addCss"><stylesheet>css/style.css</stylesheet></action>
-			<action method="addCss"><stylesheet>css/devstyles.css</stylesheet></action>
+			<!--<action method="addCss"><stylesheet>css/devstyles.css</stylesheet></action>-->
 			
 			<action method="addCss"><stylesheet>css/mystyle.css</stylesheet></action>
 			
@@ -31,27 +28,27 @@
             
             <!-- Theme js -->
             
-            <action method="addJs"><script>sns/tabdrop/bootstrap-tabdrop.js</script></action>
-            <action method="addJs"><script>sns/owl-carousel/owl.carousel.min.js</script></action>
+            <!--<action method="addJs"><script>sns/tabdrop/bootstrap-tabdrop.js</script></action>-->
+            <!--<action method="addJs"><script>sns/owl-carousel/owl.carousel.min.js</script></action>-->
             <action method="addJs"><script>sns/jqtransform/js/jquery.jqtransform.js</script></action>
-            <action method="addJs"><script>sns/fancybox2/jquery.fancybox.pack.js</script></action>
+            <!--<action method="addJs"><script>sns/fancybox2/jquery.fancybox.pack.js</script></action>
             <action method="addJs"><script>sns/fancybox2/helpers/jquery.fancybox-buttons.js</script></action>
             <action method="addJs"><script>sns/fancybox2/helpers/jquery.fancybox-media.js</script></action>
-            <action method="addJs"><script>sns/fancybox2/helpers/jquery.fancybox-thumbs.js</script></action>
+            <action method="addJs"><script>sns/fancybox2/helpers/jquery.fancybox-thumbs.js</script></action>-->
             <action method="addJs"><script>sns/trade-depot-scripts.js</script></action>
 			
 			<!-- <action method="addItem"><type>skin_js</type><name>js/jquery.accordion_snyderplace.js</name></action> -->
 			<!--<action method="addItem"><type>skin_js</type><name>js/jquery.sticky-kit.min.js</name></action>-->
 			
-            <action method="addJs" ifconfig="sns_i8style_cfg/advance/showCpanel"><script>sns/minicolors/jquery.miniColors.min.js</script></action>
-            <action method="addCss" ifconfig="sns_i8style_cfg/advance/showCpanel"><stylesheet>css/sns-cpanel.css</stylesheet></action>
-            <action method="addItem" ifconfig="sns_i8style_cfg/advance/showCpanel"><type>js_css</type><name>sns/minicolors/jquery.miniColors.css</name></action>
-            <action method="addItem" ifconfig="sns_i8style_cfg/advance/showCpanel"><type>skin_js</type><name>js/sns-cpanel.js</name></action>
+            <!--<action method="addJs" ifconfig="sns_i8style_cfg/advance/showCpanel"><script>sns/minicolors/jquery.miniColors.min.js</script></action>-->
+            <!--<action method="addCss" ifconfig="sns_i8style_cfg/advance/showCpanel"><stylesheet>css/sns-cpanel.css</stylesheet></action>-->
+            <!--<action method="addItem" ifconfig="sns_i8style_cfg/advance/showCpanel"><type>js_css</type><name>sns/minicolors/jquery.miniColors.css</name></action>-->
+            <!--<action method="addItem" ifconfig="sns_i8style_cfg/advance/showCpanel"><type>skin_js</type><name>js/sns-cpanel.js</name></action>-->
 			
 			<action method="addItem"><type>skin_js</type><name>js/sns-extend.js</name></action>
             <!--<action method="addItem"><type>skin_js</type><name>js/sns-script.js</name></action>-->
 			<action method="addItem"><type>skin_js</type><name>js/ie8-responsive-file-warning.js</name><params/><if>lte IE 8</if></action>
-			<action method="addItem"><type>skin_js</type><name>js/html5shiv.js</name><params/><if>lte IE 8</if></action>
+			<!--<action method="addItem"><type>skin_js</type><name>js/html5shiv.js</name><params/><if>lte IE 8</if></action>-->
 			<action method="addItem"><type>skin_js</type><name>js/respond.min.js</name><params/><if>lte IE 8</if></action>
     		<!-- End Theme js -->
     	</reference>
@@ -88,6 +85,20 @@
 	</catalog_category_default>
 	 -->
 	<catalog_product_view>
+		<reference name="head">
+			<action method="addItem"><type>js_css</type><name>sns/fancybox2/jquery.fancybox.css</name></action>
+    		<action method="addItem"><type>js_css</type><name>sns/fancybox2/helpers/jquery.fancybox-buttons.css</name></action>
+    		<action method="addItem"><type>js_css</type><name>sns/fancybox2/helpers/jquery.fancybox-thumbs.css</name></action>
+			<action method="addItem"><type>js_css</type><name>sns/owl-carousel/owl.carousel.css</name></action>
+        	<action method="addItem"><type>js_css</type><name>sns/owl-carousel/owl.transitions.css</name></action>
+			<action method="addJs"><script>sns/owl-carousel/owl.carousel.min.js</script></action>
+			
+			<action method="addJs"><script>sns/fancybox2/jquery.fancybox.pack.js</script></action>
+            <action method="addJs"><script>sns/fancybox2/helpers/jquery.fancybox-buttons.js</script></action>
+            <action method="addJs"><script>sns/fancybox2/helpers/jquery.fancybox-media.js</script></action>
+            <action method="addJs"><script>sns/fancybox2/helpers/jquery.fancybox-thumbs.js</script></action>
+			<action method="addJs"><script>sns/owl-carousel/owl.carousel.min.js</script></action>
+		</reference>
         <reference name="right">
         	<block type="core/template" name="right.bannerslide" before="-" template="sns/blocks/bannerslide.phtml" />
         </reference>

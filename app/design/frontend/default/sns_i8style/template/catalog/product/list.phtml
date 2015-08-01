@@ -227,7 +227,7 @@
 							->addAttributeToSelect('name')
 							->addAttributeToSelect('url_path')
 							->addAttributeToSelect('related_categories')
-							->addAttributeToFilter('entity_id', $currentCatIds)
+							->addAttributeToFilter('entity_id', array('in'=>$currentCatIds))
 							->addAttributeToFilter('entity_id', array('neq' => '2'))
 							->addIsActiveFilter();
 						

@@ -7,7 +7,7 @@
 		<action method="addJs"><script>sns/jquery/jquery-noconflict.js</script></action>
 		<!--<action method="addJs"><script>sns/jquery-ui/js/jquery-ui.min.js</script></action>-->
       <!-- <action method="addItem"><type>skin_js</type><name helper="ajaxfilter/data/getJQqueryUI"/><params/><if/></action> -->
-      <action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled"><stylesheet>sns/ajaxfilter/css/sns-ajaxfilter.css</stylesheet></action>
+      <!--<action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled"><stylesheet>sns/ajaxfilter/css/sns-ajaxfilter.css</stylesheet></action>-->
       <!--<action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled">
         <script>sns/ajaxfilter/css/jquery-ui-1.8.23.custom.css</script>
       </action>-->
@@ -23,7 +23,7 @@
 		<action method="addJs"><script>sns/jquery/jquery-noconflict.js</script></action>
 		<!--<action method="addJs"><script>sns/jquery-ui/js/jquery-ui.min.js</script></action>-->
       <!-- <action method="addItem"><type>skin_js</type><name helper="ajaxfilter/data/getJQqueryUI"/><params/><if/></action> -->
-      <action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled"><stylesheet>sns/ajaxfilter/css/sns-ajaxfilter.css</stylesheet></action>
+      <!--<action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled"><stylesheet>sns/ajaxfilter/css/sns-ajaxfilter.css</stylesheet></action>-->
       <!--<action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled">
         <script>sns/ajaxfilter/css/jquery-ui-1.8.23.custom.css</script>
       </action>-->
@@ -38,7 +38,7 @@
 		<action method="addJs"><script>sns/jquery/jquery-noconflict.js</script></action>
 		<!--<action method="addJs"><script>sns/jquery-ui/js/jquery-ui.min.js</script></action>-->
       <!-- <action method="addItem"><type>skin_js</type><name helper="ajaxfilter/data/getJQqueryUI"/><params/><if/></action> -->
-      <action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled"><stylesheet>sns/ajaxfilter/css/sns-ajaxfilter.css</stylesheet></action>
+      <!--<action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled"><stylesheet>sns/ajaxfilter/css/sns-ajaxfilter.css</stylesheet></action>-->
       <!--<action method="addCss" ifconfig="ajaxfilter_cfg/general/isenabled">
         <script>sns/ajaxfilter/css/jquery-ui-1.8.23.custom.css</script>
       </action>-->

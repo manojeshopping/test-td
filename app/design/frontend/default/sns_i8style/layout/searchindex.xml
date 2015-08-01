@@ -2,7 +2,7 @@
 <layout version="0.1.0">
     <default>
         <reference name="head">
-            <action method="addCss"><stylesheet>css/mirasvit_searchindex.css</stylesheet></action>
+            <!--<action method="addCss"><stylesheet>css/mirasvit_searchindex.css</stylesheet></action>-->
         </reference>
     </default>
 
