@@ -118,7 +118,11 @@ function getSize(detectwidthurl){
 
 }
 
-window.onload = getSize("<?php echo Mage::getUrl('detectwidth/index/index') ?>");
+window.onload = getSize("<?php if (Mage::app()->getStore()->isFrontUrlSecure()) {
+    echo Mage::getUrl('detectwidth/index/index',array('_secure'=>true));
+} else {
+    echo Mage::getUrl('detectwidth/index/index');
+} ?>");
 function callback(){
 	// return;
 }
