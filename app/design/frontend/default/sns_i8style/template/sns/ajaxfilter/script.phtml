@@ -118,7 +118,7 @@ function getSize(detectwidthurl){
 
 }
 
-window.onload = getSize("<?php if (Mage::app()->getStore()->isFrontUrlSecure()) {
+window.onload = getSize("<?php if (Mage::app()->getStore()->isCurrentlySecure()) {
     echo Mage::getUrl('detectwidth/index/index',array('_secure'=>true));
 } else {
     echo Mage::getUrl('detectwidth/index/index');
