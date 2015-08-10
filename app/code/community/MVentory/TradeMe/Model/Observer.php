@@ -566,14 +566,6 @@ EOT;
           isset($auctions[$id]) ? 1 + $auctions[$id] : 1
         );
 
-        if ($nameVariants)
-          array_unshift($nameVariants, $product->getName());
-        else
-          $nameVariants[] = Mage::helper('trademe/auction')->getTitle(
-            $product,
-            $this->_store
-          );
-
         MVentory_TradeMe_Model_Log::debug(array(
           'product' => $product,
           'name variants' => $nameVariants
@@ -1251,15 +1243,19 @@ EOT;
     );
 
     if (!$allowMultiple)
-      return array();
+      return [
+        Mage::helper('trademe/auction')->getTitle($product, $this->_store)
+      ];
 
     $names = Mage::helper('trademe/product')->getNameVariants(
       $product,
       $this->_store
     );
 
+    //We don't have alternative product names so product's name is used
+    //as fallback
     if (!$names)
-      return array();
+      return [$product->getName()];
 
     $qty = $this->_getProductQty($product);
 
@@ -1274,7 +1270,9 @@ EOT;
     $qty = $qty - $numOfAuctions;
 
     if ($qty <= 0)
-      return array();
+      return [
+        Mage::helper('trademe/auction')->getTitle($product, $this->_store)
+      ];
 
     return (count($names) <= $qty)
              ? $names

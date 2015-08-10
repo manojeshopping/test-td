@@ -83,26 +83,25 @@ class MVentory_TradeMe_Helper_Auction extends MVentory_TradeMe_Helper_Data
   }
 
   /**
-   * Return title of auction choosen randomly from the set of name variants and
-   * product's name
+   * Return title of auction choosen randomly from the name variants or return
+   * product's name if name variants are missing.
    *
-   * @param Mage_Catalog_Model_Product $product Product
-   * @param Mage_Core_Model_Store $store Store
-   * @return string Auctin title
+   * @param Mage_Catalog_Model_Product $product
+   *   Product model
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store model
+   *
+   * @return string
+   *   Auction title
    */
   public function getTitle ($product, $store) {
-    $title = $product->getName();
     $titles = Mage::helper('trademe/product')->getNameVariants(
       $product,
       $store
     );
 
-    if (!$titles)
-      return $title;
-
-    $titles[] = $title;
-
-    return $titles[array_rand($titles)];
+    return $titles ? $titles[array_rand($titles)] : $product->getName();
   }
 
   /**

@@ -120,41 +120,6 @@ EOT;
     MVentory_TradeMe_Model_Config::PAYMENT_SAFE => 'SafeTrader'
   );
 
-  private $_htmlConvert = array(
-    //Remove all CR and LF symbols
-    '#\R+#s' => '',
-
-    //Remove any whitespace symbols surrounding tags
-    '#\s*(<[^<>]+>)\s*#is' => '\1',
-
-    //Replace single tab symbol, &nbsp; and whitespace symbols with space symbol
-    '#\t|&nbsp;|\s{2,}#s' => ' ',
-
-    //Remove <table> tag and its content completely
-    '#<table[^<>]*>.*</table>#is' => '',
-
-    //Replace empty tags with new lines
-    '#<([a-z1-9]+)[^<>]*>\s*</\g{1}>#is' => "\r\n",
-
-    //Replace <li> tag with '* ' string
-    '#<li[^<>]*>#i' => '* ',
-
-    //Replace opening and ending <div>, <p>, <hx> tags with 2 empty lines
-    '#</?(div|p|h[1-6])[^<>]*>#i' => "\r\n\r\n",
-
-    //Replace <br>, </br>, </li> tags with newline symbol
-    '#</?br[^<>]*>|</li>#i' => "\r\n",
-
-    //Remove remained tags
-    '#<[^<>]+>#s' => '',
-
-    //Replace multiple empty lines with single line
-    '#\R{2,}#s' => "\r\n\r\n",
-
-    //Remove all CR and LF symbols from start and end
-    '#|^\R+|\R+$#s' => '',
-  );
-
   public function __construct () {
     $this->_helper = Mage::helper('mventory/product');
   }
@@ -408,12 +373,12 @@ EOT;
 <IsBrandNew>' . $isBrandNew . '</IsBrandNew>
 <SendPaymentInstructions>true</SendPaymentInstructions>';
 
-      if (isset($account['category_image']) && $account['category_image'])
-        $xml .= '<HasGallery>true</HasGallery>';
-
-      $xml .= '<PhotoIds><PhotoId>' . $photoId . '</PhotoId></PhotoIds>';
-
+      //Add photo to auction if we have one in the product and use it as gallery
+      //image if it's allowed in the settings
       if ($photoId) {
+        if (isset($account['category_image']) && $account['category_image'])
+          $xml .= '<HasGallery>true</HasGallery>';
+
         $xml .= '<PhotoIds><PhotoId>' . $photoId . '</PhotoId></PhotoIds>';
       }
 
@@ -1013,13 +978,57 @@ EOT;
   }
 
   public function _removeHtml ($text) {
-    return preg_match('#</?[^<>]+>#', $text)
-             ? preg_replace(
-                 array_keys($this->_htmlConvert),
-                 array_values($this->_htmlConvert),
-                 $text
-               )
-               : $text;
+    if (!preg_match('#</?[^<>]+>#', $text))
+      return $text;
+
+    $rules = array(
+      //Remove all CR and LF symbols
+      '#\R+#s' => '',
+
+      //Replace single tab symbol, &nbsp;, </td> and whitespace symbols
+      //with space symbol
+      '#\t|&nbsp;|</td>|\h{2,}#is' => ' ',
+
+      //Replace <li> tag with '* ' string
+      //Remove any tags appearing between <li> and </li>
+      //Remain </li> to convert it to newline later
+      '#<li[^<>]*>(?<i>(?:(?!<li[^<>]*>).)*)</li>#i' => function ($matches) {
+        return '* ' . preg_replace('#<[^<>]+>#s', ' ', $matches['i']) . '</li>';
+      },
+
+      //Replace all whitespans other than single space with single space
+      //Either one [\t\r\n\f\v] and zero or more ws,
+      //or two or more consecutive-any-whitespace.
+      '#(?>[^\S ]\s*|\s{2,})#ix' => ' ',
+
+      //Replace empty tags with newline symbol
+      '#<([a-z1-9]+)[^<>]*>\s*</\g{1}>#is' => "\r\n",
+
+      //Replace opening and ending <div>, <p>, <hx> tags with empty line
+      '#</?(div|p|h[1-6])[^<>]*>#i' => "\r\n\r\n",
+
+      //Replace <br>, <br />, </br>, </li>, </tr> tags with newline symbol
+      '#</?br[^<>]*>|</li>|</tr>#i' => "\r\n",
+
+      //Remove remained tags
+      '#<[^<>]+>#s' => '',
+
+      //Replace multiple empty lines with single line
+      '#\R{2,}#s' => "\r\n\r\n",
+
+      //Remove any horizontal space adjacent to newline symbols
+      '#\h*(\R+)\h*#' => '$1',
+
+      //Remove all CR and LF symbols from start and end
+      '#|^\R+|\R+$#s' => '',
+    );
+
+    foreach ($rules as $regex => $replace)
+      $text = is_callable($replace)
+        ? preg_replace_callback($regex, $replace, $text)
+        : preg_replace($regex, $replace, $text);
+
+    return $text;
   }
 
   public function _loadCategories () {
