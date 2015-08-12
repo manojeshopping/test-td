@@ -1243,9 +1243,7 @@ EOT;
     );
 
     if (!$allowMultiple)
-      return [
-        Mage::helper('trademe/auction')->getTitle($product, $this->_store)
-      ];
+      return array(Mage::helper('trademe/auction')->getTitle($product, $this->_store));
 
     $names = Mage::helper('trademe/product')->getNameVariants(
       $product,
@@ -1255,7 +1253,7 @@ EOT;
     //We don't have alternative product names so product's name is used
     //as fallback
     if (!$names)
-      return [$product->getName()];
+      return array($product->getName());
 
     $qty = $this->_getProductQty($product);
 
@@ -1270,9 +1268,7 @@ EOT;
     $qty = $qty - $numOfAuctions;
 
     if ($qty <= 0)
-      return [
-        Mage::helper('trademe/auction')->getTitle($product, $this->_store)
-      ];
+      return array(Mage::helper('trademe/auction')->getTitle($product, $this->_store));
 
     return (count($names) <= $qty)
              ? $names
