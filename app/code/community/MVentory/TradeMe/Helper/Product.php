@@ -27,6 +27,13 @@
 class MVentory_TradeMe_Helper_Product extends MVentory_TradeMe_Helper_Data
 {
   /**
+   * Regex to replace tag with atttribute code by its product's value
+   *
+   * @see MVentory_TradeMe_Helper_Product::_processNames()
+   */
+  const _RE_TAGS = '/(?<before>\s*)(?<tag>{{(?<code>[^{}]*)}})(?<after>\s*)/';
+
+  /**
    * Add filtering by selected stock statuses in specified store to product
    * collection
    *
@@ -174,7 +181,8 @@ class MVentory_TradeMe_Helper_Product extends MVentory_TradeMe_Helper_Data
   }
 
   /**
-   * Return name variants for the supplied product
+   * Return name variants for the supplied product with processed
+   * {{attribute_code}} tags
    *
    * @param Mage_Catalog_Model_Product $product
    *   Product model
@@ -193,17 +201,49 @@ class MVentory_TradeMe_Helper_Product extends MVentory_TradeMe_Helper_Data
     if (!$code)
       return array();
 
-    if (!$_names = trim($product[strtolower($code)]))
+    $names = trim($product[strtolower($code)]);
+
+    if (!$names)
       return array();
 
-    $_names = explode("\n", str_replace("\r\n", "\n", $_names));
+    return array_filter(array_map(
+      'trim',
+      $this->_processNames(
+        explode("\n", str_replace("\r\n", "\n", $names)),
+        $product
+      )
+    ));
+  }
 
-    $names = array();
+  /**
+   * Replace {{attribute_code}} tags in the supplied list of product's
+   * alternative names with corresponding value from the specified product
+   *
+   * @param array $names
+   *   List of product's alternative names
+   *
+   * @param Mage_Catalog_Model_Product $product
+   *   Product model
+   *
+   * @return array
+   *   List of processed alternative names
+   */
+  protected function _processNames ($names, $product) {
+    $attrs = $product->getAttributes();
 
-    foreach ($_names as $_name)
-      if ($_name = trim($_name))
-        $names[] = $_name;
+    return preg_replace_callback(
+      self::_RE_TAGS,
+      function ($matches) use ($product, $attrs) {
+        $code = trim($matches['code']);
+        $value = ($code && isset($attrs[$code]) && ($attr = $attrs[$code]))
+                   ? trim($attr->getFrontend()->getValue($product))
+                   : false;
 
-    return $names;
+        return $value
+                 ? $matches['before'] . $value . $matches['after']
+                 : (($matches['before'] . $matches['after']) ? ' ' : '');
+      },
+      $names
+    );
   }
 }
