@@ -296,9 +296,9 @@ class Sns_Producttabs_Block_List extends Mage_Catalog_Block_Product_Abstract{
 					$stocklevel = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty();
 					$stock = $product->getStockItem();
 					$status = $stock->getIsInStock();
-					if( $stocklevel > 0 && $status == '1' ){
+					// if( $stocklevel > 0 && $status == '1' ){
 						$items[$item->id] = $itemTab;
-					}
+					// }
 				}
 				$itemTab->orderid   = $orderid;
 				
@@ -332,9 +332,9 @@ class Sns_Producttabs_Block_List extends Mage_Catalog_Block_Product_Abstract{
 					$stocklevel = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty();
 					$stock = $product->getStockItem();
 					$status = $stock->getIsInStock();
-					if( $stocklevel > 0 && $status == '1' ){
+					// if( $stocklevel > 0 && $status == '1' ){
 						$items[$item->id] = $itemTab;
-					}
+					// }
 				}
 				$itemTab->orderid   = $orderid;
 				if($i==1){
@@ -515,9 +515,9 @@ class Sns_Producttabs_Block_List extends Mage_Catalog_Block_Product_Abstract{
 			$stocklevel = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty();
 			$stock = $product->getStockItem();
 			$status = $stock->getIsInStock();
-			if( $status == '1' ){
+			// if( $status == '1' ){
 				$items[$product_obj->id] = $product_obj;
-			}
+			// }
 			//$items[$product_obj->id] = $product_obj;
 		}
 		return $items;
