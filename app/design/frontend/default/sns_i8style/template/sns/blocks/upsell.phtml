@@ -61,37 +61,70 @@ $imgSize = Mage::helper('i8style/data')->getImgSize(L);
 						</div>
 						<div class="product-image">
 							<a class="img-main" href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_item->getName()) ?>" class="product-image">
+								<?php if(!$_item->isSaleable()): ?><div class="sold-out"><h4>SOLD OUT</h4></div><?php endif; ?>
 								<img src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize($imgSize[0], $imgSize[1]) ?>" alt="<?php echo $this->escapeHtml($_item->getName()) ?>" />
 							</a>
+							<div class="product-brand"><?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_item)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?></div>
 						</div>
 						<div class="product-details">
-							<div class="product-title clearfix">
-								<h2><?php echo 	$this->escapeHtml($_item->getShortDescription()) ?></h2>
-							</div>
 							<div class="product-info row">
-								<div class="col-xs-6">
-									<div class="product-brand"><?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_item)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?></div>
-								</div>
-								<div class="col-xs-6 td-price">
-									<?php echo $this->getPriceHtml($_item, true, '-upsell') ?>
-								</div>
+								<?php echo $this->getPriceHtml($_item, true, '-upsell') ?>
+							</div>
+							<div class="product-title clearfix">
+								<?php if($_item->getOverlayMessage()): ?>
+									<div class="td-label">
+										<h4><?php echo $_item->getOverlayMessage(); ?></h4>
+									</div>
+								<?php endif; ?>
+								<h2><?php echo 	$this->escapeHtml($_item->getShortDescription()) ?></h2>
 							</div>
 						</div>
 					</div>
-						<div class="product-wrap-bottom">
-							<div class="product-option">
-							<?php if($_item->isSaleable()): ?>
-								<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action btn-warning btn-md btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_item) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class="fa fa-shopping-cart"></i></button>
-								<?php else: ?>
-								<span class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></span>
-								<?php endif; ?>
-						
-								<button type="button" onclick="setLocation('<?php echo $this->helper('wishlist')->getAddUrl($_item) ?>')" class="btn btn-td-standard1 btn-td-primary-quiet btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Wishlist') ?>"><i class="fa fa-star"></i></button>	
-								<button type="button" onclick="setLocation('<?php echo $this->helper('catalog/product_compare')->getAddUrl($_item) ?>')" class="link-compare btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Compare') ?>"><i class="fa fa-align-left fa-rotate-270"></i></button>
-							</div>
+					<div class="product-wrap-bottom">
+						<div class="product-option float-lefta">
+						<?php if($_item->isSaleable()): ?>
+							<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action btn-warning btn-md btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_item) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class="fa fa-shopping-cart"></i></button>
+							<?php else: ?>
+							<button type="button" class="btn btn-md" disabled><i class="fa fa-shopping-cart"></i></button>
+							<?php endif; ?>
+					
+							<button type="button" onclick="setLocation('<?php echo $this->helper('wishlist')->getAddUrl($_item) ?>')" class="btn btn-td-standard1 btn-td-primary-quiet btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Wishlist') ?>"><i class="fa fa-star"></i></button>	
+							<button type="button" onclick="setLocation('<?php echo $this->helper('catalog/product_compare')->getAddUrl($_item) ?>')" class="link-compare btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Compare') ?>"><i class="fa fa-align-left fa-rotate-270"></i></button>
+						</div>
+						<?php 		
+							$currentCatIds = $_item->getCategoryIds();
+							$categoryCollection = Mage::getResourceModel('catalog/category_collection')
+								->addAttributeToSelect('name')
+								->addAttributeToSelect('url_path')
+								->addAttributeToSelect('related_categories')
+								->addAttributeToFilter('entity_id', array('in'=>$currentCatIds))
+								->addAttributeToFilter('entity_id', array('neq' => '2'))
+								->addIsActiveFilter();
+							
+							$assignedCategories = $categoryCollection->getData();
+							$levelArray = array();
+							foreach($categoryCollection as $cat){
+								if($cat->getIsActive()){
+									$levelArray[] = $cat->getLevel();
+								}
+							}
+							
+							$maxs = array_keys($levelArray, max($levelArray));
+							$highestLevelCatIndex = $maxs[0]; 
+							$deepestCategoryId = $assignedCategories[$highestLevelCatIndex]['entity_id'];
+							$deepestCategory = Mage::getModel('catalog/category')->load($deepestCategoryId);
+							
+							$parentCatLabel = 'ALL:';
+							$parentCat =$deepestCategory->getName();
+							$parentCatUrlPath = $deepestCategory->getUrlPath();
+						?>
+						<div class="parent-category float-left">
+							<h5 class="dark"><?php echo $parentCatLabel ?> 
+							<div class="label label-info"><a href="<?php echo Mage::getUrl($parentCatUrlPath); ?>"><?php echo $parentCat; ?></a></div></h5>
 						</div>
 						<div class="inner-box-sku"><?php echo $_item->getSku(); ?></div>
-                </div>
+					</div>
+				</div>
                 <?php endif; ?>
             <?php endfor; ?>
         </div>
