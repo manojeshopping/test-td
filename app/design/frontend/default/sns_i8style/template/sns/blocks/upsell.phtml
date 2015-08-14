@@ -73,7 +73,7 @@ $imgSize = Mage::helper('i8style/data')->getImgSize(L);
 							<div class="product-title clearfix">
 								<?php if($_item->getOverlayMessage()): ?>
 									<div class="td-label">
-										<h4><?php echo $_item->getOverlayMessage(); ?></h4>
+										<?php echo $_item->getOverlayMessage(); ?>
 									</div>
 								<?php endif; ?>
 								<h2><?php echo 	$this->escapeHtml($_item->getShortDescription()) ?></h2>
