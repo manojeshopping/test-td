@@ -1922,9 +1922,8 @@ div.fixed {
   color: white;
 }
 .product-detail .td-label {
-  position: absolute;
-  top: 80px !important;
-  display: inline;
+  position: relative;
+  display: inline-block !important;
 }
 /********************* PRICE STYLES base *************************/.product-price {
   display: inline-block;
