@@ -64,7 +64,7 @@ $imgSize = Mage::helper('i8style/data')->getImgSize(L);
 								<?php if(!$_item->isSaleable()): ?><div class="sold-out"><h4>SOLD OUT</h4></div><?php endif; ?>
 								<img src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize($imgSize[0], $imgSize[1]) ?>" alt="<?php echo $this->escapeHtml($_item->getName()) ?>" />
 							</a>
-							<div class="product-brand"><?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_item)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?></div>
+							<div class="product-brand hidden-xs"><?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_item)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?></div>
 						</div>
 						<div class="product-details">
 							<div class="product-info row">
