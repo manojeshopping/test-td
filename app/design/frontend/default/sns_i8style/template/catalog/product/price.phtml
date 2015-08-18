@@ -358,10 +358,9 @@ $_specialPriceStoreLabel = $this->getProductAttribute('special_price')->getStore
             
         <?php else: // excl. ?>
             <div class="price-old">
-                <span class="price" id="old-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
-					<?php echo $this->__('Regular Price:') ?>
-                    <strike><?php echo $_coreHelper->formatPrice($_regularPrice, false) ?></strike>
-                </span>
+                <?php echo $this->__('Regular Price:') ?><strike><span class="price" id="old-price-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
+					<?php echo $_coreHelper->formatPrice($_regularPrice, false) ?>
+                </span></strike>
             </div>
 
             <?php if ($_taxHelper->displayBothPrices()): ?>
@@ -373,11 +372,10 @@ $_specialPriceStoreLabel = $this->getProductAttribute('special_price')->getStore
                         </span>
                     </div>
 					<div class="price-plus-gst">
-                        <span class="price"
-                              id="price-excluding-tax-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
+                        <span class="price" id="price-excluding-tax-<?php echo $_id ?><?php echo $this->getIdSuffix() ?>">
                             <?php echo $_coreHelper->formatPrice($_finalPrice, false) ?>
-							<?php echo $this->helper('tax')->__('Excl. Tax:') ?>
-                        </span>
+						</span>
+						<?php echo $this->helper('tax')->__('Excl. Tax:') ?>	
                     </div>
                 
             <?php else: ?>
