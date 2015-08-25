@@ -1630,11 +1630,11 @@ div.fixed {
   right: 4px;
   /*right: @prod-padding;*/
 
-  color: #b8bdbf;
+  /*color: #b8bdbf;*/
   padding: 2px 4px;
   /*background-color: lighten(@td-grey, 20%);*/
 
-  font-size: .6em;
+  font-size: .7em;
 }
 .productOLD {
   transition: all 0.5s ease;
