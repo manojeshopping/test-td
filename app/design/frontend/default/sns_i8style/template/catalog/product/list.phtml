@@ -267,7 +267,7 @@
 		<?php endforeach ?>
 		<?php
 			$scrnWidth = Mage::getSingleton('core/session')->getScreenWidth();
-			if($scrnWidth && $scrnWidth>=1280 && $scrnWidth<1920){
+			if($scrnWidth && $scrnWidth>=1280 && $scrnWidth<1669){
 				if($totalProductsCount%4!=0){
 					$ratio4 = $totalProductsCount%4;
 					$loop4 = 4-$ratio4;
@@ -276,7 +276,7 @@
 					}
 				}
 			}
-			if($scrnWidth && $scrnWidth>=1920){
+			if($scrnWidth && $scrnWidth>=1669){
 				if($totalProductsCount%5!=0){
 					$ratio5 = $totalProductsCount%5;
 					$loop5 = 5-$ratio5;
