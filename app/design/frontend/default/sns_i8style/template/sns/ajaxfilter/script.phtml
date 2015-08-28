@@ -103,26 +103,6 @@ function ajaxFilter(url) {
 }
 <?php endif; ?>
 
-function getSize(detectwidthurl){
-	var screenWidth = screen.width;
-	var screenHeight = screen.height;
-	jQuery.ajax({
-		type: "POST",
-		url: detectwidthurl,
-		data: { screen_width : screenWidth },
-		success: function(data)
-		{
-			console.log( data );
-		}
-	});
-
-}
-
-window.onload = getSize("<?php if (Mage::app()->getStore()->isCurrentlySecure()) {
-    echo Mage::getUrl('detectwidth/index/index',array('_secure'=>true));
-} else {
-    echo Mage::getUrl('detectwidth/index/index');
-} ?>");
 function callback(){
 	// return;
 }
