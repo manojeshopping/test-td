@@ -25,6 +25,27 @@ if( $options->list_products_by == 'order' ){
 			<?php
 				} 
 			?>
+			<?php
+				$scrnWidth = Mage::getSingleton('core/session')->getScreenWidth();
+				if($scrnWidth && $scrnWidth>=1280 && $scrnWidth<1400){
+					if($_collectionSize%4!=0){
+						$ratio4 = $_collectionSize%4;
+						$loop4 = 4-$ratio4;
+						for($i=1;$i<=$loop4;$i++){
+							echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
+						}
+					}
+				}
+				if($scrnWidth && $scrnWidth>=1400){
+					if($_collectionSize%5!=0){
+						$ratio5 = $_collectionSize%5;
+						$loop5 = 5-$ratio5;
+						for($i=1;$i<=$loop5;$i++){
+							echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
+						}
+					}
+				}	
+			?>	
 			</div>	
 	<?php
 		endforeach; 
