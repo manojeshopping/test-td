@@ -158,7 +158,7 @@
 <?php else: ?>
 
 <?php // Grid Mode ?>
-    <div class="wrap">
+    <div class="wrap" id="wrapping-div">
 		
 		<?php $_collectionSize = $_productCollection->count() ?>
 		<?php 
@@ -266,7 +266,10 @@
 			</div>
 		<?php endforeach ?>
 		<?php
-			$scrnWidth = Mage::getSingleton('core/session')->getScreenWidth();
+			for($i=1;$i<=4;$i++){
+				echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
+			}
+			/* $scrnWidth = Mage::getSingleton('core/session')->getScreenWidth();
 			if($scrnWidth && $scrnWidth>=1280 && $scrnWidth<1400){
 				if($totalProductsCount%4!=0){
 					$ratio4 = $totalProductsCount%4;
@@ -284,9 +287,34 @@
 						echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
 					}
 				}
-			}	
+			} */	
 		?>
 	</div>
+	<script type="text/javascript">
+			var $_screenWidth = screen.width;
+			var $_screenHeight = screen.height;
+			var $_totalProductsCounts = <?php echo $totalProductsCount ?>;
+			
+			if($_screenWidth && $_screenWidth>=1280 && $_screenWidth<1400){
+				if($_totalProductsCounts%4!=0){
+					$_ratio4 = $_totalProductsCounts%4;
+					$_loop4 = 4-$_ratio4;
+					for (i = 1; i <= $_loop4; i++) {
+						document.getElementById('filler-ad-'+i).style.display = 'block';
+					}
+				}
+			}
+			if($_screenWidth && $_screenWidth>=1400){
+				if($_totalProductsCounts%5!=0){
+					$_ratio5 = $_totalProductsCounts%5;
+					$_loop5 = 5-$_ratio5;
+					for (i = 1; i <= $_loop5; i++) {
+						document.getElementById('filler-ad-'+i).style.display = 'block';
+					}
+				}
+			}
+			
+	</script>
 <?php endif; ?>
 	<div class="clearfix vspace40 "></div>
 	<div class="container text-center bottom-pager">
