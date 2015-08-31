@@ -273,6 +273,35 @@
 	</div>
 	<script type="text/javascript">
 			window.load = displayFillerAdd(<?php echo $totalProductsCount ?>);
+			window.onresize = function() {
+				var $_screenWidth = screen.width;
+				var $_screenHeight = screen.height;
+				var $_totalProductsCounts = <?php echo $totalProductsCount ?>;
+	
+				if($_screenWidth && $_screenWidth<1200){
+					for (i = 1; i <= 4; i++) {
+						document.getElementById('filler-ad-'+i).style.display = 'none';
+					}
+				}
+				if($_screenWidth && $_screenWidth>=1200 && $_screenWidth<1400){
+					if($_totalProductsCounts%4!=0){
+						$_ratio4 = $_totalProductsCounts%4;
+						$_loop4 = 4-$_ratio4;
+						for (i = 1; i <= $_loop4; i++) {
+							document.getElementById('filler-ad-'+i).style.display = 'block';
+						}
+					}
+				}
+				if($_screenWidth && $_screenWidth>=1400){
+					if($_totalProductsCounts%5!=0){
+						$_ratio5 = $_totalProductsCounts%5;
+						$_loop5 = 5-$_ratio5;
+						for (i = 1; i <= $_loop5; i++) {
+							document.getElementById('filler-ad-'+i).style.display = 'block';
+						}
+					}
+				}
+			}
 	</script>
 <?php endif; ?>
 	<div class="clearfix vspace40 "></div>
