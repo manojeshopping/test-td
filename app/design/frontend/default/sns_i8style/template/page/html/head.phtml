@@ -61,24 +61,28 @@
 </script>
 
 <script type="text/javascript">
-function getSize(detectwidthurl){
-	var screenWidth = screen.width;
-	var screenHeight = screen.height;
-	jQuery.ajax({
-		type: "POST",
-		url: detectwidthurl,
-		data: { screen_width : screenWidth },
-		success: function(data)
-		{
-			console.log( data );
+function displayFillerAdd($productsCount){
+ 	var $_screenWidth = screen.width;
+	var $_screenHeight = screen.height;
+	var $_totalProductsCounts = $productsCount;
+	
+	if($_screenWidth && $_screenWidth>=1280 && $_screenWidth<1400){
+		if($_totalProductsCounts%4!=0){
+			$_ratio4 = $_totalProductsCounts%4;
+			$_loop4 = 4-$_ratio4;
+			for (i = 1; i <= $_loop4; i++) {
+				document.getElementById('filler-ad-'+i).style.display = 'block';
+			}
 		}
-	});
-
-}
-
-window.load = getSize("<?php if (Mage::app()->getStore()->isCurrentlySecure()) {
-    echo Mage::getUrl('detectwidth/index/index',array('_secure'=>true));
-} else {
-    echo Mage::getUrl('detectwidth/index/index');
-} ?>");
+	}
+	if($_screenWidth && $_screenWidth>=1400){
+		if($_totalProductsCounts%5!=0){
+			$_ratio5 = $_totalProductsCounts%5;
+			$_loop5 = 5-$_ratio5;
+			for (i = 1; i <= $_loop5; i++) {
+				document.getElementById('filler-ad-'+i).style.display = 'block';
+			}
+		}
+	}
+ } 
 </script>
