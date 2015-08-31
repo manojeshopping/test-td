@@ -278,10 +278,8 @@
 				var $_screenHeight = screen.height;
 				var $_totalProductsCounts = <?php echo $totalProductsCount ?>;
 	
-				if($_screenWidth && $_screenWidth<1200){
-					for (i = 1; i <= 4; i++) {
-						document.getElementById('filler-ad-'+i).style.display = 'none';
-					}
+				for (i = 1; i <= 4; i++) {
+					document.getElementById('filler-ad-'+i).style.display = 'none';
 				}
 				if($_screenWidth && $_screenWidth>=1200 && $_screenWidth<1400){
 					if($_totalProductsCounts%4!=0){
