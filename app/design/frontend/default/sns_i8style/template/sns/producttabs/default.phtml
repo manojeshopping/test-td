@@ -42,6 +42,24 @@ if( $options->list_products_by == 'order' ){
 						document.getElementById('filler-ad-'+i).style.display = 'none';
 					}
 
+					if($_screenWidth && $_screenWidth>=768 && $_screenWidth<992){
+						if($_totalProductsCounts%2!=0){
+							$_ratio2 = $_totalProductsCounts%2;
+							$_loop2 = 2-$_ratio2;
+							for (i = 1; i <= $_loop2; i++) {
+								document.getElementById('filler-ad-'+i).style.display = 'block';
+							}
+						}
+					}
+					if($_screenWidth && $_screenWidth>=992 && $_screenWidth<1200){
+						if($_totalProductsCounts%3!=0){
+							$_ratio3 = $_totalProductsCounts%3;
+							$_loop3 = 3-$_ratio3;
+							for (i = 1; i <= $_loop3; i++) {
+								document.getElementById('filler-ad-'+i).style.display = 'block';
+							}
+						}
+					}
 					if($_screenWidth && $_screenWidth>=1200 && $_screenWidth<1400){
 						if($_totalProductsCounts%4!=0){
 							$_ratio4 = $_totalProductsCounts%4;
