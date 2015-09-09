@@ -141,3 +141,7 @@ input[type="button"]:hover, .button:hover, button:hover {border-color: #fa0d25;c
 #sns_content .block.block-layered-nav dl#narrow-by-list dd ol li{padding:3px 0;color:#666;position:relative;padding-left:20px;}
 #sns_content .block.block-layered-nav dl#narrow-by-list dd ol li:after{content:'';display:block;width:6px;height:6px;background:#fa0d25;position:absolute;top:50%;left:2px;margin-top:-2px;opacity:0;filter:alpha(opacity=0);-webkit-transition:all 0.2s linear;transition:all 0.2s linear;}#sns_content .block.block-layered-nav dl#narrow-by-list dd ol li a{-webkit-transition:all 0.2s ease-out;transition:all 0.2s ease-out;}#sns_content .block.block-layered-nav dl#narrow-by-list dd ol li .item-count{color:#ccc;font-style:italic;margin-left:3px;}#sns_content .block.block-layered-nav dl#narrow-by-list dd ol li:hover:after{opacity:1;filter:alpha(opacity=100);}#sns_content .block.block-layered-nav dl#narrow-by-list dd ol li:hover .item-count{color:#fa0d25;font-style:normal;}
 img{max-width:100%;}
+
+.product-options dl dd .input-box ul.options-list li{list-style:none !important;}
+.product-options dl dd .input-box ul.options-list li span.label label{color:#51585a !important;}
+.product-options dl dd .input-box ul.options-list li input.product-custom-option{float:left;}
