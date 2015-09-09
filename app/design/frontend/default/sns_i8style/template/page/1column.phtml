@@ -45,8 +45,10 @@ if($module == 'checkout' && $controller == 'cart' && $action == 'index')
 {
   //Cart Page
 }
+$actionName = Mage::app()->getFrontController()->getRequest()->getActionName();
 $wrapClass = (!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!='catalog')? ' page-wrap' : '';
-$skinyClass = (Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms' && !Mage::getBlockSingleton('page/html_header')->getIsHomePage()) ? ' skinny-page' : '';
+$skinyClass = ((Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms' && !Mage::getBlockSingleton('page/html_header')->getIsHomePage())) ? ' skinny-page' : '';
+$skinyClass1 = ($actionName=='login')? ' skinny-page1' : '';
 ?>
 <body id="bd" class="<?php echo $this->getBodyClass();?>">
 	<?php echo $this->getChildHtml('after_body_start') ?>
@@ -54,23 +56,25 @@ $skinyClass = (Mage::app()->getFrontController()->getRequest()->getRouteName() =
 		<?php echo $this->getChildHtml('header') ?>
 	</header>
 	<div class="grey-area">
-		<div id="my_slideshow">
-			<?php echo $this->getChildHtml('slideshow') ?>
-		</div>
+		<?php if(Mage::getBlockSingleton('page/html_header')->getIsHomePage()) { ?>
+			<div id="my_slideshow">
+				<?php echo $this->getChildHtml('slideshow') ?>
+			</div>
+		<?php } ?>
 		<?php if($this->getChildHtml('breadcrumbs')): ?>
-       	<div class="row top-bar">
-			<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!=='checkout') { ?>
+       	<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!=='checkout' && $actionName!='login') { ?>
+		<div class="row top-bar">
 				<div class="container">
 					<div style="" class="col-xs-12 col-sm-12 col-md-12">
 						<?php echo $this->getChildHtml('breadcrumbs') ?>
 					</div>
 				</div>
-			<?php } ?>	
-		</div>	
+		</div>
+		<?php } ?>	
         <?php endif; ?>
        	<div class="container">
-			<?php if($wrapClass!='' || $skinyClass!=''): ?>
-			<div class="<?php echo $wrapClass.$skinyClass ?>">
+			<?php if($wrapClass!='' || $skinyClass!='' || $skinyClass1!=''): ?>
+			<div class="<?php echo $wrapClass.$skinyClass.$skinyClass1 ?>">
 			<?php endif;?>
 			<?php echo $this->getChildHtml('global_messages') ?>
 				<?php if($this->getChildHtml('content')): ?>
