@@ -48,7 +48,7 @@ if($module == 'checkout' && $controller == 'cart' && $action == 'index')
 $actionName = Mage::app()->getFrontController()->getRequest()->getActionName();
 $wrapClass = (!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!='catalog')? ' page-wrap' : '';
 $skinyClass = ((Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms' && !Mage::getBlockSingleton('page/html_header')->getIsHomePage())) ? ' skinny-page' : '';
-$skinyClass1 = ($actionName=='login')? ' skinny-page1' : '';
+$skinyClass1 = ($actionName=='login' || $actionName=='create')? ' skinny-page1' : '';
 ?>
 <body id="bd" class="<?php echo $this->getBodyClass();?>">
 	<?php echo $this->getChildHtml('after_body_start') ?>
@@ -62,7 +62,7 @@ $skinyClass1 = ($actionName=='login')? ' skinny-page1' : '';
 			</div>
 		<?php } ?>
 		<?php if($this->getChildHtml('breadcrumbs')): ?>
-       	<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!=='checkout' && $actionName!='login') { ?>
+       	<?php if(!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!=='checkout' && $actionName!='login' && $actionName!='create') { ?>
 		<div class="row top-bar">
 				<div class="container">
 					<div style="" class="col-xs-12 col-sm-12 col-md-12">
