@@ -27,13 +27,13 @@
 
 -->
 <layout version="0.1.0">
-    <customer_account>
+    <!--<customer_account>
         <reference name="customer_account_navigation" >
             <action method="addLink" translate="label"><name>recurring_profiles</name><path>sales/recurring_profile/</path><label>Recurring Profiles</label></action>
         </reference>
-    </customer_account>
+    </customer_account>-->
 
-    <sales_recurring_profile_index>
+    <!--<sales_recurring_profile_index>
         <update handle="customer_account"/>
         <reference name="root">
             <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
@@ -47,9 +47,9 @@
                 </block>
             </block>
         </reference>
-    </sales_recurring_profile_index>
+    </sales_recurring_profile_index>-->
 
-    <sales_recurring_profile_view__tabs>
+    <!--<sales_recurring_profile_view__tabs>
         <reference name="root">
             <action method="setTemplate"><template>page/2columns-right.phtml</template></action>
         </reference>
@@ -62,30 +62,30 @@
                     <action method="setViewLabel" translate="value"><value>Profile Information</value></action>
                     <action method="setViewAction"><value>view</value></action>
                 </block>
-<!-- not implemented
+!-- not implemented
                 <block type="core/text" as="history" name="sales.recurring.profile.view.tab.history">
                     <action method="addToParentGroup"><value>info_tabs</value></action>
                     <action method="setViewLabel" translate="value"><value>History</value></action>
                     <action method="setViewAction"><value>history</value></action>
                 </block>
--->
+--
                 <block type="core/text" as="related_orders" name="sales.recurring.profile.view.tab.orders">
                     <action method="addToParentGroup"><value>info_tabs</value></action>
                     <action method="setViewLabel" translate="value"><value>Related Orders</value></action>
                     <action method="setViewAction"><value>orders</value></action>
                 </block>
-<!-- not implemented
+!-- not implemented
                 <block type="core/text" as="vendor_info" name="sales.recurring.profile.view.tab.vendor">
                     <action method="addToParentGroup"><value>info_tabs</value></action>
                     <action method="setViewLabel" translate="value"><value>Gateway Information</value></action>
                     <action method="setViewAction"><value>vendor</value></action>
                 </block>
--->
+--
             </block>
         </reference>
-    </sales_recurring_profile_view__tabs>
+    </sales_recurring_profile_view__tabs>-->
 
-    <sales_recurring_profile_view>
+    <!--<sales_recurring_profile_view>
         <update handle="customer_account"/>
         <update handle="sales_recurring_profile_view__tabs"/>
         <reference name="sales.recurring.profile.view.tab.profile">
@@ -130,7 +130,7 @@
                 <action method="setViewLabel" translate="value"><value>Shipping Address</value></action>
             </block>
         </reference>
-    </sales_recurring_profile_view>
+    </sales_recurring_profile_view>-->
 
 <!-- not implemented
     <sales_recurring_profile_history>
@@ -142,7 +142,7 @@
     </sales_recurring_profile_history>
 -->
 
-    <sales_recurring_profile_orders>
+    <!--<sales_recurring_profile_orders>
         <update handle="customer_account"/>
         <update handle="sales_recurring_profile_view__tabs"/>
         <reference name="sales.recurring.profile.view.tab.orders">
@@ -157,7 +157,7 @@
                 <action method="setGridHtmlCss"><value>border:0</value></action>
             </block>
         </reference>
-    </sales_recurring_profile_orders>
+    </sales_recurring_profile_orders>-->
 
 <!-- not implemented
     <sales_recurring_profile_vendor>
