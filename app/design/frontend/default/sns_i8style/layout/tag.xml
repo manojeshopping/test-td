@@ -45,12 +45,12 @@ Default layout, loads most of the pages
 Customer account pages, rendered for all tabs in dashboard
 -->
 
-    <customer_account>
-        <!-- Mage_Tag -->
+    <!--<customer_account>
+        <!-- Mage_Tag --
         <reference name="customer_account_navigation">
             <action method="addLink" translate="label" module="tag"><name>tags</name><path>tag/customer/</path><label>My Tags</label></action>
         </reference>
-    </customer_account>
+    </customer_account>-->
 
 <!--
 Customer account home dashboard layout
@@ -103,7 +103,7 @@ All tags page
         </reference>
     </tag_product_list>
 
-    <tag_customer_index translate="label">
+    <!--<tag_customer_index translate="label">
         <label>Customer My Account My Tags List</label>
         <update handle="customer_account"/>
         <reference name="root">
@@ -112,9 +112,9 @@ All tags page
         <reference name="my.account.wrapper">
             <block type="tag/customer_tags" name="customer_tags" template="tag/customer/tags.phtml"/>
         </reference>
-    </tag_customer_index>
+    </tag_customer_index>-->
 
-    <tag_customer_view translate="label">
+    <!--<tag_customer_view translate="label">
         <label>Customer My Account Tag View</label>
         <update handle="customer_account"/>
         <reference name="root">
@@ -123,6 +123,6 @@ All tags page
         <reference name="my.account.wrapper">
             <block type="tag/customer_view" name="customer_view" template="tag/customer/view.phtml"/>
         </reference>
-    </tag_customer_view>
+    </tag_customer_view>-->
 
 </layout>
