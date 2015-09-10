@@ -145,3 +145,5 @@ img{max-width:100%;}
 .product-options dl dd .input-box ul.options-list li{list-style:none !important;}
 .product-options dl dd .input-box ul.options-list li span.label label{color:#51585a !important;}
 .product-options dl dd .input-box ul.options-list li input.product-custom-option{float:left;}
+.sidebar-offcanvas .block-account .block-title strong span{color:#fff;}
+.sidebar-offcanvas .block-content ul li.current strong{color:#ffb400;}
