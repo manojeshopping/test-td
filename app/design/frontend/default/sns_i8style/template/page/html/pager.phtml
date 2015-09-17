@@ -34,9 +34,13 @@
 <?php if($this->getCollection()->getSize()): ?>
 
 <?php if($this->getUseContainer()): ?>
-<div class="pager">
+<!--<div class="pager">-->
+<div class="hidden-xs hidden-sm col-md-12 hidden-ie order-toolbar">
+<div class="vspace4"></div>
+<div class="">
 <?php endif ?>
     <?php if($this->getShowAmounts()): ?>
+	<div class="float-left order-amount">
     <p class="amount">
         <?php if($this->getLastPageNum()>1): ?>
             <?php echo $this->__('Items %s to %s of %s total', $this->getFirstNum(), $this->getLastNum(), $this->getTotalNum()) ?>
@@ -44,19 +48,22 @@
             <strong><?php echo $this->__('%s Item(s)', $this->getTotalNum()) ?></strong>
         <?php endif; ?>
     </p>
+	</div>
     <?php endif ?>
 
     <?php if($this->getShowPerPage()): ?>
-    <div class="limiter">
-        <label><?php echo $this->__('Show') ?></label>
-        <select onchange="setLocation(this.value)">
+	<div class="float-right order-limiter">
+	<span class="limit_label">Show</span>	
+    <div class="limiter btn-group">
+        <select class="select-limit-show" onchange="setLocation(this.value)">
         <?php foreach ($this->getAvailableLimit() as  $_key=>$_limit): ?>
             <option value="<?php echo $this->getLimitUrl($_key) ?>"<?php if($this->isLimitCurrent($_key)): ?> selected="selected"<?php endif ?>>
                 <?php echo $_limit ?>
             </option>
         <?php endforeach; ?>
-        </select> <?php echo $this->__('per page') ?>
+        </select> <?php // echo $this->__('per page') ?>
     </div>
+	</div>
     <?php endif ?>
 
     <?php if($this->getLastPageNum()>1): ?>
@@ -115,7 +122,15 @@
     <?php endif; ?>
 
 <?php if($this->getUseContainer()): ?>
+<!--</div>-->
+</div>
 </div>
 <?php endif ?>
 
 <?php endif ?>
+<script type="text/javascript" >
+    jQuery(function($){
+        // Transforming the form's Select control using jqTransform Plugin.
+       $(".order-toolbar .limiter").jqTransform();
+    });
+</script>

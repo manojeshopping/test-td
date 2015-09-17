@@ -23,8 +23,8 @@
  * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-?>
 
-<?php if($this->getWishlist()->getItemsCount() && $this->getWishlist()->isSalable()): ?>
-	<button type="button" data-placement="top" data-toggle="tooltip" title="<?php echo $this->__('Add All to Cart') ?>" onclick="addAllWItemsToCart()" class="btn btn-td-action btn-md floatright btn-margin-rt"><span><span><?php echo $this->__('Add All to Cart') ?></span></span></button>
-<?php endif;?>
+?>
+<a href="<?php echo $this->getItemRemoveUrl($this->getItem()); ?>" onclick="return confirmRemoveWishlistItem();" title="<?php echo $this->__('Remove Item') ?>"
+    class="btn-remove btn-remove2"><button title="" data-placement="top" data-toggle="tooltip" class="btn btn-td-grey btn-md btn-margin-rt" type="button" data-original-title="Cancel"><?php echo $this->__('Remove item');?></button>
+</a>
