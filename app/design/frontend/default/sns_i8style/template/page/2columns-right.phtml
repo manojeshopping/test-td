@@ -66,17 +66,17 @@ $wrapClass = (!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $
 $skinyClass = (Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms' && !Mage::getBlockSingleton('page/html_header')->getIsHomePage()) ? ' skinny-page' : '';
 ?>
 <body id="bd" class="catalog-bg <?php echo $this->getBodyClass();?><?php echo $bclass; ?>">
-	<?php echo $this->getChildHtml('after_body_start') ?>
+	<?php // echo $this->getChildHtml('after_body_start') ?>
 	<header>
 		<?php echo $this->getChildHtml('header') ?>
 	</header>
 	<div class="catalog-bg">
 		<div class="container" id="sns_content">
-			<div class="row row-offcanvas row-offcanvas-left reverse-area wrap">
+			<div class="row row-offcanvas row-offcanvas-left wrap">
 				<button type="button" class="attributes-toggle pull-right visible-xs" data-toggle="offcanvas">
 					<i class="fa fa-chevron-right"></i>
 				</button>
-				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 sidebar-offcanvas left-col" id="sidebar">
+				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 sidebar-offcanvas left-col reverse-area" id="sidebar">
 					<?php echo $this->getChildHtml('right') ?>
 				</div>
 				<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10 grey-area1 right-col">

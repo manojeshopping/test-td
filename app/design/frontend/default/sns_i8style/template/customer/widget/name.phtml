@@ -45,7 +45,7 @@ For checkout/onepage/shipping.phtml:
 /* @var $this Mage_Customer_Block_Widget_Name */
 ?>
 <?php $actionNameSignup = Mage::app()->getFrontController()->getRequest()->getActionName(); ?>
-<?php if($actionNameSignup!='create'){ ?>
+<?php if($actionNameSignup!='create' || $actionNameSignup!='form' || $actionNameSignup!='edit'){ ?>
 <div class="<?php echo $this->getContainerClassName() ?>">
 <?php } ?>
 <?php if ($this->showPrefix()): ?>
@@ -65,7 +65,7 @@ For checkout/onepage/shipping.phtml:
     </div>
 <?php endif; ?>
 
-<?php if($actionNameSignup=='create'){ ?>
+<?php if($actionNameSignup=='create' || $actionNameSignup=='form' || $actionNameSignup=='edit'){ ?>
 		<label for="<?php echo $this->getFieldId('firstname')?>" class="required"><?php echo $this->getStoreLabel('firstname') ?><em>*</em></label>
         <div class="form-group">
             <input type="text" id="<?php echo $this->getFieldId('firstname')?>" name="<?php echo $this->getFieldName('firstname')?>" value="<?php echo $this->escapeHtml($this->getObject()->getFirstname()) ?>" title="<?php echo $this->getStoreLabel('firstname') ?>" maxlength="255" class="form-control <?php echo $this->helper('customer/address')->getAttributeValidationClass('firstname') ?>" <?php echo $this->getFieldParams() ?> placeholder="First Name"/>
@@ -123,6 +123,6 @@ For checkout/onepage/shipping.phtml:
         </div>
     </div>
 <?php endif; ?>
-<?php if($actionNameSignup!='create'){ ?>
+<?php if($actionNameSignup!='create' || $actionNameSignup!='form' || $actionNameSignup!='edit'){ ?>
 </div>
 <?php } ?>
