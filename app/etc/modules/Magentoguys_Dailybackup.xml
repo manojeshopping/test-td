@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Magentoguys_Dailybackup>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Magentoguys_Dailybackup>
+    </modules>
+</config> 

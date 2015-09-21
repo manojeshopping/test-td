@@ -190,10 +190,13 @@
 						?>
 					</div>
 					<div class="product-image item-img" >
-						<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="image-main img-main">
-							<?php if(!$_product->isSaleable()): ?><div class="sold-out"><h4>SOLD OUT</h4></div><?php endif; ?>
-							<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($imgSize[0], $imgSize[1]); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"/>
-						</a>
+						<div class="amlabel-div">
+							<?php echo Mage::helper('amlabel')->getLabels($_product) ?>
+							<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="image-main img-main">
+								<?php if(!$_product->isSaleable()): ?><div class="sold-out"><h4>SOLD OUT</h4></div><?php endif; ?>
+								<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($imgSize[0], $imgSize[1]); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"/>
+							</a>
+						</div>
 						<div class="product-brand hidden-xs">	<?php echo $this->getLayout()->createBlock('manufacturer/manufacturer')->setProduct($_product)->setTemplate('manufacturer/product_manufacturer.phtml')->toHtml(); ?></div>
 					</div>
 					<div class="product-details">

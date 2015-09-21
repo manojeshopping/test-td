@@ -1,3 +1,10 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Base
+ */
+?>
 <div class="ambase-debug-header"><?php echo $this->__("General")?></div>
 <div class="ambase-debug-section">
     <table cellspacing="0">
@@ -30,16 +37,32 @@
             <td><?php echo $this->__("Cron")?></td>
             <td><?php
             $crontabConfig = $this->getCrontabConfig();
-            if ($crontabConfig === null){
+            if (count($crontabConfig) === 0){
                 echo '<div class="red">';
                 echo $this->__('No cron jobs found') . "</div>";
                 echo "<a target='_blank' href='https://support.amasty.com/index.php?/Knowledgebase/Article/View/72/24/magento-cron'>" . $this->__("Learn more") . "</a>";
             } else {
-                if (is_array($crontabConfig)){
-                    echo implode("<br/>", $crontabConfig);
-                } else {
-                    echo $crontabConfig;
-                }
+                ?>
+                <table>
+                <?php foreach ($crontabConfig as $crontabRow){ ?>
+                    <tr>
+                        <td style="padding: 0px 5px;"><?php echo $crontabRow['job_code'];?></td>
+                        <td style="padding: 0px 5px;"><?php echo $crontabRow['status'];?></td>
+                        <td style="padding: 0px 5px;"><?php echo $crontabRow['created_at'];?></td>
+                    </tr>
+                <?php }?>
+                </table>
+        
+                <?php
+                
+                    
+                
+                
+//                if (is_array($crontabConfig)){
+//                    echo implode("<br/>", $crontabConfig);
+//                } else {
+//                    echo $crontabConfig;
+//                }
             }
             ?></td>
         </tr>

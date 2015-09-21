@@ -1,4 +1,10 @@
-<?php    
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Base
+ */
+    
     class Amasty_Base_Model_Conflict{
         protected $_log = array();
         protected $_beforeCode = '/* added automatically by conflict fixing tool */ ';
