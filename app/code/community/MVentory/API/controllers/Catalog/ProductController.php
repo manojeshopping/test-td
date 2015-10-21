@@ -27,13 +27,6 @@
 class MVentory_API_Catalog_ProductController
   extends Mage_Adminhtml_Controller_Action {
 
-  /**
-   * Temporarily allow access for all users
-   */
-  protected function _isAllowed() {
-    return true;
-  }
-
   public function massNameRebuildAction () {
     $request = $this->getRequest();
 

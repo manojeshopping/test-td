@@ -47,13 +47,6 @@ Visit <a target="_blank" href="http://mventory.com/help/configure-access/">mvent
 Save the XML-RPC user again to generate a new link
 EOT;
 
-  /**
-   * Temporarily allow access for all users
-   */
-  protected function _isAllowed() {
-    return true;
-  }
-
   protected function _construct() {
     $this->setUsedModuleName('MVentory_API');
   }
