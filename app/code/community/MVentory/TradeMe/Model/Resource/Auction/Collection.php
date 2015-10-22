@@ -13,7 +13,7 @@
  * part of the licensing agreement with mVentory.
  *
  * @package MVentory/TradeMe
- * @copyright Copyright (c) 2014 mVentory Ltd. (http://mventory.com)
+ * @copyright Copyright (c) 2014-2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
@@ -33,5 +33,18 @@ class MVentory_TradeMe_Model_Resource_Auction_Collection
    */
   protected function _construct () {
     $this->_init('trademe/auction');
+  }
+
+  /**
+   * Delete all auctions in the collection
+   *
+   * @return MVentory_TradeMe_Model_Resource_Auction_Collection
+   *   Instance of this class
+   */
+  public function delete () {
+    foreach ($this->getItems() as $item)
+      $item->delete();
+
+    return $this;
   }
 }

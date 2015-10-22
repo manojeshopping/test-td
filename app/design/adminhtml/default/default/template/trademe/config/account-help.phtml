@@ -24,26 +24,27 @@
 </div>
 
 <div class="box">
+  <h4>This section explains settings used in the CSV configuration file. See Settings section above for more info.</h4>
+
+  <p>Shipping options can be configured per account per shipping method. In addition, either weight-based or price-based (but not both) rules can be configured. Configuration CSV file consists of 4 selectors (first four columns: account, shipping method, max weight, max price) and a number of configuration fields (remaining columns). For a particular product, the file is scanned from the first row down until a row with matching selectors is found - the configuration values from this row are then used to create a TradeMe listing.</p>
+
+  <h5>Description of selectors columns:</h5>
+
   <table class="trademe-setting-help-table">
-    <tr>
-      <td colspan="2">
-        This section explains settings used in the CSV configuration file. See Settings section above for more info.
-      </td>
-    </tr>
     <tr>
       <td>
         Account
       </td>
       <td>
-        Account Name (as specified above.)
+        Account name (as specified above), where a listing is being created.
       </td>
     </tr>
     <tr>
       <td>
-        Shipping type
+        Shipping method
       </td>
       <td>
-        Values from the shipping type attribute (mv_shipping_ by default). Each shipping type value can be configured separately in separate rows or an asterix can be used as a wildcat to configure all shipping types that do not have their own configurations.
+        Values from the shipping method attribute (specified above). Each shipping method can be configured separately in separate rows or an asterix can be used as a wildcat to configure all shipping types that do not have their own configurations.
       </td>
     </tr>
     <tr>
@@ -51,17 +52,22 @@
         Maximum weight
       </td>
       <td>
-        This column is a match if the weight of the product is less or equals the value in this column. Arrange values in ascending order.
+        Product weight must be less or equal to the value in this column. Arrange values in ascending order. The use of weight and price rules is mutually exclusive for each account/shipping method combination.
       </td>
     </tr>
     <tr>
       <td>
-        Minimal price
+        Maximum price
       </td>
       <td>
-        Products with cost below minimal price will not be considered for automatic submission to Trade Me.
+        Product price must be less or equal to the value in this column. Arrange values in ascending order. The use of weight and price rules is mutually exclusive for each account/shipping method combination.
       </td>
     </tr>
+  </table>
+
+  <h5>Description of configuration fields:</h5>
+
+  <table class="trademe-setting-help-table">
     <tr>
       <td>
         Free shipping cost

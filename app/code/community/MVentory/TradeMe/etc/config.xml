@@ -23,7 +23,7 @@
 <config>
   <modules>
     <MVentory_TradeMe>
-      <version>7</version>
+      <version>8</version>
     </MVentory_TradeMe>
   </modules>
 
@@ -224,6 +224,11 @@
 
         <!-- 0 = Managed and in stock -->
         <stock_status>0</stock_status>
+
+        <min_allowed_qty>1</min_allowed_qty>
+
+        <!-- 0 = No -->
+        <auto_withdraw>0</auto_withdraw>
       </settings>
 
       <one_dollar>
@@ -235,6 +240,14 @@
         <allow_withdrawal>0</allow_withdrawal>
 
       </one_dollar>
+
+      <image>
+
+        <!-- 0 = No -->
+        <allow_multiple>0</allow_multiple>
+
+      </image>
     </trademe>
   </default>
+
 </config>

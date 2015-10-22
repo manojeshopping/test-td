@@ -56,7 +56,7 @@ jQuery(document).ready(function ($) {
         $values.append($('<option>', {
           value: value.id,
           html: value.label,
-          class: attr.used_values[value.id] ? 'mventory-state-used-value' : ''
+          class: attr.used_values[value.id] ? 'trademe-state-used-value' : ''
         }));
 
       $values.change();

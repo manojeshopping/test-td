@@ -153,9 +153,9 @@
             </unlink_all_auctions>
 
             <cron translate="label comment tooltip">
-              <label>Magento cron interval (in minutes)</label>
+              <label>TradeMe polling interval</label>
               <tooltip><![CDATA[Magento cron must be running for this feature to work.<br/>You can make listings manually with the cron disabled, but the site will not be able to check TradeMe for sales or auction expiration.]]></tooltip>
-              <comment><![CDATA[Interval to poll TradeMe for updates or 0 to disable polling. Enable <a href="https://www.google.co.nz/search?q=magento+cron.php" target="_blank" title="How to configure and troubleshoot Magento cron">Cron.php</a>.]]></comment>
+              <comment><![CDATA[Interval to poll TradeMe for updates (in minutes) or 0 to disable polling. Enable <a href="https://www.google.co.nz/search?q=magento+cron.php" target="_blank" title="How to configure and troubleshoot Magento cron">Cron.php</a>.]]></comment>
               <frontend_type>text</frontend_type>
               <backend_model>trademe/setting_backend_cron</backend_model>
 
@@ -249,6 +249,40 @@
               <sort_order>110</sort_order>
             </stock_status>
 
+            <min_allowed_qty translate="label comment tooltip">
+              <label>Minimum Stock Quantity</label>
+              <comment>Only products with this quantity or more will be listed.</comment>
+              <tooltip>Only applies to products with managed stock.</tooltip>
+              <frontend_type>text</frontend_type>
+              <frontend_class>validate-number-range number-range-1-</frontend_class>
+
+              <depends>
+                <!-- 0 = Managed and in stock -->
+                <stock_status>0</stock_status>
+              </depends>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>111</sort_order>
+            </min_allowed_qty>
+
+            <auto_withdraw translate="label comment tooltip">
+              <label>Automatic Withdrawal</label>
+              <comment><![CDATA[<b>Please note:</b> you may incur TradeMe <a target="_blank" href="http://www.trademe.co.nz/help/18/fees-and-fee-calculator#general">withdrawal charges</a> with each withdrawal]]></comment>
+              <tooltip>Products that go out of stock can be automatically withdrawn from TradeMe. Polling interval
+                  must be enabled (more than 0) for this feature to work.</tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+
+              <show_in_default>0</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>112</sort_order>
+            </auto_withdraw>
+
             <import translate="label comment tooltip">
               <label>Import configuration file</label>
               <comment>A valid config file is required for the extension to work</comment>
@@ -269,7 +303,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>111</sort_order>
+              <sort_order>113</sort_order>
             </import>
 
             <export translate="label">
@@ -280,7 +314,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>112</sort_order>
+              <sort_order>114</sort_order>
             </export>
           </fields>
         </settings>
@@ -465,6 +499,20 @@
           <sort_order>3</sort_order>
 
           <fields>
+            <allow_multiple>
+              <label>Submit all images</label>
+              <comment></comment>
+              <tooltip>Select whether you want to submit all product images to TradeMe or only the main image. You may be charged by TradeMe for additional images.</tooltip>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+
+              <sort_order>1</sort_order>
+            </allow_multiple>
+
             <padding translate="label comment tooltip">
               <label>Padding, px</label>
               <comment>Default: 0 px</comment>
@@ -475,7 +523,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>1</sort_order>
+              <sort_order>2</sort_order>
             </padding>
 
             <watermark_options translate="label">
@@ -486,7 +534,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>2</sort_order>
+              <sort_order>3</sort_order>
             </watermark_options>
 
             <watermark_image translate="label comment tooltip">
@@ -502,7 +550,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>3</sort_order>
+              <sort_order>4</sort_order>
             </watermark_image>
 
             <watermark_size translate="label comment tooltip">
@@ -515,7 +563,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>4</sort_order>
+              <sort_order>5</sort_order>
             </watermark_size>
 
             <watermark_opacity translate="label comment tooltip">
@@ -528,7 +576,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>5</sort_order>
+              <sort_order>6</sort_order>
             </watermark_opacity>
 
             <watermark_position translate="label tooltip">
@@ -541,7 +589,7 @@
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
 
-              <sort_order>6</sort_order>
+              <sort_order>7</sort_order>
             </watermark_position>
           </fields>
         </image>

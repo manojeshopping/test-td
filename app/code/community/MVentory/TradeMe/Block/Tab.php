@@ -51,7 +51,7 @@ class MVentory_TradeMe_Block_Tab
   public function __construct() {
     parent::__construct();
 
-    $trademe = Mage::helper('trademe');
+    $trademe = Mage::helper('trademe/product');
 
     $product = $this->getProduct();
 
@@ -63,9 +63,26 @@ class MVentory_TradeMe_Block_Tab
     $this->_store = $this->_website->getDefaultStore();
 
     $this->_currency = $this->_store->getBaseCurrency();
-    $this->_productPrice = $trademe->getProductPrice($product, $this->_website);
-    $this->_hasSpecialPrice = $this->_productPrice < $product->getPrice();
 
+    /**
+     * @var MVentory_TradeMe_Helper_Auction::getPrice()
+     *
+     * @todo This should be replace with call to the function above
+     *   after it will be updated to calculate "partial" auction price
+     */
+    $this->_productPrice = $trademe->getPrice($product, $this->_website);
+
+    $this->_hasSpecialPrice = Mage::helper('trademe/product')->hasSpecialPrice(
+      $product,
+      $this->_store
+    );
+
+    /**
+     * @var MVentory_TradeMe_Helper_Auction::getPrice()
+     *
+     * @todo This should be replace with call to the function above after
+     *   it will be updated to calculate "partial" auction price
+     */
     if ($this->_currency->getCode() != MVentory_TradeMe_Model_Config::CURRENCY)
       $this->_productPrice = $trademe->currencyConvert(
         $this->_productPrice,
@@ -82,18 +99,30 @@ class MVentory_TradeMe_Block_Tab
     $this->_session = $session->getData('trademe_data');
     $session->unsetData('trademe_data');
 
-    $this->_accountId = isset($this->_session['account_id'])
-                          ? $this->_session['account_id']
-                            : $this->_auction['account_id'];
-
     $this->_accounts = $trademe->prepareAccounts(
       $trademe->getAccounts($this->_website),
       $product,
       $this->_website->getDefaultStore()
     );
 
-    if (!$this->_accountId)
-      $this->_accountId = false;
+    //Select current TradeMe acccount
+    switch (true) {
+      case isset($this->_session['account_id']):
+        $this->_accountId = $this->_session['account_id'];
+        break;
+
+      case isset($this->_auction['account_id']):
+        $this->_accountId = $this->_auction['account_id'];
+        break;
+
+      case count($this->_accounts):
+        reset($this->_accounts);
+        $this->_accountId = key($this->_accounts);
+        break;
+
+      default:
+        $this->_accountId = false;
+    }
 
     if (count($this->_accounts)) {
         foreach ($this->_accounts as $id => $data)
@@ -515,33 +544,36 @@ class MVentory_TradeMe_Block_Tab
 
     $product = $this->getProduct();
 
-    foreach ($this->_accounts as &$account)
-      if (isset($account['shipping_type'])) {
-        $account['shipping_rate'] = (float) $helper->getShippingRate(
-          $product,
-          $account['name'],
-          $this->_website
+    foreach ($this->_accounts as &$account) {
+      $account['shipping_rate'] = (float) $helper->getShippingRate(
+        $product,
+        $account['name'],
+        $this->_website
+      );
+
+      $code = $this->_currency;
+
+      /**
+       * @todo Replace with MVentory_TradeMe_Helper_Data::applyTmCurrency()
+       *   helper method after it'll have been implemented.
+       *
+       * @see MVentory_TradeMe_Helper_Data::currencyConvert()
+       *   See description for the method to find more info
+       */
+      if ($code->getCode() != MVentory_TradeMe_Model_Config::CURRENCY)
+        $account['shipping_rate'] = $helper->currencyConvert(
+          $account['shipping_rate'],
+          $this->_currency,
+          MVentory_TradeMe_Model_Config::CURRENCY,
+          $this->_store
         );
-
-        $code = $this->_currency;
-
-        if ($code->getCode() != MVentory_TradeMe_Model_Config::CURRENCY)
-          $account['shipping_rate'] = $helper->currencyConvert(
-            $account['shipping_rate'],
-            $this->_currency,
-            MVentory_TradeMe_Model_Config::CURRENCY,
-            $this->_store
-          );
-      }
+    }
   }
 
   protected function _calculateFees () {
     $helper = Mage::helper('trademe');
 
     foreach ($this->_accounts as &$account) {
-      if (!isset($account['shipping_type']))
-        continue;
-
       $shippingRate = isset($account['shipping_rate'])
                         ? $account['shipping_rate']
                           : 0;

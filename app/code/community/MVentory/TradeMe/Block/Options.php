@@ -58,7 +58,7 @@ class MVentory_TradeMe_Block_Options
         'type' => self::TYPE_TEXT
       ),
       'shipping_type' => array(
-        'label' => 'Shipping type',
+        'label' => 'Shipping method',
         'type' => self::TYPE_TEXT
       ),
       'weight' => array(
@@ -66,8 +66,8 @@ class MVentory_TradeMe_Block_Options
         'type' => self::TYPE_FLOAT,
         'empty' => true
       ),
-      'minimal_price' => array(
-        'label' => 'Minimal price',
+      'price' => array(
+        'label' => 'Maximum price',
         'type' => self::TYPE_PRICE,
         'empty' => true
       ),
@@ -122,16 +122,23 @@ class MVentory_TradeMe_Block_Options
    * @return MVentory_TradeMe_Block_Options
    */
   protected function _prepareCollection () {
+    $helper = Mage::helper('trademe/settings');
     $collection = new Varien_Data_Collection();
 
-    $accounts = Mage::helper('trademe')->getAccounts(
-      $this->getWebsite(),
-      false
-    );
+    $accounts = $helper->getAccounts($this->getWebsite());
 
     $_shippingTypes = $this->_getShippingTypes();
 
-    if (count($accounts) && count($_shippingTypes))
+    if (count($accounts) && count($_shippingTypes)) {
+
+      //Get array of all available conditions and convert it to key-based array
+      //with empty values for further use
+      $availConds = $helper->getAvailConds();
+      $availConds = array_combine(
+        $availConds,
+        array_fill(0, count($availConds), '')
+      );
+
       foreach ($accounts as $account) {
         $hasShippingTypes = isset($account['shipping_types'])
                             && count($account['shipping_types']);
@@ -140,52 +147,68 @@ class MVentory_TradeMe_Block_Options
                            ? $account['shipping_types']
                              : $this->_fillShippingTypes($_shippingTypes);
 
-        foreach ($shippingTypes as $id => $options) {
-          $options['allow_buy_now'] = (int) $options['allow_buy_now'];
-
-          if (!isset($_shippingTypes[$options['shipping_type']]))
+        foreach ($shippingTypes as $shippingTypeId => $shippingType) {
+          if (!isset($_shippingTypes[$shippingTypeId]))
             continue;
 
-          $row = array(
-            'account_name' => $account['name'],
-            'shipping_type' => $_shippingTypes[$options['shipping_type']]
-          );
+          foreach ($shippingType['settings'] as $condValue => $settings) {
+            $row = array(
+              'account_name' => $account['name'],
+              'shipping_type' => $_shippingTypes[$shippingTypeId]
+            );
 
-          $row += $options;
+            //Merging of following arrays sets empty value for all conditions
+            //except condition used for current shipping type if the condition
+            //exists
+            $row += array_merge(
+              //All conditions names with empty values
+              $availConds,
 
-          foreach ($row as $optionId => $optionValue) {
-            if (!isset($this->_options[$optionId]))
-              continue;
+              //Condition name and its value used for current shipping type
+              //Empty array if there's no condition
+              array_intersect_key(
+                [$shippingType['condition'] => $condValue],
+                $availConds
+              )
+            );
 
-            $option = $this->_options[$optionId];
+            $row += $settings;
 
-            if (isset($option['empty']) && $optionValue === '')
-              continue;
+            foreach ($row as $optionId => $optionValue) {
+              if (!isset($this->_options[$optionId]))
+                continue;
 
-            if (isset($option['prepare']))
-              $optionValue = call_user_func(
-                array($this, $option['prepare']),
-                $optionValue
-              );
+              $option = $this->_options[$optionId];
 
-            switch ($option['type']) {
-              case self::TYPE_INT:
-              case self::TYPE_BOOL:
-                $optionValue = (int) $optionValue;
-                break;
-              case self::TYPE_FLOAT:
-                $optionValue = (float) $optionValue;
-                break;
-              case self::TYPE_PRICE:
-                $optionValue = number_format((float) $optionValue, 2);
+              if (isset($option['empty']) && $optionValue === '')
+                continue;
+
+              if (isset($option['prepare']))
+                $optionValue = call_user_func(
+                  array($this, $option['prepare']),
+                  $optionValue
+                );
+
+              switch ($option['type']) {
+                case self::TYPE_INT:
+                case self::TYPE_BOOL:
+                  $optionValue = (int) $optionValue;
+                  break;
+                case self::TYPE_FLOAT:
+                  $optionValue = (float) $optionValue;
+                  break;
+                case self::TYPE_PRICE:
+                  $optionValue = number_format((float) $optionValue, 2);
+              }
+
+              $row[$optionId] = $optionValue;
             }
 
-            $row[$optionId] = $optionValue;
+            $collection->addItem(new Varien_Object($row));
           }
-
-          $collection->addItem(new Varien_Object($row));
         }
       }
+    }
 
     $this->setCollection($collection);
 
