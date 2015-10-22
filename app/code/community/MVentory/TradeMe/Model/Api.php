@@ -62,6 +62,9 @@ EOT;
   const __E_AUCTION_DESC = <<<'EOT'
 Length of the description exceeded the limit of %d characters
 EOT;
+  const __E_MATCHING_MISSING = <<<'EOT'
+Product has empty value for %s attribute(s) required by the selected TradeMe category
+EOT;
   const __E_STORE_PAYMENT = <<<'EOT'
 TradeMe Payment methods are not selected
 EOT;
@@ -276,6 +279,11 @@ EOT;
         'Product doesn\'t have matched TradeMe category'
       );
 
+    if ($attrs = $this->_getAttrs($categoryId, $product)) {
+      $attrsXml = $this->_exportAttrsAsXml($attrs);
+      unset($attrs);
+    }
+
     $shippingType = MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
 
     Mage::unregister('product');
@@ -306,13 +314,7 @@ EOT;
       html_entity_decode($description, ENT_COMPAT, 'UTF-8')
     );
 
-    $image = Mage::helper('trademe/image')->getImage(
-      $product,
-      $this->_imageSize,
-      $store
-    );
-
-    $photoId = $this->uploadImage($image);
+    $photoIds = $this->_getPhotoIds($product, $store);
 
     $client = $accessToken->getHttpClient($this->getConfig());
     $client->setUri('https://api.' . $this->_host . '.co.nz/v1/Selling.xml');
@@ -330,13 +332,7 @@ EOT;
     else
       $title = htmlspecialchars($title);
 
-    $price = $this->_getPrice(
-      $product,
-      $account,
-      $_data,
-      $overwrite,
-      $store->getBaseCurrency()
-    );
+    $price = $this->_getPrice($product, $account, $_data, $store, $overwrite);
 
     $buyNow = '';
 
@@ -375,11 +371,13 @@ EOT;
 
       //Add photo to auction if we have one in the product and use it as gallery
       //image if it's allowed in the settings
-      if ($photoId) {
+      if ($photoIds) {
         if (isset($account['category_image']) && $account['category_image'])
           $xml .= '<HasGallery>true</HasGallery>';
 
-        $xml .= '<PhotoIds><PhotoId>' . $photoId . '</PhotoId></PhotoIds>';
+        $xml .= '<PhotoIds><PhotoId>'
+                . implode('</PhotoId><PhotoId>', $photoIds)
+                . '</PhotoId></PhotoIds>';
       }
 
       $xml .= '<ShippingOptions>';
@@ -408,43 +406,8 @@ EOT;
                 )
               . '</PaymentMethod></PaymentMethods>';
 
-      /**
-       * @todo Temporarily disabled. Matching code is buggy in some corner cases
-       * and should be fixed and refactored.
-       */
-      //$attributes = $this->getCategoryAttrs($categoryId);
-      $attributes = false;
-
-      if ($attributes) {
-        $attributes = $helper->fillAttributes(
-          $product,
-          $attributes,
-          $helper->getMappingStore()
-        );
-
-        if ($attributes['error']) {
-          if (isset($attributes['required']))
-            return 'Product has empty "' . $attributes['required']
-                   . '" attribute';
-
-          if (isset($attributes['no_match']))
-            return 'Error in matching "' . $attributes['no_match']
-                   . '" attribute: incorrect value in "fake" store';
-        }
-
-        if ($attributes = $attributes['attributes']) {
-          $xml .= '<Attributes>';
-
-          foreach ($attributes as $attributeName => $attributeValue) {
-            $xml .= '<Attribute>';
-            $xml .= '<Name>' . htmlspecialchars($attributeName) . '</Name>';
-            $xml .= '<Value>' . htmlspecialchars($attributeValue) . '</Value>';
-            $xml .= '</Attribute>';
-          }
-
-          $xml .= '</Attributes>';
-        }
-      }
+      if (isset($attrsXml))
+        $xml .= $attrsXml;
 
       $xml .=  '<SKU>' . htmlspecialchars($product->getSku()) . '</SKU>';
       $xml .= '</ListingRequest>';
@@ -679,8 +642,7 @@ EOT;
         $product,
         $account,
         $formData,
-        array(),
-        $store->getBaseCurrency()
+        $store
       );
 
     if(!isset($parameters['ReservePrice']))
@@ -780,56 +742,15 @@ EOT;
   }
 
   public function massCheck ($auctions) {
-    $accessToken = $this->auth();
-    $client = $accessToken->getHttpClient($this->getConfig());
-    $client->setUri(
-      'https://api.' . $this->_host
-        . '.co.nz/v1/MyTradeMe/SellingItems/All.json'
-    );
-    $client->setMethod(Zend_Http_Client::GET);
-
-    //Request more rows than number of auctions to be sure that all listings
-    //from account will be included in a response
-    $client->setParameterGet('rows', count($auctions) * 10);
-
-    $response = $client->request();
-
-    if (($status = $response->getStatus()) != 200)
-      throw new MVentory_TradeMe_ApiException(sprintf(
-        self::__E_RESPONSE_STATUS,
-        $status,
-        200
-      ));
-
-    $body = $response->getBody();
-
-    if ($body === '')
-      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
-
-    $items = json_decode($body, true);
-
-    if ($items === null)
-      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
-
-    if (!isset($items['List']))
-      throw new MVentory_TradeMe_ApiException(sprintf(
-        self::__E_RESPONSE_INCOMPLETE,
-        'List'
-      ));
-
-    if (!isset($items['TotalCount']))
-      throw new MVentory_TradeMe_ApiException(sprintf(
-        self::__E_RESPONSE_INCOMPLETE,
-        'TotalCount'
-      ));
+    $items = $this->getAllSellingAuctions();
 
     foreach ($auctions as $auction)
-      foreach ($items['List'] as $item)
+      foreach ($items as $item)
         if (isset($item['ListingId'])
             && $item['ListingId'] == $auction['listing_id'])
           $auction['is_selling'] = true;
 
-    return $items['TotalCount'];
+    return count($items);
   }
 
   public function uploadImage ($image) {
@@ -1129,6 +1050,90 @@ EOT;
     return $this->_prepareListingDetails($body);
   }
 
+  /**
+   * Request a list of all active auctions from TradeMe.
+   *
+   * @return array
+   *   List of auctions data
+   */
+  public function getAllSellingAuctions () {
+    $page = 1;  // response can consist of multiple pages
+
+    $accessToken = $this->auth();
+
+    $client = $accessToken
+      ->getHttpClient($this->getConfig())
+      ->setUri(
+        'https://api.'
+        . $this->_host
+        . '.co.nz/v1/MyTradeMe/SellingItems/All.json'
+      )
+      ->setMethod(Zend_Http_Client::GET)
+      ->setParameterGet('rows', 5000)         // Request 5000 products per page of response
+      ->setParameterGet('page', $page);
+
+    $response = $this->_checkSellingItemsResponse($client->request());
+    $itemCount = $response['PageSize'];
+    $items = $response['List'];
+
+      // Request additional pages if required
+    while ($itemCount < $response['TotalCount'] && !empty($response['List'])) {
+      $client->setParameterGet('page',++$page);
+      $response = $this->_checkSellingItemsResponse($client->request());
+      $itemCount += $response['PageSize'];
+      $items = array_merge($items,$response['List']);
+    }
+
+    return $items;
+  }
+
+  /**
+   * Check sanity of TradeMe response, decoding it in the process.
+   *
+   * @param $response
+   * @return mixed
+   *  Checked and decoded response
+   * @throws MVentory_TradeMe_ApiException
+   */
+  private function _checkSellingItemsResponse($response) {
+    if (($status = $response->getStatus()) != 200)
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_STATUS,
+        $status,
+        200
+      ));
+
+    $body = $response->getBody();
+
+    if ($body === '')
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_EMPTY);
+
+    $response = json_decode($body, true);
+
+    if ($response === null)
+      throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
+
+    if (!isset($response['List']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'List'
+      ));
+
+    if (!isset($response['TotalCount']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'TotalCount'
+      ));
+
+    if (!isset($response['PageSize']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_RESPONSE_INCOMPLETE,
+        'PageSize'
+      ));
+
+    return $response;
+  }
+
   public function _parseCategories (&$list, $categories, $names = array()) {
     foreach ($categories as $category) {
       if (isset($this->_ignoreCategories[$category['Number']]))
@@ -1257,11 +1262,11 @@ EOT;
    * @param array $data
    *   Additional data
    *
+   * @param Mage_Core_Model_Store $store
+   *   Store model
+   *
    * @param array $overwrite
    *   Overwrite values
-   *
-   * @param Mage_Directory_Model_Currency $currency
-   *   Base currency of current store
    *
    * @return float
    *   Final price for TradeMe auction
@@ -1269,34 +1274,16 @@ EOT;
   protected function _getPrice ($product,
                                 $account,
                                 $data,
-                                $overwrite,
-                                $currency) {
+                                $store,
+                                $overwrite = []) {
 
-    if (isset($overwrite['price']))
-      return $overwrite['price'];
-
-    $website = $this->_getWebsite();
-    $helper = Mage::helper('trademe');
-
-    $price = $helper->getProductPrice($product, $website);
-
-    $price += $helper->getShippingRate(
-      $product,
-      $account['name'],
-      $website
-    );
-
-    if ($currency->getCode != MVentory_TradeMe_Model_Config::CURRENCY)
-      $price = $helper->currencyConvert(
-        $price,
-        $currency,
-        MVentory_TradeMe_Model_Config::CURRENCY,
-        $website->getDefaultStore()
-      );
-
-    return $this->_getAddFees($product, $data)
-               ? $helper->addFees($price)
-                 : $price;
+    return isset($overwrite['price'])
+      ? $overwrite['price']
+      : Mage::helper('trademe/auction')->getPrice(
+          $product,
+          array_merge($account, $data),
+          $store
+        );
   }
 
   /**
@@ -1339,6 +1326,40 @@ EOT;
       ',',
       $store->getConfig(MVentory_TradeMe_Model_Config::_PAYMENT_METHODS)
     );
+  }
+
+  protected function _getAttrs ($categoryId, $product) {
+    $attributes = $this->getCategoryAttrs($categoryId);
+    if (!$attributes)
+      return;
+
+    $helper = Mage::helper('trademe/attribute');
+
+    $attributes = $helper->fillAttributes(
+      $product,
+      $attributes,
+      $helper->getMappingStore()
+    );
+
+    if ($attributes['error'] && isset($attributes['required']))
+      throw new MVentory_TradeMe_ApiException(sprintf(
+        self::__E_MATCHING_MISSING,
+        $attributes['required']
+      ));
+
+    return $attributes['attributes'];
+  }
+
+  protected function _exportAttrsAsXml ($attrs) {
+    $xml = '';
+
+    foreach ($attrs as $name => $value)
+      $xml .= '<Attribute>'
+              . '<Name>' . htmlspecialchars($name) . '</Name>'
+              . '<Value>' . htmlspecialchars($value) . '</Value>'
+              .'</Attribute>';
+
+    return '<Attributes>' . $xml . '</Attributes>';
   }
 
   /**
@@ -1441,5 +1462,29 @@ EOT;
     array_walk($errors, 'trim');
 
     return array_filter($errors);
+  }
+
+  /**
+   * Get main image or all images depending on Submit all images setting
+   * and upload one by one, return IDs of uploaded images
+   *
+   * @param Mage_Catalog_Model_Product $product
+   *   Product model
+   *
+   * @param Mage_Core_Model_Store
+   *   Store model
+   *
+   * @return array
+   *   List of photo IDs returned by Trademe for uploaded images
+   */
+  protected function _getPhotoIds ($product, $store) {
+    $helper = Mage::helper('trademe/image');
+
+    return array_map(
+      [$this, 'uploadImage'],
+      $this->_getConfig(MVentory_TradeMe_Model_Config::_IMG_MULTIPLE)
+        ? $helper->getAllImages($product, $this->_imageSize, $store)
+        : [$helper->getImage($product, $this->_imageSize, $store)]
+    );
   }
 }

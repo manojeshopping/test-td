@@ -31,6 +31,6 @@ class MVentory_TradeMe_Model_Setting_Backend_Options
   }
 
   public function _afterSave () {
-    Mage::helper('trademe')->importOptions($this);
+    Mage::helper('trademe/settings')->import($this);
   }
 }
