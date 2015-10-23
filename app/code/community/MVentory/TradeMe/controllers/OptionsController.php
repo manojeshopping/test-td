@@ -48,4 +48,11 @@ class MVentory_TradeMe_OptionsController
       $content
     );
   }
+
+  /**
+   * Temporarily allow access for all users
+   */
+  protected function _isAllowed() {
+    return true;
+  }
 }

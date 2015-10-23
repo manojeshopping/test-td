@@ -385,4 +385,11 @@ class MVentory_TradeMe_ListingController
 
     return array_filter($errors);
   }
+
+  /**
+   * Temporarily allow access for all users
+   */
+  protected function _isAllowed() {
+    return true;
+  }
 }

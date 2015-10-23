@@ -190,7 +190,7 @@ EOT;
     $this->_accounts = $accounts;
 
     //Sync current auctions and list new
-    $this->_automatedWithdrawal();    
+    $this->_automatedWithdrawal();
     $this->_syncAllAuctions();
     $this->_listNormalAuctions();
     $this->_listFixedEndAuctions($job);

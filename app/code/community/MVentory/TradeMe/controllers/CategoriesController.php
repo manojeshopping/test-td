@@ -58,4 +58,11 @@ class MVentory_TradeMe_CategoriesController
       ->getResponse()
       ->setBody($body);
   }
+
+  /**
+   * Temporarily allow access for all users
+   */
+  protected function _isAllowed() {
+    return true;
+  }
 }

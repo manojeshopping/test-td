@@ -92,4 +92,11 @@ class MVentory_TradeMe_MatchingController
 
     echo 1;
   }
+
+  /**
+   * Temporarily allow access for all users
+   */
+  protected function _isAllowed() {
+    return true;
+  }
 }
