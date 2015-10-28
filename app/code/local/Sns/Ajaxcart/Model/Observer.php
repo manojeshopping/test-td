@@ -306,6 +306,22 @@ class Sns_Ajaxcart_Model_Observer
 			exit();
 		}
 	}
+	
+	public function clearallWish(){
+		if(Mage::getStoreConfig('ajaxcart_cfg/general/enable') AND Mage::app()->getFrontController()->getRequest()->getParam('isWLPage')!=""){
+			Mage::getSingleton('customer/session')->getData('messages')->clear();
+			Mage::helper('ajaxcart/Sendhtml')->setAddwhat("1");
+			if(!Mage::app()->getFrontController()->getRequest()->getParam('isWLPage')){
+				$wish=Mage::helper('ajaxcart')->renderMiniWish();
+			}else{
+				$wish=Mage::helper('ajaxcart')->renderWishlist();
+			}
+			$text=Mage::helper('ajaxcart')->renderWishlistTitle();
+			Mage::helper('ajaxcart/Sendhtml')->sendResponse($wish, $text);
+			exit();
+		}
+	}
+	
 	public function removeProductCompare(){
 		if(Mage::getStoreConfig('ajaxcart_cfg/general/enable') AND Mage::app()->getFrontController()->getRequest()->getParam('isCOPage')!=""){
 				Mage::getSingleton('catalog/session')->getData('messages')->clear();

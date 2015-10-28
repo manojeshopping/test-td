@@ -43,10 +43,10 @@ Default layout, loads most of the pages
             <block type="wishlist/customer_sidebar" name="wishlist_sidebar" as="wishlist" after="cart_sidebar" template="wishlist/sidebar.phtml" />
         </reference>
     </default>
-
-<!--
-Customer account pages, rendered for all tabs in dashboard
--->
+	
+	<!--
+	Customer account pages, rendered for all tabs in dashboard
+	-->
 
     <customer_account>
         <!-- Mage_Wishlist -->
@@ -85,6 +85,12 @@ Wishlist pages
                             <title>Product Details and Comment</title>
                         </action>
                     </block>
+					<block type="wishlist/customer_wishlist_item_column_price" name="customer.wishlist.item.price" template="wishlist/item/column/price.phtml">
+                        <action method="setTitle" translate="title">
+                            <title>Price</title>
+                        </action>
+						<block type="wishlist/customer_wishlist_item_options" name="customer.wishlist.item.options" />
+                    </block>
                     <block type="wishlist/customer_wishlist_item_column_cart" name="customer.wishlist.item.cart" template="wishlist/item/column/cart.phtml">
                         <action method="setTitle" translate="title">
                             <title>Add to Cart</title>
@@ -94,10 +100,11 @@ Wishlist pages
                     <block type="wishlist/customer_wishlist_item_column_remove" name="customer.wishlist.item.remove" template="wishlist/item/column/remove.phtml" />
                 </block>
                 <block type="core/text_list" name="customer.wishlist.buttons" as="control_buttons">
-                    <block type="wishlist/customer_wishlist_button" name="customer.wishlist.button.share" template="wishlist/button/share.phtml" />
-                    <block type="wishlist/customer_wishlist_button" name="customer.wishlist.button.update" template="wishlist/button/update.phtml" />
+                    <block type="wishlist/customer_wishlist_button" name="customer.wishlist.button.clear" template="wishlist/button/clear.phtml" />
+					<block type="wishlist/customer_wishlist_button" name="customer.wishlist.button.update" template="wishlist/button/update.phtml" />
 					<block type="wishlist/customer_wishlist_button" name="customer.wishlist.button.toCart" template="wishlist/button/tocart.phtml" />
                 </block>
+				<block type="wishlist/customer_wishlist_button" name="customer.wishlist.button.share" template="wishlist/button/share.phtml" />
             </block>
         </reference>
         <reference name="right">

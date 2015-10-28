@@ -113,6 +113,16 @@
                     </ajaxcart>
                 </observers>
             </controller_action_postdispatch_wishlist_index_remove>
+			<controller_action_postdispatch_ajaxcart_wishlist_clearall>
+                <observers>
+                    <ajaxcart>
+                        <type>singleton</type>
+                        <class>ajaxcart/observer</class>
+                        <method>clearallWish</method>
+                    </ajaxcart>
+                </observers>
+            </controller_action_postdispatch_ajaxcart_wishlist_clearall>
+			
 	        <controller_action_postdispatch_catalog_product_compare_remove>
                 <observers>
                     <ajaxcart>
@@ -211,6 +221,13 @@
                     <frontName>ajaxcart</frontName>
                 </args>
             </ajaxcart>
+			<wishlist>
+				<args>
+					<modules>
+						<sns_ajaxcart before="Mage_Wishlist">Sns_Ajaxcart</sns_ajaxcart>
+					</modules>
+				</args>
+			</wishlist>
         </routers>
         <layout>
             <updates>

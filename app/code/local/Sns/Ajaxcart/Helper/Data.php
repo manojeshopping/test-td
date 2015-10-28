@@ -199,32 +199,42 @@ class Sns_Ajaxcart_Helper_Data extends Mage_Core_Helper_Abstract{
                 $item_info = $block->createBlock('wishlist/customer_wishlist_item_column_comment')
                                     ->setTemplate('wishlist/item/column/info.phtml')
                                     ->setTitle(Mage::helper('ajaxcart')->__('Product Details and Comment'));
+				$item_price = $block->createBlock('wishlist/customer_wishlist_item_column_price')
+                                    ->setTemplate('wishlist/item/column/price.phtml')
+                                    ->setTitle(Mage::helper('ajaxcart')->__('price')); 					
                 $item_cart = $block    ->createBlock('wishlist/customer_wishlist_item_column_cart')
                                     ->setTemplate('wishlist/item/column/cart.phtml')
                                     ->setTitle(Mage::helper('ajaxcart')->__('Add to Cart'));
                 $item_options = $block->createBlock('wishlist/customer_wishlist_item_options', 'customer.wishlist.item.options');
+				$item_price->append($item_options);
                 $item_cart->append($item_options);
                 $item_remove = $block->createBlock('wishlist/customer_wishlist_item_column_remove')
                                         ->setTemplate('wishlist/item/column/remove.phtml');
             $items->append($item_image)
                     ->append($item_info)
+					->append($item_price)
                     ->append($item_cart)
                     ->append($item_remove);
-            $buttons = $block->createBlock('core/text_list','control_buttons')
+            
+			$button_share = $block->createBlock('wishlist/customer_wishlist_button','customer.wishlist.button.share')
+                                ->setTemplate('wishlist/button/share.phtml');
+			
+			$buttons = $block->createBlock('core/text_list','control_buttons')
                                 ->setTemplate('wishlist/item/list.phtml');
-            $btn_share = $block->createBlock('wishlist/customer_wishlist_button')
-                ->setTemplate('wishlist/button/share.phtml');
+            $btn_clear = $block->createBlock('wishlist/customer_wishlist_button')
+                ->setTemplate('wishlist/button/clear.phtml');
             $btn_tocart = $block->createBlock('wishlist/customer_wishlist_button')
                 ->setTemplate('wishlist/button/tocart.phtml');
             $btn_update = $block->createBlock('wishlist/customer_wishlist_button')
                 ->setTemplate('wishlist/button/update.phtml');
-            $buttons->append($btn_share)
+            $buttons->append($btn_clear)
                         ->append($btn_tocart)
                         ->append($btn_update);
             $wishlist =    $block->createBlock('wishlist/customer_wishlist')
                                 ->setTemplate('wishlist/view.phtml')
                                 ->append($items)
                                 ->append($buttons)
+								->append($button_share)
                                 ->setTitle(Mage::helper('ajaxcart')->__('My Wishlist'));
         }else{
             $wishitem= $block->createBlock('"wishlist/customer_wishlist_item_options','item_options');
