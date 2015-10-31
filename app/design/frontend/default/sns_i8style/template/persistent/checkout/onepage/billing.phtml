@@ -29,8 +29,9 @@
 <div class="form-list">
     <?php if ($this->customerHasAddresses()): ?>
         <div class="form-group">
-            <label for="billing-address-select col-sm-10 control-label"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
-            <div class="col-sm-10">
+			<label for="billing-address-select col-sm-10 control-label" class="col-sm-12 control-label"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></label>
+            <label for="billing-address-select" class="col-sm-2 control-label"></label>
+			<div class="col-sm-10">
                 <?php echo $this->getAddressesHtmlSelect('billing') ?>
             </div>
         </div>

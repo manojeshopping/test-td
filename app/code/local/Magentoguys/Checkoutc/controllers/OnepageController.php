@@ -144,6 +144,32 @@ class Magentoguys_Checkoutc_OnepageController extends Mage_Checkout_OnepageContr
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         }
     }
+	
+	public function saveShippingAction()
+    {
+        if ($this->_expireAjax()) {
+            return;
+        }
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost('shipping', array());
+            $customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
+            /*** added by riyaj ***/
+			$orderComment = $this->getRequest()->getPost('myorder_customercomment');
+			Mage::getModel('checkout/session')->setMyCustomerOrderComment($orderComment);
+			/****** end  *****/
+			$result = $this->getOnepage()->saveShipping($data, $customerAddressId);
+
+            if (!isset($result['error'])) {
+                $result['goto_section'] = 'shipping_method';
+                $result['update_section'] = array(
+                    'name' => 'shipping-method',
+                    'html' => $this->_getShippingMethodsHtml()
+                );
+            }
+            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+        }
+    }
+
 
    
 }

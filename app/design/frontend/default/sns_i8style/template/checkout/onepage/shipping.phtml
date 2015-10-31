@@ -36,7 +36,8 @@
 	</div>	
    <?php if ($this->customerHasAddresses()): ?>
    <div class="form-group">
-	   <label for="shipping-address-select col-sm-10 control-label"><?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?></label>
+	   <label for="shipping-address-select col-sm-10 control-label" class="col-sm-12 control-label"><?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?></label>
+	   <label for="shipping-address-select" class="col-sm-2 control-label"></label>
 	   <div class="col-sm-10">
 		   <?php echo $this->getAddressesHtmlSelect('shipping') ?>
 	   </div>
@@ -101,6 +102,7 @@
 				<input type="text" title="<?php echo $this->__('Zip/Postal Code') ?>" name="shipping[postcode]" id="shipping:postcode" value="<?php echo $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="form-control validate-zip-international <?php // echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" onchange="shipping.setSameAsBilling(false);" placeholder="Post Code"/>
 			</div>
 		</div>
+		<?php echo $this->getChildHtml('mbcomments') ?>
 		<div class="form-group">
 			<label for="shipping:country_id" class="required col-sm-2 control-label"><em>*</em><?php echo $this->__('Country') ?></label>
 			<div class="col-sm-10">

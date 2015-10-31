@@ -1398,6 +1398,7 @@ div.fixed {
 |                                                                                              |         
 +----------------------------------------------------------------------------------------------+          
 */
+/*
 .carousel {
   display: none;
   z-index: 0;
@@ -1420,6 +1421,8 @@ div.fixed {
   height: auto;
   margin: 0 auto;
 }
+*/
+
 @media (min-width: 768px) {
   .carousel {
     display: block;
