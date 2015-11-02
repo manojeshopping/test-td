@@ -153,3 +153,4 @@ img{max-width:100%;}
 .bottom-pager .order-toolbar .order-amount{display:none;}
 .bottom-pager .order-toolbar .order-limiter{display:none;}
 .customer-name-middlename .name-middlename{display:none;}
+.product-options ul.options-list li input{float:left;}
