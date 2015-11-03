@@ -196,6 +196,33 @@
 					</ajaxcart>
 				</observers>
 			</controller_action_postdispatch_wishlist_index_add>
+			<controller_action_postdispatch_customer_account_login>
+				<observers>
+					<ajaxcart>
+						<type>singleton</type>
+						<class>ajaxcart/observer</class>
+						<method>popupLogin</method>
+					</ajaxcart>
+				</observers>
+			</controller_action_postdispatch_customer_account_login>
+			<controller_action_postdispatch_customer_account_create>
+				<observers>
+					<ajaxcart>
+						<type>singleton</type>
+						<class>ajaxcart/observer</class>
+						<method>popupRegister</method>
+					</ajaxcart>
+				</observers>
+			</controller_action_postdispatch_customer_account_create>
+			<controller_action_postdispatch_customer_account_forgotpassword>
+				<observers>
+					<ajaxcart>
+						<type>singleton</type>
+						<class>ajaxcart/observer</class>
+						<method>popupForgotpassword</method>
+					</ajaxcart>
+				</observers>
+			</controller_action_postdispatch_customer_account_forgotpassword>
 			<controller_action_postdispatch_catalog_product_compare_add>
 				<observers>
 					<ajaxcart>

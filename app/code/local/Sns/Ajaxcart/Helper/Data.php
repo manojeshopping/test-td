@@ -36,6 +36,28 @@ class Sns_Ajaxcart_Helper_Data extends Mage_Core_Helper_Abstract{
 						->setTemplate('wishlist/sidebar.phtml')  ;;
 		return  $miniwish->renderView();
 	}
+	
+	public function renderLoginPopup(){
+		$b=Mage::getSingleton('core/layout');
+		$loginPopup=	$b 	->createBlock('customer/form_login')
+						->setTemplate('persistent/customer/form/login_popup.phtml');
+		return  $loginPopup->renderView();
+	}
+	
+	public function renderRegisterPopup(){
+		$b=Mage::getSingleton('core/layout');
+		$registerPopup=	$b 	->createBlock('customer/form_register')
+						->setTemplate('persistent/customer/form/register_popup.phtml');
+		return  $registerPopup->renderView();
+	}
+	
+	public function renderForgotpasswordPopup(){
+		$b=Mage::getSingleton('core/layout');
+		$forgotpasswordPopup=	$b 	->createBlock('customer/account_forgotpassword')
+						->setTemplate('customer/form/forgotpassword.phtml');
+		return  $forgotpasswordPopup->renderView();
+	}
+	
 	public function renderProductCompare(){
 		$b=Mage::getSingleton('core/layout');
 		$productcompare= $b	->createBlock('catalog/product_compare_sidebar')

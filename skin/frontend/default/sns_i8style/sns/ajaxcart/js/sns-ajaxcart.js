@@ -20,6 +20,9 @@ function reURLPoductsSpecial() {
 }
 
 function aCConstruct() {
+	reNewLinkLogin();
+	reNewLinkRegister();
+	reNewLinkForgotpassword();
     reURLPoductsSpecial();
     if (typeof productAddToCartForm != 'undefined') {
         productAddToCartForm.submit = function(args) {
@@ -36,6 +39,7 @@ function aCConstruct() {
     }
     if (ajax_for_wishlist) {
 		reNewLinkRemoveWishList();
+		if (isLoggedIn == "0") reNewLinkWishList(); 
 		if (isLoggedIn == "1") reNewLinkWishList();
         reNewLinkAddToCartInWishList();
 		reNewLinkClearAllInWishList();
@@ -154,6 +158,18 @@ function reNewLinkWishList() {
     reCreateLink('wishlist/index/add');
 }
 
+function reNewLinkLogin() {
+    reCreateLink('customer/account/login');
+}
+
+function reNewLinkRegister() {
+    reCreateLink('customer/account/create');
+}
+
+function reNewLinkForgotpassword() {
+    reCreateLink('customer/account/forgotpassword');
+}
+
 function reNewLinkAddToCartInWishList() {
     reCreateLink('wishlist/index/cart');
 }
@@ -171,7 +187,7 @@ function renderAjaxWrap() {
     str = str + '			<div id="sns_ajaxbox" class="modal-content">';
     str = str + '					<div id="ajax_process" style="display:block;"></div>';
     str = str + '					<div id="ajax_content">';
-    str = str + '<div class="modal-header"><button aria-label="Close" data-dismiss="modal" class="close" type="button" onclick="closeAll()"><span aria-hidden="true">&times;</span></button><h4 id="myModalLabel" class="modal-title uppercase">Product Added</h4></div><div id="confirmbox"></div>';
+    str = str + '<div class="modal-header"><button aria-label="Close" data-dismiss="modal" class="close" type="button" onclick="closeAll()"><span aria-hidden="true">&times;</span></button><h4 id="myModalLabel" class="modal-title uppercase">Login Form</h4></div><div id="confirmbox"></div>';
     str = str + '					</div>';
     str = str + '			</div>';
     str = str + '		</div><div id="ajax_overlay"></div>';
@@ -206,7 +222,8 @@ function callAjax(url, action, link) {
             method: 'post',
             parameters: {
                 isCOPage: isCOPage,
-                isWLPage: isWLPage
+                isWLPage: isWLPage,
+				isLoggedIn: isLoggedIn
             },
             onSuccess: function(result) {
                 if (link == 'checkout/cart/delete') {
@@ -346,6 +363,24 @@ function setResult(result) {
             getConfirm(result);
         deletePCompare = 0;
         closeCFirm = 0;
+    
+	} else if (result.addtype == '3') {
+		if (closeCFirm != 1)
+			getConfirm(result);
+		closeCFirm = 0;	
+		
+    }
+	else if (result.addtype == '4') {
+		if (closeCFirm != 1)
+			getConfirm(result);
+		closeCFirm = 0;	
+		
+    }
+	else if (result.addtype == '5') {
+		if (closeCFirm != 1)
+			getConfirm(result);
+		closeCFirm = 0;	
+		
     }
 }
 

@@ -183,6 +183,40 @@ class Sns_Ajaxcart_Model_Observer
 
 		}
 	}
+	
+	public function popupLogin(){
+		if(Mage::getStoreConfig('ajaxcart_cfg/general/enable')){
+
+				Mage::getSingleton('customer/session')->getData('messages')->clear();
+				$loginform = Mage::helper('ajaxcart')->renderLoginPopup();
+				Mage::helper('ajaxcart/Sendhtml')->setAddwhat("3");
+				Mage::helper('ajaxcart/Sendhtml')->sendResponse($loginform, 'testing');
+
+		}
+	}
+	
+	public function popupRegister(){
+		if(Mage::getStoreConfig('ajaxcart_cfg/general/enable')){
+
+				Mage::getSingleton('customer/session')->getData('messages')->clear();
+				$registerform = Mage::helper('ajaxcart')->renderRegisterPopup();
+				Mage::helper('ajaxcart/Sendhtml')->setAddwhat("4");
+				Mage::helper('ajaxcart/Sendhtml')->sendResponse($registerform, 'testing');
+
+		}
+	}
+	
+	public function popupForgotpassword(){
+		if(Mage::getStoreConfig('ajaxcart_cfg/general/enable')){
+
+				Mage::getSingleton('customer/session')->getData('messages')->clear();
+				$forgotpasswordform = Mage::helper('ajaxcart')->renderForgotpasswordPopup();
+				Mage::helper('ajaxcart/Sendhtml')->setAddwhat("5");
+				Mage::helper('ajaxcart/Sendhtml')->sendResponse($forgotpasswordform, 'testing');
+
+		}
+	}
+	
 	public function addProductCompare(){
 		if(Mage::getStoreConfig('ajaxcart_cfg/general/enable') AND Mage::app()->getFrontController()->getRequest()->getParam('isCOPage')!=""){
 				$product=$this->_initProduct();

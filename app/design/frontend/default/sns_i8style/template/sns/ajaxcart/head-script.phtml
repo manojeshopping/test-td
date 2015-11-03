@@ -37,9 +37,37 @@
 				ac_href=(isCOPage==1)?"<?php echo Mage::getUrl('checkout/onepage/') ?>":"<?php echo Mage::getUrl('checkout/cart/') ?>";
 				cfaction='<button class="btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-dismiss="modal" type="button">Close</button><button type="button" id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('Checkout');?>" class="btn btn-td-action btn-warning btn-md" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\''+ac_href+'\';"  href="#">'+ac_text+'</button>';
 				cfaction_text="<?php echo Mage::helper('ajaxcart')->__('your shopping cart.');?>";
+				
+				cfhead = '<div class="modal-body"><div class="vspace12"></div><h4>'+result.pdname+'</h4><div class="vspace12"></div></div>';
+		pdinfo= (typeof result.pdinfo !="undefined")?result.pdinfo:"";
+		confirmcontent =	cfhead + ((typeof pdinfo.item !="undefined" && pdinfo.item!="" && show_product_in_confirm)?(pdinfo.item):"") + ((typeof pdinfo.other !="undefined" && pdinfo.other!="")?pdinfo.other:"") + '<div id="bottom-cfbox" class="modal-footer"><div class="float-left"><div class="vspace8 clearfix"></div><p>This window will automatically close in <span id="cout_down" class="label label-default">'+ time_cd +' </span> seconds</p></div>'+cfaction+'</div>';
+		confirmtitle="Product Added";
+		$("myModalLabel").innerHTML= confirmtitle;
+		$("confirmbox").innerHTML=confirmcontent;
+		setTimeout("getCDown(time_cd)",1000);
+		$("ajax_content").setStyle({display:"block"});
+		$("sns_ajaxwrap").setStyle({display:"block"});
+		fixPosWrap();
+		if(time_cd==0)
+			isCPPage=0;
+				
 		}else if(result.addtype=='1'){
 				cfaction='<button class="btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-dismiss="modal" type="button">Close</button><button type="button" id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('Wishlist');?>" class="btn btn-td-action btn-warning btn-md" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\'<?php echo Mage::getUrl('wishlist/index/') ?>\';"  href="#"><?php echo Mage::helper('ajaxcart')->__('View Wishlist');?></button>';
 				cfaction_text="<?php echo Mage::helper('ajaxcart')->__('your wishlist.');?>";
+				
+				cfhead = '<div class="modal-body"><div class="vspace12"></div><h4>'+result.pdname+'</h4><div class="vspace12"></div></div>';
+		pdinfo= (typeof result.pdinfo !="undefined")?result.pdinfo:"";
+		confirmcontent =	cfhead + ((typeof pdinfo.item !="undefined" && pdinfo.item!="" && show_product_in_confirm)?(pdinfo.item):"") + ((typeof pdinfo.other !="undefined" && pdinfo.other!="")?pdinfo.other:"") + '<div id="bottom-cfbox" class="modal-footer"><div class="float-left"><div class="vspace8 clearfix"></div><p>This window will automatically close in <span id="cout_down" class="label label-default">'+ time_cd +' </span> seconds</p></div>'+cfaction+'</div>';
+		confirmtitle="Added to Wishist";
+		$("myModalLabel").innerHTML= confirmtitle;
+		$("confirmbox").innerHTML=confirmcontent;
+		setTimeout("getCDown(time_cd)",1000);
+		$("ajax_content").setStyle({display:"block"});
+		$("sns_ajaxwrap").setStyle({display:"block"});
+		fixPosWrap();
+		if(time_cd==0)
+			isCPPage=0;
+				
 		}else if(result.addtype=='2'){
 				strPop=result.co_sb;
 				ac_href=strPop.substring(strPop.indexOf("popWin('"),strPop.indexOf(")",strPop.indexOf("popWin('"))+1);
@@ -49,12 +77,13 @@
 					cfaction = '';
 				}
 				cfaction_text="<?php echo Mage::helper('ajaxcart')->__('comparison list.');?>";
-		}
-
-		cfhead = '<div class="modal-body"><div class="vspace12"></div><h4>'+result.pdname+'</h4><div class="vspace12"></div></div>';
+				
+				cfhead = '<div class="modal-body"><div class="vspace12"></div><h4>'+result.pdname+'</h4><div class="vspace12"></div></div>';
 		pdinfo= (typeof result.pdinfo !="undefined")?result.pdinfo:"";
 		confirmcontent =	cfhead + ((typeof pdinfo.item !="undefined" && pdinfo.item!="" && show_product_in_confirm)?(pdinfo.item):"") + ((typeof pdinfo.other !="undefined" && pdinfo.other!="")?pdinfo.other:"") + '<div id="bottom-cfbox" class="modal-footer"><div class="float-left"><div class="vspace8 clearfix"></div><p>This window will automatically close in <span id="cout_down" class="label label-default">'+ time_cd +' </span> seconds</p></div>'+cfaction+'</div>';
 
+		confirmtitle="Added to Compare";
+		$("confirmTitle").innerHTML=confirmtitle;
 		$("confirmbox").innerHTML=confirmcontent;
 		setTimeout("getCDown(time_cd)",1000);
 		$("ajax_content").setStyle({display:"block"});
@@ -62,6 +91,48 @@
 		fixPosWrap();
 		if(time_cd==0)
 			isCPPage=0;
+				
+		}else if(result.addtype=='3'){
+				
+				cfaction='<button class="btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-dismiss="modal" type="button">Close</button><button type="button" id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('Wishlist');?>" class="btn btn-td-action btn-warning btn-md" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\'<?php echo Mage::getUrl('wishlist/index/') ?>\';"  href="#"><?php echo Mage::helper('ajaxcart')->__('View Wishlist');?></button>';
+				cfaction_text="<?php echo Mage::helper('ajaxcart')->__('your wishlist.');?>";
+				loginPopup = result.co_sb;
+				confirmtitle= 'Login Form';
+				$("myModalLabel").innerHTML=confirmtitle;
+				$("confirmbox").innerHTML=loginPopup;
+				$("ajax_content").setStyle({display:"block"});
+				$("sns_ajaxwrap").setStyle({display:"block"});
+				fixPosWrap();
+		
+		}
+		else if(result.addtype=='4'){
+				
+				cfaction='<button class="btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-dismiss="modal" type="button">Close</button><button type="button" id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('Wishlist');?>" class="btn btn-td-action btn-warning btn-md" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\'<?php echo Mage::getUrl('wishlist/index/') ?>\';"  href="#"><?php echo Mage::helper('ajaxcart')->__('View Wishlist');?></button>';
+				cfaction_text="<?php echo Mage::helper('ajaxcart')->__('your wishlist.');?>";
+				registerPopup = result.co_sb;
+				confirmtitle= 'Register Form';
+				$("myModalLabel").innerHTML=confirmtitle;
+				$("confirmbox").innerHTML=registerPopup;
+				$("ajax_content").setStyle({display:"block"});
+				$("sns_ajaxwrap").setStyle({display:"block"});
+				fixPosWrap();
+		
+		}
+		else if(result.addtype=='5'){
+				
+				cfaction='<button class="btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-dismiss="modal" type="button">Close</button><button type="button" id="btn_cfaction" title="<?php echo Mage::helper('ajaxcart')->__('Wishlist');?>" class="btn btn-td-action btn-warning btn-md" onclick="$(\'confirmbox\').innerHTML=\'\';$(\'ajax_content\').setStyle({display:\'none\'});$(\'sns_ajaxwrap\').setStyle({display:\'none\'});window.location=\'<?php echo Mage::getUrl('wishlist/index/') ?>\';"  href="#"><?php echo Mage::helper('ajaxcart')->__('View Wishlist');?></button>';
+				cfaction_text="<?php echo Mage::helper('ajaxcart')->__('your wishlist.');?>";
+				forgotpasswordPopup = result.co_sb;
+				confirmtitle= 'Forgot Password Form';
+				$("myModalLabel").innerHTML=confirmtitle;
+				$("confirmbox").innerHTML=forgotpasswordPopup;
+				$("ajax_content").setStyle({display:"block"});
+				$("sns_ajaxwrap").setStyle({display:"block"});
+				fixPosWrap();
+		
+		}
+
+		
 	}
 //]]>
 </script>
