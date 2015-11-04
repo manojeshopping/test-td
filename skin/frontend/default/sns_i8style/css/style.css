@@ -1398,9 +1398,8 @@ div.fixed {
 |                                                                                              |         
 +----------------------------------------------------------------------------------------------+          
 */
-/*
+
 .carousel {
-  display: none;
   z-index: 0;
 }
 .carousel .carousel-control {
@@ -1421,7 +1420,7 @@ div.fixed {
   height: auto;
   margin: 0 auto;
 }
-*/
+
 
 @media (min-width: 768px) {
   .carousel {
