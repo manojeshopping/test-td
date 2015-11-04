@@ -1642,3 +1642,4 @@ div.actions:after,
 .files-wide .row:after,
 .grid tr.filter .range .range-line:after,
 .store-scope:after { display:block; clear:both; content:"."; font-size:0; line-height:0; height:0; overflow:hidden; }
+#category_tab_content select.related_categories{width:514px !important;height:1014px;}
