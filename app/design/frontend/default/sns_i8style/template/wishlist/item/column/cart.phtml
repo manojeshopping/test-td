@@ -32,16 +32,16 @@ $options = $this->getChild('customer.wishlist.item.options')
     ->setItem($item)
     ->getConfiguredOptions();
 ?>
-<div class="cart-cell">
-<?php echo $this->getPriceHtml($product, empty($options));?>
-<div class="add-to-cart-alt">
+<!--<div class="cart-cell">-->
+<?php // echo $this->getPriceHtml($product, empty($options));?>
+<div class="input-group" style="width:180px;">
 <?php if ($item->canHaveQty() && $item->getProduct()->isVisibleInSiteVisibility()): ?>
-    <div class="col-lg-3 btn-margin-rt">
-		<input type="text" class="form-control qty validate-not-negative-number" name="qty[<?php echo $item->getId() ?>]" value="<?php echo $this->getAddToCartQty($item) * 1 ?>" />
-	</div>
+    	<input type="text" class="form-control qty validate-not-negative-number" name="qty[<?php echo $item->getId() ?>]" value="<?php echo $this->getAddToCartQty($item) * 1 ?>" />
 <?php endif; ?>
 <?php if ($product->isSaleable()): ?>
-    <button type="button" title="<?php echo $this->__('Add to Cart') ?>" onclick="addWItemToCart(<?php echo $item->getId()?>);" class="btn btn-td-action btn-md btn-margin-rt wishlist-btn"><?php echo $this->__('Add to Cart') ?></button>
+    <span class="input-group-btn">
+		<button type="button" title="<?php echo $this->__('Add to Cart') ?>" onclick="addWItemToCart(<?php echo $item->getId()?>);" class="btn btn-td-action"><?php echo $this->__('Add to Cart') ?></button>
+	</span>
 <?php else: ?>
     <?php if ($product->getIsSalable()): ?>
         <p class="availability in-stock"><span><?php echo $this->__('In stock') ?></span></p>
@@ -53,7 +53,5 @@ $options = $this->getChild('customer.wishlist.item.options')
 <?php foreach($this->getSortedChildren() as $childName):?>
     <?php echo $this->getChildHtml($childName, false);?>
 <?php endforeach;?>
-<?php if ($product->isVisibleInSiteVisibility()): ?>
-    <p><a class="link-edit" href="<?php echo $this->getItemConfigureUrl($item) ?>"><button title="" data-placement="top" data-toggle="tooltip" class="btn btn-td-info btn-xs" type="button" data-original-title="Edit"><?php echo $this->__('Edit') ?></button></a></p>
-<?php endif ?>
-</div>
+
+<!--</div>-->

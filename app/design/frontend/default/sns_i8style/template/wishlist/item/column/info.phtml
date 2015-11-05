@@ -27,11 +27,31 @@
 /* @var Mage_Wishlist_Model_Item $item */
 $item = $this->getItem();
 $product = $item->getProduct();
+
 ?>
-<div class="product-name"><a href="<?php echo $this->getProductUrl($item) ?>" title="<?php echo $this->escapeHtml($product->getName()) ?>"><?php echo $this->escapeHtml($product->getName()) ?></a></div>
-<div class="product-sku"><?php echo $this->escapeHtml($product->getSku()) ?></div>
-<div class="description std"><div class="inner"><?php echo $this->escapeHtml($this->stripTags($product->getShortDescription()));?></div></div>
-<textarea name="description[<?php echo $item->getWishlistItemId() ?>]" rows="3" cols="5" onfocus="focusComment(this)" onblur="focusComment(this)" title="<?php echo $this->__('Comment') ?>"><?php echo ($this->escapeHtml($item->getDescription() ? $item->getDescription() : $this->helper('wishlist')->defaultCommentString())) ?></textarea>
+<h3><a href="<?php echo $this->getProductUrl($item) ?>" title="<?php echo $this->escapeHtml($product->getName()) ?>"><?php echo $this->escapeHtml($product->getName()) ?></a></h3>
+<p><?php echo $this->escapeHtml($this->stripTags($product->getShortDescription()));?></p>
+<?php if ($product->hasCustomOptions()) {  
+		foreach ($product->getOptions() as $o) {
+			$optionType = $o->getType();
+			if($optionType=='drop_down' || $optionType=='multiple' || $optionType=='checkbox' || $optionType=='radio'){
+				$values = $o->getValues();
+				foreach($values as $k => $v){
+					echo  '<p>'.$o->getTitle().': '.$v->getTitle().'</p>';
+				} 
+			} 
+			else{
+				echo '<p>'.$o->getTitle().'</p>';
+			} 
+		}
+	}
+?>
+<div class="form-group">
+	<!-- <label for="exampleInputName2">Comments</label> -->
+	<input type="text" name="description[<?php echo $item->getWishlistItemId() ?>]" class="form-control" id="exampleInputName2" placeholder="Comments:" title="<?php echo $this->__('Comment') ?>" value="<?php echo ($this->escapeHtml($item->getDescription() ? $item->getDescription() : '')) ?>" />
+</div>
+<!--<textarea name="description[<?php echo $item->getWishlistItemId() ?>]" rows="3" cols="5" onfocus="focusComment(this)" onblur="focusComment(this)" title="<?php echo $this->__('Comment') ?>"><?php echo ($this->escapeHtml($item->getDescription() ? $item->getDescription() : $this->helper('wishlist')->defaultCommentString())) ?></textarea>-->
+<!--<p><span class="label label-info"><?php echo $this->escapeHtml($product->getSku()) ?></span></p>-->
 <?php if($this->getSortedChildren()): ?>
     <div class="item-manage">
     <?php foreach($this->getSortedChildren() as $childName):?>

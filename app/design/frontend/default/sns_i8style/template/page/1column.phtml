@@ -46,7 +46,7 @@ if($module == 'checkout' && $controller == 'cart' && $action == 'index')
   //Cart Page
 }
 $actionName = Mage::app()->getFrontController()->getRequest()->getActionName();
-$wrapClass = (!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!='catalog')? ' page-wrap' : '';
+$wrapClass = (!Mage::getBlockSingleton('page/html_header')->getIsHomePage() && $module!='catalog' && $action!='configure')? ' page-wrap' : '';
 $skinyClass = ((Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms' && !Mage::getBlockSingleton('page/html_header')->getIsHomePage())) ? ' skinny-page' : '';
 $skinyClass1 = ($actionName=='login' || $actionName=='create')? ' skinny-page1' : '';
 ?>

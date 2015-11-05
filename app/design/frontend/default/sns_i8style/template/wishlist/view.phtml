@@ -31,9 +31,10 @@
             <?php if ($this->helper('wishlist')->isRssAllow() && $this->hasWishlistItems()): ?>
                 <a href="<?php echo $this->helper('wishlist')->getRssUrl($this->getWishlistInstance()->getId()); ?>" class="link-rss"><?php echo $this->__('RSS Feed') ?></a>
             <?php endif; ?>
-            <h1 class="td-section"><?php echo $this->getTitle(); ?></h1>
         </div>
-        <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+		<h1 class="td-section"><?php echo $this->getTitle(); ?></h1>
+		<hr>
+        <?php // echo $this->getMessagesBlock()->getGroupedHtml() ?>
 
         <form id="wishlist-view-form" action="<?php echo $this->getUrl('*/*/update', array('wishlist_id' => $this->getWishlistInstance()->getId())) ?>" method="post">
             <?php echo $this->getChildHtml('top'); ?>
@@ -48,11 +49,21 @@
                 <?php endif ?>
 				<div class="button-intro"><?php echo $this->__('Share Your Wishlist by email or send to us along with your comments'); ?></div>
 				<div class="vspace20"></div>
-				
-                <div class="buttons-set buttons-set2">
-					<a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><button title="" data-placement="top" data-toggle="tooltip" class="btn btn-td-grey btn-md btn-margin-rt" type="button" data-original-title="Back"><?php echo $this->__('Back') ?></button></a>
-                    <?php echo $this->getChild('control_buttons')->toHtml();?>
+				<div class="pull-left">
+					<a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><button title="" data-placement="top" data-toggle="tooltip" class="btn btn-td-info-quiet btn-md" type="button" data-original-title="Back"><?php echo $this->__('Back') ?></button></a>
+				</div>
+                <div class="pull-right">
+				    <?php echo $this->getChild('control_buttons')->toHtml();?>
                 </div>
+				<div class="vspace100"></div>
+				<div class="clearfix"></div>
+				<div class="well">
+				<h2><?php echo $this->__('Share Your Wishlist') ?></h2>
+				<p><?php echo $this->__('You can send us your wishlist with any queries about your order. We can follow up unique queries and can also process your order offline.
+		Alternatively you can send the above list to yourself or to another email recipient. NB: Your Wishlist will be also be saved here on your next visit to tradedepot.co.nz') ?></p>
+					<div class="vspace20"></div>
+					<?php echo $this->getChildHtml('customer.wishlist.button.share'); ?>
+				</div>
             </fieldset>
         </form>
 

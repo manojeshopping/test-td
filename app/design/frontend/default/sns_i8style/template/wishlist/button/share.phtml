@@ -26,7 +26,7 @@
 ?>
 
 <?php if($this->getWishlist()->getItemsCount()): ?>
-	<button type="submit" data-placement="top" data-toggle="tooltip" name="save_and_share_to_us" value="info@tradedepot.co.nz" title="<?php echo $this->__('EMAIL US') ?>" class="btn btn-td-info btn-md floatright btn-margin-rt"><span><span><?php echo $this->__('EMAIL US') ?></span></span></button>
-	<button type="submit" data-placement="top" data-toggle="tooltip" name="save_and_share_to_me" value="<?php echo Mage::getSingleton('customer/session')->getCustomer()->getEmail(); ?>" title="<?php echo $this->__('EMAIL ME') ?>" class="btn btn-td-info btn-md floatright btn-margin-rt"><span><span><?php echo $this->__('EMAIL ME') ?></span></span></button>
-    <button type="submit" data-placement="top" data-toggle="tooltip" name="save_and_share" title="<?php echo $this->__('EMAIL A FREIND') ?>" class="btn btn-td-info btn-md floatright btn-margin-rt"><span><span><?php echo $this->__('EMAIL A FREIND') ?></span></span></button>
+	<button type="submit" data-placement="top" data-toggle="tooltip" name="save_and_share" title="<?php echo $this->__('Send to a friend') ?>" class="btn btn-td-info btn-md btn-margin-rt"><span><span><?php echo $this->__('EMAIL A FREIND') ?></span></span></button>
+	<button type="submit" data-placement="top" data-toggle="tooltip" name="save_and_share_to_me" value="<?php echo Mage::getSingleton('customer/session')->getCustomer()->getEmail(); ?>" title="<?php echo $this->__('Send to myself') ?>" class="btn btn-td-info btn-md btn-margin-rt"><span><span><?php echo $this->__('EMAIL ME') ?></span></span></button>
+	<button type="submit" data-placement="top" data-toggle="tooltip" name="save_and_share_to_us" value="info@tradedepot.co.nz" title="<?php echo $this->__('Send to Trade Depot') ?>" class="btn btn-td-info btn-md btn-margin-rt"><span><span><?php echo $this->__('Send to Trade Depot') ?></span></span></button>
 <?php endif;?>

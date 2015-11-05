@@ -309,26 +309,20 @@
  */
 class Magentoguys_Checkoutc_Model_Sales_Order extends Mage_Sales_Model_Order
 {
-    
-    /**
-     * Send email with order data
+
+	/**
+     * Queue email with new order data
+     *
+     * @param bool $forceMode if true then email will be sent regardless of the fact that it was already sent previously
      *
      * @return Mage_Sales_Model_Order
      * @throws Exception
      */
-    public function sendNewOrderEmail()
+    public function queueNewOrderEmail($forceMode = false)
     {
-        $storeId = $this->getStore()->getId();
+		$storeId = $this->getStore()->getId();
 
         if (!Mage::helper('sales')->canSendNewOrderEmail($storeId)) {
-            return $this;
-        }
-
-        $emailSentAttributeValue = $this->hasEmailSent()
-            ? $this->getEmailSent()
-            : Mage::getModel('sales/order')->load($this->getId())->getData('email_sent');
-        $this->setEmailSent((bool)$emailSentAttributeValue);
-        if ($this->getEmailSent()) {
             return $this;
         }
 
@@ -337,6 +331,7 @@ class Magentoguys_Checkoutc_Model_Sales_Order extends Mage_Sales_Model_Order
         $copyMethod = Mage::getStoreConfig(self::XML_PATH_EMAIL_COPY_METHOD, $storeId);
 
         // Start store emulation process
+        /** @var $appEmulation Mage_Core_Model_App_Emulation */
         $appEmulation = Mage::getSingleton('core/app_emulation');
         $initialEnvironmentInfo = $appEmulation->startEnvironmentEmulation($storeId);
 
@@ -372,7 +367,10 @@ class Magentoguys_Checkoutc_Model_Sales_Order extends Mage_Sales_Model_Order
 			$customerName = $this->getCustomerName();
 		}
 
+
+        /** @var $mailer Mage_Core_Model_Email_Template_Mailer */
         $mailer = Mage::getModel('core/email_template_mailer');
+        /** @var $emailInfo Mage_Core_Model_Email_Info */
         $emailInfo = Mage::getModel('core/email_info');
         $emailInfo->addTo($this->getCustomerEmail(), $customerName);
         if ($copyTo && $copyMethod == 'bcc') {
@@ -397,17 +395,24 @@ class Magentoguys_Checkoutc_Model_Sales_Order extends Mage_Sales_Model_Order
         $mailer->setStoreId($storeId);
         $mailer->setTemplateId($templateId);
         $mailer->setTemplateParams(array(
-                'order'        => $this,
-                'billing'      => $this->getBillingAddress(),
-                'payment_html' => $paymentBlockHtml
-            )
-        );
-        $mailer->send();
+            'order'        => $this,
+            'billing'      => $this->getBillingAddress(),
+            'payment_html' => $paymentBlockHtml
+        ));
+
+        /** @var $emailQueue Mage_Core_Model_Email_Queue */
+        $emailQueue = Mage::getModel('core/email_queue');
+        $emailQueue->setEntityId($this->getId())
+            ->setEntityType(self::ENTITY)
+            ->setEventType(self::EMAIL_EVENT_NAME_NEW_ORDER)
+            ->setIsForceCheck(!$forceMode);
+
+        $mailer->setQueue($emailQueue)->send();
 
         $this->setEmailSent(true);
         $this->_getResource()->saveAttribute($this, 'email_sent');
 
         return $this;
     }
-
+    
 }
