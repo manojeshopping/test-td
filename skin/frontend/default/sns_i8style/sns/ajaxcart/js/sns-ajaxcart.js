@@ -217,6 +217,11 @@ function snsAjaxCart() {
 function callAjax(url, action, link) {
     if (action == "url") {
         overlaywrap = (closeCFirm == 1) ? 'close' : 'show';
+		if(isSecureUrl==1){
+			url = url.replace("http://", "https://");
+		}else if(isSecureUrl==0){
+			url = url.replace("https://", "http://");
+		}
         new Ajax.Request(url, {
             encoding: 'UTF-8',
             method: 'post',
