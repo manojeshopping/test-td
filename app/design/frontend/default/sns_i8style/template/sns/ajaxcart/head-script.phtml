@@ -4,6 +4,7 @@
 	var isWLPage=<?php echo (strpos(Mage::app()->getFrontController()->getRequest()->getPathInfo(),'/wishlist/')!==false)?'1':'0'?>;
 	var isCPPage=<?php echo (strpos(Mage::app()->getFrontController()->getRequest()->getPathInfo(),'/catalog/product_compare/')!==false)?'1':'0'?>;
 	var isLoggedIn="<?php echo (Mage::getSingleton('customer/session')->isLoggedIn())?1:0?>";
+	var isSecureUrl="<?php echo (Mage::app()->getStore()->isFrontUrlSecure() && Mage::app()->getRequest()->isSecure())?1:0 ?>";
 	var skiplink ='<?php
 	if (strpos(Mage::app()->getFrontController()->getRequest()->getPathInfo(),'/checkout/cart/configure/')!==false ){
 			$matches=NULL;
