@@ -283,13 +283,16 @@ class Magentoguys_Wishlistreminder_IndexController extends Mage_Wishlist_IndexCo
 
 			/***code modified by mgguys for secure url issue on wishlist***/
             if (Mage::helper('checkout/cart')->getShouldRedirectToCart()) {
-				if(isSecureUrl==1){
+				$isSecure = (Mage::app()->getStore()->isFrontUrlSecure() && Mage::app()->getRequest()->isSecure())?1:0;
+				
+				if($isSecure==1){
 					$redirectUrl = Mage::helper('checkout/cart')->getCartUrl();
 					$redirectUrl = str_replace("http://", "https://",$redirectUrl);
-				}elseif(isSecureUrl==0){
+				}elseif($isSecure==0){
 					$redirectUrl = Mage::helper('checkout/cart')->getCartUrl();
 				}
 			}
+			
 			/*****************************/
 			
 			Mage::helper('wishlist')->calculate();
