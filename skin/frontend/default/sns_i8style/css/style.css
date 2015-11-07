@@ -1421,6 +1421,52 @@ div.fixed {
   margin: 0 auto;
 }
 
+.table-hover > tbody > tr:hover {
+  background-color: #fff8e5;
+  cursor: pointer;
+}
+/* OCT todo */.carousel.new-slide {
+  border: 1px solid #CCC;
+  border-bottom: none;
+}
+.carousel.new-slide .carousel-control {
+  width: 10% !important;
+}
+.carousel.new-slide .carousel-control.left:hover {
+  background-image: linear-gradient(to right, #0495d7 0%, #0495d7 100%) !important;
+}
+.carousel.new-slide .carousel-control.right:hover {
+  background-image: linear-gradient(to right, #0495d7 0%, #0495d7 100%) !important;
+}
+.thumb-slide {
+  border: none;
+  border-right: 0px;
+  border-left: 1px solid #CCC;
+}
+.thumb-slide a.thumbnail:hover,
+.thumb-slide a.thumbnail:focus,
+.thumb-slide a.thumbnail.active {
+  border-color: #ffb400;
+  background-color: #FC0;
+}
+.thumb-slide .thumbnail {
+  margin: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.thumb-slide .thumbnail.thumbnail-black {
+  border: 1px solid #CCC;
+}
+.thumb-slide .thumbnail.thumbnail-black:first-child {
+  border-left: none;
+}
+.thumb-slide .carousel-control {
+  width: 10% !important;
+}
 
 @media (min-width: 768px) {
   .carousel {

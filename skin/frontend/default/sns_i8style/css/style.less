@@ -854,6 +854,77 @@ div.fixed {
 }
 
 
+
+.table-hover>tbody>tr:hover {
+    background-color: lighten(@td-yellow,45%);
+    cursor: pointer;
+}
+
+
+
+
+/* OCT todo */ 
+
+.carousel {
+  &.new-slide {
+    border: 1px solid #CCC;
+    border-bottom: none;
+    .carousel-control {
+      width: 10% !important;
+    }      
+    .carousel-control.left {  
+      &:hover {
+          background-image: linear-gradient(
+            to right, 
+            @td-blue 0%, 
+            @td-blue 100%
+          ) !important;
+      }      
+    }
+    .carousel-control.right {  
+      &:hover {
+          background-image: linear-gradient(
+            to right, 
+            @td-blue 0%, 
+            @td-blue 100%
+          ) !important;
+      }      
+    }
+  }
+}
+
+
+.thumb-slide {
+  border: none;
+  border-right: 0px;
+  border-left: 1px solid #CCC;  
+  a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active {
+    border-color: @td-yellow;
+    background-color: #FC0;
+  }
+  .thumbnail {
+    margin: 0px;
+    .border-radius(0px);
+    &.thumbnail-black {
+      border: 1px solid #CCC;
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }  
+  .carousel-control {
+    width: 10% !important;
+  }
+}
+
+
+
+
+
+
+
+
+
 @media (min-width: 768px) {
   .carousel {
     display: block;
