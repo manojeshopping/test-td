@@ -6,14 +6,6 @@
 	$_currentCategory = Mage::registry('current_category');
 	$_currentCategoryId = $_currentCategory->getId();
 ?>
-<form action="<?php echo Mage::getUrl('wishlist/index/addmultiple') ;?>" method="post" id="products_addtowishlist_form" enctype="multipart/form-data">
-<input type="hidden" name="wishlist_products" id="wishlist_products" value="" />
-<button class="form-button button btn-cart" onclick="this.form.submit()"><span><span><?php echo $this->__('Put all in wishlist') ?></span></span></button>
-</form>
-<form action="<?php echo Mage::getUrl('ajaxcart/cart/addAllProducts') ;?>" method="post" id="products_addtocart_form" enctype="multipart/form-data">
-<input type="hidden" name="cart_products" id="cart_products" value="" />
-<button class="form-button button btn-cart" onclick="this.form.submit()"><span><span><?php echo $this->__('Put all in wishlist') ?></span></span></button>
-</form>
 <?php if(!$_productCollection->count()): ?>
 <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
 <?php else: ?>
