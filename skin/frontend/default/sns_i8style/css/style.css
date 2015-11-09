@@ -1403,6 +1403,9 @@ div.fixed {
   z-index: 0;
 }
 .carousel .carousel-control {
+  padding-top: 6%;
+  /* OCT todo */
+  
   background-image: none !important;
 }
 .carousel .carousel-control.left:hover {
