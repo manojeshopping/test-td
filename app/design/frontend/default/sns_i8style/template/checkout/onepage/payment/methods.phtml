@@ -43,12 +43,14 @@
 <?php else:
 ?>
 <div class="form-group">
-<div class="col-sm-10">
+<div class="col-sm-12">
 <?php 
 	$i = 1;
     foreach ($methods as $_method):
         $_code = $_method->getCode();
 ?>
+	<div class="col-sm-6">
+	<div class="col-sm-12">
 	<div class="radio-inline">
 	<label>    
 	<?php if(!$oneMethod): ?>
@@ -64,10 +66,14 @@
         <?php echo $this->escapeHtml($this->getMethodTitle($_method)) ?> <?php echo $this->getMethodLabelAfterHtml($_method) ?>
 	</label>
 	</div>
+	</div>
+	<div class="col-sm-12">
 	<?php if ($html = $this->getPaymentMethodFormHtml($_method)): ?>
         <?php echo $html; ?>
     <?php endif; ?>
+	</div>
 	
+	</div>
 <?php $i = $i + 1; endforeach; ?>
 </div>
 </div>

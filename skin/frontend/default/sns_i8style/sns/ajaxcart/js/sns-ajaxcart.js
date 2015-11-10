@@ -777,9 +777,11 @@ jQuery(document).ready(function($) {
                             } else {
                                 imgP = $(this).parents('.product-essential').find('.product-image-zoom').find('img');
                             }
-                        } else {
+                        } else if($(this).parents('.item').find('a.product-image, .img-main').find('img').length) {
                             imgP = $(this).parents('.item').find('a.product-image, .img-main').find('img');
-                        }
+                        }else{
+							imgP = $(this).parents('.custom-item').find('a.product-image, .img-main').find('img');
+						}
                         imgToFly = imgP.clone();
                         if ($(this).attr('onclick').indexOf("?options=cart") == -1 && CANFLY == 1) {
                             flyNow();

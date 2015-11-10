@@ -322,6 +322,83 @@ class Magentoguys_Wishlistreminder_IndexController extends Mage_Wishlist_IndexCo
 
         return $this->_redirectUrl($redirectUrl);
     }
-
-
+	
+	public function addmultipleAction()
+    {
+       $wishlist = $this->_getWishlist();
+		if (!$wishlist) {
+		return $this->norouteAction();
+		}
+		 
+		$session = Mage::getSingleton('customer/session');
+		 
+		$products = $this->getRequest()->getParam('wishlist_products');
+		$products = json_decode($products,true);
+		 
+		if(!is_array($products)){
+		$this->_redirect('*/');
+		return ;
+		}
+		 
+		try {
+		foreach($products as $productId):
+		 
+		$productId = (int)$productId;
+		 
+		$product = Mage::getModel('catalog/product')->load($productId);
+		 
+		if (!$product->getId() || !$product->isVisibleInCatalog()) continue;
+		 
+		
+		$requestParams = $products;
+		if ($session->getBeforeWishlistRequest()) {
+		$requestParams = $session->getBeforeWishlistRequest();
+		$session->unsBeforeWishlistRequest();
+		}
+		$buyRequest = new Varien_Object($requestParams);
+		 
+		$result = $wishlist->addNewItem($product, $buyRequest);
+		if (is_string($result)) {
+		Mage::throwException($result);
+		}
+		$wishlist->save();
+		 
+		Mage::dispatchEvent(
+		'wishlist_add_product',
+		array(
+		'wishlist'  => $wishlist,
+		'product'   => $product,
+		'item'      => $result
+		)
+		);
+		 
+		$referer = $session->getBeforeWishlistUrl();
+		if ($referer) {
+		$session->setBeforeWishlistUrl(null);
+		} else {
+		$referer = $this->_getRefererUrl();
+		}
+		 
+		/**
+		*  Set referer to avoid referring to the compare popup window
+		*/
+		$session->setAddActionReferer($referer);
+		 
+		Mage::helper('wishlist')->calculate();
+		 
+		endforeach;
+		$message = $this->__('All products has been added to your wishlist. Click <a href="%1$s">here</a> to continue shopping.',Mage::helper('core')->escapeUrl($referer));
+		$session->addSuccess($message);
+		}
+		catch (Mage_Core_Exception $e) {
+		$session->addError($this->__('An error occurred while adding item to wishlist: %s', $e->getMessage()));
+		}
+		catch (Exception $e) {
+		$session->addError($this->__('An error occurred while adding item to wishlist.'));
+		}
+		 
+		$this->_redirect('*', array('wishlist_id' => $wishlist->getId()));
+		 
+	}
+	
 }

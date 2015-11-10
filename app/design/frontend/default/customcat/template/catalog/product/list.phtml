@@ -1,0 +1,219 @@
+<?php 
+    $_productCollection=$this->getLoadedProductCollection();
+	$_helper = $this->helper('catalog/output');
+    $themeConfig =   Mage::helper('i8style/data')->get();
+    $imgSize = Mage::helper('i8style/data')->getImgSize('L');
+	$_currentCategory = Mage::registry('current_category');
+	$_currentCategoryId = $_currentCategory->getId();
+?>
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+<div class="col-sm-6 col-pad-right">
+	<?php if($_currentCategory): ?>
+		<?php if($_description=$_currentCategory->getDescription()): ?>
+			<?php echo $_helper->categoryAttribute($_currentCategory, $_description, 'description') ?>
+		<?php endif; ?>
+	<?php endif; ?>
+</div>
+<div class="col-sm-6">
+	<div id="range-carousel" class="carousel slide new-slide main-slide" data-ride="carousel">
+		<div class="carousel-inner" role="listbox">
+			<?php $i=0; foreach ($_productCollection as $_product): ?>
+				<div class="item<?php echo ($i==0)?' active':'' ?>">
+					<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(900, 600); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"/>
+				</div>
+			<?php $i++; endforeach; ?>
+			     
+		</div>
+		<a class="left carousel-control" href="#range-carousel" role="button" data-slide="prev">
+			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		</a>
+		<a class="right carousel-control" href="#range-carousel" role="button" data-slide="next">
+			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	</div>
+
+
+	<div id="myCarousel" class="carousel slide new-slide thumb-slide">
+		<?php $_collectionSize = $_productCollection->count() ?>
+		<?php $_columnCount = 4; ?>
+		<!-- Carousel items -->
+		<div class="carousel-inner">
+			<?php $i=0; foreach ($_productCollection as $_product): ?>
+			<?php if ($i++%$_columnCount==0): ?>
+			<div class="item<?php echo ($i==1)?' active':'' ?>">
+				<div class="row">
+			<?php endif; ?>	
+					<div class="col-sm-3">
+						<a href="#x" class="thumbnail thumbnail-black" data-slide-to="0" data-target="#range-carousel">
+							<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(180, 120); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="img-responsive"/>
+						</a>
+					</div>
+			<?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+				</div>
+				<!--/row-->
+			</div>
+			<?php endif ?>
+			<?php endforeach; ?>
+			<!--/item-->
+		</div>
+		<!--/carousel-inner--> <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+
+		<a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+	</div>
+<!--/myCarousel-->
+</div>
+<div class="clearfix"></div>
+<div class="vspace20"></div>
+<div class="col-sm-12">
+	    <table class="table table-hover table-striped table-bordered" id="my-orders-table">
+            <colgroup>
+                <col width="1">
+                <col width="1">
+                <col width="1">
+                <col width="1">
+                <col width="1">
+                <col width="1">
+                <col width="1">
+            </colgroup>
+        <thead>
+            <tr class="first last">
+                <th></th>
+                <th>Title</th>
+                <th>SKU</th>
+                <th>Category</th>
+                <th class="text-right">(Excl GST)</th>
+                <th class="text-right">(Incl GST)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="handlebars-zone">
+			
+			<?php foreach ($_productCollection as $_product): ?>
+			<tr class="custom-item">
+                <td class="product-image item-img">
+                    <a data-toggle="modal" data-target="#imagePopUpModal" class="image-main img-main">
+						<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(60, 40); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" class="img-responsive1"/>
+					</a>
+				</td>
+                <td>
+                    <a href="<?php echo $_product->getProductUrl() ?>" data-toggle="tooltip" data-placement="top" title="View Details (<?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>)" target="_blank">
+                    <p><?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?></p>
+                    </a>
+                </td>
+                <td>
+                    <?php echo $_product->getSku(); ?>
+                </td>
+				<?php 		
+						$currentCatIds = $_product->getCategoryIds();
+						$categoryCollection = Mage::getResourceModel('catalog/category_collection')
+							->addAttributeToSelect('name')
+							->addAttributeToSelect('url_path')
+							->addAttributeToSelect('related_categories')
+							->addAttributeToFilter('entity_id', array('in'=>$currentCatIds))
+							->addAttributeToFilter('entity_id', array('neq' => '2'))
+							->addIsActiveFilter();
+						
+						$assignedCategories = $categoryCollection->getData();
+						$levelArray = array();
+						foreach($categoryCollection as $cat){
+							if($cat->getIsActive()){
+								$levelArray[] = $cat->getLevel();
+							}
+						}
+						if($levelArray){
+							$maxs = array_keys($levelArray, max($levelArray));
+							$highestLevelCatIndex = $maxs[0]; 
+							$deepestCategoryId = $assignedCategories[$highestLevelCatIndex]['entity_id'];
+							$deepestCategory = Mage::getModel('catalog/category')->load($deepestCategoryId);
+							
+							$parentCatLabel = 'ALL:';
+							$parentCat =$deepestCategory->getName();
+							$parentCatUrlPath = $deepestCategory->getUrlPath();
+						
+						
+					} ?>
+                <td>
+                    <a href="<?php echo Mage::getUrl($parentCatUrlPath); ?>" class="btn btn-xs btn-td-info-quiet btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Go to Catalog" data-slide-to="11" ><?php echo $parentCat; ?></i></a>
+                </td>
+				<?php 
+					echo $this->getPriceHtml($_product, false) 
+				?>
+                <!--<td class="text-right">$123.00</td>
+                <td class="text-right">$124.00</td>-->
+                <td class="text-right">
+                    <?php if($_product->isSaleable()): ?>
+					<input type="hidden" name="products[]" value="<?php echo $_product->getId() ?>" />
+					<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action float-right btn-margin-rt btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class="fa fa-shopping-cart"></i></button>
+					<?php else: ?>
+				   <button type="button" class="btn btn-md" disabled><i class="fa fa-shopping-cart"></i></button>
+				   <?php endif; ?>
+                    <a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i></a>
+                </td>
+            </tr>
+			<?php endforeach; ?>
+			
+        </tbody>
+    </table>
+     
+	<form method="post" action="<?php echo $this->getUrl().'ajaxcart/cart/addAllProducts'; ?>" name="products_addtocart_form" id="products_addtocart_form">
+		<input type="hidden" name="cart_products" id="cart_products" value="" />
+		<button type="button" onclick="javascript:beforeSubmitCart()" class="btn btn-td-action float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to cart"><i class="fa fa-shopping-cart"></i> Add All Products to Cart</button>
+	</form>
+	<form action="<?php echo Mage::getUrl('wishlist/index/addmultiple') ;?>" method="post" id="products_addtowishlist_form" enctype="multipart/form-data">
+		<input type="hidden" name="wishlist_products" id="wishlist_products" value="" />
+		<button type="button" onclick="javascript:beforeSubmitWishlist()" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i> Add all products to Wishlist</a>
+	</form>	
+</div>
+
+<div class="clearfix"></div>
+
+<?php endif; ?>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+      jQuery('#myCarousel').carousel({
+      interval: 10000
+      })
+        
+        jQuery('#myCarousel').on('slid.bs.carousel', function() {
+          //alert("slid");
+      });
+      
+		
+    });
+	
+	
+	function beforeSubmitWishlist(){
+		var products = {};
+		var i = 0;
+		jQuery('input[name="products[]"]').each(function() {
+			var productId = jQuery(this).val();
+			products[i]= productId;
+			i++;
+		});
+		jQuery('#wishlist_products').val(JSON.stringify(products));
+		jQuery('#products_addtowishlist_form').submit();
+		return;
+	}
+		
+	
+	function beforeSubmitCart(){
+		var products = {};
+		var i = 0;
+		jQuery('input[name="products[]"]').each(function() {
+			var productId = jQuery(this).val();
+			products[i]= productId;
+			i++;
+		});
+		jQuery('#cart_products').val(JSON.stringify(products));
+		jQuery('#products_addtocart_form').submit();
+		return;
+			
+	}  
+ </script>
+  
+

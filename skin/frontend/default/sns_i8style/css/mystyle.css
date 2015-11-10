@@ -154,3 +154,7 @@ img{max-width:100%;}
 .bottom-pager .order-toolbar .order-limiter{display:none;}
 .customer-name-middlename .name-middlename{display:none;}
 .product-options ul.options-list li input{float:left;}
+.amlabel-div a.carousel-control{padding-top: 16px;position: absolute;}
+.amlabel-div .carousel .carousel-control.left:hover{ background-image: linear-gradient(to right, #0495d7 0%, #0495d7 100%) !important;}
+.amlabel-div .carousel .carousel-control.right:hover{ background-image: linear-gradient(to right, #0495d7 0%, #0495d7 100%) !important;}
+.amlabel-div .carousel .carousel-control{width:10% !important;}

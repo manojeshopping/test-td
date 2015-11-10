@@ -28,5 +28,7 @@
 $item = $this->getItem();
 $product = $item->getProduct();
 ?>
+<a class="img-main" href="#">
 <img class="img-responsive1" src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(150, 100); ?>" width="150" height="100" alt="<?php echo $this->escapeHtml($product->getName()) ?>" />
+</a>
 <p><span class="label1 label-default1"><?php echo $this->escapeHtml($product->getSku()) ?></span></p>

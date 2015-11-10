@@ -45,7 +45,7 @@
     <tbody>
         <?php if (count($this->getItems())): ?>
             <?php $i=0; foreach ($this->getItems() as $item): ?>
-                <tr id="item_<?php echo $item->getId();?>" class="<?php echo ($i==0)?'first':'first'; ?><?php echo ($i%2==0)?'odd':'even'; ?>">
+                <tr id="item_<?php echo $item->getId();?>" class="<?php echo ($i==0)?'first':'first'; ?><?php echo ($i%2==0)?'odd':'even'; ?> custom-item">
                     <?php foreach ($columns as $column): ?>
                         <td><?php $column->setItem($item); echo $column->toHtml($item);?></td>
                     <?php endforeach; ?>

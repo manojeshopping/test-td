@@ -38,7 +38,7 @@
 		<?php echo $this->getChildHtml('customer.form.login.extra')?>
 		<form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="login-form">
 			<?php echo $this->getBlockHtml('formkey'); ?>
-			<div class="col-xs-12 col-md-6 col-pad-right">
+			<div class="col-xs-12 col-md-12">
 				<div class="bs-callout bs-callout-info ">
 					<h1 class="td-section"><?php echo $this->__('Login') ?></h1>
 					<p><?php echo $this->__('If you have an account with us, please log in.') ?></p>
@@ -54,10 +54,11 @@
 					<?php echo $this->getChildHtml('persistent.remember.me'); ?>
 					<?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
 					<button type="submit" class="btn btn-td-info btn-md floatright" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Login') ?>" name="send" id="send2"><?php echo $this->__('Login') ?></button>
+					<a href="<?php echo Mage::helper('persistent')->getCreateAccountUrl($this->getCreateAccountUrl()) ?>"><button type="button" class="btn btn-td-grey btn-md floatright btn-margin-rt" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Sign up') ?>"><?php echo $this->__('Sign up') ?></button></a>
 					<div class="clearfix"></div>
 				</div>
 			</div>
-			<div class="col-xs-12 col-md-6">
+			<!--<div class="col-xs-12 col-md-6">
 				<div class="bs-callout bs-callout-info1">
 					<h1 class="td-section"><?php echo $this->__('Create an Account') ?></h1>
 					<p><?php echo $this->__('By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.') ?>
@@ -66,7 +67,7 @@
 					<a href="<?php echo Mage::helper('persistent')->getCreateAccountUrl($this->getCreateAccountUrl()) ?>"><button type="button" class="btn btn-td-grey btn-md floatright" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Sign up') ?>"><?php echo $this->__('Sign up') ?></button></a>
 					<div class="clearfix"></div>
 				</div>
-			</div>
+			</div>-->
 			<?php if (Mage::helper('checkout')->isContextCheckout()): ?>
 				<input name="context" type="hidden" value="checkout" />
 			<?php endif; ?>
