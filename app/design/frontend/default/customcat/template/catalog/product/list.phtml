@@ -93,9 +93,9 @@
         <tbody id="handlebars-zone">
 			
 			<?php foreach ($_productCollection as $_product): ?>
-			<tr class="">
-                <td>
-                    <a data-toggle="modal" data-target="#imagePopUpModal">
+			<tr class="custom-item">
+                <td class="product-image item-img">
+                    <a data-toggle="modal" data-target="#imagePopUpModal" class="image-main img-main">
 						<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(60, 40); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" class="img-responsive1"/>
 					</a>
 				</td>
@@ -147,7 +147,7 @@
                 <td class="text-right">
                     <?php if($_product->isSaleable()): ?>
 					<input type="hidden" name="products[]" value="<?php echo $_product->getId() ?>" />
-					<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action float-right btn-margin-rt" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class="fa fa-shopping-cart"></i></button>
+					<button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action float-right btn-margin-rt btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class="fa fa-shopping-cart"></i></button>
 					<?php else: ?>
 				   <button type="button" class="btn btn-md" disabled><i class="fa fa-shopping-cart"></i></button>
 				   <?php endif; ?>
@@ -161,11 +161,11 @@
      
 	<form method="post" action="<?php echo $this->getUrl().'ajaxcart/cart/addAllProducts'; ?>" name="products_addtocart_form" id="products_addtocart_form">
 		<input type="hidden" name="cart_products" id="cart_products" value="" />
-		<button type="button" onclick="this.form.submit()" class="btn btn-td-action float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to cart"><i class="fa fa-shopping-cart"></i> Add All Products to Cart</button>
+		<button type="button" onclick="javascript:beforeSubmitCart()" class="btn btn-td-action float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to cart"><i class="fa fa-shopping-cart"></i> Add All Products to Cart</button>
 	</form>
 	<form action="<?php echo Mage::getUrl('wishlist/index/addmultiple') ;?>" method="post" id="products_addtowishlist_form" enctype="multipart/form-data">
 		<input type="hidden" name="wishlist_products" id="wishlist_products" value="" />
-		<button type="button" onclick="this.form.submit()" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i> Add all products to Wishlist</a>
+		<button type="button" onclick="javascript:beforeSubmitWishlist()" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i> Add all products to Wishlist</a>
 	</form>	
 </div>
 
@@ -182,13 +182,12 @@
         jQuery('#myCarousel').on('slid.bs.carousel', function() {
           //alert("slid");
       });
-        
-        
+      
+		
     });
-  </script>
-  
-<script type="text/javascript">
-	jQuery('#products_addtowishlist_form').on('submit',function(){
+	
+	
+	function beforeSubmitWishlist(){
 		var products = {};
 		var i = 0;
 		jQuery('input[name="products[]"]').each(function() {
@@ -197,10 +196,12 @@
 			i++;
 		});
 		jQuery('#wishlist_products').val(JSON.stringify(products));
+		jQuery('#products_addtowishlist_form').submit();
 		return;
-	});
-	jQuery('#products_addtocart_form').on('submit',function(){
-		alert('test');
+	}
+		
+	
+	function beforeSubmitCart(){
 		var products = {};
 		var i = 0;
 		jQuery('input[name="products[]"]').each(function() {
@@ -209,7 +210,10 @@
 			i++;
 		});
 		jQuery('#cart_products').val(JSON.stringify(products));
+		jQuery('#products_addtocart_form').submit();
 		return;
-	});
-</script>
+			
+	}  
+ </script>
+  
 

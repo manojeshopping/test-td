@@ -40,7 +40,7 @@ $options = $this->getChild('customer.wishlist.item.options')
 <?php endif; ?>
 <?php if ($product->isSaleable()): ?>
     <span class="input-group-btn">
-		<button type="button" title="<?php echo $this->__('Add to Cart') ?>" onclick="addWItemToCart(<?php echo $item->getId()?>);" class="btn btn-td-action"><?php echo $this->__('Add to Cart') ?></button>
+		<button type="button" title="<?php echo $this->__('Add to Cart') ?>" onclick="addWItemToCart(<?php echo $item->getId()?>);" class="btn btn-td-action btn-cart"><?php echo $this->__('Add to Cart') ?></button>
 	</span>
 <?php else: ?>
     <?php if ($product->getIsSalable()): ?>
