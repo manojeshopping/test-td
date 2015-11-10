@@ -100,7 +100,7 @@
 					</a>
 				</td>
                 <td>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="View Details (New Window)" target="_blank">
+                    <a href="<?php echo $_product->getProductUrl() ?>" data-toggle="tooltip" data-placement="top" title="View Details (<?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>)" target="_blank">
                     <p><?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?></p>
                     </a>
                 </td>

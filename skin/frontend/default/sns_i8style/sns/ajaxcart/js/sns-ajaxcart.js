@@ -20,9 +20,9 @@ function reURLPoductsSpecial() {
 }
 
 function aCConstruct() {
-	reNewLinkLogin();
+	/* reNewLinkLogin();
 	reNewLinkRegister();
-	reNewLinkForgotpassword();
+	reNewLinkForgotpassword(); */
     reURLPoductsSpecial();
     if (typeof productAddToCartForm != 'undefined') {
         productAddToCartForm.submit = function(args) {
@@ -39,7 +39,7 @@ function aCConstruct() {
     }
     if (ajax_for_wishlist) {
 		reNewLinkRemoveWishList();
-		if (isLoggedIn == "0") reNewLinkWishList(); 
+		/* if (isLoggedIn == "0") reNewLinkWishList(); */
 		if (isLoggedIn == "1") reNewLinkWishList();
         reNewLinkAddToCartInWishList();
 		reNewLinkClearAllInWishList();
@@ -158,7 +158,7 @@ function reNewLinkWishList() {
     reCreateLink('wishlist/index/add');
 }
 
-function reNewLinkLogin() {
+/* function reNewLinkLogin() {
     reCreateLink('customer/account/login');
 }
 
@@ -168,7 +168,7 @@ function reNewLinkRegister() {
 
 function reNewLinkForgotpassword() {
     reCreateLink('customer/account/forgotpassword');
-}
+} */
 
 function reNewLinkAddToCartInWishList() {
     reCreateLink('wishlist/index/cart');
