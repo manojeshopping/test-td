@@ -228,10 +228,11 @@ class MVentory_TradeMe_Block_Options
 
     $_shippingTypes = array();
 
-    foreach ($shippingTypes as $value => $label) {
-      $emptyOptions['shipping_type'] = $value;
-      $_shippingTypes[] = $emptyOptions;
-    }
+    foreach ($shippingTypes as $value => $label)
+      $_shippingTypes[$value] = [
+        'condition' => null,
+        'settings' => [$emptyOptions]
+      ];
 
     return $_shippingTypes;
   }
@@ -286,27 +287,54 @@ class MVentory_TradeMe_Block_Options
   }
 
   /**
-   * Convert list of shipping options to string
+   * Convert shipping options to string.
    *
-   * String format:
+   * Returns empty string if shipping options is SHIPPING_UNDECIDED
+   * Or following string if shipping options is custom:
    *
    *   <price>,<method>\r\n
    *   ...
    *   <price>,<method>
    *
-   * @param string $options Shipping options
+   * @param int|array $options
+   *   Shipping options
+   *
    * @return string
+   *   Shipping options converted to string
    */
   protected function _exportShippingOptions ($options) {
-    if (!is_array($options))
-      return $options;
+    $labels = Mage::getModel('trademe/attribute_source_freeshipping')
+      ->toArray();
 
-    $_options = '';
+    //In TM config file we use empty string for Undecided option
+    $labels[MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED] = '';
 
-    foreach ($options as $option)
-      $_options .= "\r\n" . $option['price'] . ',' . $option['method'];
+    switch (gettype($options)) {
+      case 'array':
+        $_options = '';
 
-    return substr($_options, 2);
+        foreach ($options as $option)
+          $_options .= "\r\n"
+                       . $option['price']
+                       . ','
+                       . (
+                          isset($option['description'])
+                            ? $option['description']
+                            : $option['method']
+                         );
+
+        $_options = substr($_options, 2);
+
+        return $_options
+          ?: $labels[MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED];
+
+      case 'integer':
+        return isset($labels[$options])
+          ? $labels[$options]
+          : $labels[MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED];
+    }
+
+    return $labels[MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED];
   }
 
   /**

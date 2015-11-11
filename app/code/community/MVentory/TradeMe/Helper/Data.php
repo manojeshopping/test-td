@@ -524,31 +524,6 @@ class MVentory_TradeMe_Helper_Data extends Mage_Core_Helper_Abstract
     return $duration;
   }
 
-  /**
-   * Return buyer (pre-configured customer for TradeMe sells) from supplied
-   * TradeMe account data and store
-   *
-   * @param array $account
-   *   TradeMe account data
-   *
-   * @param [type] $store
-   *   Store model to use for loading customer model
-   *
-   * @return Mage_Customer_Model_Customer|null
-   *   Customer model or null if it can't be retrieved from the supplied account
-   *   data or model doesn't exist
-   */
-  public function getBuyer ($data, $store) {
-    if (!(isset($data['buyer']) && ($buyer = (int) $data['buyer'])))
-      return;
-
-    $buyer = Mage::getModel('customer/customer')
-      ->setStore($store)
-      ->load($buyer);
-
-    return $buyer->getId() ? $buyer : null;
-  }
-
   public function isSandboxMode ($websiteId) {
     $path = MVentory_TradeMe_Model_Config::SANDBOX;
 

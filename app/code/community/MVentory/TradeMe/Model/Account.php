@@ -43,7 +43,7 @@ class MVentory_TradeMe_Model_Account
     $accounts = $helper->getAccounts($website);
     $account = $accounts[$accountId];
 
-    $route = 'trademe/account/authorise';
+    $route = 'adminhtml/trademe_account/authorise';
     $params = array(
       'account_id' => $accountId,
       'website' => $website);

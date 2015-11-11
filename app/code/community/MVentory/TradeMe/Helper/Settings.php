@@ -461,36 +461,51 @@ EOT;
   }
 
   /**
-   * Parse string with shipping options in following format
+   * Parse string with shipping options.
+   *
+   * - SHIPPING_UNDECIDED is returned for the empty string
+   * - SHIPPING_FREE is returned if the string is equal to Free word
+   *   (case insensitive)
+   *
+   * If the string is in following format
    *
    *   <price>,<method>\r\n
    *   ...
    *   <price>,<method>
    *
-   * to a list with shipping options in following format
+   * then a list of shipping options in the following format is returned
    *
-   *   array(
-   *     array(
+   *   [
+   *     [
    *       'price' => 12.5,
-   *       'method' => 'Name of shipping method'
-   *     ),
-   *     ...
-   *   )
+   *       'description' => 'Desription of a shipping method'
+   *     ],
    *
-   * @param string $value Shipping options
-   * @return array
+   *     ...
+   *   ]
+   *
+   * @param string $value
+   *   String with shipping options in of 3 formats described above
+   *
+   * @return int|array
+   *   Result of parsing supplied string with shipping options as described
+   *   above.
    */
   protected function _parseShippingOptionsValue ($value) {
-    $options = array();
+    $value = trim($value);
+    if (!$value)
+      return MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
 
-    if (!$value = trim($value))
-      return $options;
+    if (strtolower($value) === 'free')
+      return MVentory_TradeMe_Model_Config::SHIPPING_FREE;
+
+    $options = [];
 
     foreach (explode("\n", str_replace("\r\n", "\n", $value)) as $opt)
       if (count($opt = explode(',', trim($opt, " ,\t\n\r\0\x0B"), 2)) == 2)
         $options[] = array(
           'price' => (float) rtrim($opt[0]),
-          'method' => ltrim($opt[1])
+          'description' => ltrim($opt[1])
         );
 
     return $options;

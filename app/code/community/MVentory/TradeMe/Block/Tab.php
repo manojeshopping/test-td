@@ -238,12 +238,12 @@ class MVentory_TradeMe_Block_Tab
                    ->getProduct()
                    ->getId();
 
-    $submit = $this->getUrl('trademe/listing/submit/',
+    $submit = $this->getUrl('adminhtml/trademe_listing/submit/',
                             array('id' => $productId));
 
-    $categories = $this->getUrl('trademe/categories',
+    $categories = $this->getUrl('adminhtml/trademe_categories/',
                                 array('product_id' => $productId));
-    $update = $this->getUrl('trademe/listing/update/',
+    $update = $this->getUrl('adminhtml/trademe_listing/update/',
                                 array('id' => $productId));
 
     return Zend_Json::encode(compact('submit', 'categories','update'));
@@ -261,7 +261,7 @@ class MVentory_TradeMe_Block_Tab
   public function getStatusButton () {
     $label = $this->__('Check status');
     $onclick = 'setLocation(\''
-               . $this->getUrl('trademe/listing/check/',
+               . $this->getUrl('adminhtml/trademe_listing/check/',
                                array('id' => $this->getProduct()->getId()))
                . '\')';
 
@@ -272,7 +272,7 @@ class MVentory_TradeMe_Block_Tab
     $label = $this->__('Remove');
     $onclick = 'setLocation(\''
                . $this->getUrl(
-                   'trademe/listing/remove/',
+                   'adminhtml/trademe_listing/remove/',
                    array('product_id' => $this->getProduct()->getId())
                  )
                . '\')';
@@ -527,7 +527,7 @@ class MVentory_TradeMe_Block_Tab
           true
         ),
         'remove_url' => $this->getUrl(
-          'trademe/listing/remove/',
+          'adminhtml/trademe_listing/remove/',
           array(
             'id' => $listingId,
             'product_id' => $this->getProduct()->getId()

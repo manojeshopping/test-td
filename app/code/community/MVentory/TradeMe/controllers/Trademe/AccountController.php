@@ -23,7 +23,7 @@
  * @package MVentory/TradeMe
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
-class MVentory_TradeMe_AccountController
+class MVentory_TradeMe_Trademe_AccountController
   extends Mage_Adminhtml_Controller_Action
 {
   protected function _construct() {

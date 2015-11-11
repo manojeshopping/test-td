@@ -23,7 +23,7 @@
  * @package MVentory/TradeMe
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
-class MVentory_TradeMe_ListingController
+class MVentory_TradeMe_Trademe_ListingController
   extends Mage_Adminhtml_Controller_Action
 {
   public function submitAction () {
@@ -198,9 +198,9 @@ class MVentory_TradeMe_ListingController
 
       try {
         $connector = new MVentory_TradeMe_Model_Api();
-        $result = $connector
+        $listingDetails = $connector
           ->setWebsiteId($website)
-          ->check($auction);
+          ->getListingDetails($auction);
       }
       catch (Exception $e) {
         Mage::logException($e);
@@ -221,7 +221,7 @@ class MVentory_TradeMe_ListingController
 
       $link = '<a href="' . $url . '">' . $url . '</a>';
 
-      switch ($result) {
+      switch (Mage::helper('trademe/auction')->getSaleStatus($listingDetails)) {
         case 1:
           Mage::getSingleton('adminhtml/session')
             ->addSuccess($helper->__('Wasn\'t sold') . ': ' . $link);

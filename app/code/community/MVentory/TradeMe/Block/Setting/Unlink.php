@@ -41,7 +41,10 @@ class MVentory_TradeMe_Block_Setting_Unlink
       Mage::helper('core/url')->getCurrentUrl()
     );
 
-    $url = $this->getUrl('trademe/listing/unlink', array('accounts' => 'all'));
+    $url = $this->getUrl(
+      'adminhtml/trademe_listing/unlink',
+      array('accounts' => 'all')
+    );
 
     $button = $this
       ->getLayout()

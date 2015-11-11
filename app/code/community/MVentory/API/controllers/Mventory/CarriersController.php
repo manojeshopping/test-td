@@ -19,31 +19,32 @@
  */
 
 /**
- * Backend model for back csv log field
+ * Volumerate carriers export controller
  *
  * @package MVentory/API
- * @author Bogdan
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
-class MVentory_API_Model_System_Config_Backend_Imgclip_Csvlog
-  extends Mage_Core_Model_Config_Data
-{
+class MVentory_API_Mventory_CarriersController
+  extends Mage_Adminhtml_Controller_Action {
 
-  public function _beforeSave () {
-    $val = $this->getValue();
+  protected function _construct() {
+    $this->setUsedModuleName('MVentory_API');
+  }
 
-    if (!$val)
-      Mage::throwException('Log field must not be empty!');
+  /**
+   * Export shipping rates in csv format
+   */
+  public function exportAction () {
+    $websiteId = Mage::app()
+                   ->getWebsite($this->getRequest()->getParam('website'))
+                   ->getId();
 
-    $path = Mage::getBaseDir() . DS . $val;
+    $content = $this
+                 ->getLayout()
+                 ->createBlock('mventory/carrier_volumerate_grid')
+                 ->setWebsiteId($websiteId)
+                 ->getCsvFile();
 
-    if (!file_exists($path)) {
-      mkdir(dirname($path), 0775, true);
-      touch($path);
-    }
-
-    if (!(file_exists($path) && is_writable($path)))
-      Mage::throwException('Path '. $path . ' for log is invalid!');
-
-    return $this;
+    $this->_prepareDownloadResponse('shippingrates.csv', $content);
   }
 }

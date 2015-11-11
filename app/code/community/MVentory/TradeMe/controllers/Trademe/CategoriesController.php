@@ -23,7 +23,7 @@
  * @package MVentory/TradeMe
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
-class MVentory_TradeMe_CategoriesController
+class MVentory_TradeMe_Trademe_CategoriesController
   extends Mage_Adminhtml_Controller_Action
 {
 
