@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */ 
 class Amasty_Table_Block_Adminhtml_Method_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
@@ -32,11 +34,11 @@ class Amasty_Table_Block_Adminhtml_Method_Grid extends Mage_Adminhtml_Block_Widg
         'header'    => $hlp->__('Name'),
         'index'     => 'name',
     ));
-    
+    /*
     $this->addColumn('pos', array(
         'header'    => $hlp->__('Priority'),
         'index'     => 'pos',
-    ));    
+    ));    */
     
     $this->addColumn('is_active', array(
         'header'    => Mage::helper('salesrule')->__('Status'),

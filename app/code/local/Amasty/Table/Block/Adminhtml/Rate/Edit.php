@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2010 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */ 
 class Amasty_Table_Block_Adminhtml_Rate_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {

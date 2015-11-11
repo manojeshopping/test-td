@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */ 
 class Amasty_Table_Helper_Data extends Mage_Core_Helper_Abstract
 {
@@ -76,5 +78,42 @@ class Amasty_Table_Helper_Data extends Mage_Core_Helper_Abstract
         $hashAll['0'] = 'All';
         $hash = $hashAll + $hash; 
         return $hash;
-    }    
+    }
+
+    /**
+     * @param $zip
+     * @return array('area', 'district')
+     */
+    public function getDataFromZip($zip)
+    {
+        $dataZip = array('area' => '', 'district' => '');
+
+        if (!empty($zip)) {
+            $zipSpell = str_split($zip);
+            foreach ($zipSpell as $element) {
+                if ($element === ' ') {
+                    break;
+                }
+                if (is_numeric($element)) {
+                    $dataZip['district'] = $dataZip['district'] . $element;
+                } elseif (empty($dataZip['district'])) {
+                    $dataZip['area'] = $dataZip['area'] . $element;
+                }
+            }
+        }
+
+        return $dataZip;
+    }
+
+    public function _isRateResultRewritten()
+    {
+        $isRewritten = false;
+
+        $modelName = Mage::getConfig()->getModelClassName('shipping/rate_result');
+        if ($modelName == 'Amasty_Table_Model_Shipping_Rate_Result') {
+            $isRewritten = true;
+        }
+
+        return $isRewritten;
+    }
 }

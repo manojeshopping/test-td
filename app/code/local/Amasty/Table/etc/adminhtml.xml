@@ -1,7 +1,9 @@
 <?xml version="1.0"?> 
 <!--
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */
 -->
 <config>
@@ -11,7 +13,7 @@
                     <amtable translate="title" module="amtable">
                         <title>Custom Shipping Methods</title>
                         <sort_order>850</sort_order>
-                        <action>amtable/adminhtml_method</action>
+                        <action>adminhtml/amtable_method</action>
                     </amtable>
                 </children>
             </sales>
@@ -26,7 +28,7 @@
                         <sales>
                             <children>
                                 <amtable>
-                                    <title>Custom Shipping Methods</title>
+                                    <title>Shipping Table Rates</title>
                                 </amtable>
                             </children>
                         </sales>
@@ -37,7 +39,7 @@
                                         <carriers>
                                             <children>
                                                 <amtable>
-                                                    <title>Custom Shipping Methods</title>
+                                                    <title>Shipping Table Rates</title>
                                                 </amtable>
                                             </children>
                                         </carriers>
