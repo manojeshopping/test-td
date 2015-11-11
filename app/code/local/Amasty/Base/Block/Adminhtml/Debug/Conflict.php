@@ -17,7 +17,7 @@ class Amasty_Base_Block_Adminhtml_Debug_Conflict extends Amasty_Base_Block_Admin
     }
     
     function getFixUrl($object, $module, $rewrite){
-        return Mage::helper("adminhtml")->getUrl("ambase/adminhtml_base/fix", array(
+        return Mage::helper("adminhtml")->getUrl("adminhtml/ambase_base/fix", array(
             "object" => $object,
             "module" => $module,
             "rewrite" => $rewrite
@@ -25,7 +25,7 @@ class Amasty_Base_Block_Adminhtml_Debug_Conflict extends Amasty_Base_Block_Admin
     }
     
     function getRollbackUrl($object, $module, $rewrite){
-        return Mage::helper("adminhtml")->getUrl("ambase/adminhtml_base/rollback", array(
+        return Mage::helper("adminhtml")->getUrl("adminhtml/ambase_base/rollback", array(
             "object" => $object,
             "module" => $module,
             "rewrite" => $rewrite

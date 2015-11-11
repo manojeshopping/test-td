@@ -206,7 +206,7 @@ dragtable = {
                 ey += elt.offsetTop;
             }
         } while (elt = elt.offsetParent);
-        return {x: ex, y: ey};
+        return {x: ex-$('productGrid_table').up().scrollLeft, y: ey};
     },
 
     // MouseDown handler -- sets up the appropriate mousemove/mouseup handlers

@@ -1,9 +1,9 @@
 <?php
 /**
-* @author Amasty Team
-* @copyright Copyright (c) 2010-2011 Amasty (http://www.amasty.com)
-* @package Amasty_Pgrid
-*/
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Pgrid
+ */
 class Amasty_Pgrid_Helper_Category extends Mage_Core_Helper_Abstract
 {
     protected $_path = array();

@@ -1,16 +1,24 @@
 <?php
 /**
-* @author Amasty Team
-* @copyright Copyright (c) 2010-2011 Amasty (http://www.amasty.com)
-* @package Amasty_Pgrid
-*/
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Pgrid
+ */
 class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_Block_Catalog_Product_Grid
 {
     protected $_gridAttributes = array();
 
+    protected $_groupId;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_exportPageSize = null;
+    }
+
     protected function _preparePage()
     {
-        $this->getCollection()->setPageSize((int) $this->getParam($this->getVarNameLimit(), Mage::getStoreConfig('ampgrid/general/number_of_records')));        
+        $this->getCollection()->setPageSize((int) $this->getParam($this->getVarNameLimit(), Mage::getStoreConfig('ampgrid/general/number_of_records')));
         $this->getCollection()->setCurPage((int) $this->getParam($this->getVarNamePage(), $this->_defaultPage));
     }
     
@@ -18,11 +26,12 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
     {
         parent::_prepareLayout();
         $this->setExportVisibility('true');
+        $url = $this->getUrl('adminhtml/ampgrid_attribute/index');
         $this->setChild('attributes_button',
             $this->getLayout()->createBlock('adminhtml/widget_button')
                 ->setData(array(
                     'label'     => Mage::helper('ampgrid')->__('Grid Attribute Columns'),
-                    'onclick'   => 'pAttribute.showConfig();',
+                    'onclick'   => sprintf("pAttribute.showConfig('%s');", $url),
                     'class'     => 'task'
                 ))
         );
@@ -39,7 +48,7 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
                 ))
             );
         }
-        
+
         if (Mage::helper('ampgrid/mode')->isMulti())
         {
             $this->setChild('saveall_button',
@@ -52,12 +61,22 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
                 ))
         );
         }
-        
-        $this->_gridAttributes = Mage::helper('ampgrid')->prepareGridAttributesCollection();
+
+        //export old setting from system.xml
+        if (!Mage::getStoreConfig('ampgrid/general/exported_columns_from_system')
+            && !Mage::getStoreConfig('ampgrid/general/just_installed')
+        ) {
+            Mage::helper('ampgrid/migratesettings')->exportOdlColumnSettings();
+        } else {
+            Mage::getConfig()->saveConfig('ampgrid/general/exported_columns_from_system', 1);
+        }
+
+        $this->_groupId = Mage::helper('ampgrid')->getSelectedGroupId();
+        $this->_gridAttributes = Mage::helper('ampgrid')->prepareGridAttributesCollection($this->_groupId);
         
         return $this;
     }
-    
+
    protected function _addColumnFilterToCollection($column)
     {
        
@@ -70,11 +89,12 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
                 $cond = $column->getFilter()->getCondition();
                                 
                 if ($field && isset($cond)) {
-            
                     if (strpos($field, 'am_attribute_') !== FALSE){
                         $attribute = str_replace('am_attribute_', '', $field);
                         
                         $this->getCollection()->addAttributeToFilter($attribute, $cond);
+                    } else if ($field == "low_stock") {
+                       $this->getCollection()->addFilter("if(stock_item.item_id IS NULL, 0 , 1)", $cond);
                     } else {
                         
                         parent::_addColumnFilterToCollection($column);
@@ -96,12 +116,12 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
             if (strpos($columnIndex, 'am_attribute_') !== FALSE){
                 $attribute = str_replace('am_attribute_', '', $columnIndex);
                 $collection->addAttributeToSort($attribute, $column->getDir());
+            } else if ($columnIndex == "low_stock") {
+                $collection->getSelect()->order("low_stock " . $column->getDir());
+            }  else if ($columnIndex == "thumbnail") {
+                $collection->addAttributeToSort($columnIndex, $column->getDir());
             } else {
                 parent::_setCollectionOrder($column);
-                
-//                var_dump($columnIndex);
-//                exit(1);
-//                $this->setOrder($collection, $columnIndex, strtoupper($column->getDir()));                
             }
         }
         return $this;
@@ -121,37 +141,15 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
     {
         $store = $this->_getStore();
 
-        if (Mage::getStoreConfig('ampgrid/additional/avail'))
-        {
-            $collection->joinField('is_in_stock',
-                'cataloginventory/stock_item',
-                'is_in_stock',
-                'product_id=entity_id',
-                '{{table}}.stock_id=1',
-                'left');
+        $this->_prepareCollectionExtra($collection, $store);
+
+        if (!Mage::registry('product_collection')){
+            Mage::register('product_collection', $collection);
         }
 
         /**
-        * Adding special price if set in configuration        
-        */
-        if (Mage::getStoreConfig('ampgrid/additional/special_price_dates'))
-        {
-            $collection->joinAttribute('am_special_from_date', 'catalog_product/special_from_date', 'entity_id', null, 'left', $store->getId());
-            $collection->joinAttribute('am_special_to_date', 'catalog_product/special_to_date', 'entity_id', null, 'left', $store->getId());
-        }
-        
-        /**
-        * Adding code to the grid
-        */
-        
-        if (Mage::getStoreConfig('ampgrid/additional/thumb'))
-        {
-            $collection->joinAttribute('thumbnail', 'catalog_product/thumbnail', 'entity_id', null, 'left', $store->getId());
-        }
-        
-        /**
-        * Adding attributes
-        */
+         * Adding attributes
+         */
         if ($this->_gridAttributes->getSize() > 0)
         {
             foreach ($this->_gridAttributes as $attribute)
@@ -159,102 +157,102 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
                 $collection->joinAttribute($attribute->getAttributeCode(), 'catalog_product/' . $attribute->getAttributeCode(), 'entity_id', null, 'left', $store->getId());
             }
         }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/low_stock')) {
-            $this->_addLowStockFilter($collection);
-        }
-        
-        if (!Mage::registry('product_collection')){
-            Mage::register('product_collection', $collection);
-        }
-        
+
         return parent::setCollection($collection);
     }
+
+    protected function _prepareCollectionExtra($collection, $store) {
+        $extraColumns = Mage::getModel('ampgrid/column')->getCollectionExtra($this->_groupId);
+
+        foreach ($extraColumns as $column) {
+            /**
+             * @var Amasty_Pgrid_Model_Column $column
+             */
+            if (!$column->isVisible()) {
+                continue;
+            }
+
+            switch ($column->getCode()) {
+                case 'thumb':
+                    $collection->joinAttribute(
+                        'thumbnail', 'catalog_product/thumbnail', 'entity_id',
+                        null, 'left', $this->_getStore()->getId()
+                    );
+                    break;
+                case 'am_special_from_date':
+                    $collection->joinAttribute(
+                        'am_special_from_date', 'catalog_product/special_from_date',
+                        'entity_id', null, 'left', $store->getId()
+                    );
+                    break;
+                case 'am_special_to_date':
+                    $collection->joinAttribute(
+                        'am_special_to_date', 'catalog_product/special_to_date',
+                        'entity_id', null, 'left', $store->getId()
+                    );
+                    break;
+                case 'low_stock':
+                    $this->_addLowStockFilter($collection);
+                    break;
+                case 'qty_sold':
+                    $qtySoldTable = Mage::getSingleton('core/resource')->getTableName('am_pgrid_qty_sold');
+                    $collection->joinTable($qtySoldTable, 'product_id=entity_id',
+                        array('qty_sold' => 'qty_sold'),
+                        null,
+                        'left'
+                    );
+                    break;
+                case 'is_in_stock':
+                    $collection->joinField('is_in_stock',
+                        'cataloginventory/stock_item',
+                        'is_in_stock',
+                        'product_id=entity_id',
+                         sprintf('{{table}}.stock_id=1 %s',
+                             Mage::getConfig()->getModuleConfig('Aitoc_Aitquantitymanager')->is('active', 'true')
+                                ? sprintf('AND {{table}}.website_id = %d', $store->getWebsiteId()) : '' ),
+                        'left');
+                    break;
+            }
+        }
+    }
     
-    protected function _addLowStockFilter($collection){
+    protected function _addLowStockFilter($collection)
+    {
         $configManageStock = (int) Mage::getStoreConfigFlag(
             Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK);
         $globalNotifyStockQty = (float) Mage::getStoreConfig(
             Mage_CatalogInventory_Model_Stock_Item::XML_PATH_NOTIFY_STOCK_QTY);
         Mage::helper('rss')->disableFlat();
         
-        $stockItemTable = $collection->getTable('cataloginventory/stock_item');
-
         $stockItemWhere = '({{table}}.low_stock_date is not null) '
             . " AND ( ({{table}}.use_config_manage_stock=1 AND {$configManageStock}=1)"
             . " AND {{table}}.qty < "
-            . "IF({$stockItemTable}.`use_config_notify_stock_qty`, {$globalNotifyStockQty}, {{table}}.notify_stock_qty)"
+            . "IF(stock_item.`use_config_notify_stock_qty`, {$globalNotifyStockQty}, {{table}}.notify_stock_qty)"
             . ' OR ({{table}}.use_config_manage_stock=0 AND {{table}}.manage_stock=1) )';
+
+        if(Mage::getConfig()->getModuleConfig('Aitoc_Aitquantitymanager')->is('active', 'true')) {
+            $stockItemWhere .=  sprintf('AND {{table}}.website_id = %d', $this->_getStore()->getWebsiteId());
+        }
 
         $collection
             ->addAttributeToSelect('name', true)
-            ->joinTable('cataloginventory/stock_item', 'product_id=entity_id',
+            ->joinTable(array(
+                'stock_item' => 'cataloginventory/stock_item'
+                ), 'product_id=entity_id',
                 array(
-                     'low_stock' => 'use_config_notify_stock_qty'),
+                     'if(stock_item.item_id IS NULL, 0 , 1) as low_stock'
+                    ),
                 $stockItemWhere, 'left')
             ->setOrder('low_stock_date');
-
-        $collection->addAttributeToFilter('status',
-            array('in' => Mage::getSingleton('catalog/product_status')->getVisibleStatusIds()));
-        Mage::dispatchEvent('rss_catalog_notify_stock_collection_select', array('collection' => $collection));
     }
     
     protected function _prepareColumns()
     {
-        $this->addExportType('ampgrid/adminhtml_product/exportCsv', Mage::helper('customer')->__('CSV'));
-        $this->addExportType('ampgrid/adminhtml_product/exportExcel', Mage::helper('customer')->__('Excel XML'));
-        if (Mage::getStoreConfig('ampgrid/additional/thumb') && !$this->_isExport)
-        {
-            // will add thumbnail column to be the first one
-            $this->addColumn('thumb',
-                array(
-                    'header'    => Mage::helper('catalog')->__('Thumbnail'),
-                    'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_thumb',
-                    'index'		=> 'thumbnail',
-                    'sortable'  => true,
-                    'filter'    => false,
-                    'width'     => 90,
-            ));
-        }
+        $this->addExportType('adminhtml/ampgrid_product/exportCsv', Mage::helper('customer')->__('CSV'));
+        $this->addExportType('adminhtml/ampgrid_product/exportExcel', Mage::helper('customer')->__('Excel XML'));
 
-        
-        if (Mage::helper('ampgrid')->isCategoryColumnEnabled())
-        {
-            $categoryFilter  = false;
-            $categoryOptions = array();
-            if (Mage::getStoreConfig('ampgrid/additional/category_filter'))
-            {
-                $categoryFilter = 'ampgrid/adminhtml_catalog_product_grid_filter_category';
-                $categoryOptions = Mage::helper('ampgrid/category')->getOptionsForFilter();
-            }
-            
-            // adding categories column
-            $this->addColumn('categories',
-                array(
-                    'header'    => Mage::helper('catalog')->__('Categories'),
-                    'index'     => 'category_id',
-                    'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_category',
-                    'sortable'  => false,
-                    'filter'    => $categoryFilter,
-                    'type'      => 'options',
-                    'options'   => $categoryOptions,
-            ));
-        }
-
-        if (Mage::getStoreConfig('ampgrid/additional/link')){
-            $this->addColumn('Link', array(
-                'header'        => $this->__('&gt;&gt;'),
-                'index'         => 'name',
-                'type'          => 'text',
-                'sortable'  => false,
-                'filter'    => false,
-                'width' => "20px",
-                'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_link',
-            ));
-        }
-        parent::_prepareColumns();
-
-
+        $this->_prepareColumnsStandard();
+        $this->_prepareColumnsExtra();
 
         $actionsColumn = null;
         if (isset($this->_columns['action']))
@@ -262,119 +260,12 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
             $actionsColumn = $this->_columns['action'];
             unset($this->_columns['action']);
         }
-        // from version 2.4.1
-        $colsToRemove = Mage::getStoreConfig('ampgrid/additional/remove');
-        if ($colsToRemove)
-        {
-            $colsToRemove = explode(',', $colsToRemove);
-            foreach ($colsToRemove as $c)
-            {
-                $c = trim($c);
-                if (isset($this->_columns[$c]))
-                {
-                    unset($this->_columns[$c]);
-                }                
-            }
-        }
-        
-        if (Mage::helper('catalog')->isModuleEnabled('Mage_CatalogInventory') && Mage::getStoreConfig('ampgrid/additional/avail')) 
-        {
-            $this->addColumn('is_in_stock',
-                array(
-                    'header'  => Mage::helper('catalog')->__('Availability'),
-                    'type'    => 'options',
-                    'options' => array(0 => $this->__('Out of stock'), 1 => $this->__('In stock')),
-                    'index'   => 'is_in_stock',
-            ));
-        }
 
-        if (Mage::getStoreConfig('ampgrid/additional/created_at'))
-        {
-            $this->addColumn('created_at', array(
-                'header'        => $this->__('Creation Date'),
-                'index'         => 'created_at',
-                'type'          => 'date',
-            ));
-        }
-
-        if (Mage::getStoreConfig('ampgrid/additional/modified_at'))
-        {
-            $this->addColumn('updated_at', array(
-                'header'        => $this->__('Last Modified Date'),
-                'index'         => 'updated_at',
-                'type'          => 'date',
-            ));
-        }
-        
-        // adding special price columns
-        if (Mage::getStoreConfig('ampgrid/additional/special_price_dates'))
-        {
-            $this->addColumn('am_special_from_date', array(
-                'header'        => $this->__('Special Price From'),
-                'index'         => 'am_special_from_date',
-                'type'          => 'date',
-            ));
-            $this->addColumn('am_special_to_date', array(
-                'header'        => $this->__('Special Price To'),
-                'index'         => 'am_special_to_date',
-                'type'          => 'date',
-            ));
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/related_products'))
-        {
-            $this->addColumn('related_products', array(
-                'header' => $this->__('Related Products'),
-                'index' => 'related_products',
-                'sortable' => false,
-                'filter' => false,
-                'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_related',
-            ));
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/up_sells'))
-        {
-            $this->addColumn('up_sells', array(
-                'header' => $this->__('Up Sells'),
-                'index' => 'up_sells',
-                'sortable' => false,
-                'filter' => false,
-                'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_related',
-            ));
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/cross_sells'))
-        {
-            $this->addColumn('cross_sells', array(
-                'header' => $this->__('Cross Sells'),
-                'index' => 'cross_sells',
-                'sortable' => false,
-                'filter' => false,
-                'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_related',
-            ));
-        }
-
-        if (Mage::getStoreConfig('ampgrid/additional/low_stock')){
-            
-            $this->addColumn('low_stock',
-                array(
-                    'header'  => Mage::helper('catalog')->__('Low Stock'),
-                    'type'    => 'options',
-                    'options' => array("" => $this->__('No'), 1 => $this->__('Yes')),
-                    'index'   => 'low_stock',
-                    'filter_index' => 'low_stock'
-            ));
-        }
-
-
-        
         // adding cost column
-        
         if ($this->_gridAttributes->getSize() > 0)
         {
             Mage::register('ampgrid_grid_attributes', $this->_gridAttributes);
-                    
-                    
+
             Mage::helper('ampgrid')->attachGridColumns($this, $this->_gridAttributes, $this->_getStore());
         }
         
@@ -383,8 +274,309 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
             $this->_columns['action'] = $actionsColumn;
         }
 
-
         $this->sortColumnsByDragPosition();
+
+        if (Mage::helper('catalog')->isModuleEnabled('Mage_Rss')) {
+            $this->addRssList('rss/catalog/notifystock', Mage::helper('catalog')->__('Notify Low Stock RSS'));
+        }
+    }
+
+    protected function _prepareColumnsStandard()
+    {
+
+        $standardColumns = Mage::getModel('ampgrid/column')->getCollectionStandard($this->_groupId);
+        foreach ($standardColumns as $column) {
+            /**
+             * @var Amasty_Pgrid_Model_Column $column
+             */
+            if(!$column->isVisible()) {
+                continue;
+            }
+            switch($column->getCode()) {
+                case 'entity_id':
+                    $this->addColumn('entity_id',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'width' => '50px',
+                            'type'  => 'number',
+                            'index' => 'entity_id',
+                        ));
+                    break;
+                case 'name':
+                    $this->addColumn('name',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'index' => 'name',
+                        ));
+
+                    $store = $this->_getStore();
+                    if ($store->getId()) {
+                        $this->addColumn('custom_name',
+                            array(
+                                'header'=> Mage::helper('catalog')->__('%s in %s', $column->getTitle(), $store->getName()),
+                                'index' => 'custom_name',
+                            ));
+                    }
+                    break;
+                case 'type':
+                    $this->addColumn('type',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'width' => '60px',
+                            'index' => 'type_id',
+                            'type'  => 'options',
+                            'options' => Mage::getSingleton('catalog/product_type')->getOptionArray(),
+                        ));
+                    break;
+                case 'set_name':
+                    $sets = Mage::getResourceModel('eav/entity_attribute_set_collection')
+                                ->setEntityTypeFilter(Mage::getModel('catalog/product')->getResource()->getTypeId())
+                                ->load()
+                                ->toOptionHash();
+
+                    $this->addColumn('set_name',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'width' => '100px',
+                            'index' => 'attribute_set_id',
+                            'type'  => 'options',
+                            'options' => $sets,
+                        ));
+                    break;
+                case 'sku':
+                    $this->addColumn('sku',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'width' => '80px',
+                            'index' => 'sku',
+                        ));
+                    break;
+
+                case 'price':
+                    $store = $this->_getStore();
+                    $this->addColumn('price',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'type'  => 'price',
+                            'currency_code' => $store->getBaseCurrency()->getCode(),
+                            'index' => 'price',
+                        ));
+                    break;
+                case 'qty':
+                    if (Mage::helper('catalog')->isModuleEnabled('Mage_CatalogInventory')) {
+                        $this->addColumn('qty',
+                            array(
+                                'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                                'width' => '100px',
+                                'type'  => 'number',
+                                'index' => 'qty',
+                            ));
+                    }
+                    break;
+                case 'visibility':
+                    $this->addColumn('visibility',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'width' => '70px',
+                            'index' => 'visibility',
+                            'type'  => 'options',
+                            'options' => Mage::getModel('catalog/product_visibility')->getOptionArray(),
+                        ));
+                    break;
+                case 'status':
+                    $this->addColumn('status',
+                        array(
+                            'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                            'width' => '70px',
+                            'index' => 'status',
+                            'type'  => 'options',
+                            'options' => Mage::getSingleton('catalog/product_status')->getOptionArray(),
+                        ));
+                    break;
+
+                case 'websites':
+                    if (!Mage::app()->isSingleStoreMode()) {
+                        $this->addColumn('websites',
+                            array(
+                                'header'=> Mage::helper('catalog')->__($column->getTitle()),
+                                'width' => '100px',
+                                'sortable'  => false,
+                                'index'     => 'websites',
+                                'type'      => 'options',
+                                'options'   => Mage::getModel('core/website')->getCollection()->toOptionHash(),
+                            ));
+                    }
+                    break;
+                case 'action':
+                    $this->addColumn('action',
+                        array(
+                            'header'    => Mage::helper('catalog')->__($column->getTitle()),
+                            'width'     => '50px',
+                            'type'      => 'action',
+                            'getter'     => 'getId',
+                            'actions'   => array(
+                                array(
+                                    'caption' => Mage::helper('catalog')->__($column->getTitle()),
+                                    'url'     => array(
+                                        'base'=>'*/*/edit',
+                                        'params'=>array('store'=>$this->getRequest()->getParam('store'))
+                                    ),
+                                    'field'   => 'id'
+                                )
+                            ),
+                            'filter'    => false,
+                            'sortable'  => false,
+                            'index'     => 'stores',
+                        ));
+                    break;
+            }
+        }
+
+    }
+
+    protected function _prepareColumnsExtra()
+    {
+        $extraColumns = Mage::getModel('ampgrid/column')->getCollectionExtra($this->_groupId);
+        foreach ($extraColumns as $column) {
+            /**
+             * @var Amasty_Pgrid_Model_Column $column
+             */
+            if (!$column->isVisible()) {
+                continue;
+            }
+            switch ($column->getCode()) {
+                case 'thumb':
+                    if (!$this->_isExport){
+                        // will add thumbnail column to be the first one
+                        $this->addColumn('thumb',
+                            array(
+                                'header'    => Mage::helper('catalog')->__($column->getTitle()),
+                                'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_thumb',
+                                'index'		=> 'thumbnail',
+                                'sortable'  => true,
+                                'filter'    => false,
+                                'width'     => 90,
+                            ));
+                    }
+                    break;
+                case 'categories':
+                    $categoryFilter  = false;
+                    $categoryOptions = array();
+                    if (Mage::getStoreConfig('ampgrid/additional/category_filter'))
+                    {
+                        $categoryFilter = 'ampgrid/adminhtml_catalog_product_grid_filter_category';
+                        $categoryOptions = Mage::helper('ampgrid/category')->getOptionsForFilter();
+                    }
+
+                    // adding categories column
+                    $this->addColumn('categories',
+                        array(
+                            'header'    => Mage::helper('catalog')->__($column->getTitle()),
+                            'index'     => 'category_id',
+                            'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_category',
+                            'sortable'  => false,
+                            'filter'    => $categoryFilter,
+                            'type'      => 'options',
+                            'options'   => $categoryOptions,
+                        ));
+                    break;
+                case 'link':
+                    $this->addColumn('link', array(
+                        'header'        => $this->__($column->getTitle()),
+                        'index'         => 'name',
+                        'type'          => 'text',
+                        'sortable'  => false,
+                        'filter'    => false,
+                        'width' => "20px",
+                        'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_link',
+                    ));
+                    break;
+                case 'is_in_stock':
+                    if (Mage::helper('catalog')->isModuleEnabled('Mage_CatalogInventory')) {
+                        $this->addColumn('is_in_stock',
+                            array(
+                                'header'  => Mage::helper('catalog')->__($column->getTitle()),
+                                'type'    => 'options',
+                                'options' => array(0 => $this->__('Out of stock'), 1 => $this->__('In stock')),
+                                'index'   => 'is_in_stock',
+                            ));
+                    }
+                    break;
+                case 'created_at':
+                    $this->addColumn('created_at', array(
+                        'header'        => $this->__($column->getTitle()),
+                        'index'         => 'created_at',
+                        'type'          => 'date',
+                    ));
+                    break;
+                case 'qty_sold':
+                    $this->addColumn('qty_sold', array(
+                        'header' => $this->__($column->getTitle()),
+                        'index' => 'qty_sold',
+                        'type' => 'text',
+                        'width' => "40px"
+                    ));
+                    break;
+                case 'updated_at':
+                    $this->addColumn('updated_at', array(
+                        'header'        => $this->__($column->getTitle()),
+                        'index'         => 'updated_at',
+                        'type'          => 'date',
+                    ));
+                    break;
+                case 'am_special_from_date':
+                    $this->addColumn('am_special_from_date', array(
+                        'header'        => $this->__($column->getTitle()),
+                        'index'         => 'am_special_from_date',
+                        'type'          => 'date',
+                    ));
+                    break;
+                case 'am_special_to_date':
+                    $this->addColumn('am_special_to_date', array(
+                        'header'        => $this->__($column->getTitle()),
+                        'index'         => 'am_special_to_date',
+                        'type'          => 'date',
+                    ));
+                    break;
+                case 'related_products':
+                    $this->addColumn('related_products', array(
+                        'header' => $this->__($column->getTitle()),
+                        'index' => 'related_products',
+                        'sortable' => false,
+                        'filter' => false,
+                        'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_related',
+                    ));
+                    break;
+                case 'up_sells':
+                    $this->addColumn('up_sells', array(
+                        'header' => $this->__($column->getTitle()),
+                        'index' => 'up_sells',
+                        'sortable' => false,
+                        'filter' => false,
+                        'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_related',
+                    ));
+                    break;
+                case 'cross_sells':
+                    $this->addColumn('cross_sells', array(
+                        'header' => $this->__($column->getTitle()),
+                        'index' => 'cross_sells',
+                        'sortable' => false,
+                        'filter' => false,
+                        'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_related',
+                    ));
+                    break;
+                case 'low_stock':
+                    $this->addColumn('low_stock',
+                        array(
+                            'header'  => Mage::helper('catalog')->__($column->getTitle()),
+                            'type'    => 'options',
+                            'options' => array("0" => $this->__('No'), 1 => $this->__('Yes')),
+                            'index'   => 'low_stock',
+                            'filter_index' => 'low_stock'
+                        ));
+                    break;
+            }
+        }
     }
 
     public function addColumn($columnId, $column){
@@ -410,44 +602,24 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
             return $this;
         }
         $keys = array_keys($this->_columns);
-        $values = array_values($this->_columns);
 
-        $extraKey = '';
-        if (Mage::getStoreConfig('ampgrid/attr/byadmin'))
-        {
-            $extraKey = Mage::getSingleton('admin/session')->getUser()->getId();
-        }
-        $orderedFields = (string) Mage::getStoreConfig('ampgrid/attributes/sorting' . $extraKey);
-        if ($orderedFields)
-        {
-            $orderedFields = explode(',', $orderedFields);
-        } else
-        {
+        $orderedFields = Mage::helper('ampgrid')->getSelectedSorting($this->_groupId);
+        if (empty($orderedFields)) {
             return $this;
         }
 
-        for ($i = 0; $i < count($orderedFields) - 1; $i++)
-        {
-            $columnsOrder[$orderedFields[$i + 1]] = $orderedFields[$i];
-        }
-
-        foreach ($columnsOrder as $columnId => $after) {
-            if (array_search($after, $keys) !== false) {
-                // Moving grid column
-                $positionCurrent = array_search($columnId, $keys);
-
-                $key = array_splice($keys, $positionCurrent, 1);
-                $value = array_splice($values, $positionCurrent, 1);
-
-                $positionTarget = array_search($after, $keys) + 1;
-
-                array_splice($keys, $positionTarget, 0, $key);
-                array_splice($values, $positionTarget, 0, $value);
-
-                $this->_columns = array_combine($keys, $values);
+        $columns = array();
+        foreach ($orderedFields as $field) {
+            if (array_key_exists($field,$this->_columns)) {
+                $columns[$field] = $this->_columns[$field];
             }
         }
+        $unsortedColumns = array_diff_assoc($keys, $orderedFields);
+        foreach ($unsortedColumns as $columnsIndex) {
+            $columns[$columnsIndex] = $this->_columns[$columnsIndex];
+        }
 
+        $this->_columns = $columns;
         end($this->_columns);
         $this->_lastColumnId = key($this->_columns);
         return $this;
@@ -479,5 +651,5 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid extends Mage_Adminhtml_B
    {
         parent::_prepareMassaction();
         Mage::dispatchEvent('am_product_grid_massaction', array('grid' => $this)); 
-   }    
+   }
 }

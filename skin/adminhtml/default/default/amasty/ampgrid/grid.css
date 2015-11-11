@@ -28,7 +28,7 @@
      background: url(../../images/ampgrid/move.png) 98% 3px no-repeat;
  }
 
-.ampgrid_sortable a
+.ampgrid_sortable span
 {
     cursor: move;
 }
