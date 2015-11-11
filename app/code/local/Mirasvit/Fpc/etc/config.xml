@@ -154,13 +154,13 @@
     </frontend>
     <admin>
         <routers>
-            <fpc>
-                <use>admin</use>
-                <args>
-                    <module>Mirasvit_Fpc</module>
-                    <frontName>full_page_cache</frontName>
-                </args>
-            </fpc>
+            <adminhtml>
+				<args>
+					<modules>
+						<fpc after="Mage_Adminhtml">Mirasvit_Fpc_Adminhtml</fpc>
+					</modules>
+				</args>
+			</adminhtml>
         </routers>
     </admin>
     <adminhtml>

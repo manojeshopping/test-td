@@ -115,13 +115,13 @@
     </adminhtml>
     <admin>
         <routers>
-            <searchsphinx>
-                <use>admin</use>
-                <args>
-                    <module>Mirasvit_SearchSphinx</module>
-                    <frontName>searchsphinx</frontName>
-                </args>
-            </searchsphinx>
+            <adminhtml>
+				<args>
+					<modules>
+						<searchsphinx after="Mage_Adminhtml">Mirasvit_SearchSphinx_Adminhtml</searchsphinx>
+					</modules>
+				</args>
+			</adminhtml>
         </routers>
     </admin>
     <default>

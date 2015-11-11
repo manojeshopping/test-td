@@ -16,7 +16,7 @@
 
 
 
-class Mirasvit_SearchLandingPage_Adminhtml_PageController extends Mage_Adminhtml_Controller_Action
+class Mirasvit_SearchLandingPage_Adminhtml_Searchlandingpage_PageController extends Mage_Adminhtml_Controller_Action
 {
     public function preDispatch()
     {

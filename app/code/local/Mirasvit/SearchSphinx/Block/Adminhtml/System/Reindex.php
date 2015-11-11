@@ -44,7 +44,7 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_System_Reindex extends Mage_Adminhtm
         $this->addData(array(
             'button_label' => Mage::helper('customer')->__($originalData['button_label']),
             'html_id' => $element->getHtmlId(),
-            'ajax_url' => Mage::getSingleton('adminhtml/url')->getUrl('searchsphinx/adminhtml_system_action/reindex')
+            'ajax_url' => Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/searchsphinx_system_action/reindex')
         ));
 
         return $this->_toHtml();

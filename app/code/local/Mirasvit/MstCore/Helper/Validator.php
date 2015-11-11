@@ -25,7 +25,7 @@ class Mirasvit_MstCore_Helper_Validator extends Mirasvit_MstCore_Helper_Validato
 
         foreach (Mage::helper('mstcore')->getUsedCaches() as $name => $method) {
             $description[] = "PHP Cache $name is installed. Please, clear it after installation or upgrade (method $method)" .
-            ' <a style="cursor:pointer" href="' . Mage::helper('adminhtml')->getUrl('mstcore/adminhtml_validator/clearCache', array('cache_method' => $method)) . '">Flush Cache</a>';
+            ' <a style="cursor:pointer" href="' . Mage::helper('adminhtml')->getUrl('adminhtml/mstcore_validator/clearCache', array('cache_method' => $method)) . '">Flush Cache</a>';
             $result = self::INFO;
         }
 
@@ -66,7 +66,7 @@ redis> flushall
 
         if (defined('COMPILER_INCLUDE_PATH')) {
             $result = self::INFO;
-            $description[] = 'Compilation status: Enabled, <a href="' . Mage::helper('adminhtml')->getUrl('mstcore/adminhtml_validator/compiler', array('action' => 'disable')) . '">Disable</a>';
+            $description[] = 'Compilation status: Enabled, <a href="' . Mage::helper('adminhtml')->getUrl('adminhtml/mstcore_validator/compiler', array('action' => 'disable')) . '">Disable</a>';
         }
 
         return array($result, $title, $description);

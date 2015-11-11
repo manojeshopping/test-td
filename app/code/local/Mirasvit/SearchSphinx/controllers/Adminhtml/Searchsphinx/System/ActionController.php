@@ -19,7 +19,7 @@
 /**
  * @category Mirasvit
  */
-class Mirasvit_SearchSphinx_Adminhtml_System_ActionController extends Mage_Adminhtml_Controller_Action
+class Mirasvit_SearchSphinx_Adminhtml_Searchsphinx_System_ActionController extends Mage_Adminhtml_Controller_Action
 {
     protected function _getNativeEngine()
     {

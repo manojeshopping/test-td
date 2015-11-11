@@ -28,7 +28,7 @@ class Mirasvit_MstCore_Block_System_Config_Form_Extensions extends Mage_Adminhtm
         }
         $html .= '</table>';
 
-        $url = Mage::getSingleton('adminhtml/url')->getUrl('mstcore/adminhtml_validator/index', array('modules' => ''));
+        $url = Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/mstcore_validator/index', array('modules' => ''));
 
         $html .= '<br><button onclick="window.location=\''.$url.'\'" type="button"><span>Run validation tests for all extensions</span></button>';
 

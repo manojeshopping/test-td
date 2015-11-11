@@ -131,13 +131,13 @@
     </adminhtml>
     <admin>
         <routers>
-            <searchindex>
-                <use>admin</use>
-                <args>
-                    <module>Mirasvit_SearchIndex</module>
-                    <frontName>searchindex</frontName>
-                </args>
-            </searchindex>
+            <adminhtml>
+				<args>
+					<modules>
+						<searchindex after="Mage_Adminhtml">Mirasvit_SearchIndex_Adminhtml</searchindex>
+					</modules>
+				</args>
+			</adminhtml>
         </routers>
     </admin>
     <default>

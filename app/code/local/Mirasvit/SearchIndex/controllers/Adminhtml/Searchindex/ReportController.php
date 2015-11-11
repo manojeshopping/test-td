@@ -16,7 +16,7 @@
 
 
 
-class Mirasvit_SearchIndex_Adminhtml_ReportController extends Mage_Adminhtml_Controller_Action
+class Mirasvit_SearchIndex_Adminhtml_Searchindex_ReportController extends Mage_Adminhtml_Controller_Action
 {
     public function _initAction()
     {

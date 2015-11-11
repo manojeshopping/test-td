@@ -15,7 +15,7 @@
  */
 
 
-class Mirasvit_Fpc_Adminhtml_LogController extends Mage_Adminhtml_Controller_Action
+class Mirasvit_Fpc_Adminhtml_Fpc_LogController extends Mage_Adminhtml_Controller_Action
 {
     /**
      * Temporarily allow access for all users

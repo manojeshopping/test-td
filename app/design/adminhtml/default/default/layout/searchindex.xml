@@ -6,19 +6,19 @@
         </reference>
     </default>
 
-    <searchindex_adminhtml_index_edit>
+    <adminhtml_searchindex_index_edit>
         <reference name="head">
             <action method="addItem">
                 <type>js</type>
                 <name>mirasvit/code/searchindex/adminhtml/attributes.js</name>
             </action>
         </reference>
-    </searchindex_adminhtml_index_edit>
+    </adminhtml_searchindex_index_edit>
 
-    <searchindex_adminhtml_report_index>
+    <adminhtml_searchindex_report_index>
         <reference name="content">
             <block type="searchindex/adminhtml_report" name="searchindex.report" />
         </reference>
-    </searchindex_adminhtml_report_index>
+    </adminhtml_searchindex_report_index>
 
 </layout>

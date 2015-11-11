@@ -51,7 +51,7 @@ class Mirasvit_SearchIndex_Block_Adminhtml_Validation_Tab_Result extends Mage_Ad
         } else {
             $description = array();
 
-            $validateUrl = Mage::getSingleton('adminhtml/url')->getUrl('mstcore/adminhtml_validator/index', array('modules' => ''));
+            $validateUrl = Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/mstcore_validator/index', array('modules' => ''));
             $description[] = "Please, <a href='$validateUrl' target='_blank'>validate extension installation</a>.";
             $description[] = 'Be sure, that this product contains these search phrase.';
 

@@ -44,7 +44,7 @@ class Mirasvit_Misspell_Block_Adminhtml_System_BtnAction extends Mage_Adminhtml_
         $this->addData(array(
             'button_label' => Mage::helper('customer')->__($originalData['button_label']),
             'html_id' => $element->getHtmlId(),
-            'ajax_url' => Mage::getSingleton('adminhtml/url')->getUrl('misspell/adminhtml_system_action/'.$originalData['button_action']),
+            'ajax_url' => Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/misspell_system_action/'.$originalData['button_action']),
         ));
 
         return $this->_toHtml();

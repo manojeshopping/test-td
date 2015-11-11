@@ -15,24 +15,12 @@
  */
 
 
-
-/**
- * @category Mirasvit
- */
-class Mirasvit_Misspell_Adminhtml_System_ActionController extends Mage_Adminhtml_Controller_Action
+class Mirasvit_MstCore_Adminhtml_Mstcore_LoggerController extends Mage_Adminhtml_Controller_Action
 {
-    public function reindexAction()
+    public function indexAction()
     {
-        try {
-            $cntWords = Mage::getModel('misspell/indexer')->reindexAll();
-            $this->getResponse()->setBody('Reindex completed! Total words: '.$cntWords);
-        } catch (Exception $e) {
-            $this->getResponse()->setBody(nl2br($e->getMessage()));
-        }
+        $this->loadLayout()
+            ->_addContent($this->getLayout()->createBlock('mstcore/adminhtml_logger'))
+            ->renderLayout();
     }
-
-	protected function _isAllowed()
-	{
-		return true;
-	}
 }

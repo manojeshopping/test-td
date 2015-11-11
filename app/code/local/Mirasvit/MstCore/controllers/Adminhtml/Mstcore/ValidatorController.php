@@ -15,7 +15,7 @@
  */
 
 
-class Mirasvit_MstCore_Adminhtml_ValidatorController extends Mage_Adminhtml_Controller_Action
+class Mirasvit_MstCore_Adminhtml_Mstcore_ValidatorController extends Mage_Adminhtml_Controller_Action
 {
     public function indexAction()
     {

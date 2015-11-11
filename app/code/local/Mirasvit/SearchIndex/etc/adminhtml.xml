@@ -55,16 +55,16 @@
                 <searchindex_index module="searchindex">
                     <title>Manage Search Indexes</title>
                     <sort_order>10</sort_order>
-                    <action>searchindex/adminhtml_index/index</action>
+                    <action>adminhtml/searchindex_index/index</action>
                 </searchindex_index>
                 <searchindex_validation module="searchindex">
                     <title>Validate Search Results</title>
-                    <action>searchindex/adminhtml_validation/index</action>
+                    <action>adminhtml/searchindex_validation/index</action>
                     <sort_order>90</sort_order>
                 </searchindex_validation>
                 <searchindex_report module="searchindex">
                     <title>Search Terms</title>
-                    <action>searchindex/adminhtml_report/index</action>
+                    <action>adminhtml/searchindex_report/index</action>
                     <sort_order>95</sort_order>
                 </searchindex_report>
                 <searchindex_settings module="searchindex">

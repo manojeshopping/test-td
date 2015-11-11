@@ -19,13 +19,13 @@
 /**
  * @category Mirasvit
  */
-class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_Controller_Action
+class Mirasvit_SearchSphinx_Adminhtml_Searchsphinx_StopwordController extends Mage_Adminhtml_Controller_Action
 {
     protected function _initAction()
     {
         $this->loadLayout()
             ->_setActiveMenu('search')
-            ->_title($this->__('Dictionary of synonyms'));
+            ->_title($this->__('Dictionary of stopwords'));
         $this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
 
         return $this;
@@ -34,17 +34,7 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
     public function indexAction()
     {
         $this->_initAction();
-        $this->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_synonym'));
-        $this->renderLayout();
-    }
-
-    public function importAction()
-    {
-        $this->_initAction()
-            ->_title($this->__('Import Dictionary'));
-
-        $this->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_synonym_import'));
-
+        $this->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_stopword'));
         $this->renderLayout();
     }
 
@@ -52,9 +42,9 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
     {
         $this->_getModel();
 
-        $this->_title(Mage::helper('searchsphinx')->__('Add Synonyms'));
         $this->_initAction()
-            ->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_synonym_edit'))
+            ->_title($this->__('Add Stopword'))
+            ->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_stopword_edit'))
             ->renderLayout();
     }
 
@@ -63,13 +53,12 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
         $model = $this->_getModel();
 
         if ($model->getId()) {
-            $this->_title(Mage::helper('searchsphinx')->__('Edit Synonyms'));
-
             $this->_initAction()
-                ->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_synonym_edit'))
+                ->_title($this->__('Edit Stopword'))
+                ->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_stopword_edit'))
                 ->renderLayout();
         } else {
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('searchsphinx')->__('The synonym does not exist.'));
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('searchsphinx')->__('The stopword does not exist.'));
             $this->_redirect('*/*/');
         }
     }
@@ -80,12 +69,22 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
             $model = $this->_getModel();
             $model->delete();
 
-            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchsphinx')->__('Synonym was successfully deleted'));
+            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchsphinx')->__('Stopword was successfully deleted'));
         } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
         }
 
         $this->_redirect('*/*/');
+    }
+
+    public function importAction()
+    {
+        $this->_initAction()
+            ->_title($this->__('Import Dictionary'));
+
+        $this->_addContent($this->getLayout()->createBlock('searchsphinx/adminhtml_stopword_import'));
+
+        $this->renderLayout();
     }
 
     public function saveAction()
@@ -96,7 +95,7 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
                 $model->addData($data)
                     ->save();
 
-                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchsphinx')->__('Synonym is saved'));
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchsphinx')->__('Stopword is saved'));
                 Mage::getSingleton('adminhtml/session')->setFormData(false);
 
                 if ($this->getRequest()->getParam('back')) {
@@ -110,11 +109,7 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
                 Mage::getSingleton('adminhtml/session')->setFormData($data);
 
-                if ($model->getId()) {
-                    $this->_redirect('*/*/edit', array('id' => $model->getId()));
-                } else {
-                    $this->_redirect('*/*/new');
-                }
+                $this->_redirect('*/*/');
             }
         }
     }
@@ -123,9 +118,9 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
     {
         if ($data = $this->getRequest()->getPost()) {
             try {
-                $result = Mage::getSingleton('searchsphinx/synonym')->import($data['file'], $data['store']);
+                $result = Mage::getSingleton('searchsphinx/stopword')->import($data['file'], $data['store']);
 
-                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchsphinx')->__('Imported %s synonyms', $result));
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('searchsphinx')->__('Imported %s stopwords', $result));
                 Mage::getSingleton('adminhtml/session')->setFormData(false);
 
                 $this->_redirect('*/*/');
@@ -140,14 +135,14 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
 
     public function massDeleteAction()
     {
-        $ids = $this->getRequest()->getParam('synonym');
+        $ids = $this->getRequest()->getParam('stopword');
 
         if (!is_array($ids)) {
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('searchsphinx')->__('Please select synonym(s)'));
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('searchsphinx')->__('Please select stopword(s)'));
         } else {
             try {
                 foreach ($ids as $itemId) {
-                    $model = Mage::getModel('searchsphinx/synonym')->setIsMassDelete(true)
+                    $model = Mage::getModel('searchsphinx/stopword')->setIsMassDelete(true)
                         ->load($itemId);
                     $model->delete();
                 }
@@ -164,7 +159,7 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
 
     protected function _getModel()
     {
-        $model = Mage::getModel('searchsphinx/synonym');
+        $model = Mage::getModel('searchsphinx/stopword');
 
         if ($id = $this->getRequest()->getParam('id')) {
             $model->load($id);
@@ -177,6 +172,6 @@ class Mirasvit_SearchSphinx_Adminhtml_SynonymController extends Mage_Adminhtml_C
 
 	protected function _isAllowed()
 	{
-		return Mage::getSingleton('admin/session')->isAllowed('search/searchsphinx_synonyms');
+		return Mage::getSingleton('admin/session')->isAllowed('search/searchsphinx_stopwords');
 	}
 }
