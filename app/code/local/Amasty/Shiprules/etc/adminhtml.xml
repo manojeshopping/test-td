@@ -1,7 +1,9 @@
 <?xml version="1.0"?> 
 <!--
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */
 -->
 <config>
@@ -30,7 +32,18 @@
                                 </amshiprules>
                             </children>
                         </sales>
-                     </children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <amshiprules translate="title" module="amshiprules">
+                                            <title>Shipping Rules</title>
+                                        </amshiprules>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
                 </admin> 
 			</resources>
 		</acl>

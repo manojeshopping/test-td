@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */ 
 class Amasty_Shiprules_Block_Adminhtml_Rule_Edit_Tab_Conditions
     extends Mage_Adminhtml_Block_Widget_Form
@@ -53,7 +55,7 @@ class Amasty_Shiprules_Block_Adminhtml_Rule_Edit_Tab_Conditions
         $form = new Varien_Data_Form();
         $renderer = Mage::getBlockSingleton('adminhtml/widget_form_renderer_fieldset')
             ->setTemplate('promo/fieldset.phtml')
-            ->setNewChildUrl($this->getUrl('*/adminhtml_rule/newConditionHtml/form/rule_conditions_fieldset'));
+            ->setNewChildUrl($this->getUrl('*/amshiprules_rule/newConditionHtml/form/rule_conditions_fieldset'));
 
         $fieldset = $form->addFieldset('rule_conditions_fieldset', array(
             'legend'=>Mage::helper('salesrule')->__('Apply the rule only if the following conditions are met (leave blank for all products)')

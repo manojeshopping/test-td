@@ -7,7 +7,8 @@
 $this->startSetup();
 
 $this->run("
- ALTER TABLE `{$this->getTable('amshiprules/rule')}` ADD `handling` double NOT NULL AFTER `rate_max`;  
-"); 
+ ALTER TABLE `{$this->getTable('amshiprules/rule')}` ADD `weight_fixed` decimal(12,2) unsigned NOT NULL default '0' AFTER `rate_fixed`;
+");
 
+  
 $this->endSetup();
