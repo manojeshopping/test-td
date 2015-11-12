@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2010 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */
 class Amasty_Table_Block_Adminhtml_Rates extends Mage_Adminhtml_Block_Widget_Grid
 {
@@ -82,15 +84,13 @@ class Amasty_Table_Block_Adminhtml_Rates extends Mage_Adminhtml_Block_Widget_Gri
             'header'    => Mage::helper('amtable')->__('Qty To'),
             'index'     => 'qty_to',
         ));
-        
+
         $this->addColumn('shipping_type', array(
             'header'    => Mage::helper('amtable')->__('Shipping Type'),
             'index'     => 'shipping_type',
             'type'      => 'options', 
             'options'   => Mage::helper('amtable')->getTypes(),            
         ));
-                
-       
         
         $this->addColumn('cost_base', array(
             'header'    => Mage::helper('amtable')->__('Rate'),
@@ -110,7 +110,12 @@ class Amasty_Table_Block_Adminhtml_Rates extends Mage_Adminhtml_Block_Widget_Gri
         $this->addColumn('cost_weight', array(
             'header'    => Mage::helper('amtable')->__('FRPUW'),
             'index'     => 'cost_weight',
-        ));        
+        ));
+
+        $this->addColumn('time_delivery', array(
+            'header'    => Mage::helper('amtable')->__('Estimated Delivery (days)'),
+            'index'     => 'time_delivery',
+        ));
         
         $this->addColumn('action', array(
                 'header'    => Mage::helper('catalog')->__('Action'),
@@ -136,7 +141,7 @@ class Amasty_Table_Block_Adminhtml_Rates extends Mage_Adminhtml_Block_Widget_Gri
      
     public function getRowUrl($row)
     {
-        return $this->getUrl('*/adminhtml_rate/edit', array('id' => $row->getId())); 
+        return $this->getUrl('*/amtable_rate/edit', array('id' => $row->getId()));
     }
       
 }

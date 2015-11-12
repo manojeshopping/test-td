@@ -284,8 +284,6 @@ EOT;
       unset($attrs);
     }
 
-    $shippingType = MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
-
     Mage::unregister('product');
     Mage::register('product', $product);
 
@@ -334,6 +332,15 @@ EOT;
 
     $price = $this->_getPrice($product, $account, $_data, $store, $overwrite);
 
+    $subtitle = $this->_getSubtitle(
+      $product,
+      $price,
+      $account,
+      $_data,
+      $store,
+      $overwrite
+    );
+
     $buyNow = '';
 
     if ($this->_getAllowBuyNow($_data, $overwrite))
@@ -341,12 +348,13 @@ EOT;
 
     $duration = $this->_durations[$this->_getDuration($account, $overwrite)];
 
-    $shippingTypes
+    $shippingOpts = $this->_getShippingOptions($account);
+    $availShippingOpts
       = Mage::getModel('trademe/attribute_source_freeshipping')->toArray();
 
-    $shippingType = $shippingTypes[$shippingType];
-
-    unset($shippingTypes);
+    //Add Custom shipping option
+    $availShippingOpts[MVentory_TradeMe_Model_Config::SHIPPING_CUSTOM]
+      = 'Custom';
 
     $pickup = $this->_getPickup($_data, $account);
     $pickup = $this->_pickupValues[$pickup];
@@ -359,8 +367,12 @@ EOT;
     do {
       $xml = '<ListingRequest xmlns="http://api.trademe.co.nz/v1">
 <Category>' . $categoryId . '</Category>
-<Title>' . $title . '</Title>
-<Description><Paragraph>' . $description . '</Paragraph></Description>
+<Title>' . $title . '</Title>';
+
+      if ($subtitle)
+        $xml .= '<Subtitle>' . $subtitle . '</Subtitle>';
+
+      $xml .= '<Description><Paragraph>' . $description . '</Paragraph></Description>
 <StartPrice>' . $price . '</StartPrice>
 <ReservePrice>' . $price . '</ReservePrice>'
 . $buyNow .
@@ -382,17 +394,17 @@ EOT;
 
       $xml .= '<ShippingOptions>';
 
-      if (isset($account['shipping_options']) && $account['shipping_options'])
-        foreach ($account['shipping_options'] as $shippingOption)
-          $xml .= '<ShippingOption><Type>Custom</Type><Price>'
-                  . $shippingOption['price']
-                  . '</Price><Method>'
-                  . $shippingOption['method']
-                  . '</Method></ShippingOption>';
-      else
-        $xml .= '<ShippingOption><Type>'
-                . $shippingType
-                . '</Type></ShippingOption>';
+      foreach ($shippingOpts as $shippingOpt) {
+        $xml .= '<ShippingOption>';
+        $xml .= '<Type>'. $availShippingOpts[$shippingOpt['Type']] . '</Type>';
+
+        if (isset($shippingOpt['Price'], $shippingOpt['Method'])) {
+          $xml .= '<Price>'. $shippingOpt['Price'] . '</Price>';
+          $xml .= '<Method>'. $shippingOpt['Method'] . '</Method>';
+        }
+
+        $xml .= '</ShippingOption>';
+      }
 
       $xml .= '</ShippingOptions>';
 
@@ -523,39 +535,12 @@ EOT;
 
     if ($xml === false)
       throw new MVentory_TradeMe_ApiException(self::__E_RESPONSE_DECODING);
-
-    MVentory_TradeMe_Model_Log::debug(array('response' => $xml));
-
+    MVentory_TradeMe_Model_Log::debug(array('response'    => (string) $xml->Success,
+                                            'description' => (string) $xml->Description));
     if ((string) $xml->Success != 'true')
       throw new MVentory_TradeMe_ApiException((string) $xml->Description);
 
     return true;
-  }
-
-  /**
-   * NOTE: requires $this->_website to be set
-   *
-   * @param MVentory_TradeMe_Model_Auction $auction Auction
-   * @return null|int Status of auction
-   */
-  public function check ($auction) {
-    MVentory_TradeMe_Model_Log::debug();
-
-    $this->setAccountId($auction['account_id']);
-    $listingId = $auction['listing_id'];
-
-    $item = $this->_loadListingDetailsAuth($listingId);
-
-    //Check if item on sold
-    if ($item['AsAt'] < $item['EndDate'])
-      return 3;
-
-    //Check if item was sold
-    if ($item['BidCount'] > 0)
-      return 2;
-
-    //Item wasn't sold or was withdrawn
-    return 1;
   }
 
   public function update ($product,
@@ -605,8 +590,6 @@ EOT;
         if ($value == -1 && isset($account[$key]))
           $formData[$key] = $account[$key];
 
-    $shippingType = MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED;
-
     if (!isset($parameters['Category']) && isset($formData['category'])
         && $formData['category'])
       $parameters['Category'] = $formData['category'];
@@ -626,20 +609,21 @@ EOT;
     }
 
     if (!isset($parameters['ShippingOptions']))
-      if (isset($account['shipping_options']) && $account['shipping_options'])
-        foreach ($account['shipping_options'] as $shippingOption)
-          $parameters['ShippingOptions'][] = array(
-            'Type' => MVentory_TradeMe_Model_Config::SHIPPING_CUSTOM,
-            'Price' => $shippingOption['price'],
-            'Method' => $shippingOption['method'],
-          );
-      else
-        $parameters['ShippingOptions'][]['Type'] = $shippingType;
+      $parameters['ShippingOptions'] = $this->_getShippingOptions($account);
 
     //set price
     if (!isset($parameters['StartPrice']))
       $parameters['StartPrice'] = $this->_getPrice(
         $product,
+        $account,
+        $formData,
+        $store
+      );
+
+    if (!isset($parameters['Subtitle']))
+      $parameters['Subtitle'] = $this->_getSubtitle(
+        $product,
+        $parameters['StartPrice'],
         $account,
         $formData,
         $store
@@ -807,6 +791,89 @@ EOT;
       ));
 
     return $result['PhotoId'];
+  }
+
+  /**
+   * Return the details of a single listing
+   *
+   * NOTE: requires $this->_website to be set
+   *
+   * @param MVentory_TradeMe_Model_Auction $auction
+   *   Auction model
+   *
+   * @return array
+   *   Details of the listing
+   */
+  public function getListingDetails ($auction) {
+    MVentory_TradeMe_Model_Log::debug();
+
+    $this->setAccountId($auction['account_id']);
+    $listingId = $auction['listing_id'];
+
+    return $this->_loadListingDetailsAuth($listingId);
+  }
+
+  /**
+   * Get and prepare sale data from supplied listing data
+   *
+   * @param array $listing
+   *   Listing data
+   *
+   * @return array|null
+   *   Prepared sale data
+   */
+  public function getSaleDataFromListing ($listing) {
+    if (!isset($listing['Sales']))
+      return;
+
+    $sale = end($listing['Sales']);
+
+    if (isset($sale['Buyer'])) {
+      $_buyer = $sale['Buyer'];
+
+      $buyer = [
+        'email' => $_buyer['Email'],
+        'nickname' => $_buyer['Nickname']
+      ];
+
+      unset($_buyer);
+    }
+    else
+      $buyer = [];
+
+    if (isset($sale['DeliveryAddress'])) {
+      $_address = $sale['DeliveryAddress'];
+
+      $address = [
+        'name' => $_address['Name'],
+        'street' => [
+          $_address['Address1'],
+          isset($_address['Address2']) ? $_address['Address2'] : ''
+        ],
+        'city' => $_address['City'],
+        'country' => $_address['Country']
+      ];
+
+      if (isset($_address['Suburb']))
+        $address['suburb'] = $_address['Suburb'];
+
+      if (isset($_address['Postcode']))
+        $address['postcode'] = $_address['Postcode'];
+
+      if (isset($_address['PhoneNumber']))
+        $address['telephone'] = $_address['PhoneNumber'];
+
+      unset($_address);
+    }
+    else
+      $address = [];
+
+    return [
+      'price' => $sale['Price'],
+      'qty' => $sale['QuantitySold'],
+      'buyer' => $buyer,
+      'shipping_address' => $address
+    ];
   }
 
   private function processDescription ($template, $data) {
@@ -1328,6 +1395,51 @@ EOT;
     );
   }
 
+  /**
+   * Return prepared data for shipping options
+   *
+   * @param array $account
+   *   Current account
+   *
+   * @return array
+   *   Prapared shipping options
+   */
+  protected function _getShippingOptions ($account) {
+    if (!isset($account['shipping_options']))
+      return [
+        ['Type' => MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED]
+      ];
+
+    $options = $account['shipping_options'];
+
+    if (is_array($options) && $options) {
+      $_options = [];
+
+      foreach ($options as $option)
+        $_options[] = [
+          'Type' => MVentory_TradeMe_Model_Config::SHIPPING_CUSTOM,
+          'Price' => $option['price'],
+          'Method' => isset($option['description'])
+            ? $option['description']
+            : $option['method'] //This is deprecated field
+        ];
+
+      return $_options;
+    }
+
+    $availableOptions = Mage::getModel('trademe/attribute_source_freeshipping')
+      ->toArray();
+
+    if (is_int($options) && isset($availableOptions[$options]))
+      return [
+        ['Type' => $options]
+      ];
+
+    return [
+      ['Type' => MVentory_TradeMe_Model_Config::SHIPPING_UNDECIDED]
+    ];
+  }
+
   protected function _getAttrs ($categoryId, $product) {
     $attributes = $this->getCategoryAttrs($categoryId);
     if (!$attributes)
@@ -1485,6 +1597,81 @@ EOT;
       $this->_getConfig(MVentory_TradeMe_Model_Config::_IMG_MULTIPLE)
         ? $helper->getAllImages($product, $this->_imageSize, $store)
         : [$helper->getImage($product, $this->_imageSize, $store)]
+    );
+  }
+
+  /**
+   * Return subtitle for auction
+   *
+   * Chances specific change: return predefined text
+   * if product has active special price
+   *
+   * @param Mage_Catalog_Model_Product $product
+   *   Product model
+   *
+   * @param float $currentPrice
+   *   Final auction price
+   *
+   * @param array $account
+   *   Account data
+   *
+   * @param  array $data
+   *   Form data
+   *
+   * @param array $overwrite
+   *   Data to overwrite values from $account and $data parameters
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store model
+   *
+   * @return string
+   *   Subtitle for auction if product has active special price
+   */
+  protected function _getSubtitle ($product,
+                                   $currentPrice,
+                                   $account,
+                                   $data,
+                                   $store,
+                                   $overwrite = []) {
+
+    if (!Mage::helper('trademe/product')->hasSpecialPrice($product, $store))
+      return;
+
+    /**
+     * Remove values of final price and special price in the product
+     * to recalculate its final price based on original price.
+     *
+     * @see Mage_Catalog_Model_Product::getFinalPrice()
+     *   See this method to find why we need to remove final price
+     *
+     * @see Mage_Catalog_Model_Product_Type_Price::getFinalPrice()
+     *   See this method to find how final price is calculated
+     */
+
+    $specialPrice = $product->getSpecialPrice();
+    $finalPrice = $product->getFinalPrice();
+
+    $product
+      ->setSpecialPrice(null)
+      ->setFinalPrice(null);
+
+    $price = $this->_getPrice(
+      $product,
+      $account,
+      $data,
+      $store,
+      $overwrite
+    );
+
+    $product
+      ->setSpecialPrice($specialPrice)
+      ->setFinalPrice($finalPrice);
+
+    //Return subtitle text with original price and percents
+    return sprintf(
+      'Was $%.2f - now %u%% off',
+      $price,
+      round(($price - $currentPrice) / $price  * 100)
     );
   }
 }

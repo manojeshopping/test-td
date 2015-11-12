@@ -195,6 +195,34 @@ class MVentory_TradeMe_Helper_Auction extends MVentory_TradeMe_Helper_Data
   }
 
   /**
+   * Determine and return sale status of auction
+   *
+   * Statuses:
+   *
+   *   1 - Auction wasn't sold or was withdrawn
+   *   2 - Auction was sold
+   *   3 - Auction is active
+   *
+   * @param array $listingDetails
+   *   Auction detais retrieved from TradeMe
+   *
+   * @return int
+   *   Sale status of the auction
+   */
+  public function getSaleStatus ($listingDetails) {
+    //Auction is active
+    if ($listingDetails['AsAt'] < $listingDetails['EndDate'])
+      return 3;
+
+    //Auction was sold
+    if ($listingDetails['BidCount'] > 0)
+      return 2;
+
+    //Auction wasn't sold or was withdrawn
+    return 1;
+  }
+
+  /**
    * Return period of time when listing of $1 auction is allowed using value
    * of Auction end time setting for the supplied store (it adds +/-30 mins
    * to that value)

@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */
 class Amasty_Table_Block_Adminhtml_Method_Edit extends Mage_Adminhtml_Block_Widget_Form_Container
 {
@@ -26,7 +28,7 @@ class Amasty_Table_Block_Adminhtml_Method_Edit extends Mage_Adminhtml_Block_Widg
                     'class' => 'add'
                 ),15);
 
-            $url = $this->getUrl('*/adminhtml_rate/edit', array('mid'=>$mid));  
+            $url = $this->getUrl('*/amtable_rate/edit', array('mid'=>$mid));
             $this->_formScripts[] = " function newRate(){ setLocation('$url'); } ";    
         }    
         $this->_formScripts[] = " function saveAndContinueEdit(){ editForm.submit($('edit_form').action + 'continue/edit') }";       

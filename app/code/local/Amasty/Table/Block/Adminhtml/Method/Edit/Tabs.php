@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */ 
 class Amasty_Table_Block_Adminhtml_Method_Edit_Tabs extends Mage_Adminhtml_Block_Widget_Tabs
 {
@@ -35,7 +37,7 @@ class Amasty_Table_Block_Adminhtml_Method_Edit_Tabs extends Mage_Adminhtml_Block
         $this->addTab('rates', array(
             'label'     => Mage::helper('amtable')->__('Methods and Rates'),
             'class'     => 'ajax',
-            'url'       => $this->getUrl('amtable/adminhtml_rate/index', array('_current' => true)),
+            'url'       => $this->getUrl('adminhtml/amtable_rate/index', array('_current' => true)),
         ));
     
         

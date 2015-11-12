@@ -9,10 +9,10 @@
 <config>
     <modules>
         <Amasty_Base>
-            <version>2.1.4</version>
+            <version>2.1.5</version>
         </Amasty_Base>
     </modules>
-  
+
     <global>
         <blocks>
             <ambase>
@@ -53,13 +53,13 @@
 
     <admin>
         <routers>
-            <ambase>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Amasty_Base</module>
-                    <frontName>ambase</frontName>
+                    <modules>
+                        <Amasty_Base after="Mage_Adminhtml">Amasty_Base_Adminhtml</Amasty_Base>
+                    </modules>
                 </args>
-            </ambase>
+            </adminhtml>
         </routers>
     </admin>
 

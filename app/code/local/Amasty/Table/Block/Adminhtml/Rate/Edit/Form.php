@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2010 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */  
 class Amasty_Table_Block_Adminhtml_Rate_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
 {
@@ -75,7 +77,7 @@ class Amasty_Table_Block_Adminhtml_Rate_Edit_Form extends Mage_Adminhtml_Block_W
             'label'     => $hlp->__('Shipping Type'),
             'name'      => 'shipping_type',
             'options'   => Mage::helper('amtable')->getTypes(), 
-        ));            
+        ));
         
         $fldTotals->addField('price_from', 'text', array(
             'label'     => $hlp->__('Price From'),
@@ -110,7 +112,12 @@ class Amasty_Table_Block_Adminhtml_Rate_Edit_Form extends Mage_Adminhtml_Block_W
           'label'     => $hlp->__('Fixed Rate per 1 unit of weight'),
           'name'      => 'cost_weight',
         ));
-        
+
+      $fldTotals->addField('time_delivery', 'text', array(
+          'label'     => $hlp->__('Estimated Delivery (days)'),
+          'name'      => 'time_delivery',
+      ));
+      
         //set form values
         $data = Mage::getSingleton('adminhtml/session')->getFormData();
         if ($data) {

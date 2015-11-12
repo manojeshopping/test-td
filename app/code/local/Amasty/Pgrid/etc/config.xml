@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Pgrid
+ */
+-->
 <config>
     <modules>
         <Amasty_Pgrid>
-            <version>4.8.1</version>
+            <version>4.12.6</version>
         </Amasty_Pgrid>
     </modules>
-    
+
     <admin>
         <routers>
-            <ampgrid>
-                <use>admin</use>
+            <adminhtml>
                 <args>
-                    <module>Amasty_Pgrid</module>
-                    <frontName>ampgrid</frontName>
+                    <modules>
+                        <Amasty_Pgrid after="Mage_Adminhtml">Amasty_Pgrid_Adminhtml</Amasty_Pgrid>
+                    </modules>
                 </args>
-            </ampgrid>
+            </adminhtml>
         </routers>
     </admin>
-    
+
     <frontend>
         <translate>
             <modules>
@@ -29,7 +36,7 @@
             </modules>
         </translate>
     </frontend>
-    
+
     <adminhtml>
         <translate>
             <modules>
@@ -57,9 +64,9 @@
                                     </children>
                                 </config>
                             </children>
-                        </system> 
+                        </system>
                      </children>
-                </admin> 
+                </admin>
             </resources>
         </acl>
         <layout>
@@ -80,7 +87,29 @@
             </ampgrid>
             <ampgrid_mysql4>
                 <class>Amasty_Pgrid_Model_Mysql4</class>
+                <entities>
+                    <qty_sold>
+                        <table>am_pgrid_qty_sold</table>
+                    </qty_sold>
+                    <grid_group>
+                        <table>amasty_pgrid_grid_column_grid</table>
+                    </grid_group>
+                    <grid_column>
+                        <table>amasty_pgrid_grid_column</table>
+                    </grid_column>
+                    <grid_group_column>
+                        <table>amasty_pgrid_group_column</table>
+                    </grid_group_column>
+                    <grid_group_attribute>
+                        <table>amasty_pgrid_group_attribute</table>
+                    </grid_group_attribute>
+                </entities>
             </ampgrid_mysql4>
+            <eav>
+                <rewrite>
+                    <entity_attribute_backend_time_created>Amasty_Pgrid_Model_Eav_Entity_Attribute_Backend_Time_Created</entity_attribute_backend_time_created>
+                </rewrite>
+            </eav>
         </models>
         
 		<resources>
@@ -112,12 +141,47 @@
                 </rewrite>
             </adminhtml>
         </blocks>
-        
+
+        <events>
+            <sales_model_service_quote_submit_success>
+                <observers>
+                    <ampgrid_qty_sold>
+                        <class>Amasty_Pgrid_Model_Observer</class>
+                        <method>reindexQtySold</method>
+                    </ampgrid_qty_sold>
+                </observers>
+            </sales_model_service_quote_submit_success>
+            <sales_order_creditmemo_save_after>
+                <observers>
+                    <ampgrid_qty_sold>
+                        <class>Amasty_Pgrid_Model_Observer</class>
+                        <method>refundOrderInventory</method>
+                    </ampgrid_qty_sold>
+                </observers>
+            </sales_order_creditmemo_save_after>
+            <admin_system_config_section_save_after>
+                <observers>
+                    <ampgrid_qty_sold>
+                        <class>Amasty_Pgrid_Model_Observer</class>
+                        <method>addNoticeIndex</method>
+                    </ampgrid_qty_sold>
+                </observers>
+            </admin_system_config_section_save_after>
+        </events>
+
         <helpers>
             <ampgrid>
                 <class>Amasty_Pgrid_Helper</class>
             </ampgrid>
         </helpers>
+
+        <index>
+            <indexer>
+                <ampgrid_sold>
+                    <model>ampgrid/sold_indexer</model>
+                </ampgrid_sold>
+            </indexer>
+        </index>
 
     </global>
     
@@ -125,6 +189,8 @@
     <default>
         <ampgrid>
            <general>
+               <just_installed>1</just_installed>
+               <exported_columns_from_system>0</exported_columns_from_system>
                <sorting>1</sorting>
                <number_of_records>20</number_of_records>
            </general>
@@ -151,6 +217,7 @@
                <category_filter>0</category_filter>
                <special_price_dates>0</special_price_dates>
                <created_at>1</created_at>
+               <qty_sold>1</qty_sold>
                <modified_at>0</modified_at>
                <related_products>0</related_products>
                <up_sells>0</up_sells>
@@ -159,6 +226,7 @@
                <low_stock>0</low_stock>
                <products_qty>5</products_qty>
                <remove></remove>
+               <share_attribute_templates>0</share_attribute_templates>
            </additional>
            <cond>
                <availability>0</availability>
@@ -166,6 +234,9 @@
            <category>
                <thumb>1</thumb>
            </category>
+            <group>
+                <sorting>thumb,categories,entity_id,name,type,set_name,sku,price,qty,visibility,status,websites,created_at,qty_sold,action</sorting>
+            </group>
         </ampgrid>
     </default>
     

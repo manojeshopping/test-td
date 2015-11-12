@@ -490,6 +490,18 @@
 
         <image translate="label">
           <label>Image</label>
+          <footer><![CDATA[
+            <h4>Follow these steps to create a watermark</h4>
+            <ol class="trademe-setting-list">
+              <li>Create a white background 670&times;502 pixels</li>
+              <li>Open the logo image and change any white pixels inside the logo to just off-white (#FEFEFE)</li>
+              <li>Resize the logo to appropriate size (should be around 100-150px square, see what looks good) and place it in the top left corner of background from step 1.</li>
+              <li>Save as png and upload as watermark</li>
+              <li>Set Opacity to 100</li>
+              <li>Set Position to Stretch</li>
+            </ol>
+            <p>Note: Do not touch any other settings</p>
+          ]]></footer>
           <frontend_model>trademe/setting_fieldset</frontend_model>
 
           <show_in_default>1</show_in_default>

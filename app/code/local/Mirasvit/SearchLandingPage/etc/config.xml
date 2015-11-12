@@ -73,13 +73,13 @@
     </frontend>
     <admin>
         <routers>
-            <searchlandingpage>
-                <use>admin</use>
-                <args>
-                    <module>Mirasvit_SearchLandingPage</module>
-                    <frontName>searchlandingpage</frontName>
-                </args>
-            </searchlandingpage>
+            <adminhtml>
+				<args>
+					<modules>
+						<searchlandingpage after="Mage_Adminhtml">Mirasvit_SearchLandingPage_Adminhtml</searchlandingpage>
+					</modules>
+				</args>
+			</adminhtml>
         </routers>
     </admin>
 </config>

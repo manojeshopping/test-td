@@ -1,9 +1,9 @@
 <?php
 /**
-* @author Amasty Team
-* @copyright Copyright (c) 2010-2011 Amasty (http://www.amasty.com)
-* @package Amasty_Pgrid
-*/
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Pgrid
+ */
 class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
 {
     protected function _getStore()
@@ -11,10 +11,11 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
         $ret = NULL;
         
         $storeId = $this->_getStoreId();
-//        var_dump($storeId);
-        
+
         if ($storeId === 0){
-            $ret = Mage::app()->getWebsite(true)->getDefaultStore();
+            
+            $ret = Mage::app()->getWebsite(true) ? 
+                    Mage::app()->getWebsite(true)->getDefaultStore() : Mage::app()->getStore();
         }
         else
             $ret = Mage::app()->getStore($storeId);
@@ -27,116 +28,112 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
         return $storeId;
     }
 
-
     public function getColumnsProperties($json = true, $reloadAttributes = false)
     {
         $prop = array();
-        
-        if (Mage::getStoreConfig('ampgrid/cols/name'))
-        {
-            $prop['name'] = array(
-                'type'      => 'text',
-                'col'       => 'name',
-            );
-            
-            $prop['custom_name'] = array(
-                'type'      => 'text',
-                'col'       => 'custom_name',
-            );
+
+        $allColumns = Mage::getModel('ampgrid/column')->getCollectionAll($this->getSelectedGroupId());
+        foreach ($allColumns as $column) {
+            /**
+             * @var Amasty_Pgrid_Model_Column $column
+             */
+            if (!$column->isEditable()) {
+                continue;
+            }
+            switch ($column->getCode()) {
+
+                case 'name':
+                    $prop['name'] = array(
+                        'type'      => 'text',
+                        'col'       => 'name',
+                        'class' => Mage::getModel('eav/entity_attribute')->loadByCode('catalog_product', 'name')->getFrontend()->getClass()
+                    );
+
+                    $prop['custom_name'] = array(
+                        'type'      => 'text',
+                        'col'       => 'custom_name',
+                    );
+                    break;
+                case 'sku':
+                    $prop['sku'] = array(
+                        'type'      => 'text',
+                        'col'       => 'sku',
+                        'class' => Mage::getModel('eav/entity_attribute')->loadByCode('catalog_product', 'sku')->getFrontend()->getClass()
+                    );
+                    break;
+                case 'price':
+                    $prop['price'] = array(
+                        'type'      => 'price',
+                        'col'       => 'price',
+                        'format'    => 'numeric',
+                        'class' => Mage::getModel('eav/entity_attribute')->loadByCode('catalog_product', 'price')->getFrontend()->getClass()
+                    );
+                    break;
+                case 'qty':
+                    $prop['qty'] = array(
+                        'type'      => 'text',
+                        'col'       => 'qty',
+                        'obj'       => 'stock_item',
+                        'format'    => 'numeric',
+                        'class' => Mage::getModel('eav/entity_attribute')->loadByCode('catalog_product', 'qty')->getFrontend()->getClass()
+                    );
+                    break;
+                case 'is_in_stock':
+                    $prop['is_in_stock'] = array(
+                        'type'      => 'select',
+                        'options'   => array(0 => $this->__('Out of stock'), 1 => $this->__('In stock')),
+                        'col'       => 'is_in_stock',
+                        'obj'       => 'stock_item',
+                    );
+                    break;
+                case 'visibility':
+                    $visibilityOptions = Mage::getModel('catalog/product_visibility')->getOptionArray();
+                    $prop['visibility'] = array(
+                        'type'      => 'select',
+                        'options'   => $visibilityOptions,
+                        'col'       => 'visibility',
+                    );
+                    break;
+                case 'status':
+                    $statusOptions = Mage::getSingleton('catalog/product_status')->getOptionArray();
+                    $prop['status'] = array(
+                        'type'      => 'select',
+                        'options'   => $statusOptions,
+                        'col'       => 'status',
+                    );
+                    break;
+                case 'special_price':
+                    $prop['special_price'] = array(
+                        'type'      => 'price',
+                        'col'       => 'special_price',
+                        'format'    => 'numeric',
+                    );
+                    break;
+                case 'am_special_from_date':
+                    $prop['am_special_from_date'] = array(
+                        'type'      => 'date',
+                        'col'       => 'am_special_from_date',
+                    );
+                    break;
+                case 'am_special_to_date':
+                    $prop['am_special_to_date'] = array(
+                        'type'      => 'date',
+                        'col'       => 'am_special_to_date',
+                    );
+                    break;
+                case 'cost':
+                    $prop['cost'] = array(
+                        'type'      => 'price',
+                        'col'       => 'cost',
+                        'format'    => 'numeric',
+                    );
+                    break;
+            }
         }
 
-        if (Mage::getStoreConfig('ampgrid/cols/sku'))
-        {
-            $prop['sku'] = array(
-                'type'      => 'text',
-                'col'       => 'sku',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/cols/price'))
-        {
-            $prop['price'] = array(
-                'type'      => 'price',
-                'col'       => 'price',
-                'format'    => 'numeric',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/cols/qty'))
-        {
-            $prop['qty'] = array(
-                'type'      => 'text',
-                'col'       => 'qty',
-                'obj'       => 'stock_item',
-                'format'    => 'numeric',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/avail'))
-        {
-            $prop['is_in_stock'] = array(
-                'type'      => 'select',
-                'options'   => array(0 => $this->__('Out of stock'), 1 => $this->__('In stock')),
-                'col'       => 'is_in_stock',
-                'obj'       => 'stock_item',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/cols/vis'))
-        {
-            $visibilityOptions = Mage::getModel('catalog/product_visibility')->getOptionArray();
-            $prop['visibility'] = array(
-                'type'      => 'select',
-                'options'   => $visibilityOptions,
-                'col'       => 'visibility',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/cols/status'))
-        {
-            $statusOptions = Mage::getSingleton('catalog/product_status')->getOptionArray();
-            $prop['status'] = array(
-                'type'      => 'select',
-                'options'   => $statusOptions,
-                'col'       => 'status',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/special_price'))
-        {
-            $prop['special_price'] = array(
-                'type'      => 'price',
-                'col'       => 'special_price',
-                'format'    => 'numeric',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/special_price_dates'))
-        {
-            $prop['special_from_date'] = array(
-                'type'      => 'date',
-                'col'       => 'special_from_date',
-            );
-            $prop['special_to_date'] = array(
-                'type'      => 'date',
-                'col'       => 'special_to_date',
-            );
-        }
-        
-        if (Mage::getStoreConfig('ampgrid/additional/cost'))
-        {
-            $prop['cost'] = array(
-                'type'      => 'price',
-                'col'       => 'cost',
-                'format'    => 'numeric',
-            );
-        }
-
-        if (Mage::getStoreConfig('ampgrid/attr/cols'))
-        {
             if ($reloadAttributes)
             {
-                $attributes = $this->prepareGridAttributesCollection();
+                $attributes = $this->prepareGridAttributesCollection($this->getSelectedGroupId());
                 Mage::register('ampgrid_grid_attributes', $attributes);
             }
             
@@ -146,8 +143,15 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
             {
                 foreach ($attributes as $attribute)
                 {
+                    /**
+                     * @var Amasty_Pgrid_Model_Groupattribute $attribute
+                     */
+                    if(!$attribute->getIsEditable()) {
+                        continue;
+                    }
                     $prop[$attribute->getAttributeCode()] = array(
                         'col'       => $attribute->getAttributeCode(),
+                        'class' => $attribute->getFrontend()->getClass(),
                         'source'    => 'attribute', // will be used to make difference between default columns and attribute columns
                     );
                     if ('select' == $attribute->getFrontendInput() || 'multiselect' == $attribute->getFrontendInput() || 'boolean'  == $attribute->getFrontendInput())
@@ -239,7 +243,6 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
                     }
                 }
             }
-        }
 
         if (!$json)
         {
@@ -258,7 +261,7 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
         foreach ($gridAttributes as $attribute)
         {
             $props = array(
-                'header'=> $attribute->getStoreLabel(),
+                'header'=> $attribute->getCustomTitle() ? $attribute->getCustomTitle() : $attribute->getStoreLabel(),
                 'index' => $attribute->getAttributeCode(),
                 'filter_index' => 'am_attribute_'.$attribute->getAttributeCode()
             );
@@ -359,46 +362,37 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
     
-    public function getGridAttributes($attributesKey = '')
+    public function getGridAttributes($groupId)
     {
-        // will load columns by admin users, if necessary
-        $extraKey = $attributesKey;
-        if (Mage::getStoreConfig('ampgrid/attr/byadmin'))
-        {
-            $extraKey .= Mage::getSingleton('admin/session')->getUser()->getId();
-        }
-        
-        $selected = (string) Mage::getStoreConfig('ampgrid/attributes/ongrid' . $extraKey);
-        if ($selected)
-        {
-            return explode(',', $selected);
-        }
-        return array();
+        /**
+         * @var Amasty_Pgrid_Model_Group $group
+         */
+        $group = $this->getCurrentGridGroup($groupId);
+
+        $selected = $group->getAttributes();
+
+        return $selected;
     }
-    
-    public function isCategoryColumnEnabled(){
-        $extraKey = '';
-        if (Mage::getStoreConfig('ampgrid/attr/byadmin'))
-        {
-            $extraKey .= Mage::getSingleton('admin/session')->getUser()->getId();
-        }
-        
-        $category = Mage::getStoreConfig('ampgrid/attributes/category' . $extraKey);
-        if ($category === NULL){
-            //OLD OPTION BY DEFAULT
-            $category = Mage::getStoreConfig('ampgrid/additional/category');
-        }
-        
-        return $category == 1;
-    }
-    
-    public function prepareGridAttributesCollection($attributesKey = '')
+
+    public function prepareGridAttributesCollection($groupId)
     {
         $attributes = Mage::getResourceModel('catalog/product_attribute_collection')
                          ->addVisibleFilter()
                          ->addStoreLabel($this->getStore()->getId());
-        $attributes->getSelect()->where(
-            $attributes->getConnection()->quoteInto('main_table.attribute_id IN (?)', Mage::helper('ampgrid')->getGridAttributes($attributesKey))
+
+        $conditions = array(
+            'main_table.attribute_id = attribute_columns.attribute_id',
+            $attributes->getConnection()->quoteInto(
+                'attribute_columns.attribute_id IN (?)',
+                Mage::helper('ampgrid')->getGridAttributes($groupId)
+            ),
+            $attributes->getConnection()->quoteInto('attribute_columns.group_id = ?',$groupId),
+        );
+        $attributes->getSelect()->joinInner(
+            array('attribute_columns' => $attributes->getTable(
+                'ampgrid/grid_group_attribute'
+            )), implode(' AND ', $conditions),
+            array('group_id', 'is_editable', 'custom_title')
         );
         return $attributes;
     }
@@ -406,8 +400,6 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
     public function getStore()
     {
         return $this->_getStore();
-//        $storeId = (int) Mage::app()->getRequest()->getParam('store', 0);
-//        return Mage::app()->getStore($storeId);
     }
     
     public function getGridThumbSize()
@@ -418,5 +410,90 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
     public function getAllowedQtyMath()
     {
         return 'true';
+    }
+
+    public function addNoticeIndex() {
+        $process = Mage::getSingleton('index/indexer')->getProcessByCode('ampgrid_sold');
+        $process->setStatus(Mage_Index_Model_Process::STATUS_REQUIRE_REINDEX);
+        $process->save();
+    }
+
+    /**
+     * Get selected Group for user
+     *
+     * @param string $attributesKey
+     * @return int
+     */
+    public function getSelectedGroupId($attributesKey = '')
+    {
+        // will load columns by admin users, if necessary
+        $extraKey = $attributesKey;
+        if (Mage::getStoreConfig('ampgrid/attr/byadmin'))
+        {
+            $extraKey .= Mage::getSingleton('admin/session')->getUser()->getId();
+        }
+        $groupId = Mage::getStoreConfig('ampgrid/attributes/ongrid' . $extraKey)
+            ? Mage::getStoreConfig('ampgrid/attributes/ongrid' . $extraKey) : 0;
+
+        return (int)$groupId;
+    }
+
+    public function getDefaultGroup($attributesKey = '')
+    {
+       return Mage::getStoreConfig('ampgrid/attributes/ongrid'. $attributesKey);
+    }
+    /**
+     * Get selected Sorting for user
+     *
+     * @param int $groupId
+     * @return array
+     */
+    public function getSelectedSorting($groupId)
+    {
+
+        $sorting = Mage::getStoreConfig('ampgrid/group/sorting' . $groupId)
+            ? Mage::getStoreConfig('ampgrid/group/sorting' . $groupId)
+            : Mage::getStoreConfig('ampgrid/group/sorting');
+
+        return $sorting ? explode(',', $sorting) : array();
+    }
+
+    /**
+     *
+     * @param int $groupId
+     *
+     * @return Amasty_Pgrid_Model_Group
+     */
+    public function getCurrentGridGroup($groupId)
+    {
+        return Mage::getModel('ampgrid/group')->load($groupId);
+    }
+
+    /**
+     * @param int $userId
+     * @return Amasty_Pgrid_Model_Mysql4_Group_Collection
+     */
+    public function getGroupsByUserId($userId = null)
+    {
+        $groups = Mage::getModel('ampgrid/group')->getCollection();
+        $userId = $userId ? $userId : Mage::getSingleton('admin/session')->getUser()->getId();
+
+        if(!Mage::getStoreConfig('ampgrid/additional/share_attribute_templates')) {
+            $groupIds = array();
+            $groupIds[] = Mage::getStoreConfig('ampgrid/attributes/ongrid');
+            if(!empty($groupIds)) {
+                $groups->addFieldToFilter(
+                    array('is_default', 'user_id', 'entity_id'),
+                    array(1, $userId, array('in' => $groupIds))
+                );
+            } else {
+                $groups->addFieldToFilter(
+                    array('is_default', 'user_id'),
+                    array(1, $userId)
+                );
+            }
+        }
+
+        return $groups;
     }
 }

@@ -1,7 +1,9 @@
 <?php
 /**
-* @copyright Amasty.
-*/
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
+ */
 $this->startSetup();
 
 $this->run("

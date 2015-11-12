@@ -1,16 +1,29 @@
 <?php
 /**
-* @author Amasty Team
-* @copyright Copyright (c) 2010-2011 Amasty (http://www.amasty.com)
-* @package Amasty_Pgrid
-*/
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Pgrid
+ */
 ?>
-<?php 
+<?php
+/**
+ * @var Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid_Jsinit $this
+ */
 $_editMode = Mage::getStoreConfig('ampgrid/editing/mode');
 ?>
 <script type="text/javascript">
 Event.observe(window, 'load', function(){
-    peditGrid  = new amPgrid(<?php echo $this->getColumnsProperties(); ?>, '<?php echo $this->getSaveUrl(); ?>', '<?php echo $this->getSaveAllUrl(); ?>', <?php echo $this->getStoreId(); ?>, '%b %d, %Y', '<?php echo Mage::getDesign()->getSkinUrl('images/grid-cal.gif'); ?>', {quantity_math: <?php echo Mage::helper('ampgrid')->getAllowedQtyMath(); ?>, mode: '<?php echo $_editMode; ?>'});
+    pAttribute = new amPattribute('<?php echo $this->__('Grid Columns'); ?>');
+    peditGrid = new amPgrid(
+        <?php echo $this->getColumnsProperties(); ?>,
+        '<?php echo $this->getSaveUrl(); ?>',
+        '<?php echo $this->getSaveAllUrl(); ?>',
+        <?php echo $this->getStoreId(); ?>,
+        "<?php echo Mage::app()->getLocale()->getDateStrFormat(Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM) ?>",
+        '<?php echo Mage::getDesign()->getSkinUrl('images/grid-cal.gif'); ?>', {
+        quantity_math: <?php echo Mage::helper('ampgrid')->getAllowedQtyMath(); ?>,
+        mode: '<?php echo $_editMode; ?>'
+    });
 });
 Event.observe(window, 'load', function(){
     pgridSortable  = new amPgridSortable('productGrid_table', 'pgridSortable_button', '<?php echo $this->__('Sort Columns'); ?>', '<?php echo $this->__('Save Sorting'); ?>', '<?php echo $this->getSaveSortingUrl(); ?>', '<?php echo $this->getUrl('*/*/*'); ?>');

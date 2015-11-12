@@ -1,4 +1,11 @@
 <?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Pgrid
+ */
+-->
 <config>
     <translate>
         <modules>
@@ -16,6 +23,14 @@
             </all>
             <admin>
                 <children>
+                    <catalog>
+                            <children>
+                                <ampgrid translate="title" module="ampgrid">
+                                    <title>Extended Product Grid with Editor</title>
+                                    <sort_order>400</sort_order>
+                                </ampgrid>
+                            </children>
+                    </catalog>
                     <system>
                         <children>
                             <config>

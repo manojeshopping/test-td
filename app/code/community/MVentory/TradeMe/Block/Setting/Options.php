@@ -31,8 +31,10 @@ class MVentory_TradeMe_Block_Setting_Options
                  ->getRequest()
                  ->getParam('website', '');
 
-    $url = $this->getUrl('trademe/options/export', compact('website'))
-           . 'options.csv';
+    $url = $this->getUrl(
+      'adminhtml/trademe_options/export',
+      compact('website')
+    );
 
     $data = array(
       'label' => $this->__('Export CSV'),

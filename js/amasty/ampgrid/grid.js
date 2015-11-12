@@ -23,6 +23,7 @@ amPgrid.prototype = {
         this.dateFormat    = dateFormat;
         this.calendarUrl   = calendarUrl;
         this.options       = options;
+        this.tableForm = new varienForm($('productGrid_table'));
         
         this.saveAllButtonId = 'ampgrid_saveall_button';
         
@@ -116,13 +117,16 @@ amPgrid.prototype = {
                     input = document.createElement('input');
                     input.type = 'text';
                     input.value = value;
+                    if (field['class']){
+                        input.addClassName(field['class'])
+                    }
                     if ("qty" == field.col && this.options.quantity_math)
                     {
                     	input.value += '+';
                     }
                     if (Prototype.Browser.IE && !Prototype.Browser.IE9) {
                         input.setAttribute('class', "ampgrid_input_text editable");
-                    } else 
+                    } else
                     {
                         input.addClassName('ampgrid_input_text');
                         input.addClassName('editable');
@@ -148,18 +152,17 @@ amPgrid.prototype = {
 		                    $(element).value = $(element).value;
 	                    }
                     }
-					
+
                 break;
                 case 'textarea':
                 	area = document.createElement('textarea');
                     value=value.replace(new RegExp('&lt;','g'), '<');
-                    value=value.replace(new RegExp('&gt;','g'), '>');  
-                                      
+                    value=value.replace(new RegExp('&gt;','g'), '>');
+
                 	area.value = value;
                     if (Prototype.Browser.IE && !Prototype.Browser.IE9) {
                     	area.setAttribute('class', "ampgrid_input_text editable");
-                    } else 
-                    {
+                    } else {
                     	area.addClassName('ampgrid_input_text');
                     	area.addClassName('editable');
                     }
@@ -178,12 +181,11 @@ amPgrid.prototype = {
                     sel = document.createElement('select');
                     if (Prototype.Browser.IE && !Prototype.Browser.IE9) {
                         sel.setAttribute('class', "ampgrid_input_select editable");
-                    } else 
-                    {
+                    } else {
                         sel.addClassName('ampgrid_input_select');
                         sel.addClassName('editable');
                     }
-                   
+
 					var sortable = [];
 					for (var option in field.options)
 						  sortable.push([option, field.options[option]]);
@@ -198,7 +200,7 @@ amPgrid.prototype = {
 					});
 
 					var h = sortable; //var h = $H(field.options);
-					
+
                     h.each(function(optionItem){
                         var val   = optionItem[0];
                         var label = optionItem[1];
@@ -217,18 +219,25 @@ amPgrid.prototype = {
                     });
                     td.innerHTML = '';
                     td.appendChild(sel);
-                    var element = sel;
-                    $(element).observe('change',   this.cellSave.bindAsEventListener(this, field, td));
-                    $(element).observe('blur',     this.cellSave.bindAsEventListener(this, field, td));
-                    element.focus();
-                break;
+                    var chosen = new Chosen(sel,{
+                        search_contains: true,
+                        allow_single_deselect:true,
+                        width: '100%'
+                    });
+
+
+                    var scrollHorizontal = $$('.hor-scroll')[0].scrollLeft;
+                    Event.fire(chosen.form_field, "chosen:activate");
+                    sel.observe('change', this.cellSave.bindAsEventListener(this, field, td));
+                    chosen.form_field.observe('chosen:blur', this.cellSave.bindAsEventListener(this, field, td));
+                    $$('.hor-scroll')[0].scrollLeft = scrollHorizontal;
+                    break;
                 case 'multiselect':
                     sel = document.createElement('select');
                     sel.multiple = true;
                     if (Prototype.Browser.IE && !Prototype.Browser.IE9) {
                         sel.setAttribute('class', "ampgrid_input_select editable");
-                    } else 
-                    {
+                    } else {
                         sel.addClassName('ampgrid_input_select');
                         sel.addClassName('editable');
                     }
@@ -270,8 +279,13 @@ amPgrid.prototype = {
                     td.innerHTML = '';
                     td.appendChild(sel);
                     var element = sel;
-                    $(element).observe('blur',     this.cellSave.bindAsEventListener(this, field, td));
-                    element.focus();
+                    var chosen = new Chosen(sel,{
+                        search_contains: true,
+                        allow_single_deselect:true,
+                        width: '100%'
+                    });
+                    Event.fire(chosen.form_field, "chosen:activate");
+                    chosen.form_field.observe('chosen:blur', this.cellSave.bindAsEventListener(this, field, td));
                 break;
                 case 'date':
                     input = document.createElement('input');
@@ -279,8 +293,7 @@ amPgrid.prototype = {
                     input.value = value;
                     if (Prototype.Browser.IE && !Prototype.Browser.IE9) {
                         input.setAttribute('class', "ampgrid_input_text ampgrid_input_date editable");
-                    } else 
-                    {
+                    } else {
                         input.addClassName('ampgrid_input_text');
                         input.addClassName('ampgrid_input_date');
                         input.addClassName('editable');
@@ -292,7 +305,7 @@ amPgrid.prototype = {
                     element.style.top = '-1px';
                     element.style.left = '-2px';
                     element.readOnly = true;
-                    
+
                     // creating calendar button
                     calendarBtn = document.createElement('img');
                     calendarBtn.src = this.calendarUrl;
@@ -302,7 +315,7 @@ amPgrid.prototype = {
                     calendarBtn.style.position = 'relative';
                     calendarBtn.style.top = '2px';
                     calendarBtn.style.left = '1px';
-                    
+
                     Calendar.setup({
                         inputField : element.identify(),
                         ifFormat : this.dateFormat,
@@ -311,12 +324,17 @@ amPgrid.prototype = {
                         singleClick : true,
                         onClose : function(cal) {
                             cal.hide();
+                            var date = new Date(cal.date);
+                            td.down('input').setAttribute(
+                                'data-value',
+                                date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()
+                            );
                             this.cellSave(this, field, td);
                         }.bind(this)
                     });
-                    
+
                     calendarBtn.click();
-                    
+
                 break;
             }
         }
@@ -325,12 +343,16 @@ amPgrid.prototype = {
     
     cellSave: function(event)
     {
+        if (!this.tableForm.validate()){
+            return ;
+        }
+        
         var args = $A(arguments);
         var field = args[1];
         var td    = args[2];
         
         var element = td.select('.editable')[0];
-		
+
         if (!element)
         {
             return;
@@ -338,11 +360,13 @@ amPgrid.prototype = {
         
         element.addClassName('progressing');
         element.removeClassName('editable');
-        
+
+        var displayValue;
+        var saveValue;
         switch (element.type)
         {
             case 'select-one':
-                var newValue = element.options[element.selectedIndex].text;
+                displayValue = element.options[element.selectedIndex].innerHTML;
             break;
             case 'select-multiple':
                 var selectedValues = '';
@@ -355,18 +379,23 @@ amPgrid.prototype = {
                 {
                     selectedValues = selectedValues.substr(0, selectedValues.length - 2);
                 }
-                var newValue = selectedValues;
+                displayValue = selectedValues;
             break;
             default:
-                var newValue = element.value;
+                displayValue = element.value;
             break;
         }
 
-        if (newValue != this.values[td.identify()])
+        if (displayValue != this.values[td.identify()])
         {
             productId     = this.productIds[td.identify()];
             var saveValue = element.value;
-            
+
+            var attrValue = element.readAttribute('data-value');
+            if (attrValue) {
+                saveValue = attrValue;
+            }
+
     	    if ('select-multiple' == element.type)
 	        {
 	            saveValue = '';
@@ -400,8 +429,8 @@ amPgrid.prototype = {
                                 element.removeClassName('progressing');
                             }
                             if (response.success) {
-						        if(field.col == 'custom_name'){
-								    td.innerHTML = saveValue;
+						        if(field.col == 'custom_name' || displayValue != saveValue){
+								    td.innerHTML = displayValue;
                                 } else {								
                                     td.innerHTML = response.value;
 								}
@@ -454,7 +483,7 @@ amPgrid.prototype = {
             }
         } else 
         {
-            td.innerHTML = this.values[td.identify()];
+            td.innerText = td.textContent = this.values[td.identify()];
             td.removeClassName('clicked');
         }
         

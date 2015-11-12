@@ -1,9 +1,9 @@
 <?php
 /**
-* @author Amasty Team
-* @copyright Copyright (c) 2010-2011 Amasty (http://www.amasty.com)
-* @package Amasty_Pgrid
-*/
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Pgrid
+ */
 class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid_Jsinit extends Mage_Adminhtml_Block_Template
 {
     protected function _construct()
@@ -20,7 +20,7 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid_Jsinit extends Mage_Admi
     
     public function getSaveUrl()
     {
-        $url = $this->getUrl('ampgrid/adminhtml_field/save');
+        $url = $this->getUrl('adminhtml/ampgrid_field/save');
         if (Mage::getStoreConfig('web/secure/use_in_adminhtml'))
         {
             $url = str_replace(Mage::getStoreConfig('web/unsecure/base_url'), Mage::getStoreConfig('web/secure/base_url'), $url);
@@ -30,7 +30,7 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid_Jsinit extends Mage_Admi
     
     public function getSaveAllUrl()
     {
-        $url = $this->getUrl('ampgrid/adminhtml_field/saveall');
+        $url = $this->getUrl('adminhtml/ampgrid_field/saveall');
         if (Mage::getStoreConfig('web/secure/use_in_adminhtml'))
         {
             $url = str_replace(Mage::getStoreConfig('web/unsecure/base_url'), Mage::getStoreConfig('web/secure/base_url'), $url);
@@ -40,7 +40,7 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid_Jsinit extends Mage_Admi
 
     public function getSaveSortingUrl()
     {
-        $url = $this->getUrl('ampgrid/adminhtml_field/savesorting');
+        $url = $this->getUrl('adminhtml/ampgrid_field/savesorting');
         if (Mage::getStoreConfig('web/secure/use_in_adminhtml'))
         {
             $url = str_replace(Mage::getStoreConfig('web/unsecure/base_url'), Mage::getStoreConfig('web/secure/base_url'), $url);

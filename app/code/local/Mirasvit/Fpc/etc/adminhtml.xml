@@ -40,7 +40,7 @@
                         <crawler module="fpc">
                             <title>Crawler URLs</title>
                             <sort_order>10</sort_order>
-                            <action>fpc/adminhtml_crawler_url</action>
+                            <action>adminhtml/fpc_crawler_url</action>
                         </crawler>
                         <fpc_settings module="fpc">
                             <title>Settings</title>

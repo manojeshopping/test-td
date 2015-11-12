@@ -34,9 +34,11 @@ class MVentory_TradeMe_Block_Settings extends Mage_Adminhtml_Block_Abstract
   protected function _toHtml () {
     $trademe = array(
       'url' => array(
-        'authenticate' => $this->_getUrl('trademe/account/authenticate'),
-        'canremove' => $this->_getUrl('trademe/account/canremove'),
-        'remove' => $this->_getUrl('trademe/account/remove')
+        'authenticate' => $this->_getUrl(
+          'adminhtml/trademe_account/authenticate'
+        ),
+        'canremove' => $this->_getUrl('adminhtml/trademe_account/canremove'),
+        'remove' => $this->_getUrl('adminhtml/trademe_account/remove')
       )
     );
 

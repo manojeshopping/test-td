@@ -8,7 +8,7 @@
                         <mst_extensions translate="title">
                             <title>Mirasvit Extensions Validator</title>
                             <sort_order>1001</sort_order>
-                            <action>mstcore/adminhtml_validator/index</action>
+                            <action>adminhtml/mstcore_validator/index</action>
                         </mst_extensions>
                     </children>
                 </tools>

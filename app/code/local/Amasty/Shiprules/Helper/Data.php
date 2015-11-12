@@ -1,9 +1,14 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */ 
 class Amasty_Shiprules_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    protected $_counter;
+    protected $_firstTime = true;
+
     public function getAllGroups()
     {
         $customerGroups = Mage::getResourceModel('customer/group_collection')
@@ -76,6 +81,44 @@ class Amasty_Shiprules_Helper_Data extends Mage_Core_Helper_Abstract
         }
         
         return $rules;
-    }     
-         
+    }
+
+    public function getShippingPrice($block, $price, $flag)
+    {
+        $i = 0;
+        $oldPrice = 0;
+        $groups = method_exists($block, 'getEstimateRates') ? $block->getEstimateRates() : $block->getShippingRates();
+        foreach ($groups as $group) {
+            foreach ($group as $rate) {
+                $oldPrice = $rate->getOldPrice();
+                if ($i == $block->_counter) {
+                    break 2;
+                }
+                $i++;
+            }
+        }
+        $newPrice = $block->getQuote()->getStore()->convertPrice(
+                Mage::helper('tax')->getShippingPrice($price, $flag, $block->getAddress()), $block->getQuote()->getCustomerTaxClassId()
+            );
+
+        if ($block->_firstTime) {
+            $block->_counter++;
+            $block->_firstTime = false;
+        } else {
+            $block->_firstTime = true;
+        }
+        if (Mage::getStoreConfig("amshiprules/discount/show_discount") && ($oldPrice > $price)) {
+            $newPrice = '<span style="' . Mage::getStoreConfig("amshiprules/discount/old_price_style") . '">' . $oldPrice . '</span>' . ' ' .
+                '<span style="' . Mage::getStoreConfig("amshiprules/discount/new_price_style") . '">' . $newPrice . '</span>';
+        }
+        return $newPrice;
+    }
+
+    public function getPromotionsCartLink()
+    {
+        $promotionsCartUrl = Mage::helper('adminhtml')->getUrl('adminhtml/promo_quote');
+        $link = '<a href="' . $promotionsCartUrl . '">Promotions / Shopping Cart Rules</a>';
+
+        return $link;
+    }
 }

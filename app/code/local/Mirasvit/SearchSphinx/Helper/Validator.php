@@ -150,7 +150,7 @@ class Mirasvit_SearchSphinx_Helper_Validator extends Mirasvit_MstCore_Helper_Val
             $attributes = Mage::getModel('searchindex/index')->load($index->getId())->getAttributes();
 
             if (empty($attributes)) {
-                $url = Mage::helper('adminhtml')->getUrl('searchindex/adminhtml_index/edit', array('id' => $index->getId()));
+                $url = Mage::helper('adminhtml')->getUrl('adminhtml/searchindex_index/edit', array('id' => $index->getId()));
                 $result = self::WARNING;
                 $description[] = "Please configure the search index 'Products' to see more relevant search results.";
                 $description[] = "For this, go to the Search / Manage Search Indexes and open index 'Products': <a href='$url' target='_blank'>$url</a>";

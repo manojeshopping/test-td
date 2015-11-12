@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */ 
 class Amasty_Shiprules_Model_Rule extends Mage_Rule_Model_Rule
 {
@@ -99,6 +101,7 @@ class Amasty_Shiprules_Model_Rule extends Mage_Rule_Model_Rule
         
         // fixed per each item
         $qty = $this->getIgnorePromo() ? $totals['qty'] : $totals['not_free_qty'];
+        $weight = $this->getIgnorePromo() ? $totals['weight'] : $totals['not_free_weight'];
         if ($qty > 0){
             // base rate, but only in cases at lest one product is not free
             $rate += $this->getRateBase();
@@ -108,18 +111,9 @@ class Amasty_Shiprules_Model_Rule extends Mage_Rule_Model_Rule
         
         // percent per each item
         $price = $this->getIgnorePromo() ? $totals['price'] : $totals['not_free_price'];
-        $rate += $price * $this->getRatePercent() / 100;   
-        
-        $max = $this->getRateMax();
-        if ($max > 0.01){
-            $rate = min($max, $rate);    
-        }
-          
-        $min = $this->getRateMin();
-        if ($min > 0.01){
-            $rate = max($min, $rate);    
-        }
-        
+        $rate += $price * $this->getRatePercent() / 100;
+        $rate += $weight * $this->getWeightFixed();
+
         if ($this->getCalc() == self::CALC_DEDUCT){
             $rate = 0 - $rate; // negative    
         }
@@ -168,5 +162,30 @@ class Amasty_Shiprules_Model_Rule extends Mage_Rule_Model_Rule
         }
         
         return $result;
-    }         
+    }
+
+    protected function _setWebsiteIds(){
+        $websites = array();
+
+        foreach (Mage::app()->getWebsites() as $website) {
+            foreach ($website->getGroups() as $group) {
+                $stores = $group->getStores();
+                foreach ($stores as $store) {
+                    $websites[$website->getId()] = $website->getId();
+                }
+            }
+        }
+
+        $this->setOrigData('website_ids', $websites);
+    }
+
+    protected function _beforeSave(){
+        $this->_setWebsiteIds();
+        return parent::_beforeSave();
+    }
+
+    protected function _beforeDelete(){
+        $this->_setWebsiteIds();
+        return parent::_beforeDelete();
+    }
 }

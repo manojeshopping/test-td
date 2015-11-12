@@ -203,13 +203,13 @@
 
   <admin>
     <routers>
-      <trademe_adminhtml>
-        <use>admin</use>
+      <adminhtml>
         <args>
-          <module>MVentory_TradeMe</module>
-          <frontName>trademe</frontName>
+          <modules>
+            <MVentory_TradeMe after="Mage_Adminhtml">MVentory_TradeMe</MVentory_TradeMe>
+          </modules>
         </args>
-      </trademe_adminhtml>
+      </adminhtml>
     </routers>
   </admin>
 

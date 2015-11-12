@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */ 
 class Amasty_Shiprules_Model_Validator extends Varien_Object
 {
@@ -57,11 +59,16 @@ class Amasty_Shiprules_Model_Validator extends Varien_Object
                         $affectedIds[$this->getKey($rate)] = array_merge($currentIds, $oldIds);
                         
                         $a = $this->adjustments[$this->getKey($rate)];
-                        $a['fee'] += $rule->getFee();  
+                        $a['fee'] += $rule->getFee();
+
                         
                         $handling = $rule->getHandling(); // new field
                         if (is_numeric($handling)){
-                            $a['fee'] += $rate->getPrice() * $handling /100; 
+                            if($rule->getCalc() == Amasty_Shiprules_Model_Rule::CALC_DEDUCT){
+                                $a['fee'] -= $rate->getPrice() * $handling /100;
+                            } else {
+                                $a['fee'] += $rate->getPrice() * $handling /100;
+                            }
                         }
                           
                         if ($rule->removeFromRequest()){
@@ -74,14 +81,27 @@ class Amasty_Shiprules_Model_Validator extends Varien_Object
                             // remember removed group ids
                             $a['ids'] = array_merge($a['ids'], array_keys($group));
                         }//if remove
-                        
-                        if ($rule->getShipMin() > 0 ){
+
+                        if($rule->getRateMax() > 0){
+                            $a['fee'] = ($a['fee'] > 0 ? 1: -1) * min(abs($a['fee']),$rule->getRateMax());
+                        }
+
+                        if($rule->getRateMin() > 0){
+                            if($rule->getCalc() == Amasty_Shiprules_Model_Rule::CALC_DEDUCT){
+                                //add min rate change negative for discount action
+                                $a['fee'] = ($a['fee'] <= 0 ? -1: 1) * max(abs($a['fee']),$rule->getRateMin());
+                            } else {
+                                //add min rate change positive for other actions
+                                $a['fee'] = ($a['fee'] >= 0 ? 1: -1) * max(abs($a['fee']),$rule->getRateMin());
+                            }
+                        }
+                        if ($rule->getShipMin() > 0){
                             if ($rate->getCost() + $a['fee'] < $rule->getShipMin()){
                                 $a['fee'] = $rule->getShipMin() - $rate->getCost();                            
                             }
                         }
                         
-                        if ($rule->getShipMax() > 0 ){
+                        if ($rule->getShipMax() > 0){
                             if ($rate->getCost() + $a['fee'] > $rule->getShipMax()){
                                 $a['fee'] = $rule->getShipMax()  - $rate->getCost();                            
                             }                        

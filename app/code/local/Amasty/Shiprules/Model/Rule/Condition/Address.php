@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */
 class Amasty_Shiprules_Model_Rule_Condition_Address extends Mage_Rule_Model_Condition_Abstract
 {
@@ -118,11 +120,18 @@ class Amasty_Shiprules_Model_Rule_Condition_Address extends Mage_Rule_Model_Cond
         if (is_object($validatedValue)) {
             return false;
         }
+        
+        if (is_string($validatedValue)){
+            $validatedValue = strtoupper($validatedValue);
+        }
 
         /**
          * Condition attribute value
          */
         $value = $this->getValueParsed();
+        if (is_string($value)){
+            $value = strtoupper($value);
+        }
 
         /**
          * Comparison operator

@@ -37,12 +37,12 @@
                 <searchsphinx_synonyms module="searchsphinx">
                     <title>Dictionary of synonyms</title>
                     <sort_order>30</sort_order>
-                    <action>searchsphinx/adminhtml_synonym/index</action>
+                    <action>adminhtml/searchsphinx_synonym/index</action>
                 </searchsphinx_synonyms>
                 <searchsphinx_stopwords module="searchsphinx">
                     <title>Dictionary of stopwords</title>
                     <sort_order>40</sort_order>
-                    <action>searchsphinx/adminhtml_stopword/index</action>
+                    <action>adminhtml/searchsphinx_stopword/index</action>
                 </searchsphinx_stopwords>
             </children>
         </search>

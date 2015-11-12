@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2010 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */  
 class Amasty_Table_Block_Adminhtml_Method_Edit_Tab_Import extends Mage_Adminhtml_Block_Widget_Form
 {
@@ -29,7 +31,7 @@ class Amasty_Table_Block_Adminhtml_Method_Edit_Tab_Import extends Mage_Adminhtml
         $fldSet->addField('import_file', 'file', array(
           'label'     => $hlp->__('CSV File'),
           'name'      => 'import_file',
-          'note'      => $hlp->__('Example file http://amasty.com/examples/tablerates.csv')
+          'note'      => $hlp->__('Example file http://amasty.com/examples/rates.csv')
         ));               
 
         return parent::_prepareForm();

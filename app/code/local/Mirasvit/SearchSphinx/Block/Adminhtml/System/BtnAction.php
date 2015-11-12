@@ -47,7 +47,7 @@ class Mirasvit_SearchSphinx_Block_Adminhtml_System_BtnAction extends Mage_Adminh
             'button_action' => $originalData['button_action'],
             'button_label'  => $this->_getBtnLabel($originalData),
             'html_id'       => $element->getHtmlId(),
-            'ajax_url'      => Mage::getSingleton('adminhtml/url')->getUrl('searchsphinx/adminhtml_system_action/'.$originalData['button_action']),
+            'ajax_url'      => Mage::getSingleton('adminhtml/url')->getUrl('adminhtml/searchsphinx_system_action/'.$originalData['button_action']),
         ));
 
         return $this->_toHtml();

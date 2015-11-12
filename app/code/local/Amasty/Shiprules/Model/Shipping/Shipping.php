@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */
 class Amasty_Shiprules_Model_Shipping_Shipping extends Mage_Shipping_Model_Shipping
 {
@@ -22,8 +24,9 @@ class Amasty_Shiprules_Model_Shipping_Shipping extends Mage_Shipping_Model_Shipp
         
         
         $oldRates = $result->getAllRates();
+        $oldPrices = $this->_getPrices($oldRates);
         $newRates = array();
-        
+
         $validator = Mage::getSingleton('amshiprules/validator');
         $validator->init($request);
         if (!$validator->canApplyFor($oldRates)){
@@ -51,11 +54,21 @@ class Amasty_Shiprules_Model_Shipping_Shipping extends Mage_Shipping_Model_Shipp
         }
         
         $result->reset();
-        foreach ($newRates as $rate){
+        foreach ($newRates as $rate) {
+            $rate->setOldPrice($oldPrices[$rate->getMethod()]);
             $rate->setPrice(max(0, $rate->getPrice()));
             $result->append($rate);
         }
         
         return $this;
-    }    
+    }
+
+    protected function _getPrices($rates)
+    {
+        $prices = array();
+        foreach ($rates as $rate) {
+            $prices[$rate->getMethod()] = $rate->getPrice();
+        }
+        return $prices;
+    }
 }

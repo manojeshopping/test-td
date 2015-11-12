@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Shiprules
  */ 
 class Amasty_Shiprules_Block_Adminhtml_Rule_Edit_Tab_General extends Mage_Adminhtml_Block_Widget_Form
 {
@@ -36,18 +38,22 @@ class Amasty_Shiprules_Block_Adminhtml_Rule_Edit_Tab_General extends Mage_Adminh
             'name'      => 'methods',
             'note'      => $hlp->__('One method name per line, e.g Next Day Air. Leave empty for all methods.'), 
         ));
-        
+
         $fldInfo->addField('coupon', 'text', array(
             'label'     => Mage::helper('salesrule')->__('Coupon Code'), 
             'name'      => 'coupon',
-			'note'      => $hlp->__('Apply this shipping rule when specified coupon is provided. You can configure coupon in promotions / shopping cart rules. Useful when you have ONE coupon only.'),
+			'note'      => $hlp->__('Apply this rule with coupon only. Create coupon in '
+                . $hlp->getPromotionsCartLink()
+                . ' area first. Useful when you have ONE coupon only.'),
         ));    
         
         $fldInfo->addField('discount_id', 'select', array(
             'label'     => $hlp->__('Shopping Cart Rule (discount)'),
             'name'      => 'discount_id',
             'values'    => $hlp->getAllRules(),
-			'note'      => $hlp->__('Apply this rule with ANY coupon from specified discount rule. See promotions / shopping cart rules. Useful when you have MULTIPLE coupons in one rule.'),
+			'note'      => $hlp->__('Apply this rule with ANY coupon from specified discount rule. Create rule in '
+                . $hlp->getPromotionsCartLink()
+                . ' Promotions / Shopping Cart Rules</a> area first. Useful when you have MULTIPLE coupons in one rule.'),
         ));         
 		
         $fldInfo->addField('days', 'multiselect', array(

@@ -100,13 +100,13 @@
     </adminhtml>
     <admin>
         <routers>
-            <misspell>
-                <use>admin</use>
-                <args>
-                    <module>Mirasvit_Misspell</module>
-                    <frontName>misspell</frontName>
-                </args>
-            </misspell>
+            <adminhtml>
+				<args>
+					<modules>
+						<misspell after="Mage_Adminhtml">Mirasvit_Misspell_Adminhtml</misspell>
+					</modules>
+				</args>
+			</adminhtml>
         </routers>
     </admin>
     <frontend>

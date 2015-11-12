@@ -171,16 +171,16 @@ class MVentory_TradeMe_Block_Matching
       'type' => MVentory_TradeMe_Block_Categories::TYPE_RADIO
     );
 
-    $categories = $this->getUrl('trademe/categories', $params);
+    $categories = $this->getUrl('adminhtml/trademe_categories', $params);
 
     $params = array(
       'set_id' => $this->_getSetId(),
       'ajax' => true
     );
 
-    $addrule = $this->getUrl('trademe/matching/append/', $params);
-    $remove = $this->getUrl('trademe/matching/remove/', $params);
-    $reorder = $this->getUrl('trademe/matching/reorder/', $params);
+    $addrule = $this->getUrl('adminhtml/trademe_matching/append/', $params);
+    $remove = $this->getUrl('adminhtml/trademe_matching/remove/', $params);
+    $reorder = $this->getUrl('adminhtml/trademe_matching/reorder/', $params);
 
     return Mage::helper('core')->jsonEncode(compact('categories',
                                                     'addrule',

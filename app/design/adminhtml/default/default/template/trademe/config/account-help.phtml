@@ -126,7 +126,12 @@
         Buyer ID
       </td>
       <td>
-        Magento customer ID to be used to create a transaction when a product is sold through Trade Me.
+        <ul>
+          <li>Leave blank if Magento should not create any orders for sold listings. Quantities will not be updated either.</li>
+          <li>If buyer ID (=customer id in Magento) is specified Magento will attempt to download customer details from TM and allocate the order to this customer in Magento (create new if needed)</li>
+          <li>If the customer details cannot be downloaded are insufficient then this buyer ID is used</li>
+          <li>Make sure the customer is configured correctly. Disable State/Province for NZ, make postcodes optional, create a test purchase using this customer.</li>
+        </ul>
       </td>
     </tr>
     <tr>
@@ -142,7 +147,7 @@
         Shipping options
       </td>
       <td>
-        Dollar amount followed by a comma and a description. Shipping cost and description that corresponds to this shipping type - will be displayed under shipping options in the auction.
+        Dollar amount followed by a comma and a description. For Free shipping use text 'free' in the field. No value in this field will show 'To be arranged' as the description. Shipping cost and description that corresponds to this shipping type - will be displayed under shipping options in the auction.
       </td>
     </tr>
     <tr>
