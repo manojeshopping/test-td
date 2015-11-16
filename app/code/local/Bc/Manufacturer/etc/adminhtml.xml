@@ -14,7 +14,7 @@
                 <logo module="manufacturer">
                     <title>Manage Manufacturer</title>
                     <sort_order>0</sort_order>
-                    <action>manufacturer/adminhtml_manufacturer</action>
+                    <action>adminhtml/adminhtml_manufacturer</action>
                 </logo>
             </children>
         </biztech>

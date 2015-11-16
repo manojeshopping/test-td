@@ -1,8 +1,6 @@
 <?php
 /**
- * @author Amasty Team
- * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
- * @package Amasty_Table
+ * @copyright Amasty 2012
  */
 
 class Amasty_Table_Model_Carrier_Table extends Mage_Shipping_Model_Carrier_Abstract
@@ -40,23 +38,19 @@ class Amasty_Table_Model_Carrier_Table extends Mage_Shipping_Model_Carrier_Abstr
             // record carrier information
             $method->setCarrier($this->_code);
             $method->setCarrierTitle($this->getConfigData('title'));
-
-            if (isset($rates[$customMethod->getId()]['cost']))
+    
+            // record method information
+            $method->setMethod($this->_code . $customMethod->getId());
+            $method->setMethodTitle(Mage::helper('amtable')->__($customMethod->getName()));
+    
+            if (isset($rates[$customMethod->getId()]))
             {
-                // record method information
-                $method->setMethod($this->_code . $customMethod->getId());
-                $methodTitle = Mage::helper('amtable')->__($customMethod->getName());
-                $methodTitle = str_replace('{day}', $rates[$customMethod->getId()]['time'], $methodTitle);
-                $method->setMethodTitle($methodTitle);
+                    $method->setCost($rates[$customMethod->getId()]);
+                    $method->setPrice($rates[$customMethod->getId()]);
 
-                $method->setCost($rates[$customMethod->getId()]['cost']);
-                $method->setPrice($rates[$customMethod->getId()]['cost']);
-
-                $method->setPos($customMethod->getPos());
-
-                // add this rate to the result
-                $result->append($method);
-                $countOfRates++;
+                    // add this rate to the result
+                    $result->append($method);
+                    $countOfRates++;        
             }
 
         }
@@ -68,7 +62,7 @@ class Amasty_Table_Model_Carrier_Table extends Mage_Shipping_Model_Carrier_Abstr
             $error->setErrorMessage($this->getConfigData('specificerrmsg'));
             $result->append($error);
         }        
-
+        
         return $result;
     } 
 

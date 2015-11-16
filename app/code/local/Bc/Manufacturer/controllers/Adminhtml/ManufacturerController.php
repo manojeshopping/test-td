@@ -6,7 +6,7 @@ class Bc_Manufacturer_Adminhtml_ManufacturerController extends Mage_Adminhtml_Co
      * Temporarily allow access for all users
      */
     protected function _isAllowed() {
-        return true;
+        return Mage::getSingleton('admin/session')->isAllowed('biztech/logo');
     }
 
 	protected function _initAction() {

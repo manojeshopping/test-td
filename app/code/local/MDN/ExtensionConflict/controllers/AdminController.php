@@ -14,7 +14,7 @@ class MDN_ExtensionConflict_AdminController extends Mage_Adminhtml_Controller_Ac
 	 * display list
 	 *
 	 */
-	public function ListAction()
+	public function listAction()
 	{
 		$this->loadLayout();
         $this->renderLayout();
@@ -30,7 +30,7 @@ class MDN_ExtensionConflict_AdminController extends Mage_Adminhtml_Controller_Ac
 		
 		//redirect on list
 	   	Mage::getSingleton('adminhtml/session')->addSuccess($this->__('List refreshed'));
-		$this->_redirect('ExtensionConflict/Admin/List');
+		$this->_redirect('adminhtml/Admin/List');
 	}
 	
 	/**
@@ -50,7 +50,7 @@ class MDN_ExtensionConflict_AdminController extends Mage_Adminhtml_Controller_Ac
 		
 		//redirect
 	   	Mage::getSingleton('adminhtml/session')->addSuccess($this->__('File Uploaded and List refreshed'));
-		$this->_redirect('ExtensionConflict/Admin/List');
+		$this->_redirect('adminhtml/Admin/List');
 	}
 	
 	public function DeleteVirtualModuleAction()
@@ -65,7 +65,7 @@ class MDN_ExtensionConflict_AdminController extends Mage_Adminhtml_Controller_Ac
 		
 		//redirect
 	   	Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Virtual Module deleted and List refreshed'));
-		$this->_redirect('ExtensionConflict/Admin/List');
+		$this->_redirect('adminhtml/Admin/List');
 	}
 	
 	/**

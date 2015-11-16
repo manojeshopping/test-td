@@ -12,7 +12,7 @@ class MDN_ExtensionConflict_Block_Widget_Grid_Column_Renderer_IsConflict
     	else 
     	{
     		$retour = '<font color="red">Yes</font><br>';
-    		$url = $this->getUrl('ExtensionConflict/Admin/DisplayFix', array('ec_id' => $row->getId()));
+    		$url = $this->getUrl('adminhtml/Admin/DisplayFix', array('ec_id' => $row->getId()));
     		$retour .= '<a href="'.$url.'">Display fix</a>';
     	}
     	return $retour;

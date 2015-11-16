@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+		<welcomeconfig translate="label" module="ajaxlogin">
+			<label>Gurutheme</label>
+			<sort_order>99999</sort_order>
+		</welcomeconfig>
+	</tabs>	
+	<sections>
+		<ajaxlogin_options translate="label" module="ajaxlogin">
+			<label>Ajax Login</label>
+			<tab>welcomeconfig</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>1000</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+                <hint>
+                    <frontend_model>welcome/adminhtml_config_source_hint</frontend_model>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </hint>
+    			<gurutheme translate="label">
+    				<label>Configuration</label>
+    				<frontend_type>text</frontend_type>
+    				<sort_order>1</sort_order>
+    				<show_in_default>1</show_in_default>
+    				<show_in_website>1</show_in_website>
+    				<show_in_store>1</show_in_store>                
+                	<fields>
+                		<ajaxlogin>
+                            <label>Show Ajax Login : </label>
+                            <frontend_type>select</frontend_type>
+                            <!-- adding a source model -->
+                            <source_model>adminhtml/system_config_source_yesno</source_model>                           
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </ajaxlogin>
+                	</fields>
+                </gurutheme>
+             </groups>
+		</ajaxlogin_options>
+		
+	</sections>		
+</config>

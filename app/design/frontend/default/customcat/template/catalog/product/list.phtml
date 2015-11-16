@@ -92,12 +92,77 @@
         </thead>
         <tbody id="handlebars-zone">
 			
-			<?php foreach ($_productCollection as $_product): ?>
+			<?php $j=0; foreach ($_productCollection as $_product): ?>
+			<?php 
+				$gallery_images = Mage::getModel('catalog/product')->load($_product->getId())->getMediaGalleryImages();
+				
+			?>
 			<tr class="custom-item">
                 <td class="product-image item-img">
-                    <a data-toggle="modal" data-target="#imagePopUpModal" class="image-main img-main">
+                    <a data-toggle="modal" data-target="#imagePopUpModal<?php echo $j; ?>" class="image-main img-main">
 						<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(60, 40); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'thumbnail'), null, true) ?>" class="img-responsive1"/>
 					</a>
+					<?php if (count($gallery_images) > 0): ?>
+					<div class="modal fade" id="imagePopUpModal<?php echo $j; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel"><?php echo $_product->getName(); ?></h4>
+								</div>
+								<div class="modal-body">
+									<div id="range-carousel-popup<?php echo $j; ?>" class="carousel slide new-slide main-slide" data-ride="carousel">
+										<div class="carousel-inner" role="listbox">
+											<?php $i=0; foreach($gallery_images as $_image): ?>
+												<div class="item<?php echo ($i==0)?' active':'' ?>">
+													<img src="<?php echo Mage::helper('catalog/image')->init($_product, 'image', $_image->getFile())->resize(900, 600); ?>" alt="<?php echo $this->htmlEscape($_image->getLabel()) ?>"/>
+												</div>
+											<?php $i++; endforeach; ?>
+										</div>
+										<a class="left carousel-control" href="#range-carousel-popup<?php echo $j; ?>" role="button" data-slide="prev">
+											<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+											<span class="sr-only">Previous</span>
+										</a>
+										<a class="right carousel-control" href="#range-carousel-popup<?php echo $j; ?>" role="button" data-slide="next">
+											<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+											<span class="sr-only">Next</span>
+										</a>
+									</div>
+									<div id="myCarousel-popup<?php echo $j; ?>" class="carousel slide new-slide thumb-slide">
+		<?php $gallery_images_count = count($gallery_images); ?>
+		<?php $_columnCount = 4; ?>
+		<!-- Carousel items -->
+		<div class="carousel-inner">
+			<?php $i=0; foreach ($gallery_images as $_image): ?>
+			<?php if ($i++%$_columnCount==0): ?>
+			<div class="item<?php echo ($i==1)?' active':'' ?>">
+				<div class="row">
+			<?php endif; ?>	
+					<div class="col-sm-3">
+						<a href="#x" class="thumbnail thumbnail-black" data-slide-to="0" data-target="#range-carousel">
+							<img src="<?php echo Mage::helper('catalog/image')->init($_product, 'image', $_image->getFile())->resize(180, 120); ?>" alt="<?php echo $this->htmlEscape($_image->getLabel()) ?>"/>
+						</a>
+					</div>
+			<?php if ($i%$_columnCount==0 || $i==$gallery_images_count): ?>
+				</div>
+				<!--/row-->
+			</div>
+			<?php endif ?>
+			<?php endforeach; ?>
+			<!--/item-->
+		</div>
+		<!--/carousel-inner--> <a class="left carousel-control" href="#myCarousel-popup<?php echo $j; ?>" data-slide="prev">‹</a>
+
+		<a class="right carousel-control" href="#myCarousel-popup<?php echo $j; ?>" data-slide="next">›</a>
+	</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<?php endif; ?>
 				</td>
                 <td>
                     <a href="<?php echo $_product->getProductUrl() ?>" data-toggle="tooltip" data-placement="top" title="View Details (<?php echo $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description') ?>)" target="_blank">
@@ -151,10 +216,15 @@
 					<?php else: ?>
 				   <button type="button" class="btn btn-md" disabled><i class="fa fa-shopping-cart"></i></button>
 				   <?php endif; ?>
+					<?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
                     <a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i></a>
+					<?php }else{ ?>
+						<a data-toggle="modal" data-target="#loginPopUpModal" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i></a>
+					<?php } ?>
                 </td>
-            </tr>
-			<?php endforeach; ?>
+			</tr>
+			
+			<?php $j++; endforeach; ?>
 			
         </tbody>
     </table>
@@ -165,7 +235,11 @@
 	</form>
 	<form action="<?php echo Mage::getUrl('wishlist/index/addmultiple') ;?>" method="post" id="products_addtowishlist_form" enctype="multipart/form-data">
 		<input type="hidden" name="wishlist_products" id="wishlist_products" value="" />
-		<button type="button" onclick="javascript:beforeSubmitWishlist()" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i> Add all products to Wishlist</a>
+		<?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
+		<button type="button" onclick="javascript:beforeSubmitWishlist()" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fa fa-star"></i> Add all products to Wishlist</button>
+		<?php }else{ ?>
+			<a data-toggle="modal" data-target="#loginPopUpModal" class="btn btn-td-info float-right btn-margin-rt" data-toggle="tooltip" data-placement="top" title="Add all products to Wishlist"><i class="fa fa-star"></i> Add all products to Wishlist</a>
+		<?php } ?>
 	</form>	
 </div>
 

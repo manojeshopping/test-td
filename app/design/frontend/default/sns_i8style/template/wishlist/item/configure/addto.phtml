@@ -30,7 +30,7 @@
 <div class="col-xs-4 1showMeRed">
 	<div class="input-group input-group-lg floatright">
 		<?php if ($this->helper('wishlist')->isAllow()) : ?>
-			<a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-compare"><button data-original-title="<?php echo $this->__('Add to Wishlist') ?>" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-margin-rt btn-td-primary btn-md" type="button"><i class="fa fa-star"></i></button></a></li>
+			<a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-compare"><button data-original-title="<?php echo $this->__('Add to Wishlist') ?>" title="" data-placement="top" data-toggle="tooltip" class="btn btn-lg btn-margin-rt btn-td-primary btn-md" type="button"><i class="fa fa-star"></i></button></a>
 		<?php endif; ?>
 		<?php $_product = $this->getProduct(); ?>
 		<?php $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product); ?>
