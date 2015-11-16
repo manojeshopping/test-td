@@ -1,8 +1,6 @@
 <?php
 /**
- * @author Amasty Team
- * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
- * @package Amasty_Table
+ * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
  */ 
 class Amasty_Table_Model_Mysql4_Method extends Mage_Core_Model_Mysql4_Abstract
 {

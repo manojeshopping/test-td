@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <config>
-    <menu>
+    <!--<menu>
         <system>
             <children>
                 <extensionconflict translate="title" module="ExtensionConflict">
@@ -44,5 +44,5 @@
                 <file>ExtensionConflict.xml</file>
             </ExtensionConflict>
         </updates>
-    </layout>
+    </layout>-->
 </config>

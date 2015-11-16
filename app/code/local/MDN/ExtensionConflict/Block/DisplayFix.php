@@ -16,6 +16,6 @@ class MDN_ExtensionConflict_Block_DisplayFix extends Mage_Adminhtml_Block_Widget
 	
 	public function getBackUrl()
 	{
-		return $this->getUrl('ExtensionConflict/Admin/List');
+		return $this->getUrl('adminhtml/Admin/List');
 	}
 }

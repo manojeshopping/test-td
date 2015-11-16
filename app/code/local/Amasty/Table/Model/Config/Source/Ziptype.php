@@ -1,9 +1,9 @@
 <?php
 /**
- * @author Amasty Team
- * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
- * @package Amasty_Table
- */
+* @author Amasty Team
+* @copyright Copyright (c) 2010-2012 Amasty (http://www.amasty.com)
+* @package Amasty_Table
+*/
 class Amasty_Table_Model_Config_Source_Ziptype extends Varien_Object
 {
     public function toOptionArray()

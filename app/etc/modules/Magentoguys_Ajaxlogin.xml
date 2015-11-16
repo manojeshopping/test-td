@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Magentoguys_Ajaxlogin>
+            <active>true</active>
+            <codePool>local</codePool>
+         </Magentoguys_Ajaxlogin>
+    </modules>
+</config>

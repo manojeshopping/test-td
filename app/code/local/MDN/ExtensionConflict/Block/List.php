@@ -71,17 +71,17 @@ class MDN_ExtensionConflict_Block_List extends Mage_Adminhtml_Block_Widget_Grid
     
     public function getRefreshUrl()
     {
-    	return $this->getUrl('ExtensionConflict/Admin/Refresh');
+    	return $this->getUrl('adminhtml/Admin/Refresh');
     }
     
     public function getUploadUrl()
     {
-    	return $this->getUrl('ExtensionConflict/Admin/Upload');
+    	return $this->getUrl('adminhtml/Admin/Upload');
     }
     
     public function getDeleteVirtualModuleUrl()
     {
-    	return $this->getUrl('ExtensionConflict/Admin/DeleteVirtualModule');
+    	return $this->getUrl('adminhtml/Admin/DeleteVirtualModule');
     }
     
 

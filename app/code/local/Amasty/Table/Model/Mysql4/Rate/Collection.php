@@ -1,8 +1,6 @@
 <?php
 /**
- * @author Amasty Team
- * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
- * @package Amasty_Table
+ * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
  */ 
 class Amasty_Table_Model_Mysql4_Rate_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
 {
@@ -45,50 +43,30 @@ class Amasty_Table_Model_Mysql4_Rate_Collection extends Mage_Core_Model_Mysql4_C
                                 'eq'    => '',
                                  ),                                                                  
         ));
-
-        $inputZip = $request->getDestPostcode();
+        
         if (Mage::getStoreConfig('carriers/amtable/numeric_zip'))
         {
-            $zipData = Mage::helper('amtable')->getDataFromZip($inputZip);
-            $this->addFieldToFilter('num_zip_from', array(
-                array(
-                    'lteq'  => $zipData['district'],
-                ),
-                array(
-                    'eq'    => '0',
-                ),
-            ));
-            $this->addFieldToFilter('num_zip_to', array(
-                array(
-                    'gteq'  => $zipData['district'],
-                ),
-                array(
-                    'eq'    => '0',
-                ),
-            ));
-
-            $searchParam = array(array(
-                'eq' => '',
-            ));
-            if (!empty($zipData['area'])) {
-                $searchParam[] = array(
-                    'like' => $zipData['area'] . '%',
-                );
-            }
-
             $this->addFieldToFilter('zip_from', array(
-                $searchParam,
+                                    array(
+                                    'lteq'  => $request->getDestPostcode(),
+                                     ),
+                                    array(
+                                    'eq'    => '',
+                                     ),                                                                  
             ));
-
-            //to prefer rate with zip
-            $this->setOrder('num_zip_from', 'DESC');
-            $this->addOrder('num_zip_to', 'DESC');
+            $this->addFieldToFilter('zip_to', array(
+                                    array(
+                                    'gteq'  => $request->getDestPostcode(),
+                                     ),
+                                    array(
+                                    'eq'    => '',
+                                     ),                                                                  
+            ));                          
         }
-        else {
-            $this->getSelect()->where("? LIKE zip_from OR zip_from = ''", $inputZip);
-        }
+        else
+            $this->getSelect()->where("? LIKE zip_from OR zip_from = ''", $request->getDestPostcode());
 
-        return $this;
+        return $this;        
     }    
     
     public function addMethodFilters($methodIds)

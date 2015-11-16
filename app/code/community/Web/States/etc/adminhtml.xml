@@ -6,7 +6,7 @@
                 <web_states module="web_states">
                     <title>Country States</title>
                     <sort_order>100</sort_order>
-                    <action>states/adminhtml_states</action>
+                    <action>adminhtml/adminhtml_states/index</action>
                 </web_states>
             </children>
         </cms>

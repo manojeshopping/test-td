@@ -66,24 +66,13 @@
                 <children>
                     <extensionconflict translate="title" module="ExtensionConflict">
                         <title>Extension Conflict</title>
-                        <action>ExtensionConflict/Admin/List</action>
+                        <action>adminhtml/Admin/List</action>
                     </extensionconflict>
                 </children>
             </system>
         </menu>
 
-
-        <routers>
-            <ExtensionConflict>
-                <use>standard</use>
-                <args>
-                    <module>MDN_ExtensionConflict</module>
-                    <frontName>Organizer</frontName>
-                </args>
-            </ExtensionConflict>
-        </routers>
-
-        <layout>
+		<layout>
             <updates>
                 <ExtensionConflict>
                     <file>ExtensionConflict.xml</file>
@@ -93,6 +82,9 @@
 
         <acl>
             <resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
                 <admin>
                     <children>
                         <system>
@@ -124,13 +116,20 @@
     
     <admin>
         <routers>
-            <ExtensionConflict>
+            <!--<ExtensionConflict>
                 <use>admin</use>
                 <args>
                     <module>MDN_ExtensionConflict</module>
                     <frontName>ExtensionConflict</frontName>
                 </args>
-            </ExtensionConflict>
+            </ExtensionConflict>-->
+			<adminhtml> 
+				<args> 
+					<modules> 
+						<MDN_ExtensionConflict after="Mage_Adminhtml">MDN_ExtensionConflict</MDN_ExtensionConflict>
+					</modules> 
+				</args> 
+			</adminhtml>
         </routers>
     </admin>
     
