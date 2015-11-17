@@ -40,6 +40,7 @@
 			<div class="col-xs-12 col-md-6 col-pad-right">
 				<input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>" />
 				<input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
+				<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 				<div class="bs-callout bs-callout-info ">
 					<h1 class="td-section"><?php echo $this->__('Sign up') ?></h1>
 
