@@ -157,10 +157,14 @@ class MVentory_TradeMe_Helper_Order extends MVentory_TradeMe_Helper_Data
    *   Sell quantity
    */
   protected function _setProduct ($quote, $product, $price, $qty) {
+    $error = $quote->addProduct($product, new Varien_Object(['qty' => $qty]));
+    // returns error string if product could not be added
+    if (is_string($error)) {
+      throw new Exception($error);
+    }
     $quote
-      ->addProduct($product, new Varien_Object(['qty' => $qty]))
       ->setCustomPrice($price)
-      ->setOriginalCustomPrice($price);;
+      ->setOriginalCustomPrice($price);
   }
 
   /**
