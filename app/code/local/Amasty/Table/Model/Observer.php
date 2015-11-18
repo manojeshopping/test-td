@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */
 class Amasty_Table_Model_Observer
 {
@@ -20,6 +22,22 @@ class Amasty_Table_Model_Observer
         $attributesTransfer->addData($result);
         
         return $this;
-    }       
-    
+    }
+
+    public function addMethodComment(Varien_Event_Observer $observer)
+    {
+        $firstBlock = Mage::getConfig()->getBlockClassName('checkout/onepage_shipping_method_available');
+        if (Mage::getConfig()->getModuleConfig('AW_Onestepcheckout')->is('active', 'true')){
+            $firstBlock = Mage::getConfig()->getBlockClassName('aw_onestepcheckout/onestep_form_shippingmethod');
+        }
+        $secondBlock = Mage::getConfig()->getBlockClassName('checkout/cart_shipping');
+        $block = $observer->getBlock();
+        if ((get_class($block) == $firstBlock) || (get_class($block) == $secondBlock)) {
+            $transport = $observer->getTransport();
+            $html = trim($transport->getHtml());
+            $html = Mage::getModel('amtable/method')->addComment($html);
+            $transport->setHtml($html);
+        }
+    }
+
 }
