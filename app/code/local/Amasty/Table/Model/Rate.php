@@ -4,8 +4,23 @@
  */
 class Amasty_Table_Model_Rate extends Mage_Core_Model_Abstract
 {
-    const MAX_LINE_LENGTH  = 2000;
-    const COL_NUMS         = 16;
+    const MAX_LINE_LENGTH  = 50000;
+    const COL_NUMS         = 19;
+	const HIDDEN_COLUMNS    = 2;
+    const BATCH_SIZE       = 50000;
+    const COUNTRY          = 0;
+    const STATE            = 1;
+    const ZIP_FROM         = 3;
+    const NUM_ZIP_FROM     = 18;
+    const ZIP_TO           = 4;
+    const NUM_ZIP_TO       = 19;
+    const PRICE_TO         = 6;
+    const WEIGHT_TO        = 8;
+    const QTY_TO           = 10;
+    const SHIPPING_TYPE    = 11;
+	const ALGORITHM_SUM    = 0;
+    const ALGORITHM_MAX    = 1;
+    const ALGORITHM_MIN    = 2;
 
     public function _construct()
     {

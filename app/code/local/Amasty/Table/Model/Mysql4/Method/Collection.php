@@ -1,6 +1,8 @@
 <?php
 /**
- * @copyright   Copyright (c) 2009-2012 Amasty (http://www.amasty.com)
+ * @author Amasty Team
+ * @copyright Copyright (c) 2015 Amasty (https://www.amasty.com)
+ * @package Amasty_Table
  */ 
 class Amasty_Table_Model_Mysql4_Method_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
 {
@@ -23,5 +25,10 @@ class Amasty_Table_Model_Mysql4_Method_Collection extends Mage_Core_Model_Mysql4
         $this->getSelect()->where('cust_groups="" OR cust_groups LIKE "%,'.$groupId.',%"');
         
         return $this;
-    }    
+    }
+
+    public function toOptionHash()
+    {
+        return $this->_toOptionHash('method_id','comment');
+    }
 }
