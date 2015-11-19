@@ -55,14 +55,14 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
    *   Buyer model and address model
    */
   public function get ($data, $store) {
-    $buyer = $this->_load($data, $store);
+/*    $buyer = $this->_load($data, $store);
     if ($buyer)
       return $buyer;
 
     $buyer = $this->_create($data, $store);
     if ($buyer)
       return $buyer;
-
+*/
     return $this->_default($data['default_buyer_id'], $store);
   }
 
