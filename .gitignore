@@ -67,3 +67,7 @@ Thumbs.db
 *.bak
 *.swp
 *~.nib
+
+# Redis                        #
+# ##############################
+/shell/redis.php
