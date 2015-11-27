@@ -112,6 +112,7 @@
 					<?php echo $this->getChildHtml('mainmenu'); ?>
 				</div>
 				<div class="right">
+					<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('header-button')->toHtml(); ?> 
 					<?php echo $this->getChildHtml('topSearch'); ?>
 				</div>
 				<div class="row bar hidden-xs">
