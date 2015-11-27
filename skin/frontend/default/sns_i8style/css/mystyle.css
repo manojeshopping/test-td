@@ -158,3 +158,17 @@ img{max-width:100%;}
 .amlabel-div .carousel .carousel-control.left:hover{ background-image: linear-gradient(to right, #0495d7 0%, #0495d7 100%) !important;}
 .amlabel-div .carousel .carousel-control.right:hover{ background-image: linear-gradient(to right, #0495d7 0%, #0495d7 100%) !important;}
 .amlabel-div .carousel .carousel-control{width:10% !important;}
+
+.xmas{
+background-image:url(http://www.tradedepot.co.nz/media/wysiwyg/misc/xmas-trading-hours.png);
+float:left;
+background-position:center center;
+-webkit-background-size:100%;
+background-repeat:no-repeat;
+background-size:100%;
+width:180px;
+height:71px;
+margin-left:20px;
+margin-top:-20px;
+display:block;w
+}
