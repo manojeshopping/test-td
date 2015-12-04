@@ -178,8 +178,8 @@ class Amasty_Table_Model_Rate extends Mage_Core_Model_Abstract
 
 
 
-        if ($item->getParentItemId())
-            continue;
+        // if ($item->getParentItemId())
+            // continue;
 
         if ($ignoreVirtual && $item->getProduct()->isVirtual())
             continue;
