@@ -16,13 +16,29 @@
 		<input type="hidden" name="related_product" id="related-products-field" value="" />
 	</div>	
 		<?php //echo $this->getChildHtml('product_js');?>
-	<div id="product-shop">
-	   
+	<div id="product-shop" class="product-detail product-view">
+	   <div class="row product-essential">
+	   <div class="">
 		<div class="product-options" id="product-options-wrapper" style="margin:0">
-			<div class="product-name">
-                <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
-            </div>
-			<?php echo $this->getChildHtml('product_configurable_options');?>
+		<div class="product-description box">
+			<h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+			<hr/>
+			<div class="row">
+				<div class="col-xs-6 col-sm-6 pddetail-price">
+					<?php 
+					if($_product->getTypeId() == 'downloadable'){
+						echo $this->getChildHtml('product_price');
+					}
+					if($_product->getTypeId() == 'bundle'){
+						echo $this->getChildHtml('bundle_price');
+					}
+					else{
+						echo $this->getPriceHtml($_product);
+					}?>
+				</div>
+			</div>
+			<hr/>
+            <?php echo $this->getChildHtml('product_configurable_options');?>
 			<?php echo $this->getChildHtml('product_downloadable_options');?>
 			<?php if( $_product->getTypeId() == 'bundle'):?>
 					<div><?php echo $this->getChildHtml('type_bundle_options');?></div>
@@ -38,22 +54,24 @@
 			<?php //echo $this->getChildHtml('product_options');?>
 			<?php echo $this->getChildHtml('html_calendar');?>
 			<?php echo $this->getChildHtml('tierprices');?>
-			<?php 
-			if($_product->getTypeId() == 'downloadable'){
-				echo $this->getChildHtml('product_price');
-			}else{
-				echo $this->getPriceHtml($_product);
-			}?>
+			<hr/>
 			
-			<div class="product-options-bottom">
+			<div class="cart-buttons">
+				<div class="row">
+				<div class="product-options-bottom add-to-box">
 				<?php echo $this->getChildHtml('addtocart');?>
 				<?php /*
 				<a href="javascript:void(0);" id="btcancel" onclick = "$('product_addtocart_form').remove();$('options').setStyle({display:'none'});">
 					<?php echo $this->__('Cancel')?>
 				</a>
 				*/?>
+				</div>
+				</div>
 			</div>
 			<?php echo $this->getChildHtml('extrahind');?>
+			</div>
+		</div>
+		</div>
 		</div>
 		<script type="text/javascript">decorateGeneric($$('#product-options-wrapper dl'), ['last']);</script>
 	</div>
