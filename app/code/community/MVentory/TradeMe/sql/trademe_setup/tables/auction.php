@@ -57,6 +57,14 @@ $table->addColumn(
 );
 
 $table->addColumn(
+  'distinction_hash',
+  Varien_Db_Ddl_Table::TYPE_TEXT,
+  32,
+  ['nullable' => false],
+  'Distinction hash'
+);
+
+$table->addColumn(
   'listing_id',
   Varien_Db_Ddl_Table::TYPE_TEXT,
   30,

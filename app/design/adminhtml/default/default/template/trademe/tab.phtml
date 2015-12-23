@@ -19,8 +19,7 @@
  */
 
 $_product = $this->getProduct();
-$_auction = $this->getAuction();
-$_fixedEndAuctions = $this->getFixedEndAuctions();
+$_auctions = $this->_getAuctions();
 
 $_categories = $this->getCategories();
 $_preselectedCategories = $this->getPreselectedCategories();
@@ -42,11 +41,10 @@ $_fees = $this->getFees();
 $_price = $this->getProductPrice();
 $_totalPrice = $_price + $_shippingRate + $_fees;
 
-$__accountName = $this->__('Account name');
-$__listingId = $this->__('Listing ID');
-$__listed = $this->__('Listed');
-$__action = $this->__('Action');
+
 $__remove = $this->__('Remove');
+$__checkStatus = $this->__('Check status');
+$__update = $this->__('Update');
 
 ?>
 
@@ -146,9 +144,9 @@ $__remove = $this->__('Remove');
   </span>
 </p>
 
-<?php if ($_fixedEndAuctions): ?>
+<?php if ($_auctions): ?>
 <div id="trademe-fixed-end-auctions" class="grid">
-  <h6>$1 auctions:</h6>
+  <h6>Auctions:</h6>
 
   <table id="trademe-fixed-end-auctions-table" class="data" cellspacing="0">
     <colgroup>
@@ -160,20 +158,38 @@ $__remove = $this->__('Remove');
 
     <thead>
       <tr class="headings">
-        <th><?php echo $__accountName; ?></th>
-        <th><?php echo $__listingId; ?></th>
-        <th><?php echo $__listed; ?></th>
-        <th class="last"><?php echo $__action; ?></th>
+        <th><?php echo $this->__('Account name') ?></th>
+        <th><?php echo $this->__('Type') ?></th>
+        <th><?php echo $this->__('Listing ID') ?></th>
+        <th><?php echo $this->__('Listed at') ?></th>
+        <th class="last"><?php echo $this->__('Actions') ?></th>
       </tr>
     </thead>
 
     <tbody>
-      <?php foreach ($_fixedEndAuctions as $_fixedAuction): ?>
+      <?php foreach ($_auctions as $_auction): ?>
       <tr>
-        <td><?php echo $_fixedAuction['account']; ?></td>
-        <td><a target="_blank" href="<?php echo $_fixedAuction['listing_url']; ?>"><?php echo $_fixedAuction['listing']; ?></a></td>
-        <td><?php echo $_fixedAuction['listed']; ?></td>
-        <td class="last"><a href="<?php echo $_fixedAuction['remove_url']; ?>"><?php echo $__remove; ?></a></td>
+        <td><?php echo $_auction['account']; ?></td>
+        <td><?php echo $_auction['type']; ?></td>
+        <td><a target="_blank" href="<?php echo $_auction['listing_url']; ?>"><?php echo $_auction['listing_id']; ?></a></td>
+        <td><?php echo $_auction['listed_at']; ?></td>
+        <td class="last">
+          <?php if (isset($_auction['status_url'])): ?>
+
+          <a href="<?php echo $_auction['status_url'] ?>"><?php echo $__checkStatus ?></a>
+          |
+
+          <?php endif; ?>
+
+          <a href="<?php echo $_auction['remove_url']; ?>"><?php echo $__remove; ?></a>
+
+          <?php if (isset($_auction['update_url'])): ?>
+
+          |
+          <a class="trademe-action-update" data-listing-id="<?php echo $_auction['listing_id'] ?>" href="#"><?php echo $__update ?></a>
+
+          <?php endif; ?>
+        </td>
       </tr>
       <?php endforeach ?>
     </tbody>
@@ -184,25 +200,8 @@ $__remove = $this->__('Remove');
 <table cellspacing="0" class="actions">
   <tbody>
     <tr>
-      <td>
-        <?php if ($_auction['listing_id']): ?>
-          <?php echo $this->__('Listing URL'); ?>:
-          <?php $_listingUrl = $_auction->getUrl($this->_website); ?>
-        <a target="_blank" href="<?php echo $_listingUrl ?>">
-          <?php echo $_listingUrl ?>
-        </a>
-        (<?php echo $this->__('ID'); ?>: <?php echo $_auction['listing_id']; ?>  )
-        <?php endif; ?>
-      </td>
       <td class="a-right">
-      <?php
-        if ($_auction['listing_id']) {
-          echo $this->getStatusButton();
-          echo $this->getRemoveButton();
-          echo $this->getUpdateButton();
-        } else
-          echo $this->getSubmitButton();
-      ?>
+        <?php echo $this->getSubmitButton() ?>
       </td>
     </tr>
   </tbody>

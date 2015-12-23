@@ -140,15 +140,6 @@ class MVentory_TradeMe_Trademe_ListingController
         $auction = null;
     }
 
-    if (!$auction && isset($params['product_id']) && $params['product_id']) {
-      $auction = Mage::getModel('trademe/auction')->loadByProduct(
-        $params['product_id']
-      );
-
-      if (!$auction->getId())
-        $auction = null;
-    }
-
     if (!$auction) {
       Mage::getSingleton('adminhtml/session')
         ->addError($helper->__('Can\'t load auction'));
@@ -177,151 +168,138 @@ class MVentory_TradeMe_Trademe_ListingController
   }
 
   public function checkAction () {
-    $id = $this->_request->getParam('id');
-    $product = Mage::getModel('catalog/product')->load($id);
+    $helper = Mage::helper('trademe/auction');
 
-    $helper = Mage::helper('mventory/product');
+    $auction = null;
+    $params = $this
+      ->getRequest()
+      ->getParams();
 
-    if ($product->getId()) {
-      $auction = Mage::getModel('trademe/auction')->loadByProduct($product);
+    if (isset($params['id']) && $params['id']) {
+      $auction = Mage::getModel('trademe/auction')->load(
+        $params['id'],
+        'listing_id'
+      );
 
-      if (!$auction->getId()) {
-        Mage::getSingleton('adminhtml/session')
-          ->addError($helper->__('Can\'t load auction'));
+      if (!$auction->getId())
+        $auction = null;
+    }
 
-        $this->_redirect('adminhtml/catalog_product/edit/id/' . $id);
+    $session = Mage::getSingleton('adminhtml/session');
 
-        return;
-      }
+    if (!$auction) {
+      $session->addError($helper->__('Can\'t load auction'));
 
-      $website = $helper->getWebsite($product);
+      return $this->_redirect(
+        'adminhtml/catalog_product/edit/id/' . $params['product_id']
+      );
+    }
 
-      try {
-        $connector = new MVentory_TradeMe_Model_Api();
-        $listingDetails = $connector
-          ->setWebsiteId($website)
-          ->getListingDetails($auction);
-      }
-      catch (Exception $e) {
-        Mage::logException($e);
-        Mage::getSingleton('adminhtml/session')->addError(
-          $helper->__($e->getMessage())
+    try {
+      $listingDetails = $auction->getDetails();
+    } catch (Exception $e) {
+      Mage::logException($e);
+      $session->addError($helper->__($e->getMessage()));
+
+      return $this->_redirect(
+        'adminhtml/catalog_product/edit/id/' . $params['product_id']
+      );
+    }
+
+    switch ($helper->getSaleStatus($listingDetails)) {
+      case 1:
+        $auction->delete();
+
+        $session->addSuccess(
+          $helper->__('Wasn\'t sold: %s', $auction->getUrl())
         );
 
-        return $this->_redirect('adminhtml/catalog_product/edit/id/' . $id);
-      }
+        break;
+      case 2:
+        $product = $auction->getProduct();
+        $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct(
+          $product
+        );
 
-      $path = MVentory_TradeMe_Model_Config::SANDBOX;
+        if ($stock->getManageStock() && $stock->getQty()) {
+          $stockData = $stock->getData();
+          $stockData['qty'] -= 1;
+          $product
+            ->setStockData($stockData)
+            ->save();
+        }
 
-      $host = $helper->getConfig($path, $website) ? 'tmsandbox' : 'trademe';
-      $url = 'http://www.'
-             . $host
-             . '.co.nz/Browse/Listing.aspx?id='
-             . $auction['listing_id'];
+        $auction->delete();
 
-      $link = '<a href="' . $url . '">' . $url . '</a>';
+        $session->addSuccess(
+          $helper->__('Successfully sold: %s', $auction->getUrl())
+        );
 
-      switch (Mage::helper('trademe/auction')->getSaleStatus($listingDetails)) {
-        case 1:
-          Mage::getSingleton('adminhtml/session')
-            ->addSuccess($helper->__('Wasn\'t sold') . ': ' . $link);
+        break;
+      case 3:
+        $session->addSuccess(
+          $helper->__('Listing is active: %s', $auction->getUrl())
+        );
 
-          $auction->delete();
+        break;
+      default:
+        throw new LogicException('Unexpected value of auction\'s sale status');
+    }
 
-          break;
-        case 2:
-          Mage::getSingleton('adminhtml/session')
-            ->addSuccess($helper->__('Successfully sold ') . ': ' . $link);
-
-          $stock = Mage::getModel('cataloginventory/stock_item')
-                     ->loadByProduct($product);
-
-          if ($stock->getManageStock() && $stock->getQty()) {
-            $stockData = $stock->getData();
-            $stockData['qty'] -= 1;
-            $product
-              ->setStockData($stockData)
-              ->save();
-          }
-
-          $auction->delete();
-
-          break;
-        case 3:
-          Mage::getSingleton('adminhtml/session')
-            ->addSuccess($helper->__('Listing is active ') . ': ' . $link);
-
-          break;
-        default:
-          throw new LogicException('Unexpected result value');
-      }
-    } else
-      Mage::getSingleton('adminhtml/session')->addError($helper->__('Error'));
-
-    $this->_redirect('adminhtml/catalog_product/edit/id/' . $id);
+    $this->_redirect(
+      'adminhtml/catalog_product/edit/id/' . $params['product_id']
+    );
   }
 
   public function updateAction () {
-    $request = $this->getRequest();
-    $helper = Mage::helper('mventory/product');
+    $helper = Mage::helper('trademe/auction');
 
-    $params = $request->getParams();
+    $auction = null;
+    $params = $this
+      ->getRequest()
+      ->getParams();
 
-    if (!isset($params['id'])) {
-      Mage::getSingleton('adminhtml/session')
-        ->addError($helper->__('No product ID parameter'));
+    if (isset($params['id']) && $params['id']) {
+      $auction = Mage::getModel('trademe/auction')->load(
+        $params['id'],
+        'listing_id'
+      );
 
-      $this->_redirect('adminhtml/catalog_product/index');
+      if (!$auction->getId())
+        $auction = null;
+    }
 
-      return;
+    $session = Mage::getSingleton('adminhtml/session');
+
+    if (!$auction) {
+      $session->addError($helper->__('Can\'t load auction'));
+
+      return $this->_redirect(
+        'adminhtml/catalog_product/edit/id/' . $params['product_id']
+      );
     }
 
     $data = isset($params['product']) && is_array($params['product'])
-              ? Mage::helper('trademe')->getFormFields($params['product'])
+              ? $helper->getFormFields($params['product'])
                 : array();
 
     $data['category'] = isset($params['trademe_category'])
                           ? $params['trademe_category']
                             : null;
 
-    $product = Mage::getModel('catalog/product')->load($params['id']);
-
-    if (!$product->getId()) {
-      Mage::getSingleton('adminhtml/session')
-        ->addError($helper->__('Can\'t load product'));
-
-      $this->_redirect('adminhtml/catalog_product/edit/id/' . $params['id']);
-
-      return;
-    }
-
-    $auction = Mage::getModel('trademe/auction')->loadByProduct($product);
-
-    if (!$auction->getId()) {
-      Mage::getSingleton('adminhtml/session')
-        ->addError($helper->__('Can\'t load auction'));
-
-      $this->_redirect('adminhtml/catalog_product/edit/id/' . $params['id']);
-
-      return;
-    }
-
     try {
-      $api = new MVentory_TradeMe_Model_Api();
-      $result = $api->update($product, $auction, null, $data);
+      $auction->update($data);
 
-      Mage::getSingleton('adminhtml/session')->addSuccess(
-        $helper->__('Listing has been updated')
-      );
+      $session->addSuccess($helper->__('Listing has been updated'));
     }
     catch (Exception $e) {
       Mage::logException($e);
-      Mage::getSingleton('adminhtml/session')->addError(
-        $helper->__($e->getMessage())
-      );
+      $session->addError($helper->__($e->getMessage()));
     }
 
-    $this->_redirect('adminhtml/catalog_product/edit/id/' . $params['id']);
+    $this->_redirect(
+      'adminhtml/catalog_product/edit/id/' . $params['product_id']
+    );
   }
 
   /**

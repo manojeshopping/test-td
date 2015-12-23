@@ -336,9 +336,9 @@ function setResult(result) {
             if (result.wishlist) {
                 setWlist(result);
             }
-			$("sns_ajaxwrap").setStyle({
-                display: "none"
-            });
+			// $("sns_ajaxwrap").setStyle({
+                // display: "none"
+            // });
             CANFLY = 0;
         }
     } else if (result.addtype == '1') {
@@ -511,8 +511,10 @@ function getPOptions(result) {
             break;
         }
     }
-    $("confirmbox").innerHTML = result.co_sb.stripScripts();
-    $("ajax_overlay").onclick = function(e) {
+	var confirmtitle = "Product Options";
+    $("myModalLabel").innerHTML= confirmtitle;
+	$("confirmbox").innerHTML = result.co_sb.stripScripts();
+	$("ajax_overlay").onclick = function(e) {
         $("confirmbox").innerHTML = '';
         $("ajax_content").setStyle({
             display: "none"

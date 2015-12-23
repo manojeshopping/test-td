@@ -693,4 +693,17 @@ class MVentory_TradeMe_Helper_Data extends Mage_Core_Helper_Abstract
       return $amount;
     }
   }
+
+  /**
+   * Calculate hash for supplied array
+   *
+   * @param array $data
+   *   Data to calculate hash for
+   *
+   * @return string
+   *   Hash value
+   */
+  public function getHash ($data) {
+    return md5(Mage::helper('core')->jsonEncode($data));
+  }
 }

@@ -142,8 +142,9 @@ class Sns_Ajaxcart_Helper_Data extends Mage_Core_Helper_Abstract{
 								->setTemplate('catalog/product/view/price_clone.phtml');
 			$js = $block->createBlock('core/template', 'product_js')
 								->setTemplate('catalog/product/view/options/js.phtml');
-			if ($product->getTypeId() == 'bundle'){
-				$price->addPriceBlockType('bundle','bundle/catalog_product_price','sns/ajaxcart/bundle/catalog/product/view/price.phtml') ;
+			if ($product->getTypeId() == 'bundle'){	//$price->addPriceBlockType('bundle','bundle/catalog_product_price','sns/ajaxcart/bundle/catalog/product/view/price.phtml') ;
+				$price = $block->createBlock('bundle/catalog_product_price', 'bundle_price')
+								->setTemplate('sns/ajaxcart/bundle/catalog/product/view/price.phtml');
 				$tierprices=$block->createBlock('bundle/catalog_product_view','tierprices')
 								->setTemplate('bundle/catalog/product/view/tierprices.phtml');
 				$extrahind=$block->createBlock('cataloginventory/qtyincrements','extrahint')
