@@ -833,7 +833,8 @@ EOT;
 
       $buyer = [
         'email' => $_buyer['Email'],
-        'nickname' => $_buyer['Nickname']
+        'nickname' => $_buyer['Nickname'],
+        'memberId' => $_buyer['MemberId']
       ];
 
       unset($_buyer);

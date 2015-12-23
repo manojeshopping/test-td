@@ -197,7 +197,7 @@ function categories_for_product (url_templates) {
 
   function update_handler () {
     $('#product_edit_form')
-      .attr('action', url_templates['update'])
+      .attr('action', url_templates['updates'][$(this).data('listingId')])
       .submit();
   }
 
@@ -210,7 +210,7 @@ function categories_for_product (url_templates) {
   }
 
   var $submit = $('#trademe-submit').on('click', submit_handler);
-  var $update = $('#trademe-update').on('click', update_handler);
+  var $update = $('.trademe-action-update').on('click', update_handler);
 
   apply_table_handlers($selected_categories, row_click_handler);
   categories_table(url_templates, on_add, on_remove);

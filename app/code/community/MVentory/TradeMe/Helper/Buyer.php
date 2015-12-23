@@ -55,6 +55,8 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
    *   Buyer model and address model
    */
   public function get ($data, $store) {
+// temporary disable bringing in of customer details
+// TODO: needs more work (ask Andy)
 /*    $buyer = $this->_load($data, $store);
     if ($buyer)
       return $buyer;
@@ -126,8 +128,8 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
 
     $buyer = Mage::getModel('customer/customer')
       ->setStore($store)
-      ->setFirstname($addressData['name'])
-      ->setLastname($addressData['name'])
+      ->setFirstname($buyer['nickname'])
+      ->setLastname($buyer['memberId'])
       ->setEmail($buyer['email']);
 
     try {

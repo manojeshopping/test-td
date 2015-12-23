@@ -15,9 +15,17 @@
  * @package MVentory/TradeMe
  * @copyright Copyright (c) 2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
 
-?>
+$helper = Mage::helper('trademe');
 
-Build version: 1c55ae3
-<BR/>Build date: 22/12/2015 20:31 UTC
+foreach (Mage::getResourceModel('trademe/auction_collection') as $auction) {
+  $auction['distinction_hash'] = $helper->getHash([
+    'title' => Mage::getModel('catalog/product')
+      ->load($auction['product_id'])
+      ->getName()
+  ]);
+
+  $auction->save();
+}

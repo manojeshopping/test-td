@@ -54,9 +54,9 @@ class MVentory_TradeMe_Block_Tab
     $trademe = Mage::helper('trademe/product');
 
     $product = $this->getProduct();
+    $productId = $product->getId();
 
-    $this->_auction = Mage::getModel('trademe/auction')
-      ->loadByProduct($product);
+    $this->_auctions = $this->_loadAuctions($productId);
 
     $this->_helper = Mage::helper('mventory/product');
     $this->_website = $this->_helper->getWebsite($product);
@@ -91,8 +91,6 @@ class MVentory_TradeMe_Block_Tab
         $this->_store
       );
 
-    $productId = $product->getId();
-
     //Get TradeMe parameters from the session
     $session = Mage::getSingleton('adminhtml/session');
 
@@ -111,8 +109,11 @@ class MVentory_TradeMe_Block_Tab
         $this->_accountId = $this->_session['account_id'];
         break;
 
-      case isset($this->_auction['account_id']):
-        $this->_accountId = $this->_auction['account_id'];
+      case count($this->_auctions):
+        $this->_accountId = $this
+          ->_auctions
+          ->getLastItem()['account_id'];
+
         break;
 
       case count($this->_accounts):
@@ -171,10 +172,6 @@ class MVentory_TradeMe_Block_Tab
 
   public function getProduct () {
     return Mage::registry('current_product');
-  }
-
-  public function getAuction () {
-    return $this->_auction;
   }
 
   /**
@@ -243,10 +240,20 @@ class MVentory_TradeMe_Block_Tab
 
     $categories = $this->getUrl('adminhtml/trademe_categories/',
                                 array('product_id' => $productId));
-    $update = $this->getUrl('adminhtml/trademe_listing/update/',
-                                array('id' => $productId));
 
-    return Zend_Json::encode(compact('submit', 'categories','update'));
+    $updates = [];
+
+    foreach ($this->_auctions as $auction)
+      if ($auction->isFullPrice())
+        $updates[$auction['listing_id']] = $this->getUrl(
+          'adminhtml/trademe_listing/update',
+          [
+            'id' => $auction['listing_id'],
+            'product_id' => $productId
+          ]
+        );
+
+    return Zend_Json::encode(compact('submit', 'categories','updates'));
   }
 
   public function getSubmitButton () {
@@ -256,34 +263,6 @@ class MVentory_TradeMe_Block_Tab
     $class = $enabled ? '' : 'disabled';
 
     return $this->getButtonHtml($label, null, $class, 'trademe-submit');
-  }
-
-  public function getStatusButton () {
-    $label = $this->__('Check status');
-    $onclick = 'setLocation(\''
-               . $this->getUrl('adminhtml/trademe_listing/check/',
-                               array('id' => $this->getProduct()->getId()))
-               . '\')';
-
-    return $this->getButtonHtml($label, $onclick, '', 'tm_status_button');
-  }
-
-  public function getRemoveButton () {
-    $label = $this->__('Remove');
-    $onclick = 'setLocation(\''
-               . $this->getUrl(
-                   'adminhtml/trademe_listing/remove/',
-                   array('product_id' => $this->getProduct()->getId())
-                 )
-               . '\')';
-
-    return $this->getButtonHtml($label, $onclick, '', 'tm_remove_button');
-  }
-
-  public function getUpdateButton () {
-    $label = $this->__('Update');
-
-    return $this->getButtonHtml($label, null, '', 'trademe-update');
   }
 
   public function getCategoriesButton () {
@@ -491,52 +470,68 @@ class MVentory_TradeMe_Block_Tab
     return $this->__($attributes[$code]->getFrontendLabel());
   }
 
+  protected function _loadAuctions ($productId) {
+    return Mage::getResourceModel('trademe/auction_collection')
+      ->addFieldToFilter('product_id', $productId);
+  }
+
   /**
-   * Return prepared list of $1 auctions for the current product
+   * Return prepared list of all active auctions for the current product
    *
-   * @return array Prepared list of auctions
+   * @return array
+   *   Prepared list of active auctions
    */
-  public function getFixedEndAuctions () {
-    $auctions = Mage::getResourceModel('trademe/auction_collection')
-      ->addFieldToFilter('product_id', $this->getProduct()->getId())
-      ->addFieldToFilter(
-          'type',
-          MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE
-        );
+  protected function _getAuctions () {
+    if (!count($this->_auctions))
+      return [];
 
-    $_auctions = array();
-
-    if (!count($auctions))
-      return $_auctions;
-
+    $auctions = [];
     $helper = Mage::helper('core');
 
-    foreach ($auctions as $auction) {
+    $types = [
+      MVentory_TradeMe_Model_Config::AUCTION_NORMAL
+        => $this->_helper->__('Full-price auction'),
+      MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE
+        => $this->_helper->__('$1 reserve auction')
+    ];
+
+    foreach ($this->_auctions as $auction) {
       $auctionId = $auction['account_id'];
       $listingId = $auction['listing_id'];
 
-      $_auctions[] = array(
+      $p = [
+        'id' => $listingId,
+        'product_id' => $this->getProduct()->getId()
+      ];
+
+      $data = [
         'account' => isset($this->_accounts[$auctionId])
-                       ? $this->_accounts[$auctionId]['name']
-                       : '',
-        'listing' => $listingId,
+          ? $this->_accounts[$auctionId]['name']
+          : '',
+        'type' => $types[(int) $auction['type']],
+        'listing_id' => $listingId,
         'listing_url' => $auction->getUrl($this->_website),
-        'listed' => $helper->formatDate(
+        'listed_at' => $helper->formatDate(
           $auction['listed_at'],
           Mage_Core_Model_Locale::FORMAT_TYPE_SHORT,
           true
         ),
-        'remove_url' => $this->getUrl(
-          'adminhtml/trademe_listing/remove/',
-          array(
-            'id' => $listingId,
-            'product_id' => $this->getProduct()->getId()
-          )
-        )
-      );
+        'remove_url' => $this->getUrl('adminhtml/trademe_listing/remove/', $p)
+      ];
+
+      if ($auction->isFullPrice()) {
+        $data['status_url'] = $this->getUrl(
+          'adminhtml/trademe_listing/check/',
+          $p
+        );
+
+        $data['update_url'] = true;
+      }
+
+      $auctions[] = $data;
     }
 
-    return $_auctions;
+    return $auctions;
   }
 
   protected function _calculateShippingRates () {
@@ -590,4 +585,3 @@ class MVentory_TradeMe_Block_Tab
     }
   }
 }
-

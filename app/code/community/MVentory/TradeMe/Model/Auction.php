@@ -59,6 +59,16 @@ class MVentory_TradeMe_Model_Auction extends Mage_Core_Model_Abstract
     return $this->setOrigData();
   }
 
+  public function isFullPrice () {
+    return MVentory_TradeMe_Model_Config::AUCTION_NORMAL
+      == (int) $this->_data['type'];
+  }
+
+  public function isFixedEndDate () {
+    return MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE
+      == (int) $this->_data['type'];
+  }
+
   /**
    * Assign product to auction
    *
@@ -69,6 +79,10 @@ class MVentory_TradeMe_Model_Auction extends Mage_Core_Model_Abstract
     $this->_product = $product;
 
     return $this;
+  }
+
+  public function getProduct () {
+    return $this->_product;
   }
 
   /**
@@ -93,6 +107,56 @@ class MVentory_TradeMe_Model_Auction extends Mage_Core_Model_Abstract
         : '';
   }
 
+  public function getDetails () {
+    //!!!TODO: implement getting auction details by listing ID only
+    if (!$this['product_id'])
+      return $this;
+
+    $product = Mage::getModel('catalog/product')->load($this['product_id']);
+
+    if (!$product->getId())
+      throw new Mage_Core_Exception('Can\'t load product');
+
+    $this->assignProduct($product);
+
+    $connector = new MVentory_TradeMe_Model_Api();
+
+    return $connector
+      ->setWebsiteId($this->_getWebsite())
+      ->getListingDetails($this);;
+  }
+
+  /**
+   * Update auction
+   *
+   * @return MVentory_TradeMe_Model_Auction
+   */
+  public function update ($data) {
+    //!!!TODO: implement updating by listing ID only
+    if (!$this['product_id'])
+      return $this;
+
+    //Updating of auctions with fixed end date ($1 auctions) are temporarily
+    //disabled
+    if ($this->isFixedEndDate())
+      return $this;
+
+    $product = Mage::getModel('catalog/product')->load($this['product_id']);
+
+    if (!$product->getId())
+      throw new Mage_Core_Exception('Can\'t load product');
+
+    $this->assignProduct($product);
+
+    $connector = new MVentory_TradeMe_Model_Api();
+
+    $connector
+      ->setWebsiteId($this->_getWebsite())
+      ->update($product, $this, null, $data);
+
+    return $this;
+  }
+
   /**
    * Withdraw auction
    *
@@ -105,7 +169,7 @@ class MVentory_TradeMe_Model_Auction extends Mage_Core_Model_Abstract
 
     //Withdrawal for auctions with fixed end date ($1 auctions) are temporarily
     //disabled
-    if ($this['type'] == MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE)
+    if ($this->isFixedEndDate())
       return $this;
 
     $product = Mage::getModel('catalog/product')->load($this['product_id']);

@@ -301,7 +301,7 @@ EOT;
     $price = $this->_parsePrice($row[self::COL_PRICE]);
 
     if ($price === false) {
-      $msg = 'Invalid Minimal price value ("%s") in row %s.';
+      $msg = 'Invalid Maximum price value ("%s") in row %s.';
       $params['errors'][] = $this->__($msg,$row[self::COL_PRICE], $rowNumber);
 
       return false;

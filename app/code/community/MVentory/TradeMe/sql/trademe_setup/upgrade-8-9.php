@@ -15,9 +15,23 @@
  * @package MVentory/TradeMe
  * @copyright Copyright (c) 2015 mVentory Ltd. (http://mventory.com)
  * @license Commercial
+ * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
 
-?>
+$this->startSetup();
 
-Build version: 1c55ae3
-<BR/>Build date: 22/12/2015 20:31 UTC
+$this
+  ->getConnection()
+  ->addColumn(
+      $this->getTable('trademe/auction'),
+      'distinction_hash',
+      [
+        'type' => Varien_Db_Ddl_Table::TYPE_TEXT,
+        'length' => '32',
+        'nullable' => false,
+        'comment' => 'Distinction hash',
+        'after' => 'type'
+      ]
+    );
+
+$this->endSetup();

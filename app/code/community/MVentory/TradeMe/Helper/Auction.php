@@ -223,6 +223,36 @@ class MVentory_TradeMe_Helper_Auction extends MVentory_TradeMe_Helper_Data
   }
 
   /**
+   * Chec if multiple full-price auctions are enabled
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store model. Used to get value of Auction end time setting
+   *
+   * @return boolean
+   *   True if multiple full-price auctions are enabled, otherwise false
+   */
+  public function isMultipleAuctionsEnabled ($store) {
+    return (bool) $store->getConfig(
+      MVentory_TradeMe_Model_Config::_AUC_MULT_PER_NAME
+    );
+  }
+
+  /**
+   * Check if $1 reserve auctions are exclusive, i.e. concurrent full-price
+   * auctions are disabled
+   *
+   * @return boolean
+   *   True if $1 reserve auctions are exclusive, otherwise false
+   */
+  public function isDollarAuctionExclusive () {
+    $mode = (int) Mage::getStoreConfig(
+      MVentory_TradeMe_Model_Config::_1AUC_FULL_PRICE
+    );
+
+    return $mode == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_NEVER;
+  }
+
+  /**
    * Return period of time when listing of $1 auction is allowed using value
    * of Auction end time setting for the supplied store (it adds +/-30 mins
    * to that value)

@@ -140,6 +140,88 @@ class MVentory_TradeMe_Model_Resource_Auction
   }
 
   /**
+   * Return list of distinction hashes for active auctions
+   *
+   * Avaialble auction types:
+   *
+   *   * MVentory_TradeMe_Model_Config::AUCTION_NORMAL
+   *   * MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE
+   *
+   * @see MVentory_TradeMe_Model_Config::AUCTION_NORMAL
+   *   See for available auction types
+   *
+   * @see MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE
+   *   See for available auction types
+   *
+   * @param int $auctionType
+   *   Filter distinction hashes by auctions type
+   *
+   * @return array
+   *   List of distinction hashes
+   *
+   *  Format:
+   *
+   *    [
+   *       //Key is product ID
+   *       '12' => [
+   *
+   *         //Array of distinction hashes splitted by auction type
+   *         'hashes' => [
+   *
+   *           //Key is auction type
+   *           0 => [
+   *             '34aa721d50556f255c10dbabee164e88' => true,
+   *
+   *             ...
+   *
+   *           ],
+   *           1 => [
+   *             'ba61449d17702cab34556e34b588269a' => true,
+   *             'e625626767a290ec305860e7c16456f9' => true,
+   *
+   *             ...
+   *           ]
+   *         ],
+   *
+   *         //Total number of all distinction hashes for the product (number
+   *         //of active auctions)
+   *         'count' => 3
+   *       ],
+   *
+   *       ...
+   *    ]
+   */
+  public function getDistinctionHashes ($auctionType = null) {
+    $adp = $this->_getReadAdapter();
+    $table = $this->getMainTable();
+
+    $select = $adp
+      ->select()
+      ->from($table, ['product_id', 'distinction_hash', 'type']);
+
+    if ($auctionType !== null)
+      $select->where(
+        $adp->prepareSqlCondition(
+          $adp->quoteIdentifier([$table, 'type']),
+          $auctionType
+        )
+      );
+
+    $data = [];
+
+    foreach ($adp->fetchAll($select) as $row) {
+      $id = $row['product_id'];
+
+      $data[$id]['hashes'][(int) $row['type']][$row['distinction_hash']] = true;
+      $data[$id]['count'] = isset($data[$id]['count'])
+        ? $data[$id]['count'] + 1
+        : 1;
+    }
+
+    return $data;
+  }
+
+  /**
    * Filter out products which have normal auction
    *
    * @param  Mage_Eav_Model_Entity_Collection_Abstract $collection Products

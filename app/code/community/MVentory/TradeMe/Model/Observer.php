@@ -189,6 +189,18 @@ EOT;
     $this->_store = $store;
     $this->_accounts = $accounts;
 
+    $this->_isMultAuctionsEnabled = $helper->isMultipleAuctionsEnabled(
+      $store
+    );
+
+    $this->_isStockManagedInStore = (int) $store->getConfig(
+      Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK
+    );
+
+    $this->_isDollarAuctionExclusive = $helper->isDollarAuctionExclusive(
+      $store
+    );
+
     //Sync current auctions and list new
     $this->_automatedWithdrawal();
     $this->_syncAllAuctions();
@@ -345,7 +357,77 @@ EOT;
   }
 
   /**
-   * Submit new normal auctions
+   * Submit new full-price auctions
+   *
+   * Maximum number of full-price auctions is limited by product's QTY
+   * and by number of name variants. $1 auctions are limited only by
+   * available product's QTY
+   *
+   * 1. Multiple full-price auctions are disabled, $1 auctions are exclusive
+   * -----------------------------------------------------------------------
+   *
+   *    Only one full-price auction or 1$ auctions is allowed per product.
+   *
+   *    Product pool should contain:
+   *
+   *      * Not listed products (only full-price type)
+   *
+   *    Steps:
+   *
+   *      1. Limit pool by products with full-price auction
+   *      2. Filter out products for already listed full-price auctions
+   *         from the product pool
+   *
+   * 2. Multiple full-price auctions are enabled, $1 auctions are exclusive
+   * ----------------------------------------------------------------------
+   *
+   *    Multiple full-price auctions or $1 auctions is allowed per product.
+   *
+   *    Product pool should contain:
+   *
+   *      * Not listed products (only full-price type)
+   *      * Listed products for full-price auctions with sufficient QTY
+   *
+   *    Steps:
+   *
+   *      1. Check if stock of products for full-price auctions is sufficient
+   *         to list new auctions.
+   *      2. Limit pool by products with full-price auction
+   *      3. Filter out products from step 1. with insufficient stock.
+   *
+   * 3. Multiple full-price auctions are disabled, $1 auctions aren't exclusive
+   * --------------------------------------------------------------------------
+   *
+   *    Only one full-price auction and 1$ auctions are allowed per product.
+   *
+   *    Product pool should contain:
+   *
+   *      * Not listed products (any auction type)
+   *      * Listed products for $1 auctions with sufficient qty
+   *
+   *    Steps:
+   *
+   *      1. Check if stock of products for $1 auctions is sufficient to list
+   *         new auctions.
+   *      2. Filter out products for already listed full-price auctions
+   *         and products from step 1. with insufficient stock from
+   *         the product pool
+   *
+   * 4. Multiple full-price auctions are enabled, $1 auctions aren't exclusive
+   * -------------------------------------------------------------------------
+   *
+   *    Multiple full-price auctions and $1 auctions are allowed per product.
+   *
+   *    Product pool should contain:
+   *
+   *      * Not listed products (any auction type)
+   *      * Listed products (any auction type) with sufficient QTY
+   *
+   *   Steps:
+   *
+   *     1. Check if stock of products for listed auctions is sufficient
+   *        to list new auctions.
+   *     2. Filter out products from step 1. with insufficient stock.
    *
    * @return null
    */
@@ -396,12 +478,55 @@ EOT;
 
     unset($accountId, $accountData);
 
+    $aucResource = Mage::getResourceModel('trademe/auction');
+
+    //Load distinction hashes to use them later and collect IDs of products
+    //with insufficient stock for listing new products to filter them out
+    //from the product poll
+    if ($this->_isMultAuctionsEnabled || !$this->_isDollarAuctionExclusive) {
+
+      //Additional full-price auctions can be listed for products with existing
+      //$1 auctions, so need to check stock only for these products
+      if (!($this->_isMultAuctionsEnabled || $this->_isDollarAuctionExclusive))
+        $mode = MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE;
+
+      //Additional full-price auctions can be listed for products with existing
+      //full-price auctions (as name variants), so need to check stock
+      //only for these products
+      elseif ($this->_isMultAuctionsEnabled && $this->_isDollarAuctionExclusive)
+        $mode = MVentory_TradeMe_Model_Config::AUCTION_NORMAL;
+
+      //Additional full-price auctions can be listed for products with existing
+      //auctions of any type, so no need to filter hashes by the auction type
+      else
+        $mode = null;
+
+      $hashes = $aucResource->getDistinctionHashes($mode);
+
+      foreach ($hashes as $productId => $auctions) {
+        $qty = $this->_getProductQty($productId);
+
+        if (!$qty || ($qty !== true && $qty <= $auctions['count']))
+          $filterIds[] = $productId;
+      }
+    }
+
+    $listNormAuc = (int) $this
+      ->_store
+      ->getConfig(MVentory_TradeMe_Model_Config::_1AUC_FULL_PRICE);
+
     $products = Mage::getModel('catalog/product')
       ->getCollection()
       ->addAttributeToFilter('type_id', 'simple')
 
       //Load all allowed to list products (incl. for $1 dollar auctions)
-      ->addAttributeToFilter('tm_relist', array('gt' => 0))
+      //or only products with full-price auction if $1 auctions are exclusive
+      ->addAttributeToFilter(
+          'tm_relist',
+          $this->_isDollarAuctionExclusive
+            ? MVentory_TradeMe_Model_Config::LIST_YES
+            : ['gt' => MVentory_TradeMe_Model_Config::LIST_NO]
+        )
       ->addAttributeToFilter('image', array('nin' => array('no_selection', '')))
       ->addAttributeToFilter(
           'status',
@@ -414,20 +539,16 @@ EOT;
       $this->_store
     );
 
-    $listNormAuc = (int) $this
-      ->_store
-      ->getConfig(MVentory_TradeMe_Model_Config::_1AUC_FULL_PRICE);
+    //Filter out products with insufficient stock for submitting new auctions
+    if (isset($filterIds)) {
+      $products->addIdFilter($filterIds, true);
+      unset($filterIds);
+    }
 
-    $aucResource = Mage::getResourceModel('trademe/auction');
-
-    //Filter out product which have normal auctions when List full price
-    //setting set to Always or If stocl allowed
-    if ($listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_ALWAYS
-        || $listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_STOCK)
+    //Filter out products with existing full-price auctions because multiple
+    //full-price auctions are disabled
+    if (!$this->_isMultAuctionsEnabled)
       $aucResource->filterNormalAuctions($products);
-    //Otherwise filter out all products with any auction
-    elseif ($listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_NEVER)
-      $aucResource->filterAllAuctions($products);
 
     $ids = $products->getAllIds();
     MVentory_TradeMe_Model_Log::debug(array('pool size' => count($ids)));
@@ -494,9 +615,6 @@ EOT;
     if (!count($accounts))
       return;
 
-    if ($listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_STOCK)
-      $auctions = $aucResource->getNumberPerProduct();
-
     unset($accountId, $accountData, $syncData);
 
     shuffle($ids);
@@ -506,30 +624,6 @@ EOT;
 
       if (!$id = $product->getId())
         continue;
-
-      if ($listNormAuc == MVentory_TradeMe_Model_Config::AUCTION_NORMAL_STOCK
-          && isset($auctions[$id])) {
-
-        $qty = $this->_getProductQty($product);
-
-        MVentory_TradeMe_Model_Log::debug(array(
-          'product' => $product,
-          'stock' => $qty,
-          'number of auctions' => $auctions[$id],
-        ));
-
-        //Go to next product if stock item can't be loaded (QTY === null)
-        //or stock is managed (QTY !== false) and we have no more stock to list
-        if (($qty === null) || ($qty !== false && $qty <= $auctions[$id]))
-          continue;
-      }
-
-      //??? Do we need it?
-      //if ($accountId = $product->getTmAccountId())
-      //  if (!isset($allAccountsIDs[$accountId]))
-      //    $product->setTmAccountId($accountId = null);
-      //  else if (!isset($accounts[$accountId]))
-      //    continue;
 
       $matchResult = Mage::getModel('trademe/matching')
         ->matchCategory($product);
@@ -566,84 +660,84 @@ EOT;
         if (!$perShipping)
           continue;
 
-        $nameVariants = $this->_getProductNameVariants(
-          $product,
+        $this->_debugData = [
+          'product' => $product,
+          'name variants enabled' => $this->_isMultAuctionsEnabled,
+          '$1 auctions exclusive' => $this->_isDollarAuctionExclusive
+        ];
 
-          //Use known number of normal + $1 auctions or pass 1 to count
-          //auction with default product name
-          isset($auctions[$id]) ? 1 + $auctions[$id] : 1
+        if (isset($hashes[$id])) {
+          $this->_debugData['stock'] = $this->_getProductQty($id);
+          $this->_debugData['number of auctions'] = $hashes[$id]['count'];
+        }
+
+        $auctionTitle = $this->_getAuctionTitle(
+          $product,
+          isset($hashes[$id]) ? $hashes[$id] : null
         );
+
+        $this->_debugData['title'] = $auctionTitle;
+
+        MVentory_TradeMe_Model_Log::debug($this->_debugData);
+
+        //Go to next product if auction title can't be obtained or we have
+        //used all name variants
+        if (!$auctionTitle)
+          continue 2;
+
+        try {
+          $api = new MVentory_TradeMe_Model_Api();
+          $listingId = $api->send(
+            $product,
+            $matchResult['id'],
+            $accountId,
+            array('title' => $auctionTitle)
+          );
+        }
+        catch (Exception $e) {
+          $errors = $this->_parseErrors($e->getMessage());
+
+          Mage::logException($e);
+          MVentory_TradeMe_Model_Log::debug(array(
+            'product' => $product,
+            'submit result' => $errors,
+            'error' => true
+          ));
+
+          foreach ($errors as $error)
+            if ($error == 'Insufficient balance') {
+              $this->_negativeBalanceError($accountData['name']);
+
+              if (count($accounts) == 1)
+                return;
+
+              unset($accounts[$accountId]);
+
+              break;
+            }
+
+          //Try next account
+          continue;
+        }
 
         MVentory_TradeMe_Model_Log::debug(array(
           'product' => $product,
-          'name variants' => $nameVariants
+          'submit result' => $listingId,
+          'error' => false
         ));
 
-        $numberOfListedVariants = 0;
+        Mage::getModel('trademe/auction')
+          ->setData([
+              'product_id' => $product->getId(),
+              'listing_id' => $listingId,
+              'account_id' => $accountId,
+              'distinction_hash' => $this
+                ->_helper
+                ->getHash(['title' => $auctionTitle])
+            ])
+          ->save();
 
-        foreach ($nameVariants as $nameVariant) {
-          try {
-            $api = new MVentory_TradeMe_Model_Api();
-            $listingId = $api->send(
-              $product,
-              $matchResult['id'],
-              $accountId,
-              array('title' => $nameVariant)
-            );
-          }
-          catch (Exception $e) {
-            $errors = $this->_parseErrors($e->getMessage());
-
-            Mage::logException($e);
-            MVentory_TradeMe_Model_Log::debug(array(
-              'product' => $product,
-              'submit result' => $errors,
-              'error' => true
-            ));
-
-            //Go to next product if error happened during listing name variant
-            //Because we don't want to list name variants in different accounts
-            if ($numberOfListedVariants)
-              continue 3;
-
-            foreach ($errors as $error)
-              if ($error == 'Insufficient balance') {
-                $this->_negativeBalanceError($accountData['name']);
-
-                if (count($accounts) == 1)
-                  return;
-
-                unset($accounts[$accountId]);
-
-                break;
-              }
-
-            //Try next account
-            continue 2;
-          }
-
-          MVentory_TradeMe_Model_Log::debug(array(
-            'product' => $product,
-            'submit result' => $listingId,
-            'error' => false
-          ));
-
-          //Add record to the DB only for auction with default name
-          if (!$numberOfListedVariants)
-            Mage::getModel('trademe/auction')
-              ->setData(array(
-                  'product_id' => $product->getId(),
-                  'listing_id' => $listingId,
-                  'account_id' => $accountId
-                ))
-              ->save();
-
-          $numberOfListedVariants++;
-        }
-
-        $accounts[$accountId]['free_slots'] -= $numberOfListedVariants;
-
-        if ($accounts[$accountId]['free_slots'] <= 0) {
+        if (--$accounts[$accountId]['free_slots'] <= 0) {
           $accountData['sync_data']['duration'] = $this
             ->_helper
             ->getDuration($perShipping);
@@ -661,8 +755,7 @@ EOT;
           unset($accounts[$accountId]);
         }
 
-        //We have succesfully listed product (and its name variants),
-        //go to the next one
+        //We have succesfully listed product go to the next one
         break;
       }
     }
@@ -692,11 +785,6 @@ EOT;
     if (!count($accounts))
       return;
 
-    $storeManageStock = (int) Mage::getStoreConfigFlag(
-      Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK,
-      $store
-    );
-
     $filterIds = $helper->getProductsListedToday(
       $store,
       MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE
@@ -713,7 +801,7 @@ EOT;
         continue;
 
       $manageStock = $stock->getUseConfigManageStock()
-                       ? $storeManageStock
+                       ? $this->_isStockManagedInStore
                        : (int) $stock['manage_stock'];
 
       if ($manageStock && ($stock->getQty() - $auctionsNumber < 1))
@@ -873,7 +961,10 @@ EOT;
               'product_id' => $product->getId(),
               'type' => MVentory_TradeMe_Model_Config::AUCTION_FIXED_END_DATE,
               'listing_id' => $listingId,
-              'account_id' => $accountId
+              'account_id' => $accountId,
+              'distinction_hash' => $this
+                ->_helper
+                ->getHash(['title' => $product->getName()])
             ))
           ->save();
 
@@ -893,107 +984,120 @@ EOT;
     $items = $order->getAllItems();
 
     $productHelper = Mage::helper('mventory/product');
-    $trademe = Mage::helper('trademe');
+
+    $productsToUnlink = [];
 
     foreach ($items as $item) {
-      $productId = (int) $item->getProductId();
-
-      $auction = Mage::getModel('trademe/auction')->loadByProduct($productId);
-
-      if (!$auction->getId())
-        continue;
-
       $stockItem = Mage::getModel('cataloginventory/stock_item')
-        ->loadByProduct($productId);
+        ->loadByProduct($item->getProductId());
 
       if (!($stockItem->getManageStock() && $stockItem->getQty() == 0))
         continue;
 
-      $product = Mage::getModel('catalog/product')->load($productId);
+      $product = Mage::getModel('catalog/product')->load($item->getProductId());
+      if ($product->getId())
+        $productsToUnlink[] = $product;
+    }
 
-      $website = $productHelper->getWebsite($product);
-      $accounts = $trademe->getAccounts($website);
-      $accounts = $trademe->prepareAccounts($accounts, $product);
+    if (!$productsToUnlink)
+      return;
 
-      $accountId = $auction['account_id'];
-      $account = $accountId && isset($accounts[$accountId])
-                   ? $accounts[$accountId]
-                     : null;
+    $errors = $this->_removeAuctions($productsToUnlink);
 
-      //Avoid withdrawal by default
-      $avoidWithdrawal = true;
+    if ($errors) foreach ($errors as $error) {
+      //Send email with error message to website's general contact address
 
-      $fields = $trademe->getFields($product, $account);
+      $productUrl = $productHelper->getUrl($error['product']);
+      $listingId = $error['auction']->getUrl($website);
+
+      $subject = 'TradeMe: error on removing listing';
+      $message = 'Error on increasing price or withdrawing listing ('
+                 . $listingId
+                 . ') linked to product ('
+                 . $productUrl
+                 . ')'
+                 . ' Error: ' . $error['exception']->getMessage();
+
+      $productHelper->sendEmail($subject, $message);
+    }
+  }
+
+  protected function _removeAuctions ($products) {
+    $helper = Mage::helper('trademe');
+    $productHelper = Mage::helper('mventory/product');
+    $api = new MVentory_TradeMe_Model_Api();
+    $errorsData = [];
+
+    foreach ($products as $product) {
+      $auctions = Mage::getResourceModel('trademe/auction_collection')
+        ->addFieldToFilter('product_id', $product->getId());
+
+      if (!count($auctions))
+        continue;
 
       $attrs = $product->getAttributes();
+      $website = $productHelper->getWebsite($product);
+      $accounts = $helper->prepareAccounts(
+        $helper->getAccounts($website),
+        $product
+      );
 
-      if (isset($attrs['tm_avoid_withdrawal'])) {
-        $attr = $attrs['tm_avoid_withdrawal'];
+      foreach ($auctions as $auction) {
+        $accountId = $auction['account_id'];
+        $account = $accountId && isset($accounts[$accountId])
+          ? $accounts[$accountId]
+          : null;
 
-        if ($attr->getDefaultValue() != $fields['avoid_withdrawal']) {
-          $options = $attr
-                      ->getSource()
-                      ->toOptionArray();
+        $fields = $helper->getFields($product, $account);
 
-          if (isset($options[$fields['avoid_withdrawal']]))
-            $avoidWithdrawal = (bool) $fields['avoid_withdrawal'];
+        //Avoid withdrawal by default
+        $avoidWithdrawal = true;
+
+        if (isset($attrs['tm_avoid_withdrawal'])) {
+          $attr = $attrs['tm_avoid_withdrawal'];
+
+          if ($attr->getDefaultValue() != $fields['avoid_withdrawal']) {
+            $options = $attr
+              ->getSource()
+              ->toOptionArray();
+
+            if (isset($options[$fields['avoid_withdrawal']]))
+              $avoidWithdrawal = (bool) $fields['avoid_withdrawal'];
+          }
         }
-      }
-
-      $api = new MVentory_TradeMe_Model_Api();
-
-      if ($avoidWithdrawal) {
-        $price = $product->getPrice() * 5;
-
-        if ($fields['add_fees'])
-          $price = $trademe->addFees($price);
 
         try {
-          $api->update(
-            $product,
-            $auction,
-            array('StartPrice' => $price)
-          );
+          if ($avoidWithdrawal) {
+            $price = $product->getPrice() * 5;
+
+            if ($fields['add_fees'])
+              $price = $helper->addFees($price);
+
+            $api->update($product, $auction, ['StartPrice' => $price]);
+
+          }
+          else
+            $api
+              ->setWebsiteId($website)
+              ->remove($auction);
+
+          $auction->delete();
         }
         catch (Exception $e) {
           Mage::logException($e);
 
           $error = $e->getMessage();
+
+          $errorsData[] = [
+            'exception' => $e,
+            'product' => $products,
+            'auction' => $auction
+          ];
         }
       }
-      else
-        try {
-          $api
-            ->setWebsiteId($website)
-            ->remove($auction);
-        }
-        catch (Exception $e) {
-          Mage::logException($e);
-
-          $error = $e->getMessage();
-        }
-
-      if (isset($error)) {
-        //Send email with error message to website's general contact address
-
-        $productUrl = $productHelper->getUrl($product);
-        $listingId = $auction->getUrl($website);
-
-        $subject = 'TradeMe: error on removing listing';
-        $message = 'Error on increasing price or withdrawing listing ('
-                   . $listingId
-                   . ') linked to product ('
-                   . $productUrl
-                   . ')'
-                   . ' Error: ' . $error;
-
-        $productHelper->sendEmail($subject, $message);
-
-        continue;
-      }
-
-      $auction->delete();
     }
+
+    return $errorsData;
   }
 
   public function addTradeMeData ($observer) {
@@ -1214,98 +1318,87 @@ EOT;
   }
 
   /**
-   * Return product's name variants. Number of variants depends on available
-   * stock
+   * Return title for auction.
    *
    * @param Mage_Catalog_Model_Product $product
    *   Product model
    *
-   * @param int $numOfAuctions
-   *   Number of existing auctions for the supplied product
+   * @param array $hashesData
+   *   Distinction hashes for the product
    *
-   * @return array
-   *   Returns shuffled array of name varients limit by available product's
-   *   stock.
+   * @return string|null
+   *   Returns auction title or null if it can't be obtained
    */
-  protected function _getProductNameVariants ($product, $numOfAuctions) {
-    $allowMultiple = (bool) $this->_store->getConfig(
-      MVentory_TradeMe_Model_Config::_AUC_MULT_PER_NAME
-    );
+  protected function _getAuctionTitle ($product, $hashesData) {
+    //We can simply choose one name variant from all if there're no hashes
+    //for full-price auctions (it means the product is being listed for
+    //the first time) or multiple full-price auctions are disabled
 
-    if (!$allowMultiple)
-      return [
-        Mage::helper('trademe/auction')->getTitle($product, $this->_store)
-      ];
+    $canUseNameVariants = $this->_isMultAuctionsEnabled
+                          && $hashesData
+                          && $hashesData['hashes'][0];
 
+    if (!$canUseNameVariants)
+      return $this->_helper->getTitle($product, $this->_store);
+
+    //Get all available name variants for the product
     $names = Mage::helper('trademe/product')->getNameVariants(
       $product,
       $this->_store
     );
 
-    //We don't have alternative product names so product's name is used
-    //as fallback
-    if (!$names)
-      return [$product->getName()];
+    $this->_debugData['number of available name variants'] = count($names);
 
-    $qty = $this->_getProductQty($product);
+    //We don't list the product if name variants can't be obtained or all name
+    //variants have been already listed
+    if (!$names || count($hashesData['hashes'][0]) >= count($names))
+      return null;
 
-    //Return no name variants if stock item can't be loaded
-    if ($qty === null)
-      return array();
+    //Calculate distinction hashes for all available name variants
+    $namesHashes = [];
+    foreach ($names as $name) {
+      $hash = $this->_helper->getHash(['title' => $name]);
+      $namesHashes[$hash] = $name;
+    }
 
-    //Return all name variants if stock is not managed
-    if ($qty === false)
-      return $names;
+    //Get not used name variants
+    $notUsedNames = array_diff_key($namesHashes, $hashesData['hashes'][0]);
 
-    $qty = $qty - $numOfAuctions;
-
-    if ($qty <= 0)
-      return [
-        Mage::helper('trademe/auction')->getTitle($product, $this->_store)
-      ];
-
-    return (count($names) <= $qty)
-             ? $names
-             : array_intersect_key(
-                 $names,
-                 array_flip((array) array_rand($names, $qty))
-               );
+    //Pick and return one of not used name variants
+    return $notUsedNames[array_rand($notUsedNames)];
   }
 
   /**
    * Return QTY for the specified product
    *
-   * @param Mage_Catalog_Model_Product $product
-   *   Product model
+   * @param Mage_Catalog_Model_Product|int $product
+   *   Product model or product ID
    *
    * @return int|bool|null
-   *   Returns QTY number or null if stock item can't be loaded or false if
+   *   Returns QTY number or null if stock item can't be loaded or true if
    *   stock is not managed
    */
   protected function _getProductQty ($product) {
-    if (!isset($this->_isStockManagedInStore))
-      $this->_isStockManagedInStore = (int) $this->_store->getConfig(
-        Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK
-      );
+    $productId = $product instanceof Mage_Catalog_Model_Product
+      ? $product->getId()
+      : $product;
 
-    if (!isset($product['trademe_stock_item'])) {
-      $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct(
-        $product
-      );
+    if (isset($this->_productQtys[$productId]))
+      return $this->_productQtys[$productId];
 
-      if (!$stock->getId())
-        return null;
+    $stockItem = Mage::getModel('cataloginventory/stock_item')->loadByProduct(
+      $productId
+    );
 
-      $product['trademe_stock_item'] = $stock;
-    }
-    else
-      $stock = $product['trademe_stock_item'];
+    if (!$stockItem->getId())
+      return $this->_productQtys[$productId] = null;
 
-    $manageStock = $stock->getUseConfigManageStock()
-                     ? $this->_isStockManagedInStore
-                     : (int) $stock['manage_stock'];
+    $isStockManage = $stockItem->getUseConfigManageStock()
+      ? $this->_isStockManagedInStore
+      : (bool) $stockItem['manage_stock'];
 
-    return $manageStock ? $stock->getQty() : false;
+    return $this->_productQtys[$productId]
+      = ($isStockManage ? $stockItem->getQty() : true);
   }
 
   /**
@@ -1365,7 +1458,7 @@ EOT;
       ));
     } catch (Exception $e) {
       MVentory_TradeMe_Model_Log::debug(array(
-        'error on order creating' => $e->getMessage()
+        'error on order creation' => $e->getMessage()
       ));
 
       throw $e;
