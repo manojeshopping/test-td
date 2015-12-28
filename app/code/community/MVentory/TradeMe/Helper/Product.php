@@ -333,13 +333,21 @@ EOT;
     if (!$names)
       return array();
 
-    return array_filter(array_map(
+    /**
+     * Strip whitespace from name variants, remove duplicate and empty names
+     *
+     *   * array_map to trim array values
+     *   * Double array_flip to remove duplicate array values
+     *   * array_filter to remove empty array values
+     */
+
+    return array_filter(array_flip(array_flip(array_map(
       'trim',
       $this->_processNames(
         explode("\n", str_replace("\r\n", "\n", $names)),
         $product
       )
-    ));
+    ))));
   }
 
   /**
