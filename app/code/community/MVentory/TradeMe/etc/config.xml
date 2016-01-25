@@ -23,7 +23,7 @@
 <config>
   <modules>
     <MVentory_TradeMe>
-      <version>9</version>
+      <version>10</version>
     </MVentory_TradeMe>
   </modules>
 
@@ -247,6 +247,22 @@
         <allow_multiple>0</allow_multiple>
 
       </image>
+
+      <order>
+
+        <!-- 1 = Yes -->
+        <allow>1</allow>
+
+        <!-- 1 = Yes -->
+        <create_shipment>1</create_shipment>
+
+        <!-- 1 = Yes -->
+        <create_invoice>1</create_invoice>
+
+        <!-- 1 = Yes -->
+        <create_new_customer>1</create_new_customer>
+
+      </order>
     </trademe>
   </default>
 

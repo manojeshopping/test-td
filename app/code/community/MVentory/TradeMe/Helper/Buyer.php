@@ -33,7 +33,8 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
    * @var array
    */
   protected $_defaultAddressData = [
-    'name' => 'Name not specified',
+    'firstname' => 'First name not specified',
+    'lastname' => 'Last name not specified',
     'street' => ['Shipping address not specified', ''],
     'suburb' => '',
     'city' => 'City not specified',
@@ -55,17 +56,27 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
    *   Buyer model and address model
    */
   public function get ($data, $store) {
-// temporary disable bringing in of customer details
-// TODO: needs more work (ask Andy)
-/*    $buyer = $this->_load($data, $store);
-    if ($buyer)
-      return $buyer;
+    $onlyDefaultCustomer = Mage::getStoreConfigFlag(
+      MVentory_TradeMe_Model_Config::_ORDER_CUSTOMER_DEF,
+      $store
+    );
 
-    $buyer = $this->_create($data, $store);
-    if ($buyer)
-      return $buyer;
-*/
-    return $this->_default($data['default_buyer_id'], $store);
+    if ($onlyDefaultCustomer)
+      return $this->_default($store);
+
+    $customer = $this->_load($data, $store);
+    if ($customer)
+      return $customer;
+
+    $canCreateCustomer = Mage::getStoreConfigFlag(
+      MVentory_TradeMe_Model_Config::_ORDER_CUSTOMER_NEW,
+      $store
+    );
+
+    if ($canCreateCustomer && ($customer = $this->_create($data, $store)))
+      return $customer;
+
+    return $this->_default($store);
   }
 
   /**
@@ -128,8 +139,8 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
 
     $buyer = Mage::getModel('customer/customer')
       ->setStore($store)
-      ->setFirstname($buyer['nickname'])
-      ->setLastname($buyer['memberId'])
+      ->setFirstname($addressData['firstname'])
+      ->setLastname($addressData['lastname'])
       ->setEmail($buyer['email']);
 
     try {
@@ -174,13 +185,14 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
    * @return array
    *   Buyer model and address model
    */
-  protected function _default ($defaultBuyerId, $store) {
-    if (!$defaultBuyerId)
+  protected function _default ($store) {
+    $id = $store->getConfig(MVentory_TradeMe_Model_Config::_ORDER_CUSTOMER_ID);
+    if (!$id)
       return;
 
     $defaultBuyer = Mage::getModel('customer/customer')
       ->setStore($store)
-      ->load($defaultBuyerId);
+      ->load($id);
 
     return $defaultBuyer->getId()
              ? [$defaultBuyer, $defaultBuyer->getDefaultBillingAddress()]
@@ -200,8 +212,9 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
    *   Prepare address data
    */
   protected function _prepareAddressData ($data, $buyer) {
-    if (!(isset($data['name']) && $data['name']))
-      $data['name'] = $buyer['nickname'];
+    foreach (['firstname', 'lastname'] as $key)
+      if (!(isset($data[$key]) && $data[$key]))
+        $data[$key] = $buyer['nickname'];
 
     return array_merge($this->_defaultAddressData, $data);
   }
@@ -228,8 +241,8 @@ class MVentory_TradeMe_Helper_Buyer extends MVentory_TradeMe_Helper_Data
 
     //Create address
     $address = Mage::getModel('customer/address')
-      ->setFirstname($data['name'])
-      ->setLastname($data['name'])
+      ->setFirstname($data['firstname'])
+      ->setLastname($data['lastname'])
       ->setStreet($data['street'])
       ->setCity($data['city'])
       ->setCountryId($countryId)

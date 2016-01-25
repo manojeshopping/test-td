@@ -27,7 +27,7 @@
 
 class MVentory_TradeMe_Helper_Settings extends MVentory_TradeMe_Helper_Data
 {
-  const NUM_OF_COLUMNS = 14;
+  const NUM_OF_COLUMNS = 13;
 
   /**
    * Column numbers
@@ -42,10 +42,9 @@ class MVentory_TradeMe_Helper_Settings extends MVentory_TradeMe_Helper_Data
   const COL_ADD_FEES = 7;
   const COL_ALLOW_PICKUP = 8;
   const COL_CATEGORY_IMAGE = 9;
-  const COL_BUYER = 10;
-  const COL_DURATION = 11;
-  const COL_SHIPPING_OPTIONS = 12;
-  const COL_FOOTER = 13;
+  const COL_DURATION = 10;
+  const COL_SHIPPING_OPTIONS = 11;
+  const COL_FOOTER = 12;
 
   const __E_COND_EMPTY_ROWS = <<<'EOT'
 There's more than one row with empty weight and price conditions. Shipping type should contain only one default row
@@ -125,7 +124,7 @@ EOT;
     //Check and skip headers
     $headers = $io->streamReadCsv();
 
-    if ($headers === false || count($headers) < self::NUM_OF_COLUMNS) {
+    if ($headers === false || count($headers) != self::NUM_OF_COLUMNS) {
       $io->streamClose();
 
       Mage::throwException(
@@ -368,7 +367,6 @@ EOT;
       'add_fees' => $addFees,
       'allow_pickup' => (bool) $row[self::COL_ALLOW_PICKUP],
       'category_image' => (bool) $row[self::COL_CATEGORY_IMAGE],
-      'buyer' => (int) $row[self::COL_BUYER],
       'duration' => $listingDuaration,
       'shipping_options' => $this->_parseShippingOptionsValue(
         $row[self::COL_SHIPPING_OPTIONS]
