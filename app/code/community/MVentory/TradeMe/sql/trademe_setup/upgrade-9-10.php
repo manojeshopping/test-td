@@ -18,14 +18,20 @@
  * @author Anatoly A. Kazantsev <anatoly@mventory.com>
  */
 
-$helper = Mage::helper('trademe');
+$this->startSetup();
 
-foreach (Mage::getResourceModel('trademe/auction_collection') as $auction) {
-  $auction['distinction_hash'] = $helper->getHash([
-    'title' => Mage::getModel('catalog/product')
-      ->load($auction['product_id'])
-      ->getName()
-  ]);
+$this
+  ->getConnection()
+  ->addColumn(
+      $this->getTable('trademe/auction'),
+      'distinction_hash',
+      [
+        'type' => Varien_Db_Ddl_Table::TYPE_TEXT,
+        'length' => '32',
+        'nullable' => false,
+        'comment' => 'Distinction hash',
+        'after' => 'type'
+      ]
+    );
 
-  $auction->save();
-}
+$this->endSetup();
