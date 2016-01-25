@@ -96,10 +96,6 @@ class MVentory_TradeMe_Block_Options
         'label' => 'Add category image',
         'type' => self::TYPE_BOOL
       ),
-      'buyer' => array(
-        'label' => 'Buyer ID',
-        'type' => self::TYPE_INT
-      ),
       'duration' => array(
         'label' => 'Listing duration',
         'type' => self::TYPE_INT

@@ -61,14 +61,36 @@ class MVentory_TradeMe_Helper_Order extends MVentory_TradeMe_Helper_Data
 
     $this->_saveQuote($quote);
 
-    $order = $this->_createOrder($quote);
+    $order = $this->_createOrder($quote, $store);
+
+    $canCreateShipment = Mage::getStoreConfigFlag(
+      MVentory_TradeMe_Model_Config::_ORDER_SHIPMENT,
+      $store
+    );
+
+    $canCreateInvoice = Mage::getStoreConfigFlag(
+      MVentory_TradeMe_Model_Config::_ORDER_INVOICE,
+      $store
+    );
 
     try {
-      $shipment = $this->_createShipment($order);
-      $invoice = $this->_createInvoice($order);
+      $shipment = null;
+      if ($canCreateShipment)
+        $shipment = $this->_createShipment($order);
 
-      $this->_completeOrder($order, $shipment, $invoice);
+      $invoice = null;
+      if ($canCreateInvoice)
+        $invoice = $this->_createInvoice($order);
     } catch (Exception $e) {
+      Mage::logException($e);
+    }
+
+    $order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true);
+
+    try {
+      $this->_completeOrder($order, $shipment, $invoice);
+    }
+    catch (Exception $e) {
       Mage::logException($e);
     }
 
@@ -251,10 +273,13 @@ class MVentory_TradeMe_Helper_Order extends MVentory_TradeMe_Helper_Data
    * @param Mage_Sales_Model_Quote $quote
    *   Quote model
    *
+   * @param Mage_Core_Model_Store $store
+   *   Store model
+   *
    * @return Mage_Sales_Model_Order
    *   Order model
    */
-  protected function _createOrder ($quote) {
+  protected function _createOrder ($quote, $store) {
     $customerResource = Mage::getModel('checkout/api_resource_customer');
     $customerResource->prepareCustomerForQuote($quote);
 
@@ -273,11 +298,20 @@ class MVentory_TradeMe_Helper_Order extends MVentory_TradeMe_Helper_Data
         ['order' => $order, 'quote' => $quote]
       );
 
-      try {
-        $order->sendNewOrderEmail();
-      } catch (Exception $e) {
-        Mage::logException($e);
-      }
+      $canSendEmail = Mage::getStoreConfigFlag(
+        MVentory_TradeMe_Model_Config::_ORDER_EMAIL,
+        $store
+      );
+
+      if ($canSendEmail)
+        try {
+          if (method_exists($order , 'queueNewOrderEmail'))
+            $order->queueNewOrderEmail();
+          else
+            $order->sendNewOrderEmail();
+        } catch (Exception $e) {
+          Mage::logException($e);
+        }
     }
 
     Mage::dispatchEvent(
@@ -331,9 +365,15 @@ class MVentory_TradeMe_Helper_Order extends MVentory_TradeMe_Helper_Data
    *   Order invoice model
    */
   protected function _completeOrder ($order, $shipment, $invoice) {
-    $transactionSave = Mage::getModel('core/resource_transaction')
-      ->addObject($shipment)
-      ->addObject($invoice)
+    $transaction = Mage::getModel('core/resource_transaction');
+
+    if ($shipment)
+      $transaction->addObject($shipment);
+
+    if ($invoice)
+      $transaction->addObject($invoice);
+
+    $transaction
       ->addObject($order)
       ->save();
   }

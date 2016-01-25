@@ -214,6 +214,11 @@ EOT;
    * @return null
    */
   protected function _syncAllAuctions () {
+    $canCreateOrder = Mage::getStoreConfigFlag(
+      MVentory_TradeMe_Model_Config::_ORDER_ALLOW,
+      $this->_store
+    );
+
     foreach ($this->_accounts as $accountId => &$accountData) {
       $auctions = Mage::getResourceModel('trademe/auction_collection')
         ->addFieldToFilter('account_id', $accountId);
@@ -331,11 +336,12 @@ EOT;
             continue;
           }
 
-          $this->_createOrder(
-            $product,
-            $perShipping,
-            $connector->getSaleDataFromListing($listingDetails)
-          );
+          if ($canCreateOrder)
+            $this->_createOrder(
+              $product,
+              $perShipping,
+              $connector->getSaleDataFromListing($listingDetails)
+            );
         }
 
         $auction->delete();
@@ -1413,12 +1419,6 @@ EOT;
    */
   protected function _createOrder ($product, $account, $saleData) {
     MVentory_TradeMe_Model_Log::debug();
-
-    //Add ID of default buyer to the data array which is passed to
-    //buyer's helper to use it in case loading or creating of buyer fails.
-    $saleData['default_buyer_id'] = isset($account['buyer'])
-      ? (int) $account['buyer']
-      : null;
 
     list($buyer, $address) = Mage::helper('trademe/buyer')->get(
       $saleData,
