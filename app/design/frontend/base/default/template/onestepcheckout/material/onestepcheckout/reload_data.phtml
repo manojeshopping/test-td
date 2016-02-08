@@ -1,0 +1,26 @@
+<?php
+$session = Mage::getSingleton('checkout/session');
+$url = $session->getData('url');
+$error = $session->getData('error');
+$success = $session->getData('success');
+$session->unsetData('url');
+$session->unsetData('error');
+$session->unsetData('success');
+
+$shipping_method_html = $this->getChildHtml('onestepcheckout_shipping_method');
+$payment_method_html = $this->getChildHtml('onestepcheckout_payment_method');
+$review_total_html = $this->getChildHtml('onestepcheckout_review');
+
+
+$result = array('shipping_method' => $shipping_method_html, 
+				'payment_method' => $payment_method_html, 
+				'review' => $review_total_html);
+				
+if(isset($success)){
+	$result['success'] = $success;	
+}
+if(isset($url))	$result['url'] = $url;		
+if(isset($error))	$result['error'] = $error;		
+		
+echo Zend_Json::encode($result);
+?>
