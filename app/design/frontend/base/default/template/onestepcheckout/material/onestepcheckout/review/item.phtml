@@ -38,7 +38,7 @@ $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER[
 <tr>
    
     <td>
-        <?php if(!Mage::helper('onestepcheckout')->checkLayout3columns()): ?>
+        <?php if(!Mage::helper('onestepcheckout')->checkLayout3columns() || true): ?>
         <a class="remove-icon" style="float:left; margin-right: 20px; line-height: 23px;" href="javascript:deleteproduct(<?php echo $_item->getId()?>,'<?php echo $this->getUrl('onestepcheckout/index/deleteproduct', array('_secure'=>true));?>','<?php echo $this->__('Are you sure?')?>')"><img  src="<?php echo $this->getSkinUrl('images/onestepcheckout/material/icon_delete.png', array('_secure'=>$secure)) ?>" width="20" height="20"/></a>
         <?php endif; ?>
         <?php 
@@ -86,7 +86,7 @@ $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER[
 			<?php /*endif;
 			 End: added by Daniel - 31/03/2015 - Qty increment */
 			?>
-			<span class="qty" id="qty-<?php echo $_item->getId() ?>"><?php echo $_item->getQty() ?></span>
+			<input class="qty" id="qty-<?php echo $_item->getId() ?>" value="<?php echo $_item->getQty() ?>"></input>
 			<input type="hidden" value="<?php echo $_item->getQty() ?>" name="qty-item-<?php echo $_item->getId() ?>" id="qty-item-<?php echo $_item->getId() ?>" />
 			<?php 
 			/* Start: added by Daniel - 31/03/2015 - Qty increment 
@@ -96,6 +96,19 @@ $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER[
                 <a  href="javascript:addproduct(<?php echo $_item->getId() ?>,'<?php echo $this->getUrl('onestepcheckout/index/add_product')?>')"><img  src="<?php echo $this->getSkinUrl('images/onestepcheckout/flatnew/add-icon3.png', array('_secure'=>$secure)) ?>" width="17" height="14"/></a>
                 <a  href="javascript:minusproduct(<?php echo $_item->getId() ?>,'<?php echo $this->getUrl('onestepcheckout/index/minus_product')?>')"><img  src="<?php echo $this->getSkinUrl('images/onestepcheckout/flatnew/minus-3.png', array('_secure'=>$secure)) ?>" width="17" height="14"/></a>
             </div>
+			<a  href="javascript:changeHiddenInput();minusproduct(<?php echo $_item->getId() ?>,'<?php echo $this->getUrl('onestepcheckout/index/minus_product')?>')"><img  src="<?php echo $this->getSkinUrl('images/onestepcheckout/flatnew/minus-3.png', array('_secure'=>$secure)) ?>" width="34" height="14"/></a>
+			<script>
+				function changeHiddenInput() {
+					var hiddenOldQty = parseInt(document.getElementById("qty-item-<?php echo $_item->getId() ?>").value);
+					var newQty = parseInt(document.getElementById("qty-<?php echo $_item->getId() ?>").value);
+					if(newQty >= 0) {
+						document.getElementById("qty-item-<?php echo $_item->getId() ?>").value = parseInt(document.getElementById("qty-<?php echo $_item->getId() ?>").value) + 1;
+					} else {
+						document.getElementById("qty-item-<?php echo $_item->getId() ?>").value = hiddenOldQty + 1;
+					}					
+				}
+			</script>
+			
 			<?php /*endif;
 			 End: added by Daniel - 31/03/2015 - Qty increment */
 			?>

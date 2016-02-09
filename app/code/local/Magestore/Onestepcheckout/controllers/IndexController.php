@@ -1089,7 +1089,7 @@ class Magestore_Onestepcheckout_IndexController extends Mage_Core_Controller_Fro
         if ($result['success'])
             $session->setData('success', true);
         $this->_addOnestepcheckoutHandle(true);
-        $result = $this->_getBlockResults($result, true);
+        $result = $this->_getBlockResults($result, true, false);
         $this->getResponse()->setBody(Zend_Json::encode($result));
     }
 
@@ -1159,7 +1159,7 @@ class Magestore_Onestepcheckout_IndexController extends Mage_Core_Controller_Fro
             $session->setData('success', true);
 
         $this->_addOnestepcheckoutHandle(true);
-        $result = $this->_getBlockResults($result, true);
+        $result = $this->_getBlockResults($result, true, false);
         $this->getResponse()->setBody(Zend_Json::encode($result));
     }
 
@@ -1229,7 +1229,7 @@ class Magestore_Onestepcheckout_IndexController extends Mage_Core_Controller_Fro
             $session->setData('success', true);
 
         $this->_addOnestepcheckoutHandle(true);
-        $result = $this->_getBlockResults($result, true);
+        $result = $this->_getBlockResults($result, true, false);
         $this->getResponse()->setBody(Zend_Json::encode($result));
     }
 
@@ -1263,12 +1263,14 @@ class Magestore_Onestepcheckout_IndexController extends Mage_Core_Controller_Fro
         $this->_isLayoutLoaded = true;
     }
     
-    private function _getBlockResults($result = null, $isShipping = false){
+    private function _getBlockResults($result = null, $isShipping = false, $updatePayment = true){
         if(!$result) 
 			$result = array();
         $payment_method_html = $this->getLayout()->getBlock('onestepcheckout_payment_method')->toHtml();
         $review_total_html = $this->getLayout()->getBlock('review_info')->toHtml();
-        $result['payment_method'] = $payment_method_html;
+		if($updatePayment) {
+			$result['payment_method'] = $payment_method_html;
+		}
         $result['review'] = $review_total_html;
         if($isShipping){
             $shipping_method_html = $this->getLayout()->getBlock('onestepcheckout_shipping_method')->toHtml();
