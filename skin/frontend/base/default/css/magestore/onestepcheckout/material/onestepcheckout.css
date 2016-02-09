@@ -692,5 +692,5 @@ input[type=checkbox]:checked ~ label .check {
 	padding: 10px 50px 55px 50px;
 }
 #onestepcheckout-login-popup  #onestepcheckout-login-button{
-	color: white !important;
+	color: white;
 }

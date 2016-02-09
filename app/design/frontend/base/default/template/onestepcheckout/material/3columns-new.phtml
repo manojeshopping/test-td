@@ -50,7 +50,7 @@
     { color:<?php echo $styleUse ?> !important; }
     .gift-messages-form .bar:before,.gift-messages-form .bar:after, #onestepcheckout-login-popup .bar:before,#onestepcheckout-login-popup .bar:after,.onestepcheckout-discount .discount-form .bar:before,.onestepcheckout-discount .discount-form .bar:after,#showhide_shipping .bar:before,#showhide_shipping .bar:after,#billing-new-address-form .bar:before,#billing-new-address-form .bar:after{background:<?php echo $styleUse ?> !important;}
     .checkbox-group label .check{border:2px solid <?php echo $styleUse ?>;border-top: none;border-left: none;}
-    #onestepcheckout-login-popup #onestepcheckout-register-button, #onestepcheckout-login-popup #onestepcheckout-forgot-button, #onestepcheckout-forgot-button, #onestepcheckout-login-popup #onestepcheckout-login-button{color:<?php echo $styleUse ?> !important;}
+    #onestepcheckout-login-popup #onestepcheckout-register-button, #onestepcheckout-login-popup #onestepcheckout-forgot-button, #onestepcheckout-forgot-button{color:<?php echo $styleUse ?> !important;}
 </style>
 <!-- Start: Added by Daniel - 02/04/2015 - set background color for top links buttons after login from OSC -->
 <style type='text/css'>
@@ -72,7 +72,7 @@
     <li>
         <h1 class="checkout_header"><?php echo $this->getCheckoutTitle(); ?></h1>
         <p class="subtitle">
-            <?php echo $this->configData['checkout_description'] ? $this->configData['checkout_description'] : 'Please fill in the fields below and click Place order to complete your purchase!'; ?>
+            <?php echo "<br>"//$this->configData['checkout_description'] ? $this->configData['checkout_description'] : 'Please fill in the fields below and click Place order to complete your purchase!'; ?>
         </p>
     </li>
     <?php if (($this->isShowLoginLink() || $this->isShowRegisterLink()) && !$this->isCustomerLoggedIn()): ?>
