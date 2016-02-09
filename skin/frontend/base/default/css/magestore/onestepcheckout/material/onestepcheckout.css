@@ -142,7 +142,7 @@ label span.required{color:red}
 #one-step-checkout-form .order-review-info .onestepcheckout-giftwrap label{font-weight:400;font-size:15px}
 #one-step-checkout-form .order-review-info .onestepcheckout-giftwrap input{float:left;margin:4px 6px 4px 0}
 .order-review-info .onestepcheckout-giftwrap label{font-weight:400}
-.onestepcheckout-comment{margin-top:15px;float:left;width:100%;padding:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.onestepcheckout-comment{margin-top:15px;float:left;width:100%;padding:20px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 #id_survey_freetext,.onestepcheckout-comment textarea, #gift-message-whole-message{width:100%;max-width:100!important;height:53px;border:0 none;border-bottom:1px solid silver}
 .onestepcheckout-comment textarea:focus{border: 0 none;border-bottom:1px solid silver}
 .order-review-info .onestepcheckout-terms-conditions{float:left;width:100%;padding:15px 0 0;box-sizing:content-box}
@@ -166,7 +166,7 @@ label span.required{color:red}
 .onestepcheckout-form-list .field .input-box{width:100%}
 .onestepcheckout-form-list .field .input-box .input-text{width:100%}
 #gift-message-whole-message{width:98%}
-.order-review-section{float:left;width:48%;margin:0 0 20px;background:#fff;border:1px solid #EBEBEB}
+.order-review-section{float:left;width:49%;margin:0 0 20px;background:#fff;border:1px solid #EBEBEB}
 .order-review-section .payment-method .onestepcheckout-payment-methods{float:left;width:92%;padding:7px 4% 5px;margin:0;box-sizing:content-box}
 .order-review-section .payment-method .onestepcheckout-payment-methods .sp-methods{float:left;width:100%;margin:0;padding:0}
 .order-review-section .payment-method .onestepcheckout-payment-methods .sp-methods .form-list{float:left;width:92%;margin:0;padding:0 0 0 8%;box-sizing:content-box}
@@ -187,7 +187,7 @@ div.loading-ajax,div.loading-ajax-login{height:50px;text-align:center;background
 #onestepcheckout-login-popup #onestepcheckout-register-button,
 #onestepcheckout-login-popup #onestepcheckout-forgot-button,
 #onestepcheckout-forgot-button,
-#onestepcheckout-login-popup #onestepcheckout-login-button{display:inline-block;margin-bottom:10px;text-transform:uppercase;padding:0 0 0 20px;font-size:15px;float:right;background-color:transparent!important;color:#2196f3}
+#onestepcheckout-login-popup #onestepcheckout-login-button{}
 #onestepcheckout-login-popup #onestepcheckout-forgot-button{padding:0}
 #onestepcheckout-login-popup #onestepcheckout-register-button{padding:0}
 #onestepcheckout-login-popup p.close,#onestepcheckout-toc-popup p.close{font-size:14px;text-transform:uppercase;font-weight:700;position:absolute;right:0;top:0;color:#fff}
@@ -673,3 +673,24 @@ input[type=checkbox]:checked ~ label .check {
 
 #billing-new-address-form .customer-dob label{position: relative; top: -20px; transition: .2s ease all;-moz-transition: .2s ease all;-webkit-transition: .2s ease all;}
 #billing-new-address-form .customer-dob input.input-text:focus ~ label, #billing-new-address-form .customer-dob input.input-text:valid ~ label{top:5px; font-size:12px;}
+/*-------------------------------------------------*/
+.onestepcheckout-index-index .address-information p.label{
+    color: #3d3d3d;
+}
+.onestepcheckout-index-index ol,ul{
+    list-style: none;
+    padding-left: 0px;
+}
+.onestepcheckout-index-index .bs-callout{
+	border: 0px solid red;
+	padding: 0px;
+}
+.onestepcheckout-index-index #payment_form_magebasedpspxpost  input{
+	width: 100%;
+}
+.onestepcheckout-index-index .page-wrap{
+	padding: 10px 50px 55px 50px;
+}
+#onestepcheckout-login-popup  #onestepcheckout-login-button{
+	color: white !important;
+}

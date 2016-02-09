@@ -26,13 +26,13 @@
 <?php $_logos = $this->getLogosToDisplay();?>
 <?php $_turnOffTypeValidation = in_array('DIN', $this->getCcAvailableTypes()); ?>
 <div class="" id="payment_form_<?php echo $_code ?>" style="display:none;">
-	<div class="form-group">	
+	<div class="form-group row">	
         <label for="<?php echo $_code ?>_cc_owner" class="required col-sm-4 control-label"><em>*</em><?php echo $this->__('Name on Card') ?></label>
         <div class="col-sm-7">
             <input type="text" title="<?php echo $this->__('Name on Card') ?>" class="form-control required-entry" id="<?php echo $_code ?>_cc_owner" name="payment[cc_owner]" value="<?php echo $this->htmlEscape($this->getInfoData('cc_owner')) ?>" placeholder="Name"/>
         </div>
 	</div>	
- 	<div class="form-group">
+ 	<div class="form-group row">
         <label for="<?php echo $_code ?>_cc_type" class="required col-sm-4 control-label"><em>*</em><?php echo $this->__('Credit Card Type') ?></label>
         <div class="col-sm-7">
             <select id="<?php echo $_code ?>_cc_type" name="payment[cc_type]" class="required-entry form-control <?php $_turnOffTypeValidation? '': 'validate-cc-type-select'?>">
@@ -44,13 +44,13 @@
             </select>
         </div>
 	</div>	
-	<div class="form-group">
+	<div class="form-group row">
         <label for="<?php echo $_code ?>_cc_number" class="required col-sm-4 control-label"><em>*</em><?php echo $this->__('Credit Card No.') ?></label>
         <div class="col-sm-7">
             <input type="text" id="<?php echo $_code ?>_cc_number" name="payment[cc_number]" title="<?php echo $this->__('Credit Card Number') ?>" class="form-control validate-cc-number validate-cc-type" value="" placeholder="XXXXXXXXXXXXXXXX" />
         </div>
     </div>
-	<div class="form-group">
+	<div class="form-group row">
         <label for="<?php echo $_code ?>_expiration" class="required col-sm-4 control-label"><em>*</em><?php echo $this->__('Expiration Date') ?></label>
         <div class="col-sm-7">
             <div class="v-fix">
@@ -63,8 +63,8 @@
             </div>
 		</div>
 	</div>	
-	<div class="form-group">
-		<label for="InputEmail2" class="col-sm-4 control-label">* Expiration Year</label>	
+	<div class="form-group row">
+		<label for="InputEmail2" class="col-sm-4 control-label"><em>*</em>Expiration Year</label>	
 		<div class="col-sm-7">            
 			<div class="v-fix">
                 <?php $_ccExpYear = $this->getInfoData('cc_exp_year') ?>
@@ -78,7 +78,7 @@
 	</div>
 	<?php echo $this->getChildHtml() ?>
     <?php if($this->hasVerification()): ?>
- 	<div class="form-group">
+ 	<div class="form-group row">
         <label for="<?php echo $_code ?>_cc_cid" class="required col-sm-4 control-label"><em>*</em><?php echo $this->__('Card Verification Number') ?><a href="#" class="cvv-what-is-this"><?php echo $this->__('[?]') ?></a></label>
         <div class="col-sm-7">
             <div class="v-fix">
@@ -172,12 +172,13 @@
 <?php endif;?>
 <hr>
 <?php if (count($_logos) > 0): ?>
-	<div class="bs-callout bs-callout-info">
+	<div class="bs-callout bs-callout-info col-sm-12">
 		<a href="http://www.paymentexpress.com/About/About_DPS/Privacy_Policy" target="_blank">
 			<img src="<?php echo $this->getSkinUrl('images/magebase/dps/dpspxlogo.png'); ?>" alt="DPS"/>
 			<small>DPS <?php echo $this->__('Privacy Policy') ?></small>
 		</a>
-		<span class="pull-right">
+		<br>
+		<span class="">
 		<?php foreach($_logos as $_logo): ?>
 			<img src="<?php echo $this->getSkinUrl('images/magebase/dps/'.$_logo); ?>" alt="" />
 		<?php endforeach ?>
