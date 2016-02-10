@@ -327,7 +327,7 @@ button.place-order-loader span{background:none transparent!important}
 .dob-month{float:left;width:24%;margin-right:3%}
 .dob-day{float:left;width:24%;margin-right:3%}
 .dob-year{float:left;width:46%}
-#one-step-checkout-form .sp-methods .validation-failed{outline:1px dashed red}
+#one-step-checkout-form .validation-failed{outline:1px solid #b94a48}
 #one-step-checkout-form .sp-methods .input-box .validation-failed{outline:none!important}
 .two-fields.last{float:right}
 #checkout-review-table-wrapper tr td{background:none!important}

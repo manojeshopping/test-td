@@ -118,8 +118,8 @@ if($config['list_type']=='all'){
 				<button type="button" onclick="minicart.callAction();" class="btn btn-td-info-quiet btn-md" data-toggle="tooltip" data-placement="top" title="Update Quantities">Update Cart</button>
 			</div>
 			<div class="pull-right">
-			  <button type="button" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')" class="btn btn-td-action-quiet btn-md" data-toggle="tooltip" data-placement="top" title="Checkout Now">Checkout</button>
-			  <button type="button" onclick="setLocation('<?php echo Mage::getUrl('checkout/cart/') ?>')" class="btn btn-td-action btn-md" data-toggle="tooltip" data-placement="top" title="View Cart">Go to Cart</button>
+			  <button type="button" onclick="setLocation('<?php echo Mage::getUrl('checkout/cart/') ?>')" class="btn btn-td-action-quiet btn-md" data-toggle="tooltip" data-placement="top" title="View Cart">Go to Cart</button>
+			  <button type="button" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')" class="btn btn-td-action btn-md" data-toggle="tooltip" data-placement="top" title="Checkout Now">Checkout</button>
 			</div>	
 	    </div>
     </div>

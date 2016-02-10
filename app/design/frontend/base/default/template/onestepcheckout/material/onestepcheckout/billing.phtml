@@ -70,7 +70,7 @@
                                         <em>*</em>
                                     <?php endif ?>
                                 </label>
-                                <select id="billing:region_id" name="billing[region_id]" title="<?php echo $this->__('State/Province') ?>" class="<?php if ($helper->getFieldRequire($fields[$i]['value'])) echo "validate-select"; ?>" style="display:none;width:135px;" >
+                                <select id="billing:region_id" name="billing[region_id]" title="<?php echo $this->__('State/Province') ?>" class="<?php if ($helper->getFieldRequire($fields[$i]['value'])) echo "validate-select required-entry"; ?>" style="display:none;width:135px;" >
                                     <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
                                 </select>
                                 <?php if (!$helper->enableGeoip()): ?>
