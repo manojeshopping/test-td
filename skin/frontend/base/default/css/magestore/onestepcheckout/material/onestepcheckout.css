@@ -330,7 +330,7 @@ button.place-order-loader span{background:none transparent!important}
 #one-step-checkout-form .validation-failed{outline:1px solid #b94a48}
 #one-step-checkout-form .sp-methods .input-box .validation-failed{outline:none!important}
 .two-fields.last{float:right}
-#checkout-review-table-wrapper tr td{background:none!important}
+#checkout-review-table-wrapper tr td{}
 #id_survey_freetext,.one-step-checkout .input-text,.one-step-checkout textarea, #gift-message-whole-message{width:100%!important;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-moz-background-clip:padding-box!important;-webkit-background-clip:padding-box!important;background-clip:padding-box!important;padding:0;    max-width: 100%;}
 .one-step-checkout button.btn-checkout span span{background-position:100% 0!important;padding:0 66px 0 56px !important;text-transform:capitalize;display:block!important}
 .a-right .cart-price{text-align:right}
@@ -698,5 +698,14 @@ input[type=checkbox]:checked ~ label .check {
     padding: 12px 4% 50px 4%;
 }
 .onestepcheckout-index-index #checkout-review-table-wrapper .table-responsive input{
-    width: 25px;
+	text-align: center;
+    width: 40px;
+	height: 34px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+    border-radius: 4px;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+.onestepcheckout-index-index #checkout-review-table-wrapper .table-responsive .warning{
+	background-color: #fcf8e3;
 }
