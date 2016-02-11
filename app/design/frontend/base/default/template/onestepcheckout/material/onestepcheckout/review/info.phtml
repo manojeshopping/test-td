@@ -30,7 +30,29 @@
     <h3 style="float:left" id="review_step_header">
         <?php echo $this->__('Order Review'); ?>
     </h3>
-    <table class="data-table" id="checkout-review-table">
+	
+	<!--------------------->
+	<div class="table-responsive">	
+		<table class="table" id="checkout-review-table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Product</th>
+					<th>Qty</th>
+					<th>Subtotal</th>
+				</tr>
+			</thead>
+			<?php echo $this->getChildHtml('totals'); ?>
+			<tbody>
+				<?php foreach($this->getItems() as $_item): ?>
+					<?php echo $this->getItemHtml($_item)?>
+				<?php endforeach ?>
+			</tbody>
+		</table>
+	</div>
+	<!--------------------->
+
+    <table class="data-table" id="checkout-review-table_delete" style="display:none">
 		<?php /*onestepcheckout_admin*/ if($this->getRequest()->getControllerName()!='admin'): ?>
 			<?php if ($this->helper('tax')->displayCartBothPrices()): $colspan = $rowspan = 2; else: $colspan = $rowspan = 1; endif; ?>
 			<col />

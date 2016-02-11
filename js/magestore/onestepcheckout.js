@@ -1107,7 +1107,15 @@ function deleteproduct(id, url, ms) {
                 });
     }
 }
-
+function changeHiddenInput(id) {
+	var hiddenOldQty = parseInt($('qty-item-' + id).value);
+	var newQty = parseInt($('qty-' + id).value);
+	if(newQty >= 0) {
+		$('qty-item-' + id).value = newQty + 1;
+	} else {
+		$('qty-item-' + id).value = hiddenOldQty + 1;
+	}					
+}
 function minusproduct(id, url) {
     var qty = $('qty-item-' + id).value;
     shippingLoad();

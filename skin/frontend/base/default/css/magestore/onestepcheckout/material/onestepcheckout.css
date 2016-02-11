@@ -694,3 +694,9 @@ input[type=checkbox]:checked ~ label .check {
 #onestepcheckout-login-popup  #onestepcheckout-login-button{
 	color: white;
 }
+.onestepcheckout-index-index #checkout-review-table-wrapper .table-responsive{
+    padding: 12px 4% 50px 4%;
+}
+.onestepcheckout-index-index #checkout-review-table-wrapper .table-responsive input{
+    width: 25px;
+}
