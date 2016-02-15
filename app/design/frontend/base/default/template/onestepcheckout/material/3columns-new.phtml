@@ -70,26 +70,25 @@
 
 <ol class="one-step-checkout three-columns-new-osc clearfix">
     <li>
-        <h1 class="checkout_header"><?php echo $this->getCheckoutTitle(); ?></h1>
-        <p class="subtitle">
-            <?php echo "<br>"//$this->configData['checkout_description'] ? $this->configData['checkout_description'] : 'Please fill in the fields below and click Place order to complete your purchase!'; ?>
-        </p>
+		<div class="row">
+			<h1 class="checkout_header pull-left"><?php echo $this->getCheckoutTitle(); ?></h1>
+			<?php if (($this->isShowLoginLink() || $this->isShowRegisterLink()) && !$this->isCustomerLoggedIn()): ?>
+			<div id='onestepcheckout_login_link' class="onestepcheckout-login-link pull-right">
+				<a href="javascript:void(0);"  id="onestepcheckout-login-link"><span>&nbsp;</span>
+					<?php if($this->configData['login_link_title']): ?>
+						<?php echo $this->configData['login_link_title'] ?>
+					<?php else:?>
+						<?php if(Mage::helper('onestepcheckout')->enableRegistration()):?>
+							<?php echo $this->__('Click here to login or create a new account') ?>
+						<?php else:?>
+							<?php echo $this->__('Already have an account?Click here to login') ?>
+						<?php endif;?>
+					<?php endif;?>
+				</a>
+			</div>
+			<?php endif ?>
+		</div>
     </li>
-    <?php if (($this->isShowLoginLink() || $this->isShowRegisterLink()) && !$this->isCustomerLoggedIn()): ?>
-        <li id='onestepcheckout_login_link' class="onestepcheckout-login-link">
-            <a href="javascript:void(0);"  id="onestepcheckout-login-link"><span>&nbsp;</span>
-                <?php if($this->configData['login_link_title']): ?>
-                    <?php echo $this->configData['login_link_title'] ?>
-                <?php else:?>
-                    <?php if(Mage::helper('onestepcheckout')->enableRegistration()):?>
-                        <?php echo $this->__('Click here to login or create a new account') ?>
-                    <?php else:?>
-                        <?php echo $this->__('Already have an account?Click here to login') ?>
-                    <?php endif;?>
-                <?php endif;?>
-            </a>
-        </li>
-    <?php endif ?>
     <!-- Start: Added by Daniel - 02/04/2015 - Top links buttons after login from OSC -->
     <li id='osc_top_links'>
         <a href='<?php echo $this->getUrl('customer/account/',array('_secure'=>true));?>' title='<?php echo $this->__('My Account');?>'><?php echo $this->__('My Account');?></a>
@@ -114,7 +113,13 @@
                     <?php echo $this->getChildHtml('onestepcheckout.shipping'); ?>
                 </div>
                 <!-- End: Modified by Daniel -01042015- Reload data after login -->
-
+				
+				<!-- Order comment -->
+				<?php if ($_helper->enableOrderComment()):?>
+					<div class="onestepcheckout-comment">
+						<textarea placeholder="<?php echo $this->__('Delivery comments')?>" id="onestepcheckout_comment" name="billing[onestepcheckout_comment]" col="15"></textarea>
+					</div>
+				<?php endif;?>
             </div>
             <div class="onestepcheckout-shipping-payment-review">
                 <?php if ($this->isVirtual() || !Mage::helper('onestepcheckout')->isHideShippingMethod() || $_helper->enabledDelivery()): ?>
@@ -270,6 +275,13 @@
 
                         </ol>
                     </div>
+					<button onclick="oscPlaceOrder(this);" id="onestepcheckout-button-place-order" type="button" title="<?php echo $this->__('Place Order') ?>" class="btn-proceed-checkout onestepcheckout-btn-checkout onestepcheckout-place">
+						<span>
+							<span>
+								<?php echo $this->__('Place order now') ?>
+							</span>
+						</span>
+					</button>
             </div>
             </div>
             <div class="wrap-col-last-3">
@@ -291,6 +303,7 @@
                         <label for="forgot"><?php echo $this->__('Forgot an Item?') ?> <a href="<?php echo $this->getUrl('checkout/cart') ?>"><?php echo $this->__('Edit Your Cart') ?></a></label>
                         <br />-->
                     <div class="clear"></div>
+					<!--
                     <button onclick="oscPlaceOrder(this);" id="onestepcheckout-button-place-order" type="button" title="<?php echo $this->__('Place Order') ?>" class="btn-proceed-checkout onestepcheckout-btn-checkout onestepcheckout-place">
                             <span>
                                 <span>
@@ -298,6 +311,7 @@
                                 </span>
                             </span>
                     </button>
+					-->
                 </div>
                 <div id="onestepcheckout-place-order-loading" style="display:none;margin-top:10px; ">
                     <!--img style="float:left;" src="<?php echo $styleUse; ?>loading-icon.gif"-->

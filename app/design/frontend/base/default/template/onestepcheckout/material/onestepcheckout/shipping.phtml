@@ -64,13 +64,13 @@
                                                 $('shipping:country_id').removeClassName('validate-select');</script>
                                         <?php endif ?>
                                     <?php elseif ($fieldsshipping[$i]['value'] == 'region'): ?>
-                                    <label <?php if ($helper->getFieldRequire($fieldsshipping[$i]['value'])): ?>class="required" <?php endif ?>  for="shipping:region"><?php echo $this->__('State/Province') ?>
+                                    <label <?php if ($helper->getFieldRequire($fieldsshipping[$i]['value'])): ?>class="required" <?php endif ?>  for="shipping:region"><?php echo $this->__('Delivery Zone') ?>
                                         <?php if ($helper->getFieldRequire($fieldsshipping[$i]['value'])): ?>
                                             <em>*</em>
             <?php endif ?>
                                     </label>
                                     <select id="shipping:region_id" name="shipping[region_id]" title="<?php echo $this->__('State/Province') ?>" class="<?php if ($helper->getFieldRequire($fieldsshipping[$i]['value'])) echo "validate-select"; ?>" style="display:none;width:135px;" >
-                                        <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                                        <option value="" disabled><?php echo $this->__('Please select delivery zone') ?></option>
                                     </select>
                                         <?php if (!$helper->enableGeoip()): ?>
                                         <script type="text/javascript">
@@ -116,7 +116,14 @@
                                     <input type="text" id="shipping:<?php echo $fieldsshipping[$i]['value']; ?>" name="shipping[<?php echo $fieldsshipping[$i]['value']; ?>]" value="<?php echo $this->htmlEscape($this->getShippingAddress()->getData($fieldsshipping[$i]['value'])) ?>" title="<?php echo $this->__($fieldValue[$fieldsshipping[$i]['value']]) ?>" class="input-text <?php if ($helper->getFieldRequire($fieldsshipping[$i]['value']) || $fieldsshipping[$i]['value'] == 'firstname' || $fieldsshipping[$i]['value'] == 'lastname') echo 'required-entry'; ?>" required/>
                                     <span class="highlight"></span>
                                     <span class="bar"></span>
-                                    <label  <?php if ($helper->getFieldRequire($fieldsshipping[$i]['value']) || $fieldsshipping[$i]['value'] == 'firstname' || $fieldsshipping[$i]['value'] == 'lastname'): ?>class="required" <?php endif ?>  for="shipping:<?php echo $fieldsshipping[$i]['value']; ?>"><?php echo $this->__($fieldValue[$fieldsshipping[$i]['value']]) ?>
+                                    <label  <?php if ($helper->getFieldRequire($fieldsshipping[$i]['value']) || $fieldsshipping[$i]['value'] == 'firstname' || $fieldsshipping[$i]['value'] == 'lastname'): ?>class="required" <?php endif ?>  for="shipping:<?php echo $fieldsshipping[$i]['value']; ?>">
+										<?php
+											if ($fieldsshipping[$i]['value'] == "fax") {
+												echo "Mobile";
+											} else {
+												echo $this->__($fieldValue[$fieldsshipping[$i]['value']]);
+											}
+										?>
                                         <?php if ($helper->getFieldRequire($fieldsshipping[$i]['value']) || $fieldsshipping[$i]['value'] == 'firstname' || $fieldsshipping[$i]['value'] == 'lastname'): ?>
                                             <em>*</em>
                                     <?php endif ?>

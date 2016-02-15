@@ -34,7 +34,7 @@ if (!($_shippingRateGroups = $this->getShippingRates())): ?>
     <dl class="sp-methods">
         <?php $_sole = count($_shippingRateGroups) == 1; foreach ($_shippingRateGroups as $code => $_rates): ?>
             <?php $i++;?>
-            <dt><?php echo $this->getCarrierName($code) ?></dt>
+            <dt><?php //echo $this->getCarrierName($code) ?></dt>
             <dd>
                 <ul>
                     <?php $j=0;?>

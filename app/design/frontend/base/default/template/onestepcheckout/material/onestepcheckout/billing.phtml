@@ -65,13 +65,13 @@
                                     </script>
                                 <?php endif ?>
                             <?php elseif ($fields[$i]['value'] == 'region'): ?>
-                                <label  <?php if ($helper->getFieldRequire($fields[$i]['value'])): ?>class="required"<?php endif ?>  for="billing:region"><?php echo $this->__('State/Province') ?>
+                                <label  <?php if ($helper->getFieldRequire($fields[$i]['value'])): ?>class="required"<?php endif ?>  for="billing:region"><?php echo $this->__('Delivery Zone') ?>
                                     <?php if ($helper->getFieldRequire($fields[$i]['value'])): ?>
                                         <em>*</em>
                                     <?php endif ?>
                                 </label>
                                 <select id="billing:region_id" name="billing[region_id]" title="<?php echo $this->__('State/Province') ?>" class="<?php if ($helper->getFieldRequire($fields[$i]['value'])) echo "validate-select required-entry"; ?>" style="display:none;width:135px;" >
-                                    <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                                    <option value="" disabled><?php echo $this->__('Please select delivery zone') ?></option>
                                 </select>
                                 <?php if (!$helper->enableGeoip()): ?>
                                     <script type="text/javascript">
@@ -143,7 +143,14 @@
                                 <input type="text" id="billing:<?php echo $fields[$i]['value']; ?>" autocomplete="<?php if ($fields[$i]['value'] == 'email') echo 'off';  ?>" name="billing[<?php echo $fields[$i]['value']; ?>]" value="<?php echo $this->htmlEscape($this->getCustomerData($fields[$i]['value'])) ?>" title="<?php echo $this->__($fieldValue[$fields[$i]['value']]) ?>" class="input-text <?php if ($helper->getFieldRequire($fields[$i]['value']) || $fields[$i]['value'] == 'firstname' || $fields[$i]['value'] == 'lastname' || $fields[$i]['value'] == 'email') echo 'required-entry'; ?>" required/>
                                 <span class="highlight"></span>
                                 <span class="bar"></span>
-                                <label <?php if ($helper->getFieldRequire($fields[$i]['value']) || $fields[$i]['value'] == 'firstname' || $fields[$i]['value'] == 'lastname' || $fields[$i]['value'] == 'email'): ?>class="required" <?php endif ?>  for="billing:<?php echo $fields[$i]['value']; ?>"><?php echo $this->__($fieldValue[$fields[$i]['value']]) ?>
+                                <label <?php if ($helper->getFieldRequire($fields[$i]['value']) || $fields[$i]['value'] == 'firstname' || $fields[$i]['value'] == 'lastname' || $fields[$i]['value'] == 'email'): ?>class="required" <?php endif ?>  for="billing:<?php echo $fields[$i]['value']; ?>">
+									<?php
+										if ($fields[$i]['value'] == "fax") {
+											echo "Mobile";
+										} else {
+											echo $this->__($fieldValue[$fields[$i]['value']]);
+										}
+									?>
                                     <?php if ($helper->getFieldRequire($fields[$i]['value']) || $fields[$i]['value'] == 'firstname' || $fields[$i]['value'] == 'lastname' || $fields[$i]['value'] == 'email'): ?>
                                         <em>*</em>
                                     <?php endif ?>

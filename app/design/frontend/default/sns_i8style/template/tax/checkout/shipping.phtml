@@ -32,11 +32,18 @@
 <?php if($this->displayBoth()):?>
 <?php 
 $regionId = $this->getQuote()->getShippingAddress()->getRegionId();
+$selectedShippingMethod = $this->getQuote()->getShippingAddress()->getShippingMethod();
 $region = Mage::getModel('directory/region')->load($regionId);
 ?>
 <tr class="estimate_delivery_cost">
     <th scope="row" style="<?php echo $this->getStyle() ?>" class="" colspan="<?php echo $this->getColspan(); ?>">
-        <?php echo $this->__('Shipping -'); ?><span class="small change-region-update"><?php echo ($region->getName()!='')?$region->getName():'Pickup, Takanini, Auckland'; ?></span>
+		<?php
+			if ($selectedShippingMethod == "freeshipping_freeshipping") {
+				echo $this->__('Shipping - ') . '<span class="small change-region-update">' .  'PICKUP' . '</span>';
+			} else {
+				echo $this->__('Shipping - ') . '<span class="small change-region-update">' . $region->getName() . '</span>';
+			}
+		?>
     </th>
     <td style="<?php echo $this->getStyle() ?>" class="text-right">
         <?php echo $this->helper('checkout')->formatPrice($this->getShippingExcludeTax()) ?>

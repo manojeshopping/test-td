@@ -39,13 +39,11 @@ $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER[
 <!--------------------->
 <tr>
 	<td>
+		<?php echo $this->htmlEscape($this->getProductName()) ?>
+		<img class="img-responsive" src='<?php echo Mage::helper('catalog/image')->init($_item->getProduct(), 'thumbnail')->resize('75');?>'/>
 		<a href="javascript:deleteproduct(<?php echo $_item->getId()?>,'<?php echo $this->getUrl('onestepcheckout/index/deleteproduct', array('_secure'=>true));?>','<?php echo $this->__('Are you sure?')?>')">
 			Delete
 		</a>
-	</td>
-	<td>
-		<img class="img-responsive" src='<?php echo Mage::helper('catalog/image')->init($_item->getProduct(), 'thumbnail')->resize('250');?>'/>
-		<?php echo $this->htmlEscape($this->getProductName()) ?>
 	</td>
 	<td>
 		<input id="qty-<?php echo $_item->getId() ?>" value="<?php echo $_item->getQty() ?>"></input>
