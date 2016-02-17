@@ -1,7 +1,7 @@
 <div class="billing_address">
     <h3 id="billing_step_header" class="step_1"><?php echo($this->__("Billing Address")); ?></h3>
     <?php if ($this->customerHasAddresses()): ?>
-        <p class="label"><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></p>
+        <p class=""><?php echo $this->__('Select a billing address from your address book or enter a new address.') ?></p>
         <ul>	
             <li>
                 <div class="one-field mdl-selectfield has-address"><?php echo $this->getAddressesHtmlSelect('billing') ?></div>

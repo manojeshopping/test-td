@@ -3,7 +3,7 @@
     <div id="showhide_shipping" class="shipping_address" style="display:none;">
         <h3 id="shipping_step_header" class="step_2"><?php echo($this->__("Shipping Address")); ?></h3>
         <?php if ($this->customerHasAddresses()): ?>
-            <p class="label"><?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?></p>
+            <p class=""><?php echo $this->__('Select a shipping address from your address book or enter a new address.') ?></p>
             <ul><li><div class="mdl-selectfield has-address"><?php echo $this->getAddressesHtmlSelect('shipping') ?></div></li></ul>
         <?php endif ?>
         <fieldset class="group-select" id="shipping-new-address-form" <?php if ($this->customerHasAddresses()): ?>style="display:none"<?php endif ?>>

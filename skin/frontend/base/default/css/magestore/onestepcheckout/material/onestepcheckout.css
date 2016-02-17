@@ -10,7 +10,7 @@
 * html .clearfix{height:1%}
 button.onestepcheckout-btn-checkout{margin-bottom:10px;padding:5px 0;box-shadow:0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);transition:all .2s ease-in-out;border-radius: 3px}
 .onestepcheckout-review-info{float:left;width:100%;margin:0 0 20px;border:0 none;background:#fff}
-.one-step-checkout h1.checkout_header{text-transform:uppercase;color:#3d3d3d;font-size:24px;font-weight:700;margin:0px 0;padding:0}
+.one-step-checkout h1.checkout_header{text-transform:uppercase;color:#3d3d3d;font-size:23px;font-weight:700;margin:0px 0;padding:0}
 .one-step-checkout p.subtitle{font-size:16px;font-weight:400;color:#3d3d3d;padding:0;margin:0}
 .onestepcheckout-formpopup .page-title{text-align:left}
 .onestepcheckout-formpopup .page-title h1{color:#F18200;font-size:16px;font-weight:700}
@@ -142,7 +142,7 @@ label span.required{color:red}
 #one-step-checkout-form .order-review-info .onestepcheckout-giftwrap label{font-weight:400;font-size:15px}
 #one-step-checkout-form .order-review-info .onestepcheckout-giftwrap input{float:left;margin:4px 6px 4px 0}
 .order-review-info .onestepcheckout-giftwrap label{font-weight:400}
-.onestepcheckout-comment{margin-top:0px;float:left;width:100%;padding:0 0px 0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.onestepcheckout-comment{margin-bottom:4px;margin-top:0px;float:left;width:100%;padding:0 0px 0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 #id_survey_freetext,.onestepcheckout-comment textarea, #gift-message-whole-message{width:100%;max-width:100!important;height:53px;border:0 none;border-bottom:1px solid silver}
 .onestepcheckout-comment textarea:focus{border: 0 none;border-bottom:1px solid silver}
 .order-review-info .onestepcheckout-terms-conditions{float:left;width:100%;padding:15px 0 0;box-sizing:content-box}
@@ -425,7 +425,7 @@ input.billing-region-input,input.shipping-region-input{padding:7px 10px 0 5px!im
 }
 @media (max-width: 850px) {
     .order-review-section,.one-step-checkout .address-information,.one-step-checkout .order-information,.one-step-checkout .shipping-method,.one-step-checkout .onestepcheckout-shipping-payment-review{width:100%}
-    .one-step-checkout .order-information{margin-bottom:25px!important}
+    .one-step-checkout .order-information{margin-bottom:10px!important}
 }
 @media (min-width: 851px) and (max-width: 1240px) {
     #one-step-checkout-form .order-information ol li.delivery .delivery_time_date label{display:block}
@@ -679,9 +679,15 @@ input[type=checkbox]:checked ~ label .check {
     list-style: none;
     padding-left: 0px;
 }
+/*billing and shipping hint text*/
+.onestepcheckout-index-index .address-information p{		
+    color: #3d3d3d;
+	font-size: 11px;
+    padding: 0px 17px;
+ }
 /*express checkout title*/
 .onestepcheckout-index-index .page-wrap{
-	padding: 5px 50px 30px 50px;
+	padding: 5px 50px 25px 50px;
 	margin-top: 7px;
 }
 /*login popup form*/
