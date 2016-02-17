@@ -35,8 +35,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php echo $this->renderTotals(null, 1); ?>
-			<?php echo $this->renderTotals('footer', 1); ?>
+			<?php $_colspan = $this->helper('tax')->displayCartBothPrices() ? 3 : 2; ?>
+			<?php $_colspan = 1; ?>
+			<?php echo $this->renderTotals(null, $_colspan); ?>
+			<?php echo $this->renderTotals('footer', $_colspan); ?>
 		</tbody>
 	</table>
 </div>

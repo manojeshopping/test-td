@@ -674,9 +674,6 @@ input[type=checkbox]:checked ~ label .check {
 #billing-new-address-form .customer-dob label{position: relative; top: -20px; transition: .2s ease all;-moz-transition: .2s ease all;-webkit-transition: .2s ease all;}
 #billing-new-address-form .customer-dob input.input-text:focus ~ label, #billing-new-address-form .customer-dob input.input-text:valid ~ label{top:5px; font-size:12px;}
 /*-------------------------------------------------*/
-.onestepcheckout-index-index .address-information p.label{
-    color: #3d3d3d;
-}
 /*initial*/
 .onestepcheckout-index-index ol,ul{
     list-style: none;
@@ -732,8 +729,7 @@ input[type=checkbox]:checked ~ label .check {
 .onestepcheckout-index-index #payment_form_magebasedpspxpost  input{
 	width: 100%;
 }
-/*others*/
-.onestepcheckout-index-index .bs-callout{
+.onestepcheckout-index-index #payment_form_magebasedpspxpost .bs-callout{
 	margin: 0;
 	border: 0px solid red;
 	padding: 0px;
