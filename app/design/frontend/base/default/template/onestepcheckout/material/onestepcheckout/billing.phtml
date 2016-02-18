@@ -243,6 +243,10 @@
 		
         </ul>
     </fieldset>
+	<script type="text/javascript">
+		$("billing-address-select").value = "";
+		$("billing-new-address-form").show();
+	</script>
     <?php if ($this->isShowShippingAddress()): ?>
         <ul>
             <li class="shipping_other_address">
