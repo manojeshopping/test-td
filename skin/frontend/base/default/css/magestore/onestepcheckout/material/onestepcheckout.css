@@ -69,7 +69,8 @@ button.onestepcheckout-btn-checkout{margin-bottom:10px;padding:5px 0;box-shadow:
 .address-information ul li.control{padding:6px 17px;width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 .address-information ul li.save-address{margin: 15px 0 0;}
 .address-information ul li.save-address label{margin-left: 5px}
-.address-information ul li.save-address .checkbox-group {background: #ebebeb;width: 100%;float: left;padding: 20px 10px;}
+.address-information ul li.save-address .checkbox-group {background: #ebebeb;width: 100%;float: left;padding: 10px 10px 11px;}
+.address-information ul li.save-address .checkbox-group .label--checkbox{margin-top: -8px !important;}
 #one-step-checkout-form li.control input.checkbox{float:left;margin:4px}
 #one-step-checkout-form li.control label{ color: #363636;}
 .address-information ul li .input-text,.address-information ul li .select{width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-moz-background-clip:padding-box!important;-webkit-background-clip:padding-box!important;background-clip:padding-box!important;border:1px solid silver}
