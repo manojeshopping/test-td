@@ -116,4 +116,32 @@ class Amasty_Table_Helper_Data extends Mage_Core_Helper_Abstract
 
         return $isRewritten;
     }
+	
+	public function getShippingTableFeeForProducts($regionId, $cart, $currentProduct = null, $currentProductQty = 0)
+    {
+        $quote = Mage::getModel('sales/quote')->setStoreId(Mage::app()->getStore('default')->getId());
+		if ($cart != null) {
+			foreach ($cart->getAllItems() as $item) {
+				$productQty = $item->getQty();
+				
+				$quote->addProduct($item->getProduct(), $productQty);
+				//echo "add into quote: " . $item->getProduct()->getName() . "|" . $productQty . "<br>";
+			}
+		}
+		if ($currentProduct != null) {
+			$quote->addProduct($currentProduct, $currentProductQty);
+			//echo "add into quote: " . $currentProduct->getName() . "|" . $currentProductQty . "<br>";
+		}
+		$quote->getShippingAddress()->setCountryId("NZ")->setRegionId($regionId);
+		$quote->getShippingAddress()->collectTotals();
+		$quote->getShippingAddress()->setCollectShippingRates(true);
+		$quote->getShippingAddress()->collectShippingRates();
+		$_rates = $quote->getShippingAddress()->getShippingRatesCollection();
+		foreach ($_rates as $_rate) {
+			//echo $_rate->getPrice() . "|" . $_rate->getMethodTitle() . "<br>";
+			if ($_rate->getMethodTitle() == "Freight Cost:") {
+				return $_rate->getPrice();
+			}
+		}
+    }
 }
