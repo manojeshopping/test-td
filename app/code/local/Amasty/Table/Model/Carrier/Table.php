@@ -62,7 +62,9 @@ class Amasty_Table_Model_Carrier_Table extends Mage_Shipping_Model_Carrier_Abstr
 						$cost_base = $readConnection->fetchOne($query);
 
 						array_push($noQtyRates, $cost_base);
-						array_push($qtyRates, $productQty * $cost_base);
+						for ($i = 0; $i < $productQty; $i++) {
+							array_push($qtyRates, $cost_base);
+						}
 					}
 					//Mage::log($noQtyRates);
 					//Mage::log($qtyRates);
