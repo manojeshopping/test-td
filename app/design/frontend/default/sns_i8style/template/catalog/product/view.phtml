@@ -48,30 +48,19 @@ $categoryCollection = Mage::getResourceModel('catalog/category_collection')
                      ->addIsActiveFilter();
 	
 //zw
-$regionId = $this->getRequest()->getParam('region');
+$regionId = Mage::getSingleton('core/session')->getRegion();
+//$cart = Mage::getSingleton('checkout/cart')->getQuote();
+//$regionId = $cart->getShippingAddress()->getRegionId();
 if ($regionId == null) $regionId = "517";
-$cart = Mage::getSingleton('checkout/cart')->getQuote();
-$cartShippingFee = Mage::helper('amtable')->getShippingTableFeeForProducts($regionId, $cart);
-$currentProductQty = 1;
-$cartAndProductShippingFee = Mage::helper('amtable')->getShippingTableFeeForProducts($regionId, $cart, $_product, $currentProductQty);
-$productShippingFee = Mage::helper('amtable')->getShippingTableFeeForProducts($regionId, null, $_product, $currentProductQty);
-$diff = $cartAndProductShippingFee - $cartShippingFee;
-//echo "Standard: " . $productShippingFee . "<br>";
-//echo "Cart Fee: " . $cartShippingFee . "<br>";
-//echo "Cart And Product Fee: " . $cartAndProductShippingFee . "<br>";
-//echo "After Discount: " . $diff . "<br>";
 
 $currentUrl = Mage::helper('core/url')->getCurrentUrl();
-$url = Mage::getSingleton('core/url')->parseUrl($currentUrl);
-$path = $url->getPath();
-//echo $path . "<br>";
-//echo $this->getRequest()->getParam('region');
+$baseUrl = Mage::getBaseUrl();
 // zw end
 ?>
 
 <script type="text/javascript">
     var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
-	var currentUrl = "<?php echo $path ?>?region=";
+	var baseUrl = "<?php echo $baseUrl ?>";
 	var currentRegionId = "<?php echo $regionId ?>";
 </script>
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
@@ -162,40 +151,57 @@ $path = $url->getPath();
 						<?php } ?>
 				</form>
 				<div class="float-right">
-					<div class="shipping related-categories" style="padding:15px; background-color:#86C7E4;">
-						<h3 class="text-center">DELIVERY COSTS</h3>
-						<br>
-						<div class="row">
-							<div class="pull-left" style="margin:5px 10px 0 0;">Area:</div>
-							<a href="" id="update"><div class="btn btn-info pull-right" style="">Update</div></a>
-							<div class="form-group pull-left" style="margin:0px 10px 0 0;">								
-								<select class="form-control" id="region_id" onclick="$('update').href = currentUrl + $('region_id').value;">
-									<option value="" disabled><?php echo $this->__('Please select delivery zone') ?></option>
-								</select>
-								<script type="text/javascript">
-									var regions = <?php echo Mage::helper('directory')->getRegionJson() ?>;
-									//alert(JSON.stringify(regions["NZ"][517]));
-
-									var select = document.getElementById("region_id");
-									for (regionId in regions["NZ"]) {
-										region = regions["NZ"][regionId];
-										
-										option = document.createElement('OPTION');
-										option.value = regionId;
-										option.text = region.name.stripTags();
-										option.title = region.name;
-
-										select.add(option);
-									}
-									
-									$('region_id').value = currentRegionId;
-								</script>
-							</div>
+					<div id="shipping">
+						<h2>Delivery Costs</h2>
+						<div style="color:#0495d7">Area:</div>
+						<div class="form-group" style="width:240px;">								
+							<select class="form-control" style="color:#0495d7; border-color:#0495d7" id="region_id">
+								<option value="" disabled><?php echo $this->__('Please select delivery zone') ?></option>
+							</select>
 						</div>
-						<br>
-						<p>Standard Delivery Charge (1 unit):</p><p><?php echo Mage::helper('core')->currency($productShippingFee, true, false); ?></p>
-						<p>Special Delivery Cost:</p><p>(if you add this to your current cart!!!)</p><p style="color:#ec1c24"><?php echo Mage::helper('core')->currency($diff, true, false);; ?></p>
+						<div id="LoadingImage" style="display: none">
+							<img src="<?php echo $this->getSkinUrl('images/onestep-loader.gif');?>" />
+						</div>
+						<div id="shippingFee" style="display:none;color:#0495d7"></div>
+						
+						<script type="text/javascript">
+							var regions = <?php echo Mage::helper('directory')->getRegionJson() ?>;
+							//alert(JSON.stringify(regions["NZ"][517]));
+							var select = document.getElementById("region_id");
+							for (regionId in regions["NZ"]) {
+								region = regions["NZ"][regionId];
+								
+								option = document.createElement('OPTION');
+								option.value = regionId;
+								option.text = region.name.stripTags();
+								option.title = region.name;
+
+								select.add(option);
+							}
+							
+							jQuery('#region_id').on('change', function(){
+								$('LoadingImage').show();
+								$('shippingFee').hide();
+								
+								jQuery.post(baseUrl + "onestepcheckout/ajax/getProductShippingFee",
+								{
+									region: $('region_id').value,
+									qty: 1,
+									pid: <?php echo $_product->getId()?>
+								},
+								function(data, status){
+									$('LoadingImage').hide();
+									$('shippingFee').innerHTML = data;
+									$('shippingFee').show();
+								});
+							});
+							
+							$('region_id').value = currentRegionId;
+							jQuery('#region_id').trigger("change");
+						</script>
 					</div>
+					<br>
+					<br>
 					<br>
 					<div class="related-categories">
 						<div class="related-categories-label">

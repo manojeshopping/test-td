@@ -238,15 +238,15 @@
 
 <?php if ($this->isCustomerLoggedIn()):?>
 			<li style="height:0;padding:0;margin:0"><input type='hidden' name='islogin' id='islogin' value='1'/></li>
+			<script type="text/javascript">
+				$("billing-address-select").value = "";
+				$("billing-new-address-form").show();
+			</script>
 		<?php endif;?>
 		<li style="height:0;padding:0;margin:0"><input type='hidden' name='emailvalid' id='emailvalid' value=''/></li>
 		
         </ul>
     </fieldset>
-	<script type="text/javascript">
-		$("billing-address-select").value = "";
-		$("billing-new-address-form").show();
-	</script>
     <?php if ($this->isShowShippingAddress()): ?>
         <ul>
             <li class="shipping_other_address">
@@ -470,3 +470,12 @@
         </script>
     <?php endif; ?>
 </div>
+
+<?php if (!$this->isCustomerLoggedIn()): ?>
+<script type="text/javascript">
+	var reginId = <?php echo Mage::getSingleton('core/session')->getRegion() ?>;
+	if (reginId > 0) {
+		$('billing:region_id').value = reginId;
+	}
+</script>
+<?php endif; ?>
