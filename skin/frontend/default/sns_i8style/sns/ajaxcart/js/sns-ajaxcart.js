@@ -698,13 +698,7 @@ miniCartForm.prototype = {
                 var request = new Ajax.Request(this.saveUrl, {
                     method: 'post',
                     onComplete: this.onComplete,
-                    onSuccess: 
-						function() {
-							this.onSave;
-							if(jQuery('#region_id').length != 0) {
-								jQuery('#region_id').trigger("change");
-							}
-						},
+                    onSuccess: this.onSave,
                     onLoading: this.onLoading,
                     parameters: Form.serialize(this.form) + '&isCOPage=' + isCOPage,
                 });
@@ -716,6 +710,9 @@ miniCartForm.prototype = {
     newCart: function(result) {
         closeCFirm = 1;
         setResult(result.responseText.evalJSON());
+		if(jQuery('#region_id').length != 0) {
+			jQuery('#region_id').trigger("change");
+		}
     },
     loadFailure: function() {},
     showLoading: function() {
