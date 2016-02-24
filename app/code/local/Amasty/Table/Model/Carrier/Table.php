@@ -72,11 +72,15 @@ class Amasty_Table_Model_Carrier_Table extends Mage_Shipping_Model_Carrier_Abstr
 					//Mage::log($qtyRates);
 					//$discArray = array(1, 0.8, 0.6, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4);
 					$discArrayString = Mage::getModel('cms/block')->setStoreId(Mage::app()->getStore()->getId())->load('freight_discount_array')->getContent();
-					$discArray = explode(", ", $discArrayString);
+					$discArray = explode(",", $discArrayString);
 					//Mage::log($discArray);
 					$adjQtyRates = array();
 					for ($i = 0; $i < count($qtyRates); $i++) {
-						array_push($adjQtyRates, $qtyRates[$i] * $discArray[$i]);	
+						if (isset($discArray[$i])) {
+							array_push($adjQtyRates, $qtyRates[$i] * $discArray[$i]);
+						} else {
+							array_push($adjQtyRates, $qtyRates[$i] * 0.4);
+						}						
 					}
 					//Mage::log($adjQtyRates);
 					//Mage::log("---------------------");

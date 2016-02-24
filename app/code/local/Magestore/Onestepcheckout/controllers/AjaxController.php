@@ -136,4 +136,28 @@ class Magestore_Onestepcheckout_AjaxController extends Mage_Core_Controller_Fron
         }
         return $result;
     }
+	public function getProductShippingFeeAction() {
+		$regionId = $this->getRequest()->getParam('region');
+		$currentProductQty = $this->getRequest()->getParam('qty');
+		$currentProductId = $this->getRequest()->getParam('pid');
+		
+		$_product = Mage::getModel('catalog/product')->load($currentProductId);
+		//echo $regionId;
+		
+		$cart = Mage::getSingleton('checkout/cart')->getQuote();
+		$cartShippingFee = Mage::helper('amtable')->getShippingTableFeeForProducts($regionId, $cart);
+		$cartAndProductShippingFee = Mage::helper('amtable')->getShippingTableFeeForProducts($regionId, $cart, $_product, $currentProductQty);
+		$productShippingFee = Mage::helper('amtable')->getShippingTableFeeForProducts($regionId, null, $_product, $currentProductQty);
+		$diff = $cartAndProductShippingFee - $cartShippingFee;
+		
+		$productShippingFee = Mage::helper('core')->currency($productShippingFee, true, false);
+		$diff = Mage::helper('core')->currency($diff, true, false);
+		
+		echo "<div class='row'><div class='pull-left'>Standard Delivery</div><div class='pull-right'>" . $productShippingFee . "</div></div>";
+		echo "<div>(For 1 unit)</div>";
+		echo "<div style='background-color:red;color:white;padding:3px'><div class='row'><h4 class='pull-left' style='color:white'>Special Delivery</h4><h3 class='pull-right' style='color:white'>" . $diff . "</h3></div>";
+		echo "<div>(If you add this to your current cart)</div></div>";
+		
+		Mage::getSingleton('core/session')->setRegion($regionId);
+	}
 }
