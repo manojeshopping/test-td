@@ -165,7 +165,7 @@
 //<![CDATA[	
 <?php if ($this->isShowShippingAddress()): ?>
     <?php if ($checkRegion == 1): ?>
-            var shippingRegionUpdater = new RegionUpdater('shipping:country_id', 'shipping:region', 'shipping:region_id', countryRegions, undefined, 'shipping:postcode');
+            //var shippingRegionUpdater = new RegionUpdater('shipping:country_id', 'shipping:region', 'shipping:region_id', countryRegions, undefined, 'shipping:postcode');
     <?php endif; ?>
     <?php if (!$helper->getFieldRequire('region')): ?>
             if ($('shipping:region_id')) {
@@ -302,3 +302,7 @@
         }
     </script>
 <?php endif; ?>
+<script type="text/javascript">
+	var regions = <?php echo $this->helper('directory')->getRegionJson() ?>;
+	easy_updateRegion('shipping:region_id', regions);
+</script>

@@ -269,7 +269,7 @@
     //<![CDATA[
 
                         if ($('billing:region') || $('billing:region_id'))
-                            var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions);
+                            //var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions);
 
 <?php if (!$helper->getFieldRequire('region')): ?>
                         if ($('billing:region_id')) {
@@ -403,7 +403,7 @@
 
             updateRegion(countryEl, regionTextEl, regionSelectEl, regions, disableAction, zipEl);
         }
-        updateBillingRegion();
+        //updateBillingRegion();
     </script>
 
     <?php if (Mage::getStoreConfig('onestepcheckout/general/suggest_address', Mage::app()->getStore()->getStoreId())): ?>
@@ -470,6 +470,11 @@
         </script>
     <?php endif; ?>
 </div>
+
+<script type="text/javascript">
+	var regions = <?php echo $this->helper('directory')->getRegionJson() ?>;
+	easy_updateRegion('billing:region_id', regions);
+</script>
 
 <?php if (!$this->isCustomerLoggedIn()): ?>
 <script type="text/javascript">
