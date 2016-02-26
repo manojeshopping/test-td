@@ -1,6 +1,40 @@
 /*
 	Update billing and shipping address when filled postcode
 */
+function compare(a, b) {
+	if (a.sort_order < b.sort_order)
+		return -1;
+	else if (a.sort_order > b.sort_order)
+		return 1;
+	else 
+		return 0;
+}
+function easy_updateRegion(selectId, regions)
+{
+	var nzRegions = [];
+	for (regionId in regions["NZ"]) {
+		var nzRegion = {regionId:"", name:"", sort_order:0};
+		nzRegion.regionId = regionId;
+		nzRegion.name = regions["NZ"][regionId].name;
+		nzRegion.sort_order = regions["NZ"][regionId].sort_order;
+		nzRegions.push(nzRegion);
+	}
+
+	nzRegions.sort(compare);
+	//alert(JSON.stringify(nzRegions));
+	
+	var select = document.getElementById(selectId);
+	for (i = 0; i < nzRegions.length; i++) { 
+		option = document.createElement('OPTION');
+		option.value = nzRegions[i].regionId;
+		option.text = nzRegions[i].name;
+		option.title = nzRegions[i].name;
+
+		select.add(option);
+	}
+	select.style.display = '';
+}
+
 function updateRegion(countryEl, regionTextEl, regionSelectEl, regions, disableAction, zipEl)
 	{
 		if (regions[countryEl.value]) {
@@ -75,7 +109,7 @@ function updateRegion(countryEl, regionTextEl, regionSelectEl, regions, disableA
 		var zipUpdater = new ZipUpdater(countryEl.value, zipEl);
 		zipUpdater.update();
 	}
-	
+
 	function setMarkDisplay(elem, display)
 	{
 		elem = $(elem);
