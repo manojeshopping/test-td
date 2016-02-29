@@ -474,6 +474,9 @@
 <script type="text/javascript">
 	var regions = <?php echo $this->helper('directory')->getRegionJson() ?>;
 	easy_updateRegion('billing:region_id', regions);
+	if ($('billing:region_id').value == "") {
+		$('billing:region_id').value = 517;	
+	}
 </script>
 
 <?php if (!$this->isCustomerLoggedIn()): ?>
