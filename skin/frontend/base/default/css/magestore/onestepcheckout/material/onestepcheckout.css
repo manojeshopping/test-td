@@ -240,7 +240,7 @@ p.forgot-link a span{background:url(../../../../images/onestepcheckout/material/
 .one-step-checkout label em{color:red}
 #one-step-checkout-form .gift-messages-form label {float: none !important;position: absolute !important;}
 .onestepcheckout-login-link{padding:0px 0}
-.onestepcheckout-login-link a{color:#39c;font-size:14px;text-decoration:none;line-height:18px}
+.onestepcheckout-login-link a{color:#39c;font-size:16px;text-decoration:none;line-height:18px}
 .onestepcheckout-login-link a:hover{text-decoration:underline}
 .onestepcheckout-login-link a span{background:url(../../../../images/onestepcheckout/material/arrow-r.png) no-repeat center center #39c;width:10px;height:10px;margin:4px 8px 4px 0;border-radius:6px;float:left}
 .one-step-checkout .order-info-3-columns{float:left;width:48%;margin:0 3% 20px 0}

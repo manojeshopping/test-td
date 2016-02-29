@@ -238,15 +238,15 @@
 
 <?php if ($this->isCustomerLoggedIn()):?>
 			<li style="height:0;padding:0;margin:0"><input type='hidden' name='islogin' id='islogin' value='1'/></li>
+			<script type="text/javascript">
+				$("billing-address-select").value = "";
+				$("billing-new-address-form").show();
+			</script>
 		<?php endif;?>
 		<li style="height:0;padding:0;margin:0"><input type='hidden' name='emailvalid' id='emailvalid' value=''/></li>
 		
         </ul>
     </fieldset>
-	<script type="text/javascript">
-		$("billing-address-select").value = "";
-		$("billing-new-address-form").show();
-	</script>
     <?php if ($this->isShowShippingAddress()): ?>
         <ul>
             <li class="shipping_other_address">
@@ -269,7 +269,7 @@
     //<![CDATA[
 
                         if ($('billing:region') || $('billing:region_id'))
-                            var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions);
+                            //var billingRegionUpdater = new RegionUpdater('billing:country_id', 'billing:region', 'billing:region_id', countryRegions);
 
 <?php if (!$helper->getFieldRequire('region')): ?>
                         if ($('billing:region_id')) {
@@ -403,7 +403,7 @@
 
             updateRegion(countryEl, regionTextEl, regionSelectEl, regions, disableAction, zipEl);
         }
-        updateBillingRegion();
+        //updateBillingRegion();
     </script>
 
     <?php if (Mage::getStoreConfig('onestepcheckout/general/suggest_address', Mage::app()->getStore()->getStoreId())): ?>
@@ -470,3 +470,20 @@
         </script>
     <?php endif; ?>
 </div>
+
+<script type="text/javascript">
+	var regions = <?php echo $this->helper('directory')->getRegionJson() ?>;
+	easy_updateRegion('billing:region_id', regions);
+	if ($('billing:region_id').value == "") {
+		$('billing:region_id').value = 517;	
+	}
+</script>
+
+<?php if (!$this->isCustomerLoggedIn()): ?>
+<script type="text/javascript">
+	var reginId = <?php echo Mage::getSingleton('core/session')->getRegion() ?>;
+	if (reginId > 0) {
+		$('billing:region_id').value = reginId;
+	}
+</script>
+<?php endif; ?>

@@ -710,6 +710,9 @@ miniCartForm.prototype = {
     newCart: function(result) {
         closeCFirm = 1;
         setResult(result.responseText.evalJSON());
+		if(jQuery('#region_id').length != 0) {
+			jQuery('#region_id').trigger("change");
+		}
     },
     loadFailure: function() {},
     showLoading: function() {
@@ -755,6 +758,9 @@ function getCDown(numb) {
         $('ajax_content').setStyle({
             display: 'none'
         });
+		if(jQuery('#region_id').length != 0) {
+			jQuery('#region_id').trigger("change");
+		}
         if (isCPPage) {
             isCPPage = 0;
             windown_compare.focus();

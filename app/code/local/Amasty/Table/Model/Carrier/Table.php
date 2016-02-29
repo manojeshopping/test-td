@@ -45,8 +45,50 @@ class Amasty_Table_Model_Carrier_Table extends Mage_Shipping_Model_Carrier_Abstr
     
             if (isset($rates[$customMethod->getId()]))
             {
+					// zw
+					$resource = Mage::getSingleton('core/resource');
+					$readConnection = $resource->getConnection('core_read');
+
+					$noQtyRates = array();
+					$qtyRates = array();
+					foreach ($request->getAllItems() as $item) {
+						$productId = $item->getProduct()->getId();
+						$productQty = $item->getQty();
+						$productWeight = $item->getWeight();
+						//Mage::log($productId . "|" . $productQty . "|" . $productWeight);
+						
+						$query = 'SELECT cost_base FROM ' . 'am_table_rate' . ' WHERE state = '
+								 . $request->getDestRegionId() . ' and weight_from = ' . $productWeight . ' LIMIT 1';
+						$cost_base = $readConnection->fetchOne($query);
+
+						array_push($noQtyRates, $cost_base);
+						for ($i = 0; $i < $productQty; $i++) {
+							array_push($qtyRates, $cost_base);
+						}
+					}
+					//Mage::log($noQtyRates);
+					//Mage::log($qtyRates);
+					rsort($qtyRates);
+					//Mage::log($qtyRates);
+					//$discArray = array(1, 0.8, 0.6, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4);
+					$discArrayString = Mage::getModel('cms/block')->setStoreId(Mage::app()->getStore()->getId())->load('freight_discount_array')->getContent();
+					$discArray = explode(",", $discArrayString);
+					//Mage::log($discArray);
+					$adjQtyRates = array();
+					for ($i = 0; $i < count($qtyRates); $i++) {
+						if (isset($discArray[$i])) {
+							array_push($adjQtyRates, $qtyRates[$i] * $discArray[$i]);
+						} else {
+							array_push($adjQtyRates, $qtyRates[$i] * 0.4);
+						}						
+					}
+					//Mage::log($adjQtyRates);
+					//Mage::log("---------------------");
+					// zw end
+					
                     $method->setCost($rates[$customMethod->getId()]);
-                    $method->setPrice($rates[$customMethod->getId()]);
+                    //$method->setPrice($rates[$customMethod->getId()]);
+					$method->setPrice(array_sum($adjQtyRates)); 
 
                     // add this rate to the result
                     $result->append($method);
