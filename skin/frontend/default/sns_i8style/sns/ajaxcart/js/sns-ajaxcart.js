@@ -131,7 +131,7 @@ function reCreateLink(link, msg, hasConfirm, skipAny) {
 }
 
 function reNewLinkDeleteInCart() {
-    reCreateLink('checkout/cart/delete', 'Are you sure you would like to remove this item from the shopping cart?', true, skiplink);
+    //reCreateLink('checkout/cart/delete', 'Are you sure you would like to remove this item from the shopping cart?', true, skiplink);
 }
 
 function reNewLinkRemoveCompare() {
