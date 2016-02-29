@@ -1043,7 +1043,7 @@ function get_separate_save_methods_function(url, update_payments)
 }
 
 function deleteproduct(id, url, ms) {
-    if (confirm(ms)) {
+    if (1) {
         shippingLoad();
         //paymentLoad();
         reviewLoad();

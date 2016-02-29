@@ -73,7 +73,7 @@
 		<div class="row">
 			<h1 class="checkout_header pull-left"><?php echo $this->getCheckoutTitle(); ?></h1>
 			<?php if (($this->isShowLoginLink() || $this->isShowRegisterLink()) && !$this->isCustomerLoggedIn()): ?>
-			<div id='onestepcheckout_login_link' class="onestepcheckout-login-link pull-right">
+			<div id='onestepcheckout_login_link' class="onestepcheckout-login-link pull-left" style="margin: 2px 0 0 20px;">
 				<a href="javascript:void(0);"  id="onestepcheckout-login-link"><span>&nbsp;</span>
 					<?php if($this->configData['login_link_title']): ?>
 						<?php echo $this->configData['login_link_title'] ?>
