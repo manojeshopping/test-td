@@ -234,13 +234,19 @@ class Mage_Core_Model_Email_Queue extends Mage_Core_Model_Abstract
 
                 try {
                     $mailer->send();
-                } catch (Exception $e) {
-                    Mage::logException($e);
+                    unset($mailer);
+                    $message->setProcessedAt(Varien_Date::formatDate(true));
+                    $message->save();
                 }
+                catch (Exception $e) {
+                    unset($mailer);
+                    $oldDevMode = Mage::getIsDeveloperMode();
+                    Mage::setIsDeveloperMode(true);
+                    Mage::logException($e);
+                    Mage::setIsDeveloperMode($oldDevMode);
 
-                unset($mailer);
-                $message->setProcessedAt(Varien_Date::formatDate(true));
-                $message->save();
+                    return false;
+                }
             }
         }
 
