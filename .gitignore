@@ -28,6 +28,7 @@
 /media/tmp
 /media/upload
 /media/wysiwyg
+/media/amlabel/
 
 #Ignore some files and directories from downloader component
 /downloader/cache.cfg
@@ -71,3 +72,10 @@ Thumbs.db
 # Redis                        #
 # ##############################
 /shell/redis.php
+
+# Site identification codes   #
+##############################
+BingSiteAuth.xml
+54CBB9B5BC887113C0861693C066327A.txt
+google424f3e57306bd8f1.html
+google47b748bc516dcae0.html
