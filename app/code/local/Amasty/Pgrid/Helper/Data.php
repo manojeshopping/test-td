@@ -263,6 +263,7 @@ class Amasty_Pgrid_Helper_Data extends Mage_Core_Helper_Abstract
             $props = array(
                 'header'=> $attribute->getCustomTitle() ? $attribute->getCustomTitle() : $attribute->getStoreLabel(),
                 'index' => $attribute->getAttributeCode(),
+				'renderer'  => 'ampgrid/adminhtml_catalog_product_grid_renderer_reckon',
                 'filter_index' => 'am_attribute_'.$attribute->getAttributeCode()
             );
             if ('price' == $attribute->getFrontendInput())
