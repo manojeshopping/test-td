@@ -5,6 +5,8 @@
 
 	$reckonPriceId =  Mage::getModel('catalog/product')->getResource()->getAttribute("reckon_price")->getId();
 	$reckonStockId =  Mage::getModel('catalog/product')->getResource()->getAttribute("reckon_stock")->getId();
+	$reckonQonOrderId =  Mage::getModel('catalog/product')->getResource()->getAttribute("reckon_q_on_order")->getId();
+	$reckonQonSalesOrderId =  Mage::getModel('catalog/product')->getResource()->getAttribute("reckon_q_on_sales_order")->getId();
 	
 	$resource = Mage::getSingleton('core/resource');
 	$readConnection = $resource->getConnection('core_read');
@@ -25,6 +27,14 @@
 			//echo $sql . "<br>";
 			
 			$sql = "update catalog_product_entity_varchar set value=" . $result["stock"] . " where entity_id = " . $id . " and attribute_id = " . $reckonStockId;
+			$writeConnection->query($sql);
+			//echo $sql . "<br>";
+			
+			$sql = "update catalog_product_entity_varchar set value=" . $result["q_on_order"] . " where entity_id = " . $id . " and attribute_id = " . $reckonQonOrderId;
+			$writeConnection->query($sql);
+			//echo $sql . "<br>";
+			
+			$sql = "update catalog_product_entity_varchar set value=" . $result["q_on_sales_order"] . " where entity_id = " . $id . " and attribute_id = " . $reckonQonSalesOrderId;
 			$writeConnection->query($sql);
 			//echo $sql . "<br>";
 		}

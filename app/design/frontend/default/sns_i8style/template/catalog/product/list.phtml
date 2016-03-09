@@ -265,6 +265,28 @@
 							<div class="label label-info"><a href="<?php echo Mage::getUrl($parentCatUrlPath); ?>"><?php echo $parentCat; ?></a></div></h5>
 					</div>
 					<div class="inner-box-sku">
+						<?php
+							if (Mage::app()->isInstalled() && Mage::getSingleton('customer/session')->isLoggedIn()) {
+								$cid = Mage::getSingleton('customer/session')->getCustomer()->getId();
+								if ($cid == 1823 || $cid == 30 || $cid == 2028 || $cid == 1901) {
+									$qHand = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_stock', Mage_Core_Model_App::ADMIN_STORE_ID);
+									$qOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_q_on_order', Mage_Core_Model_App::ADMIN_STORE_ID);
+									$qSalesOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_q_on_sales_order', Mage_Core_Model_App::ADMIN_STORE_ID);
+									if ($qHand == null) $qHand = 0;
+									if ($qOrder == null) $qOrder = 0;
+									if ($qSalesOrder == null) $qSalesOrder = 0;
+									
+									echo "<br>";
+									echo "Hand: " .  $qHand;
+									echo "<br>";
+									echo "Order: " .  $qOrder;
+									echo "<br>";
+									echo "Sales Order: " . $qSalesOrder;
+									echo "<br>";
+								}
+							}
+						?>
+						<br>
 						<?php echo $_product->getSku(); ?>
 					</div>
 				</div>	

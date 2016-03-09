@@ -3,8 +3,8 @@
 	umask(0);
 	Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 	
-	$attrCode = "reckon_price_equal";
-	$attrGroupName = "prices";
+	$attrCode = "reckon_q_on_order";
+	$attrGroupName = "general";
 	$isDelete = false;
 
 	$attSet = Mage::getModel('eav/entity_type')->getCollection()->addFieldToFilter('entity_type_code','catalog_product')->getFirstItem(); // This is because the you adding the attribute to catalog_products entity ( there is different entities in magento ex : catalog_category, order,invoice... etc ) 
