@@ -16,6 +16,9 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid_Renderer_Reckon extends 
 				$value = "No";
 			}
 		}
+		if ($this->getColumn()->getIndex() == "reckon_price") {
+			$value = Mage::helper('core')->currency($value, true, false);
+		}
         return '<div style="color:#45A1E4;text-align:right;width:100%;">'.$value.'</div>';
     }
 }
