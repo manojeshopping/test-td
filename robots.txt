@@ -1,3 +1,5 @@
+User-agent: Baiduspider
+Disallow: /
 # Google Image Crawler Setup
 User-agent: Googlebot-Image
 Disallow:
@@ -55,6 +57,7 @@ Disallow: /STATUS.txt
 Disallow: /RELEASE_NOTES.txt
 Disallow: /index.php.sample
 Disallow: /php.ini.sample
+Disallow: /onestepcheckout/ajax/getProductShippingFee
 
 # Paths (no clean URLs)
 #Disallow: /*.js$
