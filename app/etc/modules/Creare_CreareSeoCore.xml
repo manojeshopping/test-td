@@ -1,1 +1,8 @@
-../../../.modman/CreareSEO/app/etc/modules/Creare_CreareSeoCore.xml
+<config>
+    <modules>
+        <Creare_CreareSeoCore>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Creare_CreareSeoCore>
+    </modules>
+</config>
