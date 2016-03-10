@@ -225,11 +225,11 @@
 						   <button type="button" class="btn btn-md" disabled><i class="fa fa-shopping-cart"></i></button>
 					   <?php endif; ?>
 						<?php if(Mage::getSingleton('customer/session')->isLoggedIn()){ ?>
-						<a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>"><button type="button" class="btn btn-td-standard1 btn-td-primary-quiet btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Wishlist') ?>"><i class="fa fa-star"></i></button></a> 
+						<a style="display:none" href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>"><button type="button" class="btn btn-td-standard1 btn-td-primary-quiet btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Wishlist') ?>"><i class="fa fa-star"></i></button></a> 
 						<?php }else{ ?>
-						<a data-toggle="modal" data-target="#loginPopUpModal"><button type="button" class="btn btn-td-standard1 btn-td-primary-quiet btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Wishlist') ?>"><i class="fa fa-star"></i></button></a>
+						<a style="display:none" data-toggle="modal" data-target="#loginPopUpModal"><button type="button" class="btn btn-td-standard1 btn-td-primary-quiet btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Wishlist') ?>"><i class="fa fa-star"></i></button></a>
 						<?php } ?>	
-						<button type="button" onclick="setLocation('<?php echo $this->helper('catalog/product_compare')->getAddUrl($_product) ?>')" class="link-compare btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Compare') ?>"><i class="fa fa-align-left fa-rotate-270"></i></button>
+						<button style="display:none" type="button" onclick="setLocation('<?php echo $this->helper('catalog/product_compare')->getAddUrl($_product) ?>')" class="link-compare btn btn-td-standard1 btn-td-info-quiet btn-info btn-md" data-toggle="tooltip" data-placement="top" title="<?php echo $this->__('Add to Compare') ?>"><i class="fa fa-align-left fa-rotate-270"></i></button>
 					</div>
 					<?php 		
 						$currentCatIds = $_product->getCategoryIds();
@@ -276,13 +276,13 @@
 									if ($qOrder == null) $qOrder = 0;
 									if ($qSalesOrder == null) $qSalesOrder = 0;
 									
-									echo "<br>";
+									echo "<div style='color:red;font-size:14px;font-weight:bold;'>";
 									echo "Hand: " .  $qHand;
 									echo "<br>";
 									echo "Order: " .  $qOrder;
 									echo "<br>";
-									echo "Sales Order: " . $qSalesOrder;
-									echo "<br>";
+									echo "SO: " . $qSalesOrder;
+									echo "</div>";
 								}
 							}
 						?>
