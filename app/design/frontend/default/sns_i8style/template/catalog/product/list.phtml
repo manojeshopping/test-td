@@ -268,7 +268,18 @@
 						<?php
 							if (Mage::app()->isInstalled() && Mage::getSingleton('customer/session')->isLoggedIn()) {
 								$cid = Mage::getSingleton('customer/session')->getCustomer()->getId();
-								if ($cid == 1823 || $cid == 30 || $cid == 2028 || $cid == 1901) {
+								$cip = Mage::helper('core/http')->getRemoteAddr();
+								if ($cid == 1823 || 
+									$cid == 30 || 
+									$cid == 2028 || 
+									$cid == 1901 ||
+									$cid == 2036 ||													
+									$cid == 2038 ||
+									$cid == 2039 ||
+									$cid == 2040 ||
+									$cid == 9 ||
+									$cip == "122.59.194.97" ||
+									$cip == "210.48.30.100") {
 									$qHand = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_stock', Mage_Core_Model_App::ADMIN_STORE_ID);
 									$qOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_q_on_order', Mage_Core_Model_App::ADMIN_STORE_ID);
 									$qSalesOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_q_on_sales_order', Mage_Core_Model_App::ADMIN_STORE_ID);
@@ -276,7 +287,7 @@
 									if ($qOrder == null) $qOrder = 0;
 									if ($qSalesOrder == null) $qSalesOrder = 0;
 									
-									echo "<div style='color:red;font-size:14px;font-weight:bold;'>";
+									echo "<div style='color:red;font-size:14px;font-weight:bold;' class='pull-right'>";
 									echo $qHand . "|" . $qSalesOrder . "|" . $qOrder;
 									echo "</div>";
 								}
