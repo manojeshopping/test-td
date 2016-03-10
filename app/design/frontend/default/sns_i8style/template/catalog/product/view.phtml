@@ -197,13 +197,9 @@ $baseUrl = Mage::getBaseUrl();
 													if ($qOrder == null) $qOrder = 0;
 													if ($qSalesOrder == null) $qSalesOrder = 0;
 													
-													echo "<br>";
-													echo "Hand: " .  $qHand;
-													echo "<br>";
-													echo "Order: " .  $qOrder;
-													echo "<br>";
-													echo "Sales Order: " . $qSalesOrder;
-													echo "<br>";
+													echo "<div style='color:red;font-size:14px;font-weight:bold;'>";
+													echo $qHand . "|" . $qSalesOrder . "|" . $qOrder;
+													echo "</div>";
 												}
 											}
 										?>
