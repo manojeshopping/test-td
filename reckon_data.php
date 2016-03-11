@@ -20,7 +20,11 @@
 		//echo $result["sku"] . "<br>";
 		$id = Mage::getModel('catalog/product')->getResource()->getIdBySku($result["sku"]);
 		if ($id) {
-			$rp = round($result["price"] * 1.15, 2);	
+			if ($result["inc_tax"] == true) {
+				$rp = $result["price"];
+			} else {
+				$rp = round($result["price"] * 1.15, 2);
+			}
 			
 			$sql = "update catalog_product_entity_decimal set value=" . $rp . " where entity_id = " . $id . " and attribute_id = " . $reckonPriceId;
 			$writeConnection->query($sql);
