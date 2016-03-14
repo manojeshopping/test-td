@@ -56,7 +56,7 @@
 	for($i = 1; $i < count($data); $i++) {
 		$oldDate = $data[$i][0];
 		$pieces = explode("/", $oldDate);
-		$date = $pieces[2] . "-" . $pieces[0] . "-" . $pieces[1];
+		$date = $pieces[2] . "-" . $pieces[1] . "-" . $pieces[0];
 		$fullSku = $data[$i][2];
 		
 		$pieces = explode(":", $fullSku);
