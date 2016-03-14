@@ -31,7 +31,7 @@
 			$q_on_sales_order = 0;
 		}
 		
-		$query = "insert into Reckon (sku, price, stock, q_on_order, q_on_sales_order, inc_tax) values ('" . 
+		$query = "insert into reckon (sku, price, stock, q_on_order, q_on_sales_order, inc_tax) values ('" . 
 			$sku . "', " . 
 			$price . ", " . 
 			$stock . ", " . 
@@ -63,7 +63,7 @@
 		$lastIndex = count($pieces) - 1;
 		$sku = $pieces[$lastIndex];
 		
-		$query = "update Reckon set arrive_date = '" . $date . "' where sku = '" . $sku . "'";
+		$query = "update reckon set arrive_date = '" . $date . "' where sku = '" . $sku . "'";
 		//echo $query . "<br>";
 		echo ".";
 		flush();
@@ -86,7 +86,7 @@
 				$qty = 0;
 			}
 			
-			$query = "update Reckon set q" . $index . " = '" . $qty . "' where sku = '" . $sku . "'";
+			$query = "update reckon set q" . $index . " = '" . $qty . "' where sku = '" . $sku . "'";
 			//echo $query . "<br>";
 			echo ".";
 			flush();
