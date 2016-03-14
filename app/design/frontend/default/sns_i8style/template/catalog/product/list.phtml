@@ -269,6 +269,8 @@
 							if (Mage::app()->isInstalled() && Mage::getSingleton('customer/session')->isLoggedIn()) {
 								$cid = Mage::getSingleton('customer/session')->getCustomer()->getId();
 								$cip = Mage::helper('core/http')->getRemoteAddr();
+								$superUser = false;
+								$showRoom = false;
 								if ($cid == 1823 || 
 									$cid == 30 || 
 									$cid == 2028 || 
@@ -277,10 +279,11 @@
 									$cid == 2038 ||
 									$cid == 2039 ||
 									$cid == 2040 ||
-									$cid == 9 ||
-									$cip == "122.59.194.97" ||
+									$cid == 9) $superUser = true;
+								if ($cip == "122.59.194.97" ||
 									$cip == "101.100.142.33" ||
-									$cip == "210.48.30.100") {
+									$cip == "210.48.30.100") $showRoom = true;
+								if ($superUser || $showRoom) {
 									$qHand = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_stock', Mage_Core_Model_App::ADMIN_STORE_ID);
 									$qOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_q_on_order', Mage_Core_Model_App::ADMIN_STORE_ID);
 									$qSalesOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'reckon_q_on_sales_order', Mage_Core_Model_App::ADMIN_STORE_ID);
@@ -288,8 +291,37 @@
 									if ($qOrder == null) $qOrder = 0;
 									if ($qSalesOrder == null) $qSalesOrder = 0;
 									
-									echo "<div style='color:red;font-size:14px;font-weight:bold;' class='pull-right'>";
-									echo $qHand . "|" . $qSalesOrder . "|" . $qOrder;
+									$resource = Mage::getSingleton('core/resource');
+									$readConnection = $resource->getConnection('core_read');
+									$query = "SELECT arrive_date FROM Reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
+									$arrive_date = $readConnection->fetchOne($query);
+									if ($arrive_date == null) $arrive_date = "0000-00-00";
+									
+									$query = "SELECT q0 FROM Reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
+									$q0 = $readConnection->fetchOne($query);
+									if ($q0 == null) $q0 = "0";
+									
+									$query = "SELECT q1 FROM Reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
+									$q1 = $readConnection->fetchOne($query);
+									if ($q1 == null) $q1 = "0";
+									
+									$query = "SELECT q2 FROM Reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
+									$q2 = $readConnection->fetchOne($query);
+									if ($q2 == null) $q2 = "0";
+									
+									$query = "SELECT q3 FROM Reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
+									$q3 = $readConnection->fetchOne($query);
+									if ($q3 == null) $q3 = "0";
+									
+									$query = "SELECT q4 FROM Reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
+									$q4 = $readConnection->fetchOne($query);
+									if ($q4 == null) $q4 = "0";
+									
+									
+									echo "<div style='color:red;font-size:14px;font-weight:bold;text-align:right' class='pull-right'>";
+									if ($superUser) echo $q0 . "|" . $q1 . "|" . $q2 . "|" . $q3 . "|" . $q4 . "<br>";
+									echo $qHand . "|" . $qSalesOrder . "|" . $qOrder . "<br>";
+									echo $arrive_date;
 									echo "</div>";
 								}
 							}
