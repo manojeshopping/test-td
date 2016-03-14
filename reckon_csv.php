@@ -49,7 +49,7 @@
 	flush();
 	ob_flush();
 	
-	// then update
+	// then update ExpectedDate_csv
 	$file = 'ExpectedDate_csv.csv';
 	$csv = new Varien_File_Csv();
 	$data = $csv->getData($file);
@@ -75,6 +75,30 @@
 	flush();
 	ob_flush();
 	
+	// then update us price
+	$file = 'usprice.csv';
+	$csv = new Varien_File_Csv();
+	$data = $csv->getData($file);
+	for($i = 1; $i < count($data); $i++) {
+		$sku = $data[$i][0];
+		$usPrice = $data[$i][1];
+		if ($usPrice == null) {
+				$usPrice = 0;
+		}
+		
+		$query = "update reckon set us_price = '" . $usPrice . "' where sku = '" . $sku . "'";
+		//echo $query . "<br>";
+		echo ".";
+		flush();
+		ob_flush();
+		$writeConnection->query($query);
+	}
+	
+	echo "<br>update us price finished<br>";
+	flush();
+	ob_flush();
+	
+	// then update q0 q1 q2 q3 q4
 	for ($index = 0; $index < 5; $index++) {
 		$file = 'Q' . $index . '.csv';
 		$csv = new Varien_File_Csv();
