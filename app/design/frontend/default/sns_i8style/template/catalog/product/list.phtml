@@ -316,7 +316,7 @@
 									$query = "SELECT us_price FROM reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
 									$us_price = $readConnection->fetchOne($query);
 																		
-									echo "<div style='color:red;font-size:14px;font-weight:bold;text-align:right;position:absolute;top:-100px;right:0px;' class='pull-right'>";
+									echo "<div style='color:red;background-color: rgba(224, 243, 65, 0.5);font-size:14px;font-weight:bold;text-align:right;position:absolute;top:-100px;right:0px;' class='pull-right'>";
 									if ($superUser) echo 
 										round($us_price, 0) . "|" . 
 										round($us_price * 1.65, 0) . "|" . 
