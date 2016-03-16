@@ -324,7 +324,25 @@
 										round($us_price * 1.65 / 0.65 * 1.15, 0) . "|" . 
 										round($us_price * 1.65 / 0.6 * 1.15, 0) . "<br>";
 									if ($superUser) echo $q0 . "|" . $q1 . "|" . $q2 . "|" . $q3 . "|" . $q4 . "<br>";
-									echo $qHand . "|" . $qSalesOrder . "|" . $qOrder . "<br>";
+									if ($_product->getTypeId() != "bundle") {
+										echo $qHand . "|" . $qSalesOrder . "|" . $qOrder . "<br>";
+									} else {
+										// combo
+										$selectionCollection = $_product->getTypeInstance(true)->getSelectionsCollection(
+											$_product->getTypeInstance(true)->getOptionsIds($_product), $_product
+										);
+										$bundled_items = array();
+										foreach($selectionCollection as $option) 
+										{
+											$qHand = Mage::getResourceModel('catalog/product')->getAttributeRawValue($option->product_id, 'reckon_stock', Mage_Core_Model_App::ADMIN_STORE_ID);
+											$qOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($option->product_id, 'reckon_q_on_order', Mage_Core_Model_App::ADMIN_STORE_ID);
+											$qSalesOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($option->product_id, 'reckon_q_on_sales_order', Mage_Core_Model_App::ADMIN_STORE_ID);
+											if ($qHand == null) $qHand = 0;
+											if ($qOrder == null) $qOrder = 0;
+											if ($qSalesOrder == null) $qSalesOrder = 0;
+											echo $qHand . "|" . $qSalesOrder . "|" . $qOrder . "<br>";
+										}
+									}
 									echo $arrive_date;
 									echo "</div>";
 								}
