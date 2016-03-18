@@ -132,7 +132,7 @@
 					<div class="actions">
 		                <?php //if($themeConfig['listingpage_displayAddtocart']==1 ){?>
 		                <?php if( $_product->isSaleable()): ?>
-		                    <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart have-borderinset" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+		                    <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart have-borderinset" onclick="_gaq.push(['_trackEvent','cart','add','cat-page']);setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
 		                <?php else: ?>
 		                    <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
 		                <?php endif; ?>
@@ -220,7 +220,7 @@
 				<div class="product-wrap-bottom">
 					<div class="product-option float-lefta">
 						<?php if($_product->isSaleable()): ?>
-						   <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action btn-warning btn-md btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class=""></i>Add to Cart</button>
+						   <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="btn btn-td-action btn-warning btn-md btn-cart" onclick="_gaq.push(['_trackEvent','cart','add','cat-page']);setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo $this->__('Add to Cart') ?>"><i class=""></i>Add to Cart</button>
 					   <?php else: ?>
 						   <button type="button" class="btn btn-md" disabled><i class=""></i>Add to Cart</button>
 					   <?php endif; ?>
