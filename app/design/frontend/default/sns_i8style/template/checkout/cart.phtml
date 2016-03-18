@@ -33,6 +33,11 @@
 ?>
 <script type="text/javascript">
 jQuery(document).ready(function() {
+	_gaq.push(['_trackEvent','cart','view','cart-page']);
+});
+</script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
 	jQuery("#delivery").click(function() {
 		jQuery('#delivery_selected').val('delivery'); 	
 		jQuery('#estimate_shipping_selector').show();

@@ -40,7 +40,7 @@
 								</div>
 <?php endif; ?>
 								<div class="input-group input-group-lg">
-									<button onclick="productAddToCartForm.submit(this)" title="<?php echo $buttonTitle ?>" data-original-title="Add to Cart" title="" data-placement="top" data-toggle="tooltip" class="btn btn-cart btn-lg btn-margin-rt btn-td-action btn-md" type="button"><i class=""></i>&nbsp;ADD TO CART</button>
+									<button onclick="_gaq.push(['_trackEvent','cart','add','prod-page']);productAddToCartForm.submit(this)" title="<?php echo $buttonTitle ?>" data-original-title="Add to Cart" title="" data-placement="top" data-toggle="tooltip" class="btn btn-cart btn-lg btn-margin-rt btn-td-action btn-md" type="button"><i class=""></i>&nbsp;ADD TO CART</button>
 								</div>
 							</div>
 		</div>					
