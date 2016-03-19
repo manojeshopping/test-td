@@ -457,6 +457,10 @@
         });
     //]]>
     </script>
+    <?php $_catName = $_currentCategory ? $_currentCategory->getName() : "" ?>
+    <script>
+        _gaq.push(['_trackEvent','category','view','<?php echo $_catName; ?>']);
+    </script>
 </div>	
 <?php endif; ?>
 
