@@ -468,5 +468,8 @@ $baseUrl = Mage::getBaseUrl();
 			<?php echo $this->getChildHtml('upsell_products') ?>
 		</div>
 	<?php endif; ?>
+	<script>
+		_gaq.push(['_trackEvent','product','view','<?php echo $_product->getSku(); ?>']);
+	</script>
 </div>
 
