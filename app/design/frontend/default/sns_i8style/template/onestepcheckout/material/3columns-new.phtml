@@ -275,7 +275,7 @@
 
                         </ol>
                     </div>
-					<button onclick="oscPlaceOrder(this);" id="onestepcheckout-button-place-order" type="button" title="<?php echo $this->__('Place Order') ?>" class="btn-proceed-checkout onestepcheckout-btn-checkout onestepcheckout-place">
+					<button onclick="_gaq.push(['_trackEvent','checkout','place-order']);_gaq.push(['_trackPageview','/checkout/place-order']);oscPlaceOrder(this);" id="onestepcheckout-button-place-order" type="button" title="<?php echo $this->__('Place Order') ?>" class="btn-proceed-checkout onestepcheckout-btn-checkout onestepcheckout-place">
 						<span>
 							<span>
 								<?php echo $this->__('Place order now') ?>
