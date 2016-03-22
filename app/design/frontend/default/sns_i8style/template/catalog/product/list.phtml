@@ -37,11 +37,25 @@
 <?php 
     $_productCollection=$this->getLoadedProductCollection();
 	if (!isset($_GET["order"]) || $_GET['order'] == 'position') {
-		$sorted_collection = Mage::getResourceModel('catalog/product_collection')
-			->addFieldToFilter('entity_id', array('in' => $_productCollection->getAllIds()))
-			->addAttributeToSelect('*')
-			->addAttributeToSort('main_position', 'asc')
-			->setOrder('price', 'asc');
+		$pInfos = array();
+		foreach ($_productCollection->getAllIds() as $pid) {
+			$product = Mage::getModel('catalog/product')->load($pid);
+			$pInfo = array();
+			array_push($pInfo, $pid, $product->getMainPosition(), $product->getFinalPrice());
+			array_push($pInfos, $pInfo);
+		}
+		
+		function sortByOrder($a, $b) {
+			if ($a[1] == $b[1]) return $a[2] > $b[2];
+			return $a[1] > $b[1];
+		}
+		usort($pInfos, 'sortByOrder');
+		
+		$sorted_collection = new Varien_Data_Collection();
+		foreach ($pInfos as $pInfo) {
+			//echo $pInfo[1] . "|" . $pInfo[2] . "<br>";
+			$sorted_collection->addItem(Mage::getModel('catalog/product')->load($pInfo[0]));
+		}
 		$_productCollection = $sorted_collection;
 	}
 	$_helper = $this->helper('catalog/output');
@@ -335,6 +349,7 @@
 										if ($superUser) echo $q0 . "|" . $q1 . "|" . $q2 . "|" . $q3 . "|" . $q4 . "<br>";
 										echo $qHand . "|" . $qSalesOrder . "|" . $qOrder . "<br>";
 										echo $arrive_date;
+										echo "<br>" . $_product->getMainPosition() . "<br>";
 									} else {
 										// combo
 										$selectionCollection = $_product->getTypeInstance(true)->getSelectionsCollection(
