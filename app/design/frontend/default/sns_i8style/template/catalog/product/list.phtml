@@ -36,6 +36,14 @@
 
 <?php 
     $_productCollection=$this->getLoadedProductCollection();
+	if (!isset($_GET["order"]) || $_GET['order'] == 'position') {
+		$sorted_collection = Mage::getResourceModel('catalog/product_collection')
+			->addFieldToFilter('entity_id', array('in' => $_productCollection->getAllIds()))
+			->addAttributeToSelect('*')
+			->addAttributeToSort('main_position', 'asc')
+			->setOrder('price', 'asc');
+		$_productCollection = $sorted_collection;
+	}
 	$_helper = $this->helper('catalog/output');
     $themeConfig =   Mage::helper('i8style/data')->get();
     $imgSize = Mage::helper('i8style/data')->getImgSize('L');
