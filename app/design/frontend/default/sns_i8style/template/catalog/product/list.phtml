@@ -36,12 +36,11 @@
 
 <?php 
     $_productCollection=$this->getLoadedProductCollection();
-	if (!isset($_GET["order"]) || $_GET['order'] == 'position') {
+	if (!isset($_GET["order"]) || $_GET['order'] == 'main_position') {
 		$pInfos = array();
-		foreach ($_productCollection->getAllIds() as $pid) {
-			$product = Mage::getModel('catalog/product')->load($pid);
+		foreach ($_productCollection as $_product) {
 			$pInfo = array();
-			array_push($pInfo, $pid, $product->getMainPosition(), $product->getFinalPrice());
+			array_push($pInfo, $_product->getId(), Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'main_position', Mage_Core_Model_App::ADMIN_STORE_ID), $_product->getFinalPrice());
 			array_push($pInfos, $pInfo);
 		}
 		
@@ -350,6 +349,7 @@
 										echo $qHand . "|" . $qSalesOrder . "|" . $qOrder . "<br>";
 										echo $arrive_date;
 										echo "<br>" . $_product->getMainPosition() . "<br>";
+										//echo "Load:" . Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'main_position', Mage_Core_Model_App::ADMIN_STORE_ID) . "<br>";
 									} else {
 										// combo
 										$selectionCollection = $_product->getTypeInstance(true)->getSelectionsCollection(
