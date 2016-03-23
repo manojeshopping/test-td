@@ -45,14 +45,17 @@
 		}
 		
 		function sortByOrder($a, $b) {
-			if ($a[1] == $b[1]) return $a[2] > $b[2];
-			return $a[1] > $b[1];
+			if (intval($a[1]) == intval($b[1])) return $a[2] > $b[2];
+			return intval($a[1]) > intval($b[1]);
 		}
 		usort($pInfos, 'sortByOrder');
 		
 		$sorted_collection = new Varien_Data_Collection();
 		foreach ($pInfos as $pInfo) {
-			//echo $pInfo[1] . "|" . $pInfo[2] . "<br>";
+			$cip = Mage::helper('core/http')->getRemoteAddr();
+			if ($cip == "122.59.194.97") {
+				//echo $pInfo[1] . "|" . $pInfo[2] . "<br>";
+			}
 			$sorted_collection->addItem(Mage::getModel('catalog/product')->load($pInfo[0]));
 		}
 		$_productCollection = $sorted_collection;
