@@ -253,9 +253,11 @@ $baseUrl = Mage::getBaseUrl();
 													
 													$query = "SELECT us_price FROM reckon WHERE sku = '" . $_product->getSku() . "' LIMIT 1";
 													$us_price = $readConnection->fetchOne($query);
-																						
+													
+													$comboSku = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'combo_sku', Mage_Core_Model_App::ADMIN_STORE_ID);
+													
 													echo "<div style='color:red;background-color: rgba(224, 243, 65, 0.5);font-size:14px;font-weight:bold;text-align:right;position:absolute;top:-100px;right:0px;' class='pull-right'>";
-													if ($_product->getTypeId() != "bundle") {
+													if ($comboSku == "") {
 														if ($superUser) echo 
 															round($us_price, 0) . "|" . 
 															round($us_price * 1.65, 0) . "|" . 
@@ -267,41 +269,38 @@ $baseUrl = Mage::getBaseUrl();
 														echo $arrive_date;
 													} else {
 														// combo
-														$selectionCollection = $_product->getTypeInstance(true)->getSelectionsCollection(
-															$_product->getTypeInstance(true)->getOptionsIds($_product), $_product
-														);
-														$bundled_items = array();
-														
-														foreach($selectionCollection as $option) {
+														$comboSkus = explode("+", $comboSku);
+													
+														foreach($comboSkus as $sku) {
 															if ($superUser) {
-																$bundle_item_product = Mage::getModel('catalog/product')->load($option->product_id);
-																$query = "SELECT q0 FROM reckon WHERE sku = '" . $bundle_item_product->getSku() . "' LIMIT 1";
+																$query = "SELECT q0 FROM reckon WHERE sku = '" . $sku . "' LIMIT 1";
 																$q0 = $readConnection->fetchOne($query);
 																if ($q0 == null) $q0 = "0";									
-																$query = "SELECT q1 FROM reckon WHERE sku = '" . $bundle_item_product->getSku() . "' LIMIT 1";
+																$query = "SELECT q1 FROM reckon WHERE sku = '" . $sku . "' LIMIT 1";
 																$q1 = $readConnection->fetchOne($query);
 																if ($q1 == null) $q1 = "0";
-																$query = "SELECT q2 FROM reckon WHERE sku = '" . $bundle_item_product->getSku() . "' LIMIT 1";
+																$query = "SELECT q2 FROM reckon WHERE sku = '" . $sku . "' LIMIT 1";
 																$q2 = $readConnection->fetchOne($query);
 																if ($q2 == null) $q2 = "0";
-																$query = "SELECT q3 FROM reckon WHERE sku = '" . $bundle_item_product->getSku() . "' LIMIT 1";
+																$query = "SELECT q3 FROM reckon WHERE sku = '" . $sku . "' LIMIT 1";
 																$q3 = $readConnection->fetchOne($query);
 																if ($q3 == null) $q3 = "0";
-																$query = "SELECT q4 FROM reckon WHERE sku = '" . $bundle_item_product->getSku() . "' LIMIT 1";
+																$query = "SELECT q4 FROM reckon WHERE sku = '" . $sku . "' LIMIT 1";
 																$q4 = $readConnection->fetchOne($query);
 																if ($q4 == null) $q4 = "0";
 																echo "<div style='color:blue'>" . $q0 . "|" . $q1 . "|" . $q2 . "|" . $q3 . "|" . $q4 . "</div>";
 															}
 														}
-														foreach($selectionCollection as $option) {
-															$qHand = Mage::getResourceModel('catalog/product')->getAttributeRawValue($option->product_id, 'reckon_stock', Mage_Core_Model_App::ADMIN_STORE_ID);
-															$qOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($option->product_id, 'reckon_q_on_order', Mage_Core_Model_App::ADMIN_STORE_ID);
-															$qSalesOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($option->product_id, 'reckon_q_on_sales_order', Mage_Core_Model_App::ADMIN_STORE_ID);
+														foreach($comboSkus as $sku) {
+															$comboRelatedProductId = Mage::getModel('catalog/product')->loadByAttribute('sku', $sku)->getId();
+															$qHand = Mage::getResourceModel('catalog/product')->getAttributeRawValue($comboRelatedProductId, 'reckon_stock', Mage_Core_Model_App::ADMIN_STORE_ID);
+															$qOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($comboRelatedProductId, 'reckon_q_on_order', Mage_Core_Model_App::ADMIN_STORE_ID);
+															$qSalesOrder = Mage::getResourceModel('catalog/product')->getAttributeRawValue($comboRelatedProductId, 'reckon_q_on_sales_order', Mage_Core_Model_App::ADMIN_STORE_ID);
 															if ($qHand == null) $qHand = 0;
 															if ($qOrder == null) $qOrder = 0;
 															if ($qSalesOrder == null) $qSalesOrder = 0;
 															echo $qHand . "|" . $qSalesOrder . "|" . $qOrder . "<br>";
-														}
+														}												
 													}
 													echo "</div>";
 												}
