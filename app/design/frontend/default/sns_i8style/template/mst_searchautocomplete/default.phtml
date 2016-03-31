@@ -7,13 +7,14 @@ $_filterType      = $this->getFilterType();
 $_url             = $this->getAjaxUrl();
 ?>
 <form id="search_mini_form" action="<?php echo $_helper->getResultUrl() ?>"    method="get"
-    class="searchautocomplete UI-SEARCHAUTOCOMPLETE"
+    class="searchautocomplete UI-SEARCHAUTOCOMPLETE dropdown-menu"
     data-url="<?php echo $_url ?>"
     data-minchars="<?php echo Mage::getStoreConfig('searchautocomplete/general/min_chars') ?>"
     data-delay="<?php echo Mage::getStoreConfig('searchautocomplete/general/delay') ?>">
 
     <div class="form-search input-group">
-        <input id="search" type="text" onblur="this.placeholder = 'enter your text'" onfocus="this.placeholder = ''" placeholder="Product Search. e.g '1700mm Bath'" autocomplete="off"  name="<?php echo $_helper->getQueryParamName() ?>" value="<?php echo $_helper->getEscapedQueryText() ?>" class="form-control UI-SEARCH UI-NAV-INPUT" maxlength="<?php echo $_helper->getMaxQueryLength();?>" />
+		<span class="fa fa-search fa-lg" style="color:#37a555"></span>
+        <input id="search" type="text" onblur="this.placeholder = 'enter your text'" onfocus="this.placeholder = ''" placeholder="Product Search. e.g '1700mm Bath'" autocomplete="off"  name="<?php echo $_helper->getQueryParamName() ?>" value="<?php echo $_helper->getEscapedQueryText() ?>" class="UI-SEARCH UI-NAV-INPUT" maxlength="<?php echo $_helper->getMaxQueryLength();?>" />
 
 		<span class="input-group-btn">
 			<button type="submit" title="<?php echo $this->__('Search') ?>" class="btn btn-search"><?php echo $this->__('GO!');?></button>

@@ -54,7 +54,7 @@ SearchAutocomplete = Backbone.View.extend({
 
         if (self.$categoryText.length) {
             self.$categoryText.html(text);
-            $('.UI-NAV-INPUT').css('padding-left', self.$categoryText.width() + 35);
+            $('.UI-NAV-INPUT').css('padding-left', self.$categoryText.width() + 10);
             $('.UI-CATEGORY').css('width', self.$categoryText.width() + 35);
             // $('.UI-NAV-INPUT').css('width', self.baseWidth -(self.$categoryText.width() + 35));
         }

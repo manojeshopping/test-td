@@ -24,6 +24,18 @@
  * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
+<?php
+$catNames = array(
+	array("Bathroom", "BATHROOM SUPPLIES"),
+	array("Kitchen & Laundry", "KITCHEN & LAUNDRY"),
+	array("Appliances & Heatpumps", "APPLIANCES"),
+	array("AIR CON / HEAT PUMPS", "HEAT PUMPS"),
+	array("Flooring & Tiling", "FLOORING & TILING"),
+	array("Lighting, Electrical & Plumbing", "LIGHTING, ELECTRICAL & PLUMBING"),
+	array("Hardware & Building Supplies", "HARDWARE & BUILDING SUPPLIES"),
+	array("Furniture & Variety", "FURNITURE")
+);
+?>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -32,101 +44,75 @@
   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&status=0&version=v2.3";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<div id="myAffix" role="navigation" class="navbar yamm">
-    <div class="login-bar">
-		<div class="container">
-			<div class="col-md-4 hidden-xs hidden-sm col-xs-3 col-md-offset-2 showMeYellow1">
-				<div class="sns-social showMeYellow1">
-					<span class="hidden-xs hidden-sm">&nbsp;Customer Services: <span class="lighter"><?php echo Mage::getStoreConfig('serviceno/serviceno/serviceno'); ?></span> 
-					<span class="hidden-md hidden-sm hidden-xs">
-					| Connect:
-					<a data-toggle="tooltip" data-original-title="www.facebook.com/TradeDepot" data-placement="bottom" target="_blank" href="https://www.facebook.com/TradeDepot" target="_blank" title=""><i class="fa fa-facebook">
-					</i></a>
-					<a data-toggle="tooltip" data-original-title="twitter.com/TradeDepotNZ" data-placement="bottom" target="_blank" href="https://twitter.com/TradeDepotNZ" target="_self" title="">
-					<i class="fa fa-twitter"></i>
-					</a>
-					<a data-toggle="tooltip" data-original-title="www.pinterest.com/tdepot/" data-placement="bottom" target="_blank" href="http://www.pinterest.com/tdepot/" target="_self" title="">
-					<i class="fa fa-pinterest"></i>
-					</a>
-					<div class="fb-like" data-href="http://www.tradedepot.co.nz/" data-layout="button" data-action="like" data-show-faces="true" data-share="false"></div>
-					
-					
-					</span>
-					</span>
-				</div>        
-			</div>
-			<?php echo $this->getChildHtml('store_language') ?>
-			<?php echo $this->getChildHtml('currency') ?>
-			<div class="col-md-6 col-xs-12 col-sm-12 ">
-				<span class="pull-right">
-					<a href="<?php echo Mage::getUrl('customer/account/login')?>"><button class="btn btn-default floatleft btn-xs btn-margin" type="button">Login</button></a>	
-					<a href="<?php echo Mage::getUrl('customer/account/create')?>"><button class="btn btn-default floatleft btn-xs btn-margin hidden-xs" type="button">Signup</button>	
-					</a>
-					<a href="<?php echo Mage::getUrl('wishlist/index/index')?>">
-						<button class="btn btn-default floatleft btn-xs btn-margin hidden-xs" type="button" id="dLabel">
-							<i class="fa fa-star"></i> My Wishlist
-						</button>
-					</a>
-					<div class="dropdown floatleft">
-						<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default btn-xs btn-margin" type="button" id="dLabel">
-							<i class="fa fa-user"></i> Account
-							<span class="caret"></span>
-						</button>
-						<?php echo $this->getChildHtml('topLinks') ?>
-					</div>
-					<?php echo $this->getChildHtml('mini-cart') ?>	
-				</span>
-			</div>     
-		</div>
-    </div>
-    <div class="navbar-inner">
-		<div class="container">
-			<div class="navbar-header col-xs-21 col-sm-2">
-				<button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle blue" type="button">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a title="<?php echo $this->getLogoAlt() ?>" href="<?php echo $this->getUrl('') ?>">
-					<div class="logo">
-					</div>
+
+<div id="zheader">
+	<div class="<!--navbar-fixed-top-->">
+		<div id="line1">
+			<div class="container">
+				<a title="Trade Depot" href="<?php echo $this->getUrl('') ?>" class="zlogo">
+					<img id="logo" src="<?php echo $this->getUrl('') . 'skin/frontend/default/sns_i8style/images/new-logo.png' ?>" alt="Trade Depot Logo" width=353 height=82>
+					<img id="logo-line" src="<?php echo $this->getUrl('') . 'skin/frontend/default/sns_i8style/images/new-logo-line.png' ?>" alt="Trade Depot Logo" width=198 height=15 class="hidden-xs hidden-sm hidden-md">
 				</a>
-				<div class="hidden-lg hidden-md hidden-sm mobile-message">
-					<span class="pickup">
-					  <span class="standout1">
-						<a href="<?php echo Mage::getBaseUrl() ?>showroom-opening-hours">Auckland Showroom Info&nbsp;&gt;</a>
-					  </span>
-					</span>
-				</div>
-			</div>
-			<div class="col-sm-2 nav-right-object mobile-message showMeBlue1 hidden-xs hidden-md hidden-lg">
-				<span class="pickup">
-					<span class="standout1">
-						<a href="<?php echo Mage::getBaseUrl() ?>showroom-opening-hours">Auckland Showroom Info</a>
-					</span>
-				</span>
-			</div>
-			<div class="col-sm-8 col-md-10 nav-right-object">
-				<div class="left">
-					<?php echo $this->getChildHtml('mainmenu'); ?>
-				</div>
-				<div class="right">
-					<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('header-button')->toHtml(); ?> 
-					<?php echo $this->getChildHtml('topSearch'); ?>
-				</div>
-				<div class="row bar hidden-xs">
-					<div class="login-lt col-sm-5 hidden-sm hidden-md">
-					  <p><i class="fa fa-check"></i> <span class="slogan"><?php echo Mage::getStoreConfig('serviceno/serviceno/slogan'); ?></span></p>
-					</div>
-					<div class="login-rt col-sm-12 col-md-12 col-lg-7 hidden-sm">
-						<div style="text-align: right;" class="pull-right ">
-							<p><i class="fa fa-map-marker"></i>  <span class="pickup">Showroom &amp; Pickup, <span class="hidden-xs show-sm">17 Inlet Road, Takanini, Auckland. </span><a href="<?php echo Mage::getBaseUrl() ?>showroom-opening-hours">More Info</a></span></p>
-						</div>
-					</div>
-				</div>  
+				<div id="break"></div>
+				<ul id="znav">
+					<li>
+						<span class="dropdown">
+							<a href="#" class="fa fa-search fa-lg" data-toggle="dropdown" onclick="setTimeout(function(){jQuery('#search').focus();},10)"><span class="nav-word">SEARCH</span></a>
+							<?php echo $this->getChildHtml('topSearch'); ?>
+						</span>
+					</li>
+					<li><a href="<?php echo $this->getUrl('') . 'contacts/' ?>" class="fa fa-phone fa-lg"><span class="nav-word">CONTACT</span></a></li>
+					<li><a href="<?php echo $this->getUrl('') . 'customer/account/login/' ?>" class="fa fa-user fa-lg"><span class="nav-word">SIGN IN</span></a></li>
+					<li><?php echo $this->getChildHtml('mini-cart') ?></li>
+				</ul>
 			</div>
 		</div>
-    </div>
+		<div id="line2">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav dropdown">
+						<?php
+							foreach ($catNames as $catName) {
+								$cat = Mage::getResourceModel('catalog/category_collection')
+									->addFieldToFilter('name', $catName[0])
+									->getFirstItem();
+									
+								echo "<li>";
+								echo '<a class="dropdown-toggle" data-toggle="dropdown" href="' . $cat->getUrl() . '">' . $catName[1] . '</a>';
+								echo '<ul class="dropdown-menu dropdown-menu-left">';
+								
+								$subcats = $cat->getChildren();
+								$count = 0;
+								foreach (explode(',',$subcats) as $subCatid) {
+									$_category = Mage::getModel('catalog/category')->load($subCatid);
+									if ($_category->getIsActive()) {
+										echo '<li><a href="' . $_category->getURL() . '"><span>></span>' . $_category->getName() . '</a></li>';
+										$count++;
+									}
+								}
+								if ($count == 0) {
+									echo '<li><a href="' . $cat->getUrl() . '"><span>></span>' . $cat->getName() . '</a></li>';
+								}
+								echo "</ul>";
+								echo "</li>";
+							}
+						?>
+					</ul>
+				</div>
+				<script type="text/javascript">
+					if (screen.width > 768) {
+						var height = jQuery('#myNavbar>ul>li:nth-child(6)').height();
+						jQuery('#myNavbar>ul>li>a').css("height", height);
+					}
+				</script>
+			</div>
+		</div>
+	</div>
 </div>
-  

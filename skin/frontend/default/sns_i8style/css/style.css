@@ -1380,6 +1380,199 @@ div.fixed {
   border: 1px solid white;
   color: white;
 }
+/*----------New Header--------------*/
+/*zheader888*/
+#zheader {
+	margin-bottom: 0px;
+}
+#zheader #line1 {
+	background-color: white
+}
+#zheader #line2 {
+	background-color: #4672C8;
+	border-top: 4px solid #ff8c00;
+}
+/*zheader888*/
+/*line1888*/
+#line1 #logo {
+	margin: 0px 0 0px 0;
+}
+#line1 #logo-line {
+	margin: 60px 0 0px 30px;
+}
+.zlogo {
+	float: left;
+}
+#line1 a.zlogo:hover, a.zlogo:focus{
+	background-color: white;
+}
+#line1 .fa-lg {
+	font-size: 14px;
+}
+.fa:before{
+    margin: 0 0px 0 0px;
+}
+#line1 #break {
+	clear:both;
+	display: none;
+}
+#znav .nav-word {
+	margin: 0 0px 0 5px;
+	font-family: Nunito, sans-serif;
+}
+#znav {
+	float: right;
+}
+@media screen and (max-width: 768px) {
+	#znav {
+		float: left;
+	}
+	#line1 #break {
+		display: block;
+	}
+	#znav .nav-word {
+		display: none;
+	}
+}
+
+#line1 ul  {
+	margin-bottom: 0px;
+	padding-left: 0px;
+}
+#line1 ul li {
+	display: inline;
+}
+#line1 #znav>li>a {
+	padding: 40px 10px 31px 10px;
+	text-decoration: none;
+}
+#line1 #znav>li>span>a {
+	padding: 40px 10px 31px 10px;
+	text-decoration: none;
+}
+#line1 #znav>li>a {
+	color: black;
+}
+#line1 #znav>li>a:focus {
+	color: white;
+}
+#line1 #znav>li>a:hover {
+	color: white;
+	background-color: black;
+}
+#line1 #znav>li>span>a {
+	color: black;
+}
+#line1 #znav>li>span>a:focus {
+	color: white;
+}
+#line1 #znav>li>span>a:hover {
+	color: white;
+	background-color: black;
+}
+/*line1888*/
+/*search888*/
+#search_mini_form.dropdown-menu {
+	top: -40px;
+	left: -1px;
+	width: 347px;
+	height: 87px;
+	border-radius: 0px;
+}
+@media screen and (max-width: 768px) {
+	#search_mini_form.dropdown-menu {
+		width: 347px;
+	}
+}
+#search_mini_form .btn-search {
+	color: white;
+	background-color: #37a555;
+	margin-right: 10px;
+}
+#znav #search {
+	width: 200px;
+	border: 0px solid red;
+}
+#znav .form-search {
+	margin: 27px 0 0 10px;
+}
+#znav input#search {
+	font-size: 18px;
+}
+#line1 .search-results {
+	top: 51px;
+}
+/*search888*/
+/*minicart888*/
+#line1 .mymenu {
+	left: -395px;
+	top: 44px;
+}
+/*minicart888*/
+/*myNavbar888*/
+#line2 button.navbar-toggle {
+	border-color: white;
+}
+#line2 button.navbar-toggle .icon-bar{
+	background-color: white;
+}
+
+@media screen and (min-width: 1366px) {
+	#myNavbar .dropdown:hover .dropdown-menu {
+		//display: block;
+	}
+}
+#myNavbar a, a:focus, a:hover {
+	color: white;
+}
+#myNavbar a:focus, a:hover {
+	background-color: black;
+}
+#myNavbar .nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
+	background-color: #000;
+}
+#myNavbar .nav>li>a:hover, .nav>li>a:focus {
+	background-color: #000;
+}
+@media screen and (min-width: 768px) {
+	#myNavbar>ul.dropdown>li {
+		position: static;
+		width: 12.5%;
+		text-align: center;
+	}
+}
+#line2 ul {
+	width: 100%;
+}
+/*myNavbar888*/
+/*myNavbarDropDownMenu888*/
+#myNavbar ul.dropdown-menu li span{
+	color: #37a555;
+	position: relative;
+	top: -2px;
+	margin-right: 10px;
+}
+#myNavbar ul.dropdown-menu a, a:focus, a:hover {
+	background-color: black;
+}
+#myNavbar ul.dropdown-menu a:hover {
+	color: #37a555;
+}
+@media screen and (min-width: 768px) {
+	#myNavbar ul.dropdown-menu {
+		background-color: black;
+		width: 100%;
+		padding-bottom: 30px;
+	}
+	#myNavbar ul.dropdown-menu li{
+		width: 33.3%;
+		float: left;
+		padding: 30px 0 0px 30px;
+		text-transform: uppercase;
+	}
+}
+/*myNavbarDropDownMenu888*/
+/*------------------------*/
 /*
 +----------------------------------------------------------------------------------------------+         
 |                                                                                              |         
