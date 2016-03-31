@@ -1572,6 +1572,14 @@ div.fixed {
 	}
 }
 /*myNavbarDropDownMenu888*/
+/*others888*/
+a.carousel-control {
+	background-color: transparent;
+}
+footer a:hover, a:focus{
+	background-color: transparent;
+}
+/*others888*/
 /*------------------------*/
 /*
 +----------------------------------------------------------------------------------------------+         
