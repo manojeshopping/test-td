@@ -9,13 +9,17 @@ class Amasty_Pgrid_Block_Adminhtml_Catalog_Product_Grid_Renderer_Reckon extends 
     public function render(Varien_Object $row)
     {
 		$value =  $row->getData($this->getColumn()->getIndex());
-		if ($this->getColumn()->getIndex() == "reckon_price_equal") {
-			if ($value) {
-				$value = "Yes";
-			} else {
-				$value = "No";
+
+		$attribute = Mage::getModel('eav/config')->getAttribute('catalog_product', $this->getColumn()->getIndex());
+		$options = array();
+		foreach ($attribute->getSource()->getAllOptions(true, true) as $option) {
+			$id = $option['value'];
+			if ($id == $value) {
+				$value = $option['label'];
+				break;
 			}
 		}
+		
 		if ($this->getColumn()->getIndex() == "reckon_price") {
 			$value = Mage::helper('core')->currency($value, true, false);
 		}
