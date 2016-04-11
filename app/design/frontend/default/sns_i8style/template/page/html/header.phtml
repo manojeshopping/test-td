@@ -29,7 +29,7 @@ $catNames = array(
 	array("Bathroom", "BATHROOM SUPPLIES"),
 	array("Kitchen & Laundry", "KITCHEN & LAUNDRY"),
 	array("Appliances & Heatpumps", "APPLIANCES"),
-	array("AIR CON / HEAT PUMPS", "HEAT PUMPS"),
+	array("AIR CON / HEAT PUMPS", "AIR CONDITIONERS / HEAT PUMPS"),
 	array("Flooring & Tiling", "FLOORING & TILING"),
 	array("Lighting, Electrical & Plumbing", "LIGHTING, ELECTRICAL & PLUMBING"),
 	array("Hardware & Building Supplies", "HARDWARE & BUILDING SUPPLIES"),
@@ -50,8 +50,8 @@ $catNames = array(
 		<div id="line1">
 			<div class="container">
 				<a title="Trade Depot" href="<?php echo $this->getUrl('') ?>" class="zlogo">
-					<img id="logo" src="<?php echo $this->getUrl('') . 'skin/frontend/default/sns_i8style/images/new-logo.png' ?>" alt="Trade Depot Logo" width=353 height=82>
-					<img id="logo-line" src="<?php echo $this->getUrl('') . 'skin/frontend/default/sns_i8style/images/new-logo-line.png' ?>" alt="Trade Depot Logo" width=198 height=15 class="hidden-xs hidden-sm hidden-md">
+					<img id="logo" src="<?php echo $this->getUrl('') . 'skin/frontend/default/sns_i8style/images/new-logo2b.png' ?>" alt="Trade Depot Logo" width=353 height=37>
+					<img id="logo-line" src="<?php echo $this->getUrl('') . 'skin/frontend/default/sns_i8style/images/new-logo-line2.png' ?>" alt="Trade Depot Logo" width=250 height=19 class="hidden-xs hidden-sm hidden-md">
 				</a>
 				<div id="break"></div>
 				<ul id="znav">
@@ -79,14 +79,21 @@ $catNames = array(
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav dropdown">
 						<?php
+							$navIndex = 0;
 							foreach ($catNames as $catName) {
+								$navIndex++;
+								
 								$cat = Mage::getResourceModel('catalog/category_collection')
 									->addFieldToFilter('name', $catName[0])
 									->getFirstItem();
 									
 								echo "<li>";
 								echo '<a class="dropdown-toggle" data-toggle="dropdown" href="' . $cat->getUrl() . '">' . $catName[1] . '</a>';
-								echo '<ul class="dropdown-menu dropdown-menu-left">';
+								if ($navIndex < 5) {
+									echo '<ul class="dropdown-menu">';
+								} else {
+									echo '<ul class="dropdown-menu dropdown-menu-right">';
+								}								
 								
 								$subcats = $cat->getChildren();
 								$count = 0;
@@ -107,9 +114,11 @@ $catNames = array(
 					</ul>
 				</div>
 				<script type="text/javascript">
-					if (jQuery(window).width() > 768) {
+					if (jQuery(window).width() >= 768) {
 						var height = jQuery('#myNavbar>ul>li:nth-child(6)').height();
 						jQuery('#myNavbar>ul>li>a').css("height", height);
+					} else {
+						jQuery('button.navbar-toggle').click();
 					}
 				</script>
 			</div>

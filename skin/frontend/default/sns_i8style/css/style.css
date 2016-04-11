@@ -1386,19 +1386,20 @@ div.fixed {
 	margin-bottom: 0px;
 }
 #zheader #line1 {
-	background-color: white
+	background-color: #010658
 }
 #zheader #line2 {
-	background-color: #4672C8;
-	border-top: 4px solid #ff8c00;
+	background-color: #010658;
+	border-top: 0px solid black;
+	padding-top: 10px;
 }
 /*zheader888*/
 /*line1888*/
 #line1 #logo {
-	margin: 0px 0 0px 0;
+	margin: 10px 0 0px 0px;
 }
 #line1 #logo-line {
-	margin: 60px 0 0px 30px;
+	margin: 15px 0 0px 30px;
 }
 .zlogo {
 	float: left;
@@ -1407,7 +1408,7 @@ div.fixed {
 	background-color: white;
 }
 #line1 .fa-lg {
-	font-size: 14px;
+	font-size: 18px;
 }
 .fa:before{
     margin: 0 0px 0 0px;
@@ -1443,32 +1444,34 @@ div.fixed {
 	display: inline;
 }
 #line1 #znav>li>a {
-	padding: 40px 10px 31px 10px;
+	padding: 15px 10px 15px 10px;
 	text-decoration: none;
 }
 #line1 #znav>li>span>a {
-	padding: 40px 10px 31px 10px;
+	padding: 15px 10px 15px 10px;
 	text-decoration: none;
 }
 #line1 #znav>li>a {
-	color: black;
+	color: white;
 }
 #line1 #znav>li>a:focus {
-	color: white;
+	color: #37a555;
+	background-color: white;
 }
 #line1 #znav>li>a:hover {
-	color: white;
-	background-color: black;
+	color: #37a555;
+	background-color: white;
 }
 #line1 #znav>li>span>a {
-	color: black;
+	color: white;
 }
 #line1 #znav>li>span>a:focus {
-	color: white;
+	color: #37a555;
+	background-color: white;
 }
 #line1 #znav>li>span>a:hover {
-	color: white;
-	background-color: black;
+	color: #37a555;
+	background-color: white;
 }
 /*line1888*/
 /*search888*/
@@ -1517,26 +1520,31 @@ div.fixed {
 	background-color: white;
 }
 
-@media screen and (min-width: 1366px) {
-	#myNavbar .dropdown:hover .dropdown-menu {
-		//display: block;
+@media screen and (min-width: 768px) {
+	#myNavbar ul.dropdown>li:hover .dropdown-menu {
+		display: block;
 	}
 }
-#myNavbar a, a:focus, a:hover {
+#myNavbar a{
 	color: white;
+	padding-top:0px;
+	padding-bottom:0px;
 }
-#myNavbar a:focus, a:hover {
-	background-color: black;
+#myNavbar a:hover {
+	color: #37a555;
+	background-color: #010658;
 }
-#myNavbar .nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
-	background-color: #000;
+#myNavbar .nav .open>a {
+	color: #37a555;
+	background-color: #010658;
 }
 #myNavbar .nav>li>a:hover, .nav>li>a:focus {
-	background-color: #000;
+	/*click nav twice then leave*/
+	background-color: #010658;
 }
 @media screen and (min-width: 768px) {
 	#myNavbar>ul.dropdown>li {
-		position: static;
+		//position: static;
 		width: 12.5%;
 		text-align: center;
 	}
@@ -1553,19 +1561,22 @@ div.fixed {
 	margin-right: 10px;
 }
 #myNavbar ul.dropdown-menu a, a:focus, a:hover {
-	background-color: black;
+	background-color: #010658;
 }
-#myNavbar ul.dropdown-menu a:hover {
+#myNavbar ul.dropdown-menu a:hover, a:focus {
 	color: #37a555;
 }
 @media screen and (min-width: 768px) {
 	#myNavbar ul.dropdown-menu {
-		background-color: black;
-		width: 100%;
+		background-color: #010658;
+		width: 400px;
 		padding-bottom: 30px;
 	}
+	#myNavbar ul.dropdown li:nth-child(8) ul.dropdown-menu{
+		//left: -100%;
+	}
 	#myNavbar ul.dropdown-menu li{
-		width: 33.3%;
+		width: 100%;
 		float: left;
 		padding: 30px 0 0px 30px;
 		text-transform: uppercase;
@@ -2749,7 +2760,7 @@ footer a:hover, a:focus{
   }
 }
 .top-bar {
-  background-color: #012d41;
+  background-color: white;
   color: #0495d7;
 }
 .top-bar .btn-info {
