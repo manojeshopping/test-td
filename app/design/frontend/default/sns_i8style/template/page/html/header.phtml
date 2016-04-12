@@ -77,7 +77,7 @@ $catNames = array(
 					</button>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar">
-					<ul class="nav navbar-nav dropdown">
+					<ul class="nav navbar-nav">
 						<?php
 							$navIndex = 0;
 							foreach ($catNames as $catName) {
@@ -87,7 +87,7 @@ $catNames = array(
 									->addFieldToFilter('name', $catName[0])
 									->getFirstItem();
 									
-								echo "<li>";
+								echo "<li class='dropdown'>";
 								echo '<a class="dropdown-toggle" data-toggle="dropdown" href="' . $cat->getUrl() . '">' . $catName[1] . '</a>';
 								if ($navIndex < 5) {
 									echo '<ul class="dropdown-menu">';
