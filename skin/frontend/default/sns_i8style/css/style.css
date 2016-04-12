@@ -1381,25 +1381,48 @@ div.fixed {
   color: white;
 }
 /*----------New Header--------------*/
+@font-face {
+    font-family: PTC55F;
+    src: url(../fonts/PTC55F.ttf);
+}
+@font-face {
+    font-family: PTC75F;
+    src: url(../fonts/PTC75F.ttf);
+}
+@font-face {
+    font-family: PTN57F;
+    src: url(../fonts/PTN57F.ttf);
+}
+@font-face {
+    font-family: PTS55F;
+    src: url(../fonts/PTS55F.ttf);
+}
+@font-face {
+    font-family: PTS75F;
+    src: url(../fonts/PTS75F.ttf);
+}
+@font-face {
+    font-family: PTS76F;
+    src: url(../fonts/PTS76F.ttf);
+}
 /*zheader888*/
 #zheader {
 	margin-bottom: 0px;
 }
 #zheader #line1 {
-	background-color: #010658
+	background-color: rgba(0, 0, 250, 1);
 }
 #zheader #line2 {
-	background-color: #010658;
-	border-top: 0px solid black;
-	padding-top: 10px;
+	background-color: rgb(253, 0, 0);
+	border-top: 2px solid #FBF9F9;
 }
 /*zheader888*/
 /*line1888*/
 #line1 #logo {
-	margin: 10px 0 0px 0px;
+	margin: 10px 0 5px 0px;
 }
 #line1 #logo-line {
-	margin: 15px 0 0px 30px;
+	margin: 28px 0 0px 60px;
 }
 .zlogo {
 	float: left;
@@ -1419,7 +1442,8 @@ div.fixed {
 }
 #znav .nav-word {
 	margin: 0 0px 0 5px;
-	font-family: Nunito, sans-serif;
+	//font-family: Nunito, sans-serif;
+	font-family: PTC75F;
 }
 #znav {
 	float: right;
@@ -1525,10 +1549,11 @@ div.fixed {
 		display: block;
 	}
 }
-#myNavbar a{
+#myNavbar ul.dropdown>li>a{
 	color: white;
-	padding-top:0px;
+	padding-top:3px;
 	padding-bottom:0px;
+	font-family: PTC75F;
 }
 #myNavbar a:hover {
 	color: #37a555;
@@ -1561,14 +1586,19 @@ div.fixed {
 	margin-right: 10px;
 }
 #myNavbar ul.dropdown-menu a, a:focus, a:hover {
-	background-color: #010658;
+	background-color: white;
+}
+#myNavbar ul.dropdown-menu a {
+	color: black;
+	font-size: 16px;
+	font-family: PTC75F;
 }
 #myNavbar ul.dropdown-menu a:hover, a:focus {
 	color: #37a555;
 }
 @media screen and (min-width: 768px) {
 	#myNavbar ul.dropdown-menu {
-		background-color: #010658;
+		background-color: white;
 		width: 400px;
 		padding-bottom: 30px;
 	}
