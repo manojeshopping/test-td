@@ -364,6 +364,7 @@ EOT;
 
     $isBrandNew = (int) $this->_getIsBrandNew($product);
     $paymentMethods = $this->_getPaymentMethods($store);
+    $promotions = $helper->getPromotions($store);
 
     $tries = 1;
 
@@ -380,17 +381,33 @@ EOT;
 <IsBrandNew>' . $isBrandNew . '</IsBrandNew>
 <SendPaymentInstructions>true</SendPaymentInstructions>';
 
-      if ($photoIds
-          && isset($account['category_image'])
-          && $account['category_image'])
-        $xml .= '<HasGallery>true</HasGallery>';
+      if ($this->_hasBoldPromotion($promotions))
+        $xml .= '<IsBold>true</IsBold>';
+
+      if ($this->_hasFeaturePromotion($promotions))
+        $xml .= '<IsFeatured>true</IsFeatured>';
+
+      //Add photo to auction if we have one in the product and use it as gallery
+      //image if it's allowed in the settings
+      if ($photoIds) {
+        $isGalleryAllowed = isset($account['category_image'])
+          ? $account['category_image']
+          : $this->_hasGalleryPromotion($promotions);
+
+        if ($isGalleryAllowed)
+          $xml .= '<HasGallery>true</HasGallery>';
+      }
 
       //WasPrice option requires Quantity to be set
       if ($wasPrice)
         $xml .= '<Quantity>1</Quantity>';
 
-      //Add photo to auction if we have one in the product and use it as gallery
-      //image if it's allowed in the settings
+      if ($this->_hasHighlightPromotion($promotions))
+        $xml .= '<IsHighlighted>true</IsHighlighted>';
+
+      if ($this->_hasSuperPromotion($promotions))
+        $xml .= '<HasSuperFeature>true</HasSuperFeature>';
+
       if ($photoIds)
         $xml .= '<PhotoIds><PhotoId>'
                 . implode('</PhotoId><PhotoId>', $photoIds)
@@ -710,7 +727,12 @@ EOT;
     if (!isset($parameters['SKU']))
       $parameters['SKU'] = htmlspecialchars($product->getSku());
 
-    $item = array_merge($item,$parameters);
+    $item = array_merge(
+      $this->_preparePromotions($helper->getPromotions($store)),
+      $item,
+      $parameters
+    );
+
     $client->setRawData(Zend_Json::encode($item), 'application/json');
 
     $response = $client->request();
@@ -1629,6 +1651,98 @@ EOT;
     );
 
     return ($originalPrice > $price) ? $originalPrice : null;
+  }
+
+  /**
+   * Prepare list of enabled promotions for inclusion in the payload
+   * of the update request
+   *
+   * @param array $promotions
+   *   List of all enabled promotion
+   *
+   * @return array
+   *   Prepared list of promotions
+   */
+  protected function _preparePromotions ($promotions) {
+    $map = [
+      MVentory_TradeMe_Model_Config::PROMOTION_BOLD => 'IsBold',
+      MVentory_TradeMe_Model_Config::PROMOTION_FEATURE => 'IsFeatured',
+      MVentory_TradeMe_Model_Config::PROMOTION_GALLERY => 'HasGallery',
+      MVentory_TradeMe_Model_Config::PROMOTION_HIGHLIGHT => 'IsHighlighted',
+      MVentory_TradeMe_Model_Config::PROMOTION_SUPER => 'HasSuperFeature',
+    ];
+
+    return array_fill_keys(
+      array_intersect_key($map, $promotions),
+      true
+    );
+  }
+
+  /**
+   * Check if bold promotion is enabled
+   *
+   * @param array $promotions
+   *   List of all enabled promotions
+   *
+   * @return boolean
+   *   Status of the promotion
+   */
+  protected function _hasBoldPromotion ($promotions) {
+    return isset($promotions[MVentory_TradeMe_Model_Config::PROMOTION_BOLD]);
+  }
+
+  /**
+   * Check if feature promotion is enabled
+   *
+   * @param array $promotions
+   *   List of all enabled promotions
+   *
+   * @return boolean
+   *   Status of the promotion
+   */
+  protected function _hasFeaturePromotion ($promotions) {
+    return isset($promotions[MVentory_TradeMe_Model_Config::PROMOTION_FEATURE]);
+  }
+
+  /**
+   * Check if gallery promotion is enabled
+   *
+   * @param array $promotions
+   *   List of all enabled promotions
+   *
+   * @return boolean
+   *   Status of the promotion
+   */
+  protected function _hasGalleryPromotion ($promotions) {
+    return isset($promotions[MVentory_TradeMe_Model_Config::PROMOTION_GALLERY]);
+  }
+
+  /**
+   * Check if "highlight" promotion is enabled
+   *
+   * @param array $promotions
+   *   List of all enabled promotions
+   *
+   * @return boolean
+   *   Status of the promotion
+   */
+  protected function _hasHighlightPromotion ($promotions) {
+    return isset(
+      $promotions[MVentory_TradeMe_Model_Config::PROMOTION_HIGHLIGHT]
+    );
+  }
+
+  /**
+   * Check if "super feature" promotion is enabled
+   *
+   * @param array $promotions
+   *   List of all enabled promotions
+   *
+   * @return boolean
+   *   Status of the promotion
+   */
+  protected function _hasSuperPromotion ($promotions) {
+    return isset($promotions[MVentory_TradeMe_Model_Config::PROMOTION_SUPER]);
   }
 
   public function getCategories () {

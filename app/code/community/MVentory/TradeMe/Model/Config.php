@@ -35,6 +35,7 @@ class MVentory_TradeMe_Model_Config
   const _STOCK_STATUS = 'trademe/settings/stock_status';
   const _MIN_ALLOWED_QTY = 'trademe/settings/min_allowed_qty';
   const _AUTO_WITHDRAW = 'trademe/settings/auto_withdraw';
+  const _PROMOTIONS = 'trademe/settings/promotions';
 
   const _IMG_MULTIPLE = 'trademe/image/allow_multiple';
   const _IMG_PADDING = 'trademe/image/padding';
@@ -90,6 +91,14 @@ class MVentory_TradeMe_Model_Config
   const PAYMENT_CC = 2;
   const PAYMENT_CASH = 4;
   const PAYMENT_SAFE = 8;
+
+  //TradeMe auction promotions
+  const PROMOTION_NO = 'no';
+  const PROMOTION_BOLD = 'bold';
+  const PROMOTION_FEATURE = 'feature';
+  const PROMOTION_GALLERY = 'gallery';
+  const PROMOTION_HIGHLIGHT = 'highlight';
+  const PROMOTION_SUPER = 'super';
 
   //Allow to list options
   const LIST_NO = 0;

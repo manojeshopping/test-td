@@ -229,6 +229,9 @@
 
         <!-- 0 = No -->
         <auto_withdraw>0</auto_withdraw>
+
+        <!-- no = No promotion-->
+        <promotions>no</promotions>
       </settings>
 
       <one_dollar>
@@ -251,16 +254,7 @@
       <order>
 
         <!-- 1 = Yes -->
-        <allow>1</allow>
-
-        <!-- 1 = Yes -->
-        <create_shipment>1</create_shipment>
-
-        <!-- 1 = Yes -->
-        <create_invoice>1</create_invoice>
-
-        <!-- 1 = Yes -->
-        <create_new_customer>1</create_new_customer>
+        <only_default_customer>1</only_default_customer>
 
       </order>
     </trademe>

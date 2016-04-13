@@ -253,6 +253,35 @@ class MVentory_TradeMe_Helper_Auction extends MVentory_TradeMe_Helper_Data
   }
 
   /**
+   * Return enabled promotions
+   *
+   * @param Mage_Core_Model_Store $store
+   *   Store model
+   *
+   * @return array
+   *   List of enabled promotions
+   */
+  public function getPromotions ($store) {
+    $promotions = $store->getConfig(MVentory_TradeMe_Model_Config::_PROMOTIONS);
+    if (!$promotions)
+      return [];
+
+    $promotions = explode(',', $promotions);
+    if (!$promotions)
+      return [];
+
+    $promotions = array_flip($promotions);
+
+    if (isset($promotions[MVentory_TradeMe_Model_Config::PROMOTION_NO]))
+      return [];
+
+    if (isset($promotions[MVentory_TradeMe_Model_Config::PROMOTION_SUPER]))
+      return [MVentory_TradeMe_Model_Config::PROMOTION_SUPER => true];
+
+    return $promotions;
+  }
+
+  /**
    * Return period of time when listing of $1 auction is allowed using value
    * of Auction end time setting for the supplied store (it adds +/-30 mins
    * to that value)

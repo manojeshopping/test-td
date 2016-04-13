@@ -35,6 +35,8 @@ class MVentory_TradeMe_Block_Matching
     $attrs = Mage::getResourceModel('catalog/product_attribute_collection')
                ->setAttributeSetFilter($this->_getSetId());
 
+    $labels = [];
+
     foreach ($attrs as $attr) {
       if (!$attr->getIsUserDefined())
         continue;
