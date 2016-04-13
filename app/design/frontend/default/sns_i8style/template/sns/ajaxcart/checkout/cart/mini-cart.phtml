@@ -49,27 +49,19 @@ if($config['list_type']=='all'){
 //]]>
 </script>
 <?php $_cartQty = $this->getSummaryCount() ?>
-<div class="dropdown block floatleft mini-cart sns-ajaxcart<?php echo ($_cartQty > 0)?' have-item':' empty'; ?>">
+<?php if($_cartQty == null) $_cartQty = 0; ?>
+<span class="dropdown block mini-cart sns-ajaxcart<?php echo ($_cartQty > 0)?' have-item':' empty'; ?>">
    	<?php if ($this->canApplyMsrp()): ?>
             <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
         <?php else: ?>
 			<?php /* $total = Mage::helper('checkout')->formatPrice($this->getSubtotal()); */ ?>
 			<?php $total = Mage::helper('checkout')->formatPrice($this->getSubtotalInclTax()); ?>
-			<?php if($_cartQty > 0) : ?>
-			<button aria-expanded="false" aria-haspopup="true" onclick="_gaq.push(['_trackEvent','cart','view','mini'])" data-toggle="dropdown" class="btn btn-default btn-xs btn-margin" type="button" id="dLabel">
-			<i class="fa fa-shopping-cart"></i>
-			<?php echo $this->__('Cart') ?>
-				<span class="standout"><?php echo $this->__('%s item(s) %s', $_cartQty, $total) ?></span>
-				<span class="caret"></span>
-			</button>
-			<?php else: ?>
-			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default btn-xs btn-margin" type="button" id="dLabel" style="display:none">
-			<i class="fa fa-shopping-cart"></i>
-			<?php echo $this->__('Cart') ?>
-				<span class="standout"><?php echo $this->__('0 item %s', $total) ?></span>
-				<span class="caret"></span>
-			</button>	
-			<?php endif; ?>
+			<a id="zcart" onclick="_gaq.push(['_trackEvent','cart','view','mini'])" href="<?php echo $this->getUrl('') . 'checkout/cart/' ?>" class="fa fa-shopping-cart fa-lg" data-toggle="<?php if($_cartQty > 0) echo 'dropdown' ?>"><span class="nav-word"><?php echo $_cartQty ?></span></a>
+			<script type="text/javascript">
+				if(screen.width < 768){
+					jQuery('#zcart').attr("data-toggle", "");
+				}
+			</script>
         <?php endif; ?>
     <?php if ($_cartQty>0){ ?>
     <div class="block-content dropdown-menu mymenu">
@@ -124,7 +116,7 @@ if($config['list_type']=='all'){
 	    </div>
     </div>
     <?php } ?>
-</div>
+</span>
 <script type="text/javascript">
 //<![CDATA[
 if(!IS_HANDHELD){
