@@ -1423,10 +1423,10 @@ div.fixed {
 /*zheader888*/
 /*line1888*/
 #line1 #logo {
-	margin: 16px 0 5px 0px;
+	margin: 3px 0 3px 0px;
 }
 #line1 #logo-line {
-	margin: 28px 0 0px 60px;
+	margin: 48px 0 0px 60px;
 }
 .zlogo {
 	float: left;
@@ -1473,6 +1473,7 @@ div.fixed {
 #line1 ul  {
 	margin-bottom: 0px;
 	padding-left: 0px;
+	margin-top: -5px;
 }
 #line1 ul li {
 	display: inline;
