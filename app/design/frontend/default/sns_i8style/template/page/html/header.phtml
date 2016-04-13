@@ -54,17 +54,24 @@ $catNames = array(
 					<img id="logo-line" src="<?php echo $this->getUrl('') . 'skin/frontend/default/sns_i8style/images/new-logo-line2.png' ?>" alt="Trade Depot Logo" width=275 height=19 class="hidden-xs hidden-sm hidden-md">
 				</a>
 				<div id="break"></div>
-				<ul id="znav">
-					<li>
-						<span class="dropdown">
-							<a href="#" class="fa fa-search fa-lg" data-toggle="dropdown" onclick="setTimeout(function(){jQuery('#search').focus();},10)"><span class="nav-word">SEARCH</span></a>
-							<?php echo $this->getChildHtml('topSearch'); ?>
-						</span>
-					</li>
-					<li><a href="<?php echo $this->getUrl('') . 'about-trade-depot/' ?>" class="fa fa-phone fa-lg"><span class="nav-word">ABOUT US</span></a></li>
-					<li><a href="<?php echo $this->getUrl('') . 'customer/account/login/' ?>" class="fa fa-user fa-lg"><span class="nav-word">SIGN IN</span></a></li>
-					<li><?php echo $this->getChildHtml('mini-cart') ?></li>
-				</ul>
+				<div class="line1-right">
+					<ul id="znav">
+						<li>
+							<span class="dropdown">
+								<a href="#" class="fa fa-search fa-lg" data-toggle="dropdown" onclick="setTimeout(function(){jQuery('#search').focus();},10)"><span class="nav-word">SEARCH</span></a>
+								<?php echo $this->getChildHtml('topSearch'); ?>
+							</span>
+						</li>
+						<li><a href="<?php echo $this->getUrl('') . 'about-trade-depot/' ?>" class="fa fa-phone fa-lg"><span class="nav-word">ABOUT US</span></a></li>
+						<li><a href="<?php echo $this->getUrl('') . 'customer/account/login/' ?>" class="fa fa-user fa-lg"><span class="nav-word">SIGN IN</span></a></li>
+						<li><?php echo $this->getChildHtml('mini-cart') ?></li>
+					</ul>
+					<div style="clear:both"></div>
+					<div class="showroom">
+						<i class="fa fa-map-marker"></i>  
+						<span class="pickup">Showroom &amp; Pickup, <span class="hidden-xs show-sm">17 Inlet Road, Takanini, Auckland. </span><a href="http://www.tradedepot.co.nz/showroom-opening-hours">Phone: 09-298 2535 </a></span>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div id="line2">
