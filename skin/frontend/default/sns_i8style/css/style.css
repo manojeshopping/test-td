@@ -1936,7 +1936,7 @@ $sidebar_area input {
   float: left;
   position: relative;
   text-align: center;
-  width: 40%;
+  width: 50%;
 }
 .product .product-wrap-top .product-image img {
   width: 100%;
@@ -1947,7 +1947,7 @@ $sidebar_area input {
   display: table;
   position: relative;
   margin-bottom: 8px;
-  width: 60%;
+  width: 50%;
   padding: 0px 8px 0px 8px;
 }
 .product .product-wrap-top .product-details .product-title {
