@@ -210,7 +210,7 @@
 						if ($now>=$newsFrom && $now<=$newsTo && $themeConfig['general_useTagNew']==1)
 							echo "<span class='ico-product ico-new'>New</span>";
 						if (isset($price) && isset($finalPrice) && $finalPrice < $price && $themeConfig['general_useTagSale']==1)
-							echo "<span class='ico-product ico-sale'>".floor(100-($finalPrice/$price)*100)."% OFF</span>";
+							//echo "<span class='ico-product ico-sale'>".floor(100-($finalPrice/$price)*100)."% OFF</span>";
 						?>
 					</div>
 					<div class="product-image item-img" >
@@ -285,8 +285,8 @@
 						
 					} ?>
 					<div class="parent-category float-left">
-							<h5 class="dark"><?php echo $parentCatLabel ?> 
-							<div class="label label-info"><a href="<?php echo Mage::getUrl($parentCatUrlPath); ?>"><?php echo $parentCat; ?></a></div></h5>
+							<h5 class="dark"><?php //echo $parentCatLabel ?> 
+							<div class="label label-info"><a href="<?php echo Mage::getUrl($parentCatUrlPath); ?>"><?php echo "See all: " . $parentCat; ?></a></div></h5>
 					</div>
 					<div class="inner-box-sku">
 						<?php
@@ -342,7 +342,7 @@
 									
 									$comboSku = Mage::getResourceModel('catalog/product')->getAttributeRawValue($_product->getId(), 'combo_sku', Mage_Core_Model_App::ADMIN_STORE_ID);
 																		
-									echo "<div style='color:red;background-color: rgba(224, 243, 65, 0.5);font-size:14px;font-weight:bold;text-align:right;position:absolute;top:-100px;right:0px;' class='pull-right'>";
+									echo "<div style='color:red;background-color: rgba(224, 243, 65, 0.5);font-size:14px;font-weight:bold;text-align:left;position:absolute;top:-100px;left:100px;width:150px;' class='pull-right'>";
 									if ($comboSku == "") {
 										if ($superUser) echo 
 											round($us_price, 0) . "|" . 
@@ -403,7 +403,7 @@
 		<?php endforeach ?>
 		<?php
 			for($i=1;$i<=4;$i++){
-				echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
+				//echo $this->getLayout()->createBlock('cms/block')->setBlockId('filler-ad-'.$i)->toHtml();
 			}
 		?>
 	</div>

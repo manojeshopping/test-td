@@ -4,8 +4,8 @@
     width: 250px;
     max-width: 100%;
 }
-.one-step-checkout{font-family:'Roboto',sans-serif}
-.onestepcheckout-index-index select{line-height:20px;border:1px solid silver;font-family:'Roboto',sans-serif}
+.one-step-checkout{font-family:PTS75F}
+.onestepcheckout-index-index select{line-height:20px;border:1px solid silver;font-family:PTS75F}
 .clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
 * html .clearfix{height:1%}
 button.onestepcheckout-btn-checkout{margin-bottom:10px;padding:5px 0;box-shadow:0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);transition:all .2s ease-in-out;border-radius: 3px}
@@ -104,7 +104,7 @@ button.onestepcheckout-btn-checkout{margin-bottom:10px;padding:5px 0;box-shadow:
 #one-step-checkout-form .order-information ol li .onestepcheckout-shipping-method-section ul li{float:left;width:100%;margin:0px 0;font-size:14px}
 #one-step-checkout-form input.radio{float:left;margin:4px 4px 4px 0}
 #one-step-checkout-form .order-information ol li .onestepcheckout-shipping-method-section ul li label{font-weight:400;font-size:14px;cursor: pointer;}
-#one-step-checkout-form .order-information ol li .onestepcheckout-shipping-method-section ul li .price{font-weight:700;font-size:14px;font-family:'Roboto',sans-serif}
+#one-step-checkout-form .order-information ol li .onestepcheckout-shipping-method-section ul li .price{font-weight:700;font-size:14px;font-family:PTS75F}
 #one-step-checkout-form .order-information ol li .onestepcheckout-shipping-method-section .sp-methods dt{font-size:14px;margin:0}
 .one-step-checkout .login{padding-bottom:20px}
 .one-step-checkout .address-order{width:100%;border:none;margin-top:10px}
@@ -125,7 +125,7 @@ label span.required{color:red}
 .one-step-checkout .login{width:49%}
 .one-step-checkout h3{padding:2px 1px;float:left;width:100%;font-weight:700;font-size:15px;color:#363636;text-transform:uppercase;margin-left:0;display:inline-block;line-height:35px}
 .one-step-checkout h3.step_1,.one-step-checkout h3.step_2,.one-step-checkout h3.step_3,.one-step-checkout h3.step_4,.one-step-checkout h3.step_5{border-bottom:1px solid #e0e0e0}
-.one-step-checkout h3:before{display:inline-block;width:35px;height:35px;border-radius:50%;vertical-align:middle;text-align:center;line-height:35px;color:#fff;font-size:16px;font-weight:700;margin-right:10px;margin-left:17px;font-family:'Roboto',sans-serif}
+.one-step-checkout h3:before{display:inline-block;width:35px;height:35px;border-radius:50%;vertical-align:middle;text-align:center;line-height:35px;color:#fff;font-size:16px;font-weight:700;margin-right:10px;margin-left:17px;font-family:PTS75F}
 #shipping_method_step_header{border-top:1px solid #e0e0e0}
 .one-step-checkout #billing_step_header:before{content:'1'}
 .one-step-checkout #shipping_method_step_header:before{content:'2'}
@@ -235,7 +235,7 @@ p.forgot-link a span{background:url(../../../../images/onestepcheckout/material/
 #onestepcheckout-login-table p.forgot-link a,#onestepcheckout-login-table p.register-link a{/*font-size:12px;color:#738092!important;text-decoration:underline;margin-left:27px*/}
 #onestepcheckout-login-table p.forgot-link a:hover,#onestepcheckout-login-table p.register-link a:hover{text-decoration:none}
 .onestepcheckout-giftwrap label span{font-weight:700;color:#000}
-#one-step-checkout-form label{margin-bottom:5px;float:left;background:none;padding:0;font-family:'Roboto',sans-serif}
+#one-step-checkout-form label{margin-bottom:5px;float:left;background:none;padding:0;font-family:PTS75F}
 #onestepcheckout-login-popup label em,
 .one-step-checkout label em{color:red}
 #one-step-checkout-form .gift-messages-form label {float: none !important;position: absolute !important;}
@@ -262,7 +262,7 @@ p.forgot-link a span{background:url(../../../../images/onestepcheckout/material/
 #one-step-checkout-form .checkout-review-load .data-table tbody th,.data-table tbody td{border-right:none!important;padding-right:5px}
 #one-step-checkout-form .checkout-review-load .data-table tbody th{font-size:15px;padding:10px 0;color:#363636}
 #one-step-checkout-form .data-table tfoot strong{font-size:15px!important;font-weight:500;color:#363636;vertical-align:middle}
-#one-step-checkout-form .data-table tfoot strong .price{font-size:17px!important;font-weight:500;color:#363636;font-family:'Roboto',sans-serif}
+#one-step-checkout-form .data-table tfoot strong .price{font-size:17px!important;font-weight:500;color:#363636;font-family:PTS75F}
 #one-step-checkout-form .checkout-review-load .data-table td{padding:12px 0!important}
 #one-step-checkout-form .checkout-review-load .data-table td.qty-box{padding:12px 5px 12px 0 !important}
 #one-step-checkout-form .checkout-review-load .data-table td .control-qty{display:inline-block;width:13px;float:left}
@@ -343,7 +343,7 @@ button#add_coupon_code_button span,button#remove_coupon_code_button span{font-si
 .onestepcheckout-form-list li.wide{clear:both;padding-top:10px}
 #payment_form_ccsave .input-box{width:100%!important}
 .shipment-methods dd{margin-left:0}
-.one-step-checkout .input-text{height:26px!important;padding:4px 6px;line-height:26px;font-family:'Roboto',sans-serif}
+.one-step-checkout .input-text{height:26px!important;padding:4px 6px;line-height:26px;font-family:PTS75F}
 #billing-new-address-form ul{padding-bottom:0!important}
 #allow-gift-message-container{background:none}
 #gift-message-whole-message{height:53px!important}
@@ -387,7 +387,7 @@ input.billing-region-input,input.shipping-region-input{padding:7px 10px 0 5px!im
 #billing-address-select, .onestepcheckout-survey select,#showhide_shipping select,#billing-new-address-form select{font-family:inherit;background-color:transparent;width:100%;padding:0 20px 0 0;font-size:12px;color:#000;border:none;border-bottom:1px solid #e0e0e0}
 #billing-address-select:focus,.onestepcheckout-survey select:focus,#showhide_shipping select:focus,#billing-new-address-form select:focus{outline:none}
 #billing-address-select,.onestepcheckout-survey select, .mdl-selectfield select,#billing-new-address-form .mdl-selectfield select{-webkit-appearance:none;-moz-appearance:none;appearance:none}
-.onestepcheckout-survey, .mdl-selectfield,#billing-new-address-form .mdl-selectfield{font-family:'Roboto','Helvetica','Arial',sans-serif;position:relative;margin-top:26px}
+.onestepcheckout-survey, .mdl-selectfield,#billing-new-address-form .mdl-selectfield{font-family:PTS75F,'Arial',sans-serif;position:relative;margin-top:26px}
 .has-address.mdl-selectfield{margin-top:0}
 .mdl-selectfield:after,#billing-new-address-form .mdl-selectfield:after{position:absolute;top:.75em;right:.5em;width:0;height:0;padding:0;content:'';border-left:.25em solid transparent;border-right:.25em solid transparent;border-top:.375em solid #636363;pointer-events:none}
 .gift-messages-form input:focus ~ .bar:before,.gift-messages-form input:focus ~ .bar:after,#onestepcheckout-login-popup input:focus ~ .bar:before,#onestepcheckout-login-popup input:focus ~ .bar:after,.onestepcheckout-discount .discount-form input:focus ~ .bar:before,.onestepcheckout-discount .discount-form input:focus ~ .bar:after,#showhide_shipping input:focus ~ .bar:before,#showhide_shipping input:focus ~ .bar:after,.onestepcheckout-discount .discount-form input:focus ~ .bar:before,#billing-new-address-form input:focus ~ .bar:after,#billing-new-address-form input:focus ~ .bar:before,#billing-new-address-form input:focus ~ .bar:after,html.no-placeholder input input ~ .bar:before,html.no-placeholder input input ~ .bar:after{width:50%}

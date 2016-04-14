@@ -41,6 +41,7 @@
                     <li<?php echo ($_last ? ' class="last"' : '') ?>><a href="<?php echo $_link->getUrl() ?>"><?php echo $_link->getLabel() ?></a></li>
                 <?php endif; ?>
             <?php endforeach; ?>
+			<?php echo "<li><a href=\"".Mage::getBaseUrl()."customer/account/logout/\" >Logout</a></li>";?>
         </ul>
     </div>
 </div>
