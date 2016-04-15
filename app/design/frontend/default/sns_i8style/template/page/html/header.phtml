@@ -105,12 +105,12 @@ $catNames = array(
 									echo '<ul class="dropdown-menu dropdown-menu-right">';
 								}								
 								
-								$subcats = $cat->getChildren();
+								//$subcats = $cat->getChildren();
+								$subcats = Mage::getModel('catalog/category')->load($cat->getId())->getChildrenCategories();
 								$count = 0;
-								foreach (explode(',',$subcats) as $subCatid) {
-									$_category = Mage::getModel('catalog/category')->load($subCatid);
-									if ($_category->getIsActive()) {
-										echo '<li><a href="' . $_category->getURL() . '"><span>></span>' . $_category->getName() . '</a></li>';
+								foreach ($subcats as $subcat) {
+									if ($subcat->getIsActive()) {
+										echo '<li><a href="' . $subcat->getURL() . '"><span>></span>' . $subcat->getName() . '</a></li>';
 										$count++;
 									}
 								}
