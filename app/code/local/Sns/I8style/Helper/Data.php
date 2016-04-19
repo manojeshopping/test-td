@@ -51,7 +51,7 @@ class Sns_I8style_Helper_Data extends Mage_Core_Helper_Abstract {
 	public function getImgSize($size) {
 		$size = strtoupper($size);
 		
-		$imgRate = 1.5;
+		$imgRate = 1;
 		$imgS_w = 60; // small img
 		$imgM_w = 90; // detail thumb img
 		$imgL_w = 250; // grid product img
