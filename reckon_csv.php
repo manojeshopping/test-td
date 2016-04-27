@@ -7,8 +7,15 @@
 	$readConnection = $resource->getConnection('core_read');
 	$writeConnection = $resource->getConnection('core_write');
 
+	// TRUNCATE initially
+	$query = "TRUNCATE TABLE reckon"; 
+	$writeConnection->query($query);
+	echo "TRUNCATE finished<br>";
+	flush();
+	ob_flush();
+	
 	// first insert
-	$file = 'data_TDL.csv';
+	$file = 'var/import/reckon/data_TDL.csv';
 	$csv = new Varien_File_Csv();
 	$data = $csv->getData($file);
 	for($i = 1; $i < count($data); $i++) {
@@ -49,14 +56,15 @@
 	flush();
 	ob_flush();
 	
-	// then update ExpectedDate_csv
-	$file = 'ExpectedDate_csv.csv';
+	// then update ExpectedDate
+	$file = 'var/import/reckon/ExpectedDate.csv';
 	$csv = new Varien_File_Csv();
 	$data = $csv->getData($file);
 	for($i = 1; $i < count($data); $i++) {
 		$oldDate = $data[$i][0];
 		$pieces = explode("/", $oldDate);
-		$date = $pieces[2] . "-" . $pieces[1] . "-" . $pieces[0];
+		//$date = $pieces[2] . "-" . $pieces[1] . "-" . $pieces[0];
+		$date = $pieces[2] . "-" . $pieces[0] . "-" . $pieces[1];
 		$fullSku = $data[$i][2];
 		
 		$pieces = explode(":", $fullSku);
@@ -64,7 +72,7 @@
 		$sku = $pieces[$lastIndex];
 		
 		$query = "update reckon set arrive_date = '" . $date . "' where sku = '" . $sku . "'";
-		//echo $query . "<br>";
+		echo $query . "<br>";
 		echo ".";
 		flush();
 		ob_flush();
@@ -76,7 +84,7 @@
 	ob_flush();
 	
 	// then update us price
-	$file = 'usprice.csv';
+	$file = 'var/import/reckon/usprice.csv';
 	$csv = new Varien_File_Csv();
 	$data = $csv->getData($file);
 	for($i = 1; $i < count($data); $i++) {
@@ -100,7 +108,7 @@
 	
 	// then update q0 q1 q2 q3 q4
 	for ($index = 0; $index < 5; $index++) {
-		$file = 'Q' . $index . '.csv';
+		$file = 'var/import/reckon/Q' . $index . '.csv';
 		$csv = new Varien_File_Csv();
 		$data = $csv->getData($file);
 		for($i = 1; $i < count($data); $i++) {

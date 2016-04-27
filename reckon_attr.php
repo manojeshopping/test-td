@@ -3,7 +3,7 @@
 	umask(0);
 	Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 	
-	$attrCode = "reckon_q_on_order";
+	$attrCode = "combo_sku";
 	$attrGroupName = "general";
 	$isDelete = false;
 
