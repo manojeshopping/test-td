@@ -104,7 +104,9 @@ $catNames = array(
 									echo '<ul class="dropdown-menu">';
 								} else {
 									echo '<ul class="dropdown-menu dropdown-menu-right">';
-								}								
+								}
+
+								echo '<li><a href="' . $cat->getUrl() . '"><span style="visibility:hidden">></span>' . 'Show All<br><span style="visibility:hidden">></span>' . $catName[1] . '</a></li>';
 								
 								//$subcats = $cat->getChildren();
 								$subcats = Mage::getModel('catalog/category')->load($cat->getId())->getChildrenCategories();

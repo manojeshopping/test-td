@@ -3102,7 +3102,7 @@ footer a {
   color: #aae3fd;
 }
 footer a:hover {
-  color: white !important;
+  //color: white !important;
 }
 footer a.btn {
   color: white !important;
@@ -3140,7 +3140,7 @@ footer ul.links li a {
 
 }
 footer ul.links li a:hover {
-  color: white !important;
+  color: #37a555;
 }
 footer .logo {
   transform: rotate(-7deg);
