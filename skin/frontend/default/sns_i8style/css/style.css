@@ -1440,6 +1440,13 @@ div.fixed {
 #line1 .fa-lg {
 	font-size: 18px;
 }
+@media screen and (min-width: 768px) {
+	#line1  #header-cart .fa-lg{
+		position: relative;
+		top: 27px;
+		padding-bottom: 0px;
+	}
+}
 .fa:before{
     margin: 0 0px 0 0px;
 }
@@ -1473,7 +1480,12 @@ div.fixed {
 #line1 ul  {
 	margin-bottom: 0px;
 	padding-left: 0px;
-	margin-top: -5px;
+	//margin-top: -27px;
+}
+@media screen and (min-width: 768px) {
+	#line1 ul  {
+		margin-top: -28px;
+	}
 }
 #line1 ul li {
 	display: inline;
@@ -1508,8 +1520,17 @@ div.fixed {
 	color: #37a555;
 	background-color: white;
 }
+#line1  #znav>#header-cart>span>a {
+	background-color: rgb(30, 30, 170);
+	color: rgb(255, 219, 133);
+}
 #line1 .showroom {
 	color: white;
+}
+@media screen and (min-width: 768px) {
+	#line1 .showroom {
+		margin-left: -62px;
+	}
 }
 /*line1888*/
 /*search888*/
@@ -1517,6 +1538,7 @@ div.fixed {
 	top: -15px;
 	left: -1px;
 	width: 387px;
+	/*heigth is fixed if "search" font size and its padding are fixed */
 	height: 46px;
 	border-radius: 0px;
 }
@@ -1544,13 +1566,13 @@ div.fixed {
 	font-size: 18px;
 }
 #line1 .search-results {
-	top: 39px;
+	top: 38px;
 }
 /*search888*/
 /*minicart888*/
 #line1 .mymenu {
-	left: -397px;
-	top: 31px;
+	left: -394px;
+	top: 51px;
 }
 /*minicart888*/
 /*myNavbar888*/
@@ -1619,7 +1641,7 @@ div.fixed {
 		width: 100%;
 		float: left;
 		padding: 30px 0 0px 30px;
-		text-transform: uppercase;
+		//text-transform: uppercase;
 	}
 }
 /*myNavbarDropDownMenu888*/

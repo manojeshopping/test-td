@@ -35,6 +35,16 @@ $catNames = array(
 	array("Hardware & Building Supplies", "HARDWARE & BUILDING SUPPLIES"),
 	array("Furniture & Variety", "FURNITURE")
 );
+$catNames = array(
+	array("Bathroom", "Bathroom Supplies"),
+	array("Kitchen & Laundry", "Kitchen & Laundry"),
+	array("Appliances & Heatpumps", "Appliances"),
+	array("AIR CON / HEAT PUMPS", "Air Conditioners / Heat Pumps"),
+	array("Flooring & Tiling", "Flooring & Tiling"),
+	array("Lighting, Electrical & Plumbing", "Lighting, Electrical & Plumbing"),
+	array("Hardware & Building Supplies", "Hardware & Building Supplies"),
+	array("Furniture & Variety", "Furniture")
+);
 ?>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -64,7 +74,7 @@ $catNames = array(
 						</li>
 						<li><a href="<?php echo $this->getUrl('') . 'about-trade-depot/' ?>" class="fa fa-phone fa-lg"><span class="nav-word">ABOUT US</span></a></li>
 						<li><a href="<?php echo $this->getUrl('') . 'customer/account/login/' ?>" class="fa fa-user fa-lg"><span class="nav-word"><?php if ($this->helper("customer")->isLoggedIn()) echo "MY ACCOUNT"; else echo "SIGN IN"; ?></span></a></li>
-						<li><?php echo $this->getChildHtml('mini-cart') ?></li>
+						<li id="header-cart"><?php echo $this->getChildHtml('mini-cart') ?></li>
 					</ul>
 					<div style="clear:both"></div>
 					<div class="showroom">

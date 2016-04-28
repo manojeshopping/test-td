@@ -56,7 +56,18 @@ if($config['list_type']=='all'){
         <?php else: ?>
 			<?php /* $total = Mage::helper('checkout')->formatPrice($this->getSubtotal()); */ ?>
 			<?php $total = Mage::helper('checkout')->formatPrice($this->getSubtotalInclTax()); ?>
-			<a id="zcart" onclick="_gaq.push(['_trackEvent','cart','view','mini'])" href="<?php echo $this->getUrl('') . 'checkout/cart/' ?>" class="fa fa-shopping-cart fa-lg" data-toggle="<?php if($_cartQty > 0) echo 'dropdown' ?>"><span class="nav-word"><?php echo $_cartQty ?></span></a>
+			<a id="zcart" onclick="_gaq.push(['_trackEvent','cart','view','mini'])" href="<?php echo $this->getUrl('') . 'checkout/cart/' ?>" class="fa fa-shopping-cart fa-lg" data-toggle="<?php if($_cartQty > 0) echo 'dropdown' ?>">
+				<span class="nav-word">
+					<?php 
+						if($_cartQty > 0) { 
+							echo $_cartQty . "<br><br>$"  . round($this->getSubtotalInclTax(), 0);
+						} else {
+							echo "<span style='visibility: hidden'>" . $_cartQty . "<br><br>$"  . round($this->getSubtotalInclTax(), 0) . "</span>";
+							//echo "<br><br>";
+						}
+					?>
+				</span>
+			</a>
 			<script type="text/javascript">
 				if(screen.width < 768){
 					jQuery('#zcart').attr("data-toggle", "");
